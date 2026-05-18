@@ -133,7 +133,7 @@
     • ფასი: 10 gp
     • Ability: Dexterity
     • მოთხოვნა: არ აქვს
-    • Armor Hit Points: 15 HP
+    • Armor Hit Points: 20 HP
     • თვისებები: AC (Armor Class) = 11 + Dexterity modifier (პერსკნაჟი იყენებს უფრო მაღალს საკუთარ და აბჯრის AC შორის)
     • განმარტება: მაღალი Dexterity პირდაპირ ზრდის დაცვას. Armor არ ზღუდავს მოძრაობას ან stealth-ს.
     • აღწერა: მსუბუქი armor stealth და mobility build-ებისთვის.
@@ -159,7 +159,7 @@
     • Ability: Dexterity (max +2), Strength სასურველია
     • მინიმალური მოთხოვნა: Strength 12 ან Constitution 12
     • Armor Hit Points: 40 HP
-    • თვისებები: AC (Armor Class) = 14 + Dexterity modifier (max +2), stealth disadvantage  (პერსკნაჟი იყენებს უფრო მაღალს საკუთარ და აბჯრის AC შორის)
+    • თვისებები: AC (Armor Class) = 15 + Dexterity modifier (max +2), stealth disadvantage  (პერსკნაჟი იყენებს უფრო მაღალს საკუთარ და აბჯრის AC შორის)
     • განმარტება: მძიმე armor ფირფიტები ზღუდავს stealth-ს.
     თუ პერსონაჟს არ აქვს საჭირო Strength ან Constitution, movement speed მცირდება 6 მეტრით და combat maneuver-ებზე შეიძლება მიიღოს disadvantage DM-ის გადაწყვეტილებით.
     • აღწერა: მძიმე medium armor მაღალი დაცვით.
