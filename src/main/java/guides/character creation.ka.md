@@ -463,7 +463,7 @@
 
 #### Wizard — The Prepared Caster
 * Hit Dice: d6 (ყველაზე დაბალი HP, ყველაზე მყიფე)
-* Primary Abilities: Intelligence, Constitution
+* Primary Abilities: Intelligence
 * Combat Role: control, utility, knowledge
 * Playstyle: ყოველდღიურად ამზადებთ spells-ს დიდი სიიდან; magic-ით აკონტროლებთ battlefield-ს; rituals-ით სარგებლობთ outside combat; ხართ ყველაზე versatile caster
 * Best for: მოთამაშეები, ვისაც უყვარს variety, control და წინასწარი დაგეგმვა
