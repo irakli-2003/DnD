@@ -1,0 +1,33 @@
+{
+  "monsters": [
+    {
+      "id": "ember_wyrm",
+      "name": "Ember Wyrm",
+      "description": "A serpent that breathes embers.",
+      "type": "dragon",
+      "challengeRating": "4",
+      "stats": {
+        "strength": 16,
+        "dexterity": 14,
+        "constitution": 15,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "ember_breath",
+          "name": "Ember Breath",
+          "description": "Exhales a cone of scorching embers.",
+          "effects": ["burn", "area_damage"]
+        },
+        {
+          "id": "wing_buffet",
+          "name": "Wing Buffet",
+          "description": "Strikes nearby foes with a winged gust.",
+          "effects": ["knockback"]
+        }
+      ]
+    }
+  ]
+}

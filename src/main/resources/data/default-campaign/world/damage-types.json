@@ -1,0 +1,10 @@
+{
+  "damageTypes": [
+    {
+      "id": "cold",
+      "name": "Cold",
+      "description": "Ice, frost, and freezing damage."
+    }
+  ]
+}
+

@@ -1,0 +1,20 @@
+{
+  "classes": [
+    {
+      "id": "fighter",
+      "name": "Fighter",
+      "description": "A master of martial combat.",
+      "hitDie": 10,
+      "primaryAbilities": ["strength", "constitution"],
+      "savingThrowBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      }
+    }
+  ]
+}
+

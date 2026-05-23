@@ -1,0 +1,27 @@
+{
+  "beasts": [
+    {
+      "id": "dire_wolf",
+      "name": "Dire Wolf",
+      "description": "A large and aggressive wolf.",
+      "habitat": "forest",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 14,
+        "dexterity": 15,
+        "constitution": 13,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Gains advantage on attacks when allies are nearby.",
+          "effects": ["advantage_on_attack"]
+        }
+      ]
+    }
+  ]
+}

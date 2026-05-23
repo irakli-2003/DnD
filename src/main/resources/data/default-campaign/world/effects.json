@@ -1,0 +1,13 @@
+{
+  "effects": [
+    {
+      "id": "freeze",
+      "name": "Freeze",
+      "description": "Reduces movement speed and slows reactions.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "spells": [
+    {
+      "id": "frost_bolt",
+      "name": "Frost Bolt",
+      "description": "A chilling projectile of ice.",
+      "level": 1,
+      "school": "evocation",
+      "manaCost": 5,
+      "range": 30,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "easy",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "freeze",
+          "name": "Freeze",
+          "description": "Reduces movement speed and slows reactions.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": 6,
+        "typeId": "cold"
+      }
+    }
+  ]
+}

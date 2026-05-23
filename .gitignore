@@ -9,3 +9,9 @@
 /dataSources/
 /dataSources.local.xml
 /.idea/
+/target/
+
+# Custom campaigns (local data)
+/data/custom-campaigns/
+/src/main/resources/data/custom-campaigns/
+

@@ -1,0 +1,21 @@
+{
+  "items": [
+    {
+      "id": "longsword",
+      "name": "Longsword",
+      "type": "weapon",
+      "description": "A versatile steel blade.",
+      "valueGold": 15,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      }
+    }
+  ]
+}
+

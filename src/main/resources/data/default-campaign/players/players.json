@@ -1,0 +1,36 @@
+{
+  "players": [
+    {
+      "id": "player1",
+      "name": "Alyx",
+      "classId": "fighter",
+      "raceId": "human",
+      "level": 1,
+      "stats": {
+        "strength": 15,
+        "dexterity": 12,
+        "constitution": 14,
+        "intelligence": 10,
+        "wisdom": 11,
+        "charisma": 8
+      },
+      "items": [
+        {
+          "itemId": "longsword",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        }
+      ],
+      "spells": [
+        {
+          "spellId": "frost_bolt",
+          "rank": 1,
+          "active": true
+        }
+      ]
+    }
+  ]
+}
+

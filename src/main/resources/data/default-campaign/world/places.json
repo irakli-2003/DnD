@@ -1,0 +1,16 @@
+{
+  "places": [
+    {
+      "id": "stonekeep",
+      "name": "Stonekeep",
+      "description": "A fortified keep overlooking the valley.",
+      "type": "fortress",
+      "habitat": "mountain",
+      "tags": ["defensive", "mountain"],
+      "attributes": {
+        "population": "120",
+        "faction": "wardens"
+      }
+    }
+  ]
+}
