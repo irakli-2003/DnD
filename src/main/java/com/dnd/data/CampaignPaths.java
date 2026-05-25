@@ -64,5 +64,20 @@ public class CampaignPaths {
     public Path playersFile() {
         return playersDir().resolve("players.json");
     }
-}
 
+    public Path languagesFile() {
+        return worldDir().resolve("languages.json");
+    }
+
+    public Path alchemyIngredientsFile() {
+        return worldDir().resolve("alchemy-ingredients.json");
+    }
+
+    public Path booksFile() {
+        return worldDir().resolve("books.json");
+    }
+
+    public Path idRegistryFile() {
+        return worldDir().resolve("id-registry.json");
+    }
+}

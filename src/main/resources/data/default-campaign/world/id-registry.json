@@ -1,0 +1,57 @@
+{
+  "entries": [
+    {
+      "id": "fighter",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "human",
+      "file": "world/races.json"
+    },
+    {
+      "id": "longsword",
+      "file": "world/items.json"
+    },
+    {
+      "id": "frost_bolt",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "stonekeep",
+      "file": "world/places.json"
+    },
+    {
+      "id": "freeze",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "cold",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "warden_elya",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "ember_wyrm",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "dire_wolf",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "common",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "wolfsbane",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "common_tongue",
+      "file": "world/books.json"
+    }
+  ]
+}
+

@@ -20,6 +20,10 @@ public final class CampaignTemplate {
     public static final String MONSTERS_FILE = "monsters.json";
     public static final String BEASTS_FILE = "beasts.json";
     public static final String PLAYERS_FILE = "players.json";
+    public static final String LANGUAGES_FILE = "languages.json";
+    public static final String ALCHEMY_INGREDIENTS_FILE = "alchemy-ingredients.json";
+    public static final String BOOKS_FILE = "books.json";
+    public static final String ID_REGISTRY_FILE = "id-registry.json";
 
     private CampaignTemplate() {
     }
@@ -42,6 +46,10 @@ public final class CampaignTemplate {
         Files.write(worldPath.resolve(MONSTERS_FILE), (blank ? blankMonstersJson() : defaultMonstersJson()).getBytes(StandardCharsets.UTF_8));
         Files.write(worldPath.resolve(BEASTS_FILE), (blank ? blankBeastsJson() : defaultBeastsJson()).getBytes(StandardCharsets.UTF_8));
         Files.write(playersPath.resolve(PLAYERS_FILE), (blank ? blankPlayersJson() : defaultPlayersJson()).getBytes(StandardCharsets.UTF_8));
+        Files.write(worldPath.resolve(LANGUAGES_FILE), (blank ? blankLanguagesJson() : defaultLanguagesJson()).getBytes(StandardCharsets.UTF_8));
+        Files.write(worldPath.resolve(ALCHEMY_INGREDIENTS_FILE), (blank ? blankAlchemyIngredientsJson() : defaultAlchemyIngredientsJson()).getBytes(StandardCharsets.UTF_8));
+        Files.write(worldPath.resolve(BOOKS_FILE), (blank ? blankBooksJson() : defaultBooksJson()).getBytes(StandardCharsets.UTF_8));
+        Files.write(worldPath.resolve(ID_REGISTRY_FILE), (blank ? blankIdRegistryJson() : defaultIdRegistryJson()).getBytes(StandardCharsets.UTF_8));
     }
 
     public static String defaultClassesJson() {
@@ -234,6 +242,128 @@ public final class CampaignTemplate {
             "}\n";
     }
 
+    public static String defaultLanguagesJson() {
+        return "{\n" +
+            "  \"languages\": [\n" +
+            "    {\n" +
+            "      \"id\": \"common\",\n" +
+            "      \"name\": \"Common\",\n" +
+            "      \"dictionary\": {\n" +
+            "        \"hello\": \"greetings\",\n" +
+            "        \"farewell\": \"safe travels\"\n" +
+            "      },\n" +
+            "      \"requiredMaterial\": {\n" +
+            "        \"id\": \"common_tongue\",\n" +
+            "        \"name\": \"Common Tongue Primer\",\n" +
+            "        \"type\": \"book\",\n" +
+            "        \"description\": \"A primer for the common language.\",\n" +
+            "        \"valueGold\": 5,\n" +
+            "        \"weight\": 1.0,\n" +
+            "        \"damage\": null,\n" +
+            "        \"durability\": {\n" +
+            "          \"max\": 50,\n" +
+            "          \"current\": 50\n" +
+            "        },\n" +
+            "        \"overview\": \"Basic vocabulary and grammar.\"\n" +
+            "      },\n" +
+            "      \"requiredLongRests\": 3\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+    }
+
+    public static String defaultAlchemyIngredientsJson() {
+        return "{\n" +
+            "  \"ingredients\": [\n" +
+            "    {\n" +
+            "      \"id\": \"wolfsbane\",\n" +
+            "      \"name\": \"Wolfsbane\",\n" +
+            "      \"description\": \"A bitter herb used in protective concoctions.\"\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+    }
+
+    public static String defaultBooksJson() {
+        return "{\n" +
+            "  \"books\": [\n" +
+            "    {\n" +
+            "      \"id\": \"common_tongue\",\n" +
+            "      \"name\": \"Common Tongue Primer\",\n" +
+            "      \"type\": \"book\",\n" +
+            "      \"description\": \"A primer for the common language.\",\n" +
+            "      \"valueGold\": 5,\n" +
+            "      \"weight\": 1.0,\n" +
+            "      \"damage\": null,\n" +
+            "      \"durability\": {\n" +
+            "        \"max\": 50,\n" +
+            "        \"current\": 50\n" +
+            "      },\n" +
+            "      \"overview\": \"Basic vocabulary and grammar.\"\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+    }
+
+    public static String defaultIdRegistryJson() {
+        return "{\n" +
+            "  \"entries\": [\n" +
+            "    {\n" +
+            "      \"id\": \"fighter\",\n" +
+            "      \"file\": \"world/classes.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"human\",\n" +
+            "      \"file\": \"world/races.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"longsword\",\n" +
+            "      \"file\": \"world/items.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"frost_bolt\",\n" +
+            "      \"file\": \"world/spells.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"stonekeep\",\n" +
+            "      \"file\": \"world/places.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"freeze\",\n" +
+            "      \"file\": \"world/effects.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"cold\",\n" +
+            "      \"file\": \"world/damage-types.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"warden_elya\",\n" +
+            "      \"file\": \"world/npcs.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"ember_wyrm\",\n" +
+            "      \"file\": \"world/monsters.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"dire_wolf\",\n" +
+            "      \"file\": \"world/beasts.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"common\",\n" +
+            "      \"file\": \"world/languages.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"wolfsbane\",\n" +
+            "      \"file\": \"world/alchemy-ingredients.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"common_tongue\",\n" +
+            "      \"file\": \"world/books.json\"\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+    }
+
     public static String defaultNpcsJson() {
         return "{\n" +
             "  \"npcs\": [\n" +
@@ -251,7 +381,8 @@ public final class CampaignTemplate {
             "        \"wisdom\": 10,\n" +
             "        \"charisma\": 15\n" +
             "      },\n" +
-            "      \"traits\": [\"brave\", \"strategist\"]\n" +
+            "      \"traits\": [\"brave\", \"strategist\"],\n" +
+            "      \"languages\": [\"common\"]\n" +
             "    }\n" +
             "  ]\n" +
             "}\n";
@@ -279,15 +410,20 @@ public final class CampaignTemplate {
             "          \"id\": \"ember_breath\",\n" +
             "          \"name\": \"Ember Breath\",\n" +
             "          \"description\": \"Exhales a cone of scorching embers.\",\n" +
-            "          \"effects\": [\"burn\", \"area_damage\"]\n" +
+            "          \"effects\": [\"burn\", \"area_damage\"],\n" +
+            "          \"range\": 15.0,\n" +
+            "          \"recharge\": 3\n" +
             "        },\n" +
             "        {\n" +
             "          \"id\": \"wing_buffet\",\n" +
             "          \"name\": \"Wing Buffet\",\n" +
             "          \"description\": \"Strikes nearby foes with a winged gust.\",\n" +
-            "          \"effects\": [\"knockback\"]\n" +
+            "          \"effects\": [\"knockback\"],\n" +
+            "          \"range\": 5.0,\n" +
+            "          \"recharge\": 1\n" +
             "        }\n" +
-            "      ]\n" +
+            "      ],\n" +
+            "      \"languages\": [\"common\"]\n" +
             "    }\n" +
             "  ]\n" +
             "}\n";
@@ -315,7 +451,9 @@ public final class CampaignTemplate {
             "          \"id\": \"pack_tactics\",\n" +
             "          \"name\": \"Pack Tactics\",\n" +
             "          \"description\": \"Gains advantage on attacks when allies are nearby.\",\n" +
-            "          \"effects\": [\"advantage_on_attack\"]\n" +
+            "          \"effects\": [\"advantage_on_attack\"],\n" +
+            "          \"range\": 0.0,\n" +
+            "          \"recharge\": 0\n" +
             "        }\n" +
             "      ]\n" +
             "    }\n" +
@@ -365,5 +503,21 @@ public final class CampaignTemplate {
 
     public static String blankPlayersJson() {
         return "{\n  \"players\": []\n}\n";
+    }
+
+    public static String blankLanguagesJson() {
+        return "{\n  \"languages\": []\n}\n";
+    }
+
+    public static String blankAlchemyIngredientsJson() {
+        return "{\n  \"ingredients\": []\n}\n";
+    }
+
+    public static String blankBooksJson() {
+        return "{\n  \"books\": []\n}\n";
+    }
+
+    public static String blankIdRegistryJson() {
+        return "{\n  \"entries\": []\n}\n";
     }
 }

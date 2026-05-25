@@ -11,6 +11,9 @@ import com.dnd.data.dto.NpcCatalog;
 import com.dnd.data.dto.PlaceCatalog;
 import com.dnd.data.dto.PlayerRoster;
 import com.dnd.data.dto.SpellCatalog;
+import com.dnd.data.dto.LanguageCatalog;
+import com.dnd.data.dto.AlchemyIngredientCatalog;
+import com.dnd.data.dto.BookCatalog;
 import com.dnd.model.character.CharacterClass;
 import com.dnd.model.character.CharacterRace;
 import com.dnd.model.character.PlayerCharacter;
@@ -22,6 +25,9 @@ import com.dnd.model.item.Item;
 import com.dnd.model.combat.Effect;
 import com.dnd.model.magic.Spell;
 import com.dnd.model.world.Place;
+import com.dnd.model.alchemy.AlchemyIngredient;
+import com.dnd.model.item.books.Book;
+import com.dnd.model.world.Language;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -42,6 +48,9 @@ public class CampaignRepositories {
     private JsonRepository<Monster, MonsterCatalog> monsters;
     private JsonRepository<Beast, BeastCatalog> beasts;
     private JsonRepository<PlayerCharacter, PlayerRoster> players;
+    private JsonRepository<Language, LanguageCatalog> languages;
+    private JsonRepository<AlchemyIngredient, AlchemyIngredientCatalog> alchemyIngredients;
+    private JsonRepository<Book, BookCatalog> books;
 
     public CampaignRepositories(Path campaignRoot) {
         this.paths = new CampaignPaths(campaignRoot);
@@ -212,5 +221,49 @@ public class CampaignRepositories {
         }
         return players;
     }
-}
 
+    public JsonRepository<Language, LanguageCatalog> languages() {
+        if (languages == null) {
+            languages = new JsonRepository<>(
+                paths.languagesFile(),
+                mapper,
+                LanguageCatalog::new,
+                LanguageCatalog.class,
+                LanguageCatalog::getLanguages,
+                LanguageCatalog::setLanguages,
+                Language::getId
+            );
+        }
+        return languages;
+    }
+
+    public JsonRepository<AlchemyIngredient, AlchemyIngredientCatalog> alchemyIngredients() {
+        if (alchemyIngredients == null) {
+            alchemyIngredients = new JsonRepository<>(
+                paths.alchemyIngredientsFile(),
+                mapper,
+                AlchemyIngredientCatalog::new,
+                AlchemyIngredientCatalog.class,
+                AlchemyIngredientCatalog::getIngredients,
+                AlchemyIngredientCatalog::setIngredients,
+                AlchemyIngredient::getId
+            );
+        }
+        return alchemyIngredients;
+    }
+
+    public JsonRepository<Book, BookCatalog> books() {
+        if (books == null) {
+            books = new JsonRepository<>(
+                paths.booksFile(),
+                mapper,
+                BookCatalog::new,
+                BookCatalog.class,
+                BookCatalog::getBooks,
+                BookCatalog::setBooks,
+                Book::getId
+            );
+        }
+        return books;
+    }
+}

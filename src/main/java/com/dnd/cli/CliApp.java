@@ -8,12 +8,11 @@ import com.dnd.cli.storage.CampaignStorage;
 import com.dnd.cli.pages.CampaignSelectionPage;
 import com.dnd.cli.pages.CreateCampaignPage;
 import com.dnd.cli.pages.DmMenuPage;
+import com.dnd.cli.pages.EntitySelectionPage;
 import com.dnd.cli.pages.LandingPage;
 import com.dnd.cli.pages.PlaceholderPage;
 
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,40 +30,37 @@ public class CliApp {
 
         PlaceholderPage playerPage = new PlaceholderPage(
             "Player Mode",
-            "Player mode is not implemented yet."
-        );
-        PlaceholderPage createPage = new PlaceholderPage(
-            "Create Content",
-            "Create new content is not implemented yet."
-        );
-        PlaceholderPage editPage = new PlaceholderPage(
-            "Edit Content",
-            "Edit existing content is not implemented yet."
-        );
-        PlaceholderPage deletePage = new PlaceholderPage(
-            "Delete Content",
-            "Delete existing content is not implemented yet."
-        );
-        PlaceholderPage openPage = new PlaceholderPage(
-            "Open Content",
-            "Open existing content is not implemented yet."
+            "Player mode is not implemented yet.",
+            null
         );
 
-        DmMenuPage dmMenuPage = new DmMenuPage(createPage, editPage, deletePage, openPage, session);
-        CreateCampaignPage createCampaignPage = new CreateCampaignPage(session, storage, dmMenuPage);
-        CampaignSelectionPage campaignSelectionPage = new CampaignSelectionPage(session, storage, createCampaignPage, dmMenuPage);
+        EntitySelectionPage createPage = new EntitySelectionPage(EntitySelectionPage.Operation.CREATE, null);
+        EntitySelectionPage editPage = new EntitySelectionPage(EntitySelectionPage.Operation.EDIT, null);
+        EntitySelectionPage deletePage = new EntitySelectionPage(EntitySelectionPage.Operation.DELETE, null);
+        EntitySelectionPage openPage = new EntitySelectionPage(EntitySelectionPage.Operation.OPEN, null);
+        DmMenuPage dmMenuPage = new DmMenuPage(createPage, editPage, deletePage, openPage, session, null);
+        CreateCampaignPage createCampaignPage = new CreateCampaignPage(session, storage, dmMenuPage, null);
+        CampaignSelectionPage campaignSelectionPage = new CampaignSelectionPage(storage, createCampaignPage, dmMenuPage, null);
         LandingPage landingPage = new LandingPage(campaignSelectionPage, playerPage);
+
+        playerPage.setParent(landingPage);
+        campaignSelectionPage.setParent(landingPage);
+        createCampaignPage.setParent(campaignSelectionPage);
+        dmMenuPage.setParent(campaignSelectionPage);
+        createPage.setParent(dmMenuPage);
+        editPage.setParent(dmMenuPage);
+        deletePage.setParent(dmMenuPage);
+        openPage.setParent(dmMenuPage);
 
         runLoop(landingPage, session);
     }
 
     private static void runLoop(Page landingPage, CliSession session) {
         Page current = landingPage;
-        Deque<Page> history = new ArrayDeque<>();
 
         Scanner scanner = session.getScanner();
         while (true) {
-            boolean canGoBack = !history.isEmpty();
+            boolean canGoBack = current.getParent() != null;
             renderPage(current, canGoBack);
 
             String input = scanner.nextLine();
@@ -80,7 +76,7 @@ public class CliApp {
             }
             if (result.getType() == CommandResolver.ResultType.BACK) {
                 if (canGoBack) {
-                    current = history.pop();
+                    current = current.getParent();
                 }
                 continue;
             }
@@ -94,7 +90,6 @@ public class CliApp {
             if (command.getAction() != null) {
                 Page target = command.getAction().execute(session);
                 if (target != null) {
-                    history.push(current);
                     current = target;
                 }
                 continue;
@@ -102,7 +97,6 @@ public class CliApp {
 
             Page target = command.getTarget();
             if (target != null) {
-                history.push(current);
                 current = target;
             }
         }

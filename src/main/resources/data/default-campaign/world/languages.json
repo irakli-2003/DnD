@@ -1,0 +1,28 @@
+{
+  "languages": [
+    {
+      "id": "common",
+      "name": "Common",
+      "dictionary": {
+        "hello": "greetings",
+        "farewell": "safe travels"
+      },
+      "requiredMaterial": {
+        "id": "common_tongue",
+        "name": "Common Tongue Primer",
+        "type": "book",
+        "description": "A primer for the common language.",
+        "valueGold": 5,
+        "weight": 1.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Basic vocabulary and grammar."
+      },
+      "requiredLongRests": 3
+    }
+  ]
+}
+

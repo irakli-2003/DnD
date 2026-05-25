@@ -12,11 +12,13 @@ public class Npc {
     private int level;
     private CoreStats stats;
     private List<String> traits;
+    private List<String> languages;
 
     public Npc() {
     }
 
-    public Npc(String id, String name, String description, String role, int level, CoreStats stats, List<String> traits) {
+    public Npc(String id, String name, String description, String role, int level, CoreStats stats, List<String> traits,
+               List<String> languages) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -24,6 +26,7 @@ public class Npc {
         this.level = level;
         this.stats = stats;
         this.traits = traits;
+        this.languages = languages;
     }
 
     public String getId() {
@@ -81,5 +84,12 @@ public class Npc {
     public void setTraits(List<String> traits) {
         this.traits = traits;
     }
-}
 
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
+}

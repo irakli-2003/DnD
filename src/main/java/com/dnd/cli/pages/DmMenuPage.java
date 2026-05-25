@@ -13,13 +13,19 @@ public class DmMenuPage implements Page {
     private final Page deletePage;
     private final Page openPage;
     private final CliSession session;
+    private Page parent;
 
-    public DmMenuPage(Page createPage, Page editPage, Page deletePage, Page openPage, CliSession session) {
+    public DmMenuPage(Page createPage, Page editPage, Page deletePage, Page openPage, CliSession session, Page parent) {
         this.createPage = createPage;
         this.editPage = editPage;
         this.deletePage = deletePage;
         this.openPage = openPage;
         this.session = session;
+        this.parent = parent;
+    }
+
+    public void setParent(Page parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -41,5 +47,10 @@ public class DmMenuPage implements Page {
             new CommandSpec("delete", "Delete existing content", deletePage),
             new CommandSpec("open", "Open existing content", openPage)
         );
+    }
+
+    @Override
+    public Page getParent() {
+        return parent;
     }
 }

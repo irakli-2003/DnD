@@ -19,7 +19,9 @@
           "id": "pack_tactics",
           "name": "Pack Tactics",
           "description": "Gains advantage on attacks when allies are nearby.",
-          "effects": ["advantage_on_attack"]
+          "effects": ["advantage_on_attack"],
+          "range": 0.0,
+          "recharge": 0
         }
       ]
     }

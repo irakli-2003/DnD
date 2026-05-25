@@ -1,7 +1,7 @@
 package com.dnd.model.combat;
 
-import com.dnd.model.item.Armor;
-import com.dnd.model.item.ArmorMaterial;
+import com.dnd.model.item.armors.Armor;
+import com.dnd.model.item.armors.ArmorMaterial;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,15 +19,20 @@
           "id": "ember_breath",
           "name": "Ember Breath",
           "description": "Exhales a cone of scorching embers.",
-          "effects": ["burn", "area_damage"]
+          "effects": ["burn", "area_damage"],
+          "range": 15.0,
+          "recharge": 3
         },
         {
           "id": "wing_buffet",
           "name": "Wing Buffet",
           "description": "Strikes nearby foes with a winged gust.",
-          "effects": ["knockback"]
+          "effects": ["knockback"],
+          "range": 5.0,
+          "recharge": 1
         }
-      ]
+      ],
+      "languages": ["common"]
     }
   ]
 }

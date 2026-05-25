@@ -1,6 +1,6 @@
 package com.dnd.model.item;
 
-public class Item {
+public abstract class Item {
     private String id;
     private String name;
     private String type;
@@ -10,10 +10,10 @@ public class Item {
     private ItemDamage damage;
     private ItemDurability durability;
 
-    public Item() {
+    protected Item() {
     }
 
-    public Item(String id, String name, String type, String description, int valueGold, double weight, ItemDamage damage, ItemDurability durability) {
+    protected Item(String id, String name, String type, String description, int valueGold, double weight, ItemDamage damage, ItemDurability durability) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -146,5 +146,3 @@ public class Item {
         }
     }
 }
-
-

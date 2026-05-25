@@ -1,4 +1,4 @@
-package com.dnd.model.item;
+package com.dnd.model.item.armors;
 
 public enum ArmorMaterial {
     NONE,

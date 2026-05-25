@@ -1,4 +1,6 @@
-package com.dnd.model.item;
+package com.dnd.model.item.armors;
+
+import com.dnd.model.item.Item;
 
 public class Armor extends Item {
     private ArmorMaterial material;

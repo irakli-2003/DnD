@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -107,5 +108,69 @@ public class CampaignStorage {
         String trimmed = input.trim().toLowerCase(Locale.ROOT);
         String sanitized = trimmed.replaceAll("[^a-z0-9\\-_]+", "-");
         return sanitized.replaceAll("(^-+|-+$)", "");
+    }
+
+    public String normalizeCampaignName(String input) {
+        return sanitizeName(input);
+    }
+
+    public String renameCampaign(String currentName, String requestedName) throws IOException {
+        ensureInitialized();
+
+        String normalizedCurrent = sanitizeName(currentName);
+        if (normalizedCurrent.isEmpty()) {
+            throw new IllegalArgumentException("Campaign name is required.");
+        }
+
+        Path currentPath = customCampaignRoot.resolve(normalizedCurrent);
+        if (!Files.exists(currentPath)) {
+            throw new IllegalArgumentException("Unknown campaign: " + normalizedCurrent);
+        }
+
+        String normalizedRequested = sanitizeName(requestedName);
+        if (normalizedRequested.isEmpty()) {
+            throw new IllegalArgumentException("New campaign name is required.");
+        }
+
+        if (normalizedRequested.equals(normalizedCurrent)) {
+            return normalizedCurrent;
+        }
+
+        String uniqueName = ensureUniqueName(normalizedRequested);
+        Path newPath = customCampaignRoot.resolve(uniqueName);
+        Files.move(currentPath, newPath);
+        return uniqueName;
+    }
+
+    public boolean deleteCampaign(String name) throws IOException {
+        ensureInitialized();
+
+        String normalized = sanitizeName(name);
+        if (normalized.isEmpty()) {
+            return false;
+        }
+
+        Path campaignPath = customCampaignRoot.resolve(normalized);
+        if (!Files.exists(campaignPath)) {
+            return false;
+        }
+
+        deleteDirectory(campaignPath);
+        return true;
+    }
+
+    private void deleteDirectory(Path path) throws IOException {
+        if (!Files.exists(path)) {
+            return;
+        }
+        Files.walk(path)
+            .sorted(Comparator.reverseOrder())
+            .forEach(current -> {
+                try {
+                    Files.deleteIfExists(current);
+                } catch (IOException ignored) {
+                    // Best-effort delete; ignored entries will remain.
+                }
+            });
     }
 }

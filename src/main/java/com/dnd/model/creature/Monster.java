@@ -13,11 +13,13 @@ public class Monster {
     private ChallengeRating challengeRating;
     private CoreStats stats;
     private List<Ability> abilities;
+    private List<String> languages;
 
     public Monster() {
     }
 
-    public Monster(String id, String name, String description, String type, ChallengeRating challengeRating, CoreStats stats, List<Ability> abilities) {
+    public Monster(String id, String name, String description, String type, ChallengeRating challengeRating,
+                   CoreStats stats, List<Ability> abilities, List<String> languages) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -25,6 +27,7 @@ public class Monster {
         this.challengeRating = challengeRating;
         this.stats = stats;
         this.abilities = abilities;
+        this.languages = languages;
     }
 
     public String getId() {
@@ -82,5 +85,12 @@ public class Monster {
     public void setAbilities(List<Ability> abilities) {
         this.abilities = abilities;
     }
-}
 
+    public List<String> getLanguages() {
+        return languages;
+    }
+
+    public void setLanguages(List<String> languages) {
+        this.languages = languages;
+    }
+}

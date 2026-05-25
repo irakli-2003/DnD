@@ -1,10 +1,10 @@
 package com.dnd.model.character.equipment;
 
-import com.dnd.model.item.BodyArmor;
-import com.dnd.model.item.HandArmor;
-import com.dnd.model.item.HeadArmor;
+import com.dnd.model.item.armors.BodyArmor;
+import com.dnd.model.item.armors.HandArmor;
+import com.dnd.model.item.armors.HeadArmor;
 import com.dnd.model.item.Item;
-import com.dnd.model.item.LegArmor;
+import com.dnd.model.item.armors.LegArmor;
 
 import java.util.List;
 

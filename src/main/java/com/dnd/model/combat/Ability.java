@@ -7,15 +7,19 @@ public class Ability {
     private String name;
     private String description;
     private List<String> effects;
+    private double range;
+    private int recharge;
 
     public Ability() {
     }
 
-    public Ability(String id, String name, String description, List<String> effects) {
+    public Ability(String id, String name, String description, List<String> effects, double range, int recharge) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.effects = effects;
+        this.range = range;
+        this.recharge = recharge;
     }
 
     public String getId() {
@@ -49,6 +53,20 @@ public class Ability {
     public void setEffects(List<String> effects) {
         this.effects = effects;
     }
+
+    public double getRange() {
+        return range;
+    }
+
+    public void setRange(double range) {
+        this.range = range;
+    }
+
+    public int getRecharge() {
+        return recharge;
+    }
+
+    public void setRecharge(int recharge) {
+        this.recharge = recharge;
+    }
 }
-
-

@@ -1,10 +1,10 @@
-package com.dnd.model.item;
+package com.dnd.model.item.armors;
 
-public class BodyArmor extends Armor {
-    public BodyArmor() {
+public class HeadArmor extends Armor {
+    public HeadArmor() {
     }
 
-    public BodyArmor(String id, String name, String type, String description, int valueGold, double weight,
+    public HeadArmor(String id, String name, String type, String description, int valueGold, double weight,
                      ItemDamage damage, ItemDurability durability, ArmorMaterial material, int armorClassBonus) {
         super(id, name, type, description, valueGold, weight, damage, durability, material, armorClassBonus);
     }

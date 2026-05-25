@@ -6,23 +6,21 @@ import com.dnd.model.combat.Effect;
 
 import java.util.List;
 
-public class Weapon extends Item {
+public abstract class Weapon extends Item {
     private boolean dualWield;
     private Damage damage;
-    private boolean magical;
     private CoreStats minRequiredCoreStats;
     private List<Effect> effects;
 
-    public Weapon() {
+    protected Weapon() {
     }
 
-    public Weapon(String id, String name, String type, String description, int valueGold, double weight,
-                  ItemDamage itemDamage, ItemDurability durability, boolean dualWield, Damage damage,
-                  boolean magical, CoreStats minRequiredCoreStats, List<Effect> effects) {
+    protected Weapon(String id, String name, String type, String description, int valueGold, double weight,
+                     ItemDamage itemDamage, ItemDurability durability, boolean dualWield, Damage damage,
+                     CoreStats minRequiredCoreStats, List<Effect> effects) {
         super(id, name, type, description, valueGold, weight, itemDamage, durability);
         this.dualWield = dualWield;
         this.damage = damage;
-        this.magical = magical;
         this.minRequiredCoreStats = minRequiredCoreStats;
         this.effects = effects;
     }
@@ -43,14 +41,6 @@ public class Weapon extends Item {
         this.damage = damage;
     }
 
-    public boolean isMagical() {
-        return magical;
-    }
-
-    public void setMagical(boolean magical) {
-        this.magical = magical;
-    }
-
     public CoreStats getMinRequiredCoreStats() {
         return minRequiredCoreStats;
     }
@@ -67,4 +57,3 @@ public class Weapon extends Item {
         this.effects = effects;
     }
 }
-

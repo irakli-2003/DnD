@@ -8,6 +8,8 @@ public interface Page {
     String getBody();
 
     List<CommandSpec> getCommands();
+
+    default Page getParent() {
+        return null;
+    }
 }
-
-

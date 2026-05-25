@@ -33,24 +33,12 @@ This document provides a high-level overview of how the DnD homebrew system shou
   - **Create default campaign**: copies the default campaign into custom campaigns.
   - **Create blank campaign**: same structure/files as default, but empty arrays.
 
-## Campaign Storage Layout
-Project storage is organized into three packages (directories):
-- `src/main/java/com/dnd` (project core package): implementation logic.
-- `src/main/resources/data/default-campaign/` (default campaign package):
-  - `world/` JSON files for classes, races, items, spells.
-  - `players/` JSON files for player data.
-  - This package is read-only from the CLI and used as a template.
-- `src/main/resources/data/custom-campaigns/` (custom campaigns package):
-  - One subfolder per custom campaign.
-  - Same structure and JSON files as the default campaign.
-  - Editable through the CLI.
-
 ## JSON Data Guidelines
 - **Descriptive values** are strings (e.g., name, description).
 - **Logic-driven values** are numeric or boolean (e.g., stats, bonuses, effects).
 - **Collections** use arrays of nested objects (e.g., player items, spells).
 - **Stats** use a structured stat block (strength, dexterity, constitution, intelligence, wisdom, charisma).
-- **Abilities** are objects (id, name, description, effects).
+- **Abilities** are objects (id, name, description, effects, range, recharge).
 - **Enums** such as habitat and challenge rating are stored as strings for readability.
 
 ## Data Model and Persistence
@@ -61,7 +49,7 @@ Project storage is organized into three packages (directories):
   - **CombatStats**: armor class, initiative, speed, hit points, temporary HP tracking, inspiration, proficiency bonus, death saves.
   - **SavingThrows**: saving throw modifiers for each core stat.
   - **Equipment**: armor slots, hand slots, battle-ready items, stored items.
-  - **Items**: `Item` base class with `Armor` and `Weapon` subclasses (and armor slot subclasses).
+  - **Items**: `Item` base class with `Armor`, `Weapon`, `AlchemyItem`, and `Book` subclasses.
   - **Damage**: damage type logic and resolution against armor.
 - JSON persistence uses repositories that support create, read, update, delete (CRUD):
   - `com.dnd.data.JsonRepository` handles file I/O and list management.
@@ -72,21 +60,37 @@ Project storage is organized into three packages (directories):
 - `com.dnd.model.character.stats`: core stats, skills, combat stats, saving throws.
 - `com.dnd.model.character.equipment`: equipment slots and loadouts.
 - `com.dnd.model.creature`: NPCs, monsters, beasts, creature enums.
-- `com.dnd.model.item`: base items, armor, weapons, materials.
-- `com.dnd.model.magic`: spells, abilities, effects.
-- `com.dnd.model.combat`: damage and damage types.
-- `com.dnd.model.world`: places and world objects.
+- `com.dnd.model.item`: base items, armor, weapons, books.
+- `com.dnd.model.item.alchemy`: alchemy items.
+- `com.dnd.model.item.books`: books.
+- `com.dnd.model.magic`: spells and casting.
+- `com.dnd.model.combat`: damage, effects, abilities.
+- `com.dnd.model.world`: places, languages, world objects.
+- `com.dnd.model.alchemy`: alchemy ingredients.
 
 ## Spell Model Notes
 - `Spell.school` uses `com.dnd.model.magic.School`.
 - `Spell.castingMethod` uses `com.dnd.model.magic.CastingMethod`.
-- `Spell.effects` is a list of `com.dnd.model.magic.Effect` objects.
+- `Spell.effects` is a list of `com.dnd.model.combat.Effect` objects.
 - `Spell.damage` uses `com.dnd.model.combat.Damage`.
 - `Spell.concentration` uses `com.dnd.model.magic.Concentration` with difficulty/required roll rules.
 
-## UI Mode (Deferred)
-- A separate entry point is reserved for the UI application.
-- UI-specific details should not impact the CLI flow or domain model.
+## Id Registry
+- The campaign includes an `id-registry.json` in the `world/` package.
+- `com.dnd.data.IdHandler` loads existing ids from the registry and can add/remove entries.
+- Registry entries store the owning JSON file so ids can be resolved to their source data.
+
+## Campaign Storage Layout
+Project storage is organized into three packages (directories):
+- `src/main/java/com/dnd` (project core package): implementation logic.
+- `src/main/resources/data/default-campaign/` (default campaign package):
+  - `world/` JSON files for classes, races, items, spells, languages, alchemy ingredients, books, and id registry.
+  - `players/` JSON files for player data.
+  - This package is read-only from the CLI and used as a template.
+- `src/main/resources/data/custom-campaigns/` (custom campaigns package):
+  - One subfolder per custom campaign.
+  - Same structure and JSON files as the default campaign.
+  - Editable through the CLI.
 
 ## Packaging and Distribution
 - The project should build into a runnable artifact (e.g., a fat JAR).

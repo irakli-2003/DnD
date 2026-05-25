@@ -32,4 +32,9 @@ public class LandingPage implements Page {
             new CommandSpec("player", "Player mode (not implemented yet)", playerPage)
         );
     }
+
+    @Override
+    public Page getParent() {
+        return null;
+    }
 }

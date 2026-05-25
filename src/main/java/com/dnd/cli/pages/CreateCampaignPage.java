@@ -14,11 +14,17 @@ public class CreateCampaignPage implements Page {
     private final CliSession session;
     private final CampaignStorage storage;
     private final Page dmMenuPage;
+    private Page parent;
 
-    public CreateCampaignPage(CliSession session, CampaignStorage storage, Page dmMenuPage) {
+    public CreateCampaignPage(CliSession session, CampaignStorage storage, Page dmMenuPage, Page parent) {
         this.session = session;
         this.storage = storage;
         this.dmMenuPage = dmMenuPage;
+        this.parent = parent;
+    }
+
+    public void setParent(Page parent) {
+        this.parent = parent;
     }
 
     @Override
@@ -37,6 +43,11 @@ public class CreateCampaignPage implements Page {
             new CommandSpec("default", "Copy the default campaign", selectedSession -> createCampaign(selectedSession, false)),
             new CommandSpec("blank", "Create a blank campaign", selectedSession -> createCampaign(selectedSession, true))
         );
+    }
+
+    @Override
+    public Page getParent() {
+        return parent;
     }
 
     private Page createCampaign(CliSession selectedSession, boolean blank) {

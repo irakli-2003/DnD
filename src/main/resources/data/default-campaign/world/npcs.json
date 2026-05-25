@@ -14,7 +14,8 @@
         "wisdom": 10,
         "charisma": 15
       },
-      "traits": ["brave", "strategist"]
+      "traits": ["brave", "strategist"],
+      "languages": ["common"]
     }
   ]
 }
