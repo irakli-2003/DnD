@@ -2,6 +2,7 @@ package com.dnd.cli.pages.player;
 
 import com.dnd.cli.core.CliSession;
 import com.dnd.cli.core.CommandSpec;
+import com.dnd.cli.core.ConsoleIO;
 import com.dnd.cli.core.Page;
 import com.dnd.data.CampaignRepositories;
 import com.dnd.data.DataAccessException;
@@ -62,6 +63,15 @@ public class PlayerCharacterSelectionPage implements Page {
             String label = pc.getName() != null && !pc.getName().isEmpty() ? pc.getName() : pc.getId();
             String characterId = pc.getId();
             commands.add(new CommandSpec(label, "Play as " + label, selectedSession -> {
+                ConsoleIO console = selectedSession.getConsole();
+                if (pc.hasPassword()) {
+                    console.print("Enter password for " + label + ": ");
+                    String attempt = console.readLine();
+                    if (!pc.checkPassword(attempt)) {
+                        console.println("Incorrect password.");
+                        return this;
+                    }
+                }
                 selectedSession.setActivePlayerCharacterId(characterId);
                 return homePage;
             }));

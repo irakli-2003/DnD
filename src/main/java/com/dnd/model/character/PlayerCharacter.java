@@ -2,6 +2,7 @@ package com.dnd.model.character;
 
 import com.dnd.model.character.stats.CoreStats;
 import com.dnd.model.interfaces.Printable;
+import com.dnd.security.PasswordHasher;
 
 import java.util.List;
 
@@ -17,6 +18,15 @@ public class PlayerCharacter implements Printable {
     private CoreStats stats;
     private List<PlayerItem> items;
     private List<PlayerSpell> spells;
+    /**
+     * Salted hash of this character's player-mode access password (never the
+     * plaintext password itself - see {@link PasswordHasher}). {@code null}
+     * means no password has been set, so player mode won't gate access to
+     * this character.
+     */
+    private String passwordHash;
+    /** Random per-character salt paired with {@link #passwordHash}. */
+    private String passwordSalt;
 
     public PlayerCharacter() {
     }
@@ -97,6 +107,44 @@ public class PlayerCharacter implements Printable {
 
     public void setSpells(List<PlayerSpell> spells) {
         this.spells = spells;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+
+    /** @return {@code true} if a password has been set for this character. */
+    public boolean hasPassword() {
+        return passwordHash != null && !passwordHash.isEmpty();
+    }
+
+    /** Hashes {@code rawPassword} with a freshly generated salt and stores the result. */
+    public void setPassword(String rawPassword) {
+        this.passwordSalt = PasswordHasher.generateSalt();
+        this.passwordHash = PasswordHasher.hash(rawPassword, passwordSalt);
+    }
+
+    /**
+     * @return {@code true} if {@code rawPassword} matches this character's stored
+     *         password, or if no password has been set (open access).
+     */
+    public boolean checkPassword(String rawPassword) {
+        if (!hasPassword()) {
+            return true;
+        }
+        return PasswordHasher.matches(rawPassword, passwordSalt, passwordHash);
     }
 
     @Override

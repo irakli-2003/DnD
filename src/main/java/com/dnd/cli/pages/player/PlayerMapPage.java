@@ -78,6 +78,7 @@ public class PlayerMapPage implements Page {
     @Override
     public List<CommandSpec> getCommands() {
         return Arrays.asList(
+            new CommandSpec("stats",    "View your character's stats",          this::handleStats),
             new CommandSpec("move",     "Move to a new cell",                    this::handleMove),
             new CommandSpec("pickup",   "Pick up a pickable item on your cell",   this::handlePickup),
             new CommandSpec("drop",     "Drop a carried item",                   this::handleDrop),
@@ -87,6 +88,17 @@ public class PlayerMapPage implements Page {
     }
 
     // ── Command handlers ──────────────────────────────────────────────────────
+
+    private Page handleStats(CliSession session) {
+        ConsoleIO console = session.getConsole();
+        PlayerCharacter pc = token.getCharacter();
+        if (pc == null) {
+            console.println("No character data available.");
+            return this;
+        }
+        PlayerModeSupport.printStats(console, pc, repos);
+        return this;
+    }
 
     private Page handleMove(CliSession session) {
         ConsoleIO console = session.getConsole();
@@ -316,15 +328,14 @@ public class PlayerMapPage implements Page {
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private String displayName(PlayerCharacter pc) {
-        return pc.getName() != null && !pc.getName().isEmpty() ? pc.getName() : pc.getId();
+        return PlayerModeSupport.displayName(pc);
     }
 
     /** 5 ft. per grid square is the standard D&D conversion. */
     private int speedCells() {
         PlayerCharacter pc = token.getCharacter();
         CharacterRace race = pc != null ? repos.races().getById(pc.getRaceId()) : null;
-        int speedFeet = race != null ? race.getSpeed() : 30;
-        return Math.max(speedFeet / 5, 1);
+        return PlayerModeSupport.speedCells(race);
     }
 
     private List<MapItemToken> itemsOnCurrentCell() {

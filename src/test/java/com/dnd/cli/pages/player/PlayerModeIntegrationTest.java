@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -51,6 +52,7 @@ public class PlayerModeIntegrationTest {
         PlayerCharacter pc = new PlayerCharacter("hero1", "Alyx", "fighter", "human", 1,
             new CoreStats(15, 12, 14, 10, 11, 8), null,
             Collections.singletonList(new PlayerCharacter.PlayerSpell("frost_bolt", 1, true)));
+        pc.setPassword("hunter2");
         repos.players().add(pc);
 
         // Seed an item and a spell so inventory/abilities have something to show.
@@ -83,9 +85,19 @@ public class PlayerModeIntegrationTest {
         session.setCampaignContext(new com.dnd.cli.core.CampaignContext("test", campaignRoot));
 
         // Step 2: choose the character via the dynamically generated command.
+        // First try the wrong password - should be rejected and not advance the session.
         List<CommandSpec> characterCommands = characterPage.getCommands();
         assertEquals(1, characterCommands.size());
         assertEquals("Alyx", characterCommands.get(0).getKey());
+        console.queueInput("wrong-password");
+        Page afterWrongPassword = characterCommands.get(0).getAction().execute(session);
+        assertEquals(characterPage, afterWrongPassword);
+        assertTrue(console.getAllOutput().contains("Incorrect password."));
+        assertNull(session.getActivePlayerCharacterId());
+
+        // Now with the correct password.
+        console.getOutput().clear();
+        console.queueInput("hunter2");
         Page afterSelect = characterCommands.get(0).getAction().execute(session);
         assertEquals(homePage, afterSelect);
         assertEquals("hero1", session.getActivePlayerCharacterId());
@@ -113,6 +125,12 @@ public class PlayerModeIntegrationTest {
         String body = mapPage.getBody();
         assertTrue(body.contains("Your position: (2, 2)"));
         assertTrue(body.contains("Speed: 6 squares/turn"));
+
+        // Step 6b: stats are also viewable while in the map session.
+        console.getOutput().clear();
+        run(mapPage.getCommands(), "stats", session);
+        assertTrue(console.getAllOutput().contains("Name: Alyx"));
+        assertTrue(console.getAllOutput().contains("Speed: 30 ft. (6 squares/turn)"));
 
         // Step 7: pick up the sword sitting on the same cell.
         console.getOutput().clear();

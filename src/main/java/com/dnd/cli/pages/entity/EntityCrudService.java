@@ -10,6 +10,7 @@ import com.dnd.data.DataAccessException;
 import com.dnd.data.IdHandler;
 import com.dnd.data.JsonRepository;
 import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.world.map.GameMap;
 
 import java.beans.Introspector;
@@ -70,6 +71,10 @@ public class EntityCrudService {
 
         setEntityName(entity, name);
         propertyEditor.populateProperties(entity, console, false, repositories, 0);
+
+        if (entity instanceof PlayerCharacter) {
+            promptNewPassword(console, (PlayerCharacter) entity);
+        }
 
         String id = idHandler.generateId(name, type.getRegistryPath());
         setEntityId(entity, id);
@@ -169,6 +174,16 @@ public class EntityCrudService {
         console.println("Enter updated values. Leave blank to keep current values.");
         propertyEditor.populateProperties(existing, console, true, repositories, 0);
 
+        if (existing instanceof PlayerCharacter) {
+            PlayerCharacter pc = (PlayerCharacter) existing;
+            String prompt = pc.hasPassword() ? "Change password? (y/n, default n): " : "Set a password? (y/n, default n): ";
+            console.print(prompt);
+            String answer = console.readLine().trim().toLowerCase(Locale.ROOT);
+            if (answer.equals("y") || answer.equals("yes")) {
+                promptNewPassword(console, pc);
+            }
+        }
+
         setEntityId(existing, selected.getId());
 
         try {
@@ -194,6 +209,28 @@ public class EntityCrudService {
         } catch (DataAccessException | IllegalArgumentException e) {
             console.println("Failed to update Map: " + e.getMessage());
         }
+    }
+
+    /**
+     * Prompts twice for a new password (with confirmation) and hashes it onto
+     * {@code pc} via {@link PlayerCharacter#setPassword(String)}. Leaving the
+     * first prompt blank cancels without changing the existing password.
+     */
+    private void promptNewPassword(ConsoleIO console, PlayerCharacter pc) {
+        console.print("Set a password for this character (blank to skip): ");
+        String password = console.readLine();
+        if (password == null || password.isEmpty()) {
+            console.println("No password set.");
+            return;
+        }
+        console.print("Confirm password: ");
+        String confirm = console.readLine();
+        if (!password.equals(confirm)) {
+            console.println("Passwords did not match. Password not set.");
+            return;
+        }
+        pc.setPassword(password);
+        console.println("Password set.");
     }
 
     public void delete(CliSession session, CampaignRepositories repositories, IdHandler idHandler, EntityType type) {
@@ -363,6 +400,10 @@ public class EntityCrudService {
                 }
                 String name = descriptor.getName();
                 if ("id".equals(name)) {
+                    continue;
+                }
+                // Never surface the raw password hash/salt when viewing a player character.
+                if ("passwordHash".equals(name) || "passwordSalt".equals(name)) {
                     continue;
                 }
                 Object value = descriptor.getReadMethod().invoke(entity);

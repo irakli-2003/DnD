@@ -59,6 +59,12 @@ public class EntityPropertyEditor {
             if (!editing && "name".equals(name)) {
                 continue;
             }
+            // Passwords are handled by a dedicated prompt (see EntityCrudService's
+            // PLAYER-specific handling) so the raw salt/hash never appears as a
+            // free-text field here.
+            if ("passwordHash".equals(name) || "passwordSalt".equals(name)) {
+                continue;
+            }
 
             if (descriptor.getPropertyType() == CoreStats.class) {
                 CoreStats stats;

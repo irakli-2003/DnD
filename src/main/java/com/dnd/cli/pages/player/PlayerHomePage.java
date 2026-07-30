@@ -7,7 +7,6 @@ import com.dnd.cli.core.Page;
 import com.dnd.data.CampaignRepositories;
 import com.dnd.model.character.CharacterRace;
 import com.dnd.model.character.PlayerCharacter;
-import com.dnd.model.character.stats.CoreStats;
 import com.dnd.model.item.Item;
 import com.dnd.model.magic.Spell;
 import com.dnd.model.world.map.GameMap;
@@ -44,7 +43,7 @@ public class PlayerHomePage implements Page {
     @Override
     public String getTitle() {
         PlayerCharacter pc = activeCharacter();
-        return "Player: " + (pc != null ? displayName(pc) : "(no character selected)");
+        return "Player: " + (pc != null ? PlayerModeSupport.displayName(pc) : "(no character selected)");
     }
 
     @Override
@@ -54,8 +53,8 @@ public class PlayerHomePage implements Page {
             return "No character selected.";
         }
         CampaignRepositories repos = PlayerModeSupport.repositoriesFor(session);
-        String className = resolveName(repos.classes().getById(pc.getClassId()));
-        String raceName = resolveName(repos.races().getById(pc.getRaceId()));
+        String className = PlayerModeSupport.resolveName(repos.classes().getById(pc.getClassId()));
+        String raceName = PlayerModeSupport.resolveName(repos.races().getById(pc.getRaceId()));
 
         StringBuilder sb = new StringBuilder();
         sb.append("Level ").append(pc.getLevel()).append(' ').append(raceName).append(' ').append(className).append('\n');
@@ -89,28 +88,7 @@ public class PlayerHomePage implements Page {
             return this;
         }
         CampaignRepositories repos = PlayerModeSupport.repositoriesFor(s);
-
-        console.println();
-        console.println("Name: " + displayName(pc));
-        console.println("Class: " + resolveName(repos.classes().getById(pc.getClassId())));
-        console.println("Race: " + resolveName(repos.races().getById(pc.getRaceId())));
-        console.println("Level: " + pc.getLevel());
-
-        CoreStats stats = pc.getStats();
-        if (stats != null) {
-            console.println("Strength: " + stats.getStrength());
-            console.println("Dexterity: " + stats.getDexterity());
-            console.println("Constitution: " + stats.getConstitution());
-            console.println("Intelligence: " + stats.getIntelligence());
-            console.println("Wisdom: " + stats.getWisdom());
-            console.println("Charisma: " + stats.getCharisma());
-        }
-
-        CharacterRace race = repos.races().getById(pc.getRaceId());
-        if (race != null) {
-            console.println("Speed: " + race.getSpeed() + " ft. (" + speedCells(race) + " squares/turn)");
-        }
-        console.println();
+        PlayerModeSupport.printStats(console, pc, repos);
         return this;
     }
 
@@ -234,7 +212,7 @@ public class PlayerHomePage implements Page {
             PlayerToken token = findToken(map, pc.getId());
             if (token != null) {
                 CharacterRace race = repos.races().getById(pc.getRaceId());
-                int visionRadius = speedCells(race) + 2; // see a bit further than you can move in one turn
+                int visionRadius = PlayerModeSupport.speedCells(race) + 2; // see a bit further than you can move in one turn
                 return new PlayerMapPage(map, token, repos, visionRadius, this);
             }
         }
@@ -265,34 +243,12 @@ public class PlayerHomePage implements Page {
         return null;
     }
 
-    /** 5 ft. per grid square is the standard D&D conversion. */
-    private int speedCells(CharacterRace race) {
-        int speedFeet = race != null ? race.getSpeed() : 30;
-        return Math.max(speedFeet / 5, 1);
-    }
-
     private int parseIndex(String input, int size) {
         try {
             int idx = Integer.parseInt(input) - 1;
             return idx >= 0 && idx < size ? idx : -1;
         } catch (NumberFormatException e) {
             return -1;
-        }
-    }
-
-    private String displayName(PlayerCharacter pc) {
-        return pc.getName() != null && !pc.getName().isEmpty() ? pc.getName() : pc.getId();
-    }
-
-    private String resolveName(Object entity) {
-        if (entity == null) {
-            return "Unknown";
-        }
-        try {
-            Object name = entity.getClass().getMethod("getName").invoke(entity);
-            return name != null ? name.toString() : "Unknown";
-        } catch (Exception e) {
-            return "Unknown";
         }
     }
 }
