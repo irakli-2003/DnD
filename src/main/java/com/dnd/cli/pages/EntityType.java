@@ -14,6 +14,7 @@ import com.dnd.model.creature.Npc;
 import com.dnd.model.item.Item;
 import com.dnd.model.item.books.Book;
 import com.dnd.model.magic.Spell;
+import com.dnd.model.world.Dice;
 import com.dnd.model.world.Language;
 import com.dnd.model.world.Place;
 
@@ -33,6 +34,7 @@ public enum EntityType {
     LANGUAGE("language", "Language", Language.class, CampaignRepositories::languages, "world/languages.json"),
     ALCHEMY_INGREDIENT("alchemy", "Alchemy Ingredient", AlchemyIngredient.class, CampaignRepositories::alchemyIngredients, "world/alchemy-ingredients.json"),
     BOOK("book", "Book", Book.class, CampaignRepositories::books, "world/books.json"),
+    DICE("dice", "Dice", Dice.class, CampaignRepositories::dice, "world/dice.json"),
     PLAYER("player", "Player", PlayerCharacter.class, CampaignRepositories::players, "players/players.json");
 
     private final String key;
@@ -73,4 +75,3 @@ public enum EntityType {
         return registryPath;
     }
 }
-

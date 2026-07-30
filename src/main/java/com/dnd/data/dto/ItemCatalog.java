@@ -1,9 +1,11 @@
 package com.dnd.data.dto;
 
 import com.dnd.model.item.Item;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
 
+@JsonDeserialize(using = ItemCatalogDeserializer.class)
 public class ItemCatalog {
     private List<Item> items;
 

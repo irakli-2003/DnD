@@ -4,7 +4,11 @@
       "id": "fighter",
       "name": "Fighter",
       "description": "A master of martial combat.",
-      "hitDie": 10,
+        "hitDie": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
       "primaryAbilities": ["strength", "constitution"],
       "savingThrowBonuses": {
         "strength": 2,

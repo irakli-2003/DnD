@@ -23,6 +23,7 @@ public final class CampaignTemplate {
     public static final String LANGUAGES_FILE = "languages.json";
     public static final String ALCHEMY_INGREDIENTS_FILE = "alchemy-ingredients.json";
     public static final String BOOKS_FILE = "books.json";
+    public static final String DICE_FILE = "dice.json";
     public static final String ID_REGISTRY_FILE = "id-registry.json";
 
     private CampaignTemplate() {
@@ -49,6 +50,7 @@ public final class CampaignTemplate {
         Files.write(worldPath.resolve(LANGUAGES_FILE), (blank ? blankLanguagesJson() : defaultLanguagesJson()).getBytes(StandardCharsets.UTF_8));
         Files.write(worldPath.resolve(ALCHEMY_INGREDIENTS_FILE), (blank ? blankAlchemyIngredientsJson() : defaultAlchemyIngredientsJson()).getBytes(StandardCharsets.UTF_8));
         Files.write(worldPath.resolve(BOOKS_FILE), (blank ? blankBooksJson() : defaultBooksJson()).getBytes(StandardCharsets.UTF_8));
+        Files.write(worldPath.resolve(DICE_FILE), (blank ? blankDiceJson() : defaultDiceJson()).getBytes(StandardCharsets.UTF_8));
         Files.write(worldPath.resolve(ID_REGISTRY_FILE), (blank ? blankIdRegistryJson() : defaultIdRegistryJson()).getBytes(StandardCharsets.UTF_8));
     }
 
@@ -59,7 +61,11 @@ public final class CampaignTemplate {
             "      \"id\": \"fighter\",\n" +
             "      \"name\": \"Fighter\",\n" +
             "      \"description\": \"A master of martial combat.\",\n" +
-            "      \"hitDie\": 10,\n" +
+            "      \"hitDie\": {\n" +
+            "        \"id\": \"d10\",\n" +
+            "        \"name\": \"d10\",\n" +
+            "        \"sides\": 10\n" +
+            "      },\n" +
             "      \"primaryAbilities\": [\"strength\", \"constitution\"],\n" +
             "      \"savingThrowBonuses\": {\n" +
             "        \"strength\": 2,\n" +
@@ -305,6 +311,43 @@ public final class CampaignTemplate {
             "}\n";
     }
 
+    public static String defaultDiceJson() {
+        return "{\n" +
+            "  \"dice\": [\n" +
+            "    {\n" +
+            "      \"id\": \"d4\",\n" +
+            "      \"name\": \"d4\",\n" +
+            "      \"sides\": 4\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d6\",\n" +
+            "      \"name\": \"d6\",\n" +
+            "      \"sides\": 6\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d8\",\n" +
+            "      \"name\": \"d8\",\n" +
+            "      \"sides\": 8\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d10\",\n" +
+            "      \"name\": \"d10\",\n" +
+            "      \"sides\": 10\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d12\",\n" +
+            "      \"name\": \"d12\",\n" +
+            "      \"sides\": 12\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d20\",\n" +
+            "      \"name\": \"d20\",\n" +
+            "      \"sides\": 20\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+    }
+
     public static String defaultIdRegistryJson() {
         return "{\n" +
             "  \"entries\": [\n" +
@@ -359,6 +402,30 @@ public final class CampaignTemplate {
             "    {\n" +
             "      \"id\": \"common_tongue\",\n" +
             "      \"file\": \"world/books.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d4\",\n" +
+            "      \"file\": \"world/dice.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d6\",\n" +
+            "      \"file\": \"world/dice.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d8\",\n" +
+            "      \"file\": \"world/dice.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d10\",\n" +
+            "      \"file\": \"world/dice.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d12\",\n" +
+            "      \"file\": \"world/dice.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"d20\",\n" +
+            "      \"file\": \"world/dice.json\"\n" +
             "    }\n" +
             "  ]\n" +
             "}\n";
@@ -515,6 +582,10 @@ public final class CampaignTemplate {
 
     public static String blankBooksJson() {
         return "{\n  \"books\": []\n}\n";
+    }
+
+    public static String blankDiceJson() {
+        return "{\n  \"dice\": []\n}\n";
     }
 
     public static String blankIdRegistryJson() {

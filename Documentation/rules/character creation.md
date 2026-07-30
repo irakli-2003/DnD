@@ -19,7 +19,8 @@ Character Creation / პერსონაჟის შექმნა
    * Intelligence — ცოდნა და განათლება
    * Wisdom — სიბრძნე და გამოცდილება
    * Charisma — ქარიზმატულობა
-   თითოეულ ability score-ს აქვს შესაბამისი modifier, რომელიც გამოიყენება თითქმის ყველა მექანიკაში. 
+
+თითოეულ ability score-ს აქვს შესაბამისი modifier, რომელიც გამოიყენება თითქმის ყველა მექანიკაში. 
 
 ### Ability Score Generation: Point Buy
    ამ სისტემაში ability scores მიიღება მხოლოდ Point Buy მეთოდით.

@@ -2,10 +2,11 @@ package com.dnd.model.creature;
 
 import com.dnd.model.character.stats.CoreStats;
 import com.dnd.model.combat.Ability;
+import com.dnd.model.interfaces.Printable;
 
 import java.util.List;
 
-public class Monster {
+public class Monster implements Printable {
     private String id;
     private String name;
     private String description;
@@ -92,5 +93,10 @@ public class Monster {
 
     public void setLanguages(List<String> languages) {
         this.languages = languages;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }

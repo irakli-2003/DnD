@@ -104,6 +104,7 @@ public class CliApp {
 
     private static void renderPage(Page page, boolean canGoBack) {
         System.out.println();
+        System.out.println("==================================================");
         System.out.println(page.getTitle());
         System.out.println(page.getBody());
         System.out.println();
@@ -120,6 +121,7 @@ public class CliApp {
         } else {
             System.out.println("- back (b) : No previous page");
         }
+        System.out.println("==================================================");
         System.out.println();
     }
 }

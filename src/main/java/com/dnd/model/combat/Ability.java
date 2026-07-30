@@ -1,8 +1,9 @@
 package com.dnd.model.combat;
 
+import com.dnd.model.interfaces.Printable;
 import java.util.List;
 
-public class Ability {
+public class Ability implements Printable {
     private String id;
     private String name;
     private String description;
@@ -68,5 +69,10 @@ public class Ability {
 
     public void setRecharge(int recharge) {
         this.recharge = recharge;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }

@@ -2,10 +2,11 @@ package com.dnd.model.creature;
 
 import com.dnd.model.character.stats.CoreStats;
 import com.dnd.model.combat.Ability;
+import com.dnd.model.interfaces.Printable;
 
 import java.util.List;
 
-public class Beast {
+public class Beast implements Printable {
     private String id;
     private String name;
     private String description;
@@ -81,6 +82,11 @@ public class Beast {
 
     public void setAbilities(List<Ability> abilities) {
         this.abilities = abilities;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }
 

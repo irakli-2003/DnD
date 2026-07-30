@@ -8,24 +8,52 @@ import com.dnd.data.CampaignRepositories;
 import com.dnd.data.IdHandler;
 import com.dnd.data.JsonRepository;
 import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.world.Dice;
+import com.dnd.model.item.Item;
+import com.dnd.model.item.Weapon;
+import com.dnd.model.item.alchemy.AlchemyItem;
+import com.dnd.model.item.alchemy.Decoction;
+import com.dnd.model.item.alchemy.Oil;
+import com.dnd.model.item.alchemy.Poison;
+import com.dnd.model.item.alchemy.Potion;
+import com.dnd.model.item.armors.Armor;
+import com.dnd.model.item.books.Book;
+import com.dnd.model.item.weapons.magic_weapons.DarkWeapon;
+import com.dnd.model.item.weapons.magic_weapons.DivineWeapon;
+import com.dnd.model.item.weapons.magic_weapons.ElementalWeapon;
+import com.dnd.model.item.weapons.magic_weapons.IllusionWeapon;
+import com.dnd.model.item.weapons.magic_weapons.MagicWeapon;
+import com.dnd.model.item.weapons.magic_weapons.NatureWeapon;
+import com.dnd.model.item.weapons.magic_weapons.NecromancyWeapon;
+import com.dnd.model.item.weapons.magic_weapons.TeleportationWeapon;
+import com.dnd.model.item.weapons.magic_weapons.TransmutationWeapon;
+import com.dnd.model.item.weapons.magic_weapons.WitcherSignsWeapon;
+import com.dnd.model.item.weapons.physical_weapons.FinesseWeapon;
+import com.dnd.model.item.weapons.physical_weapons.MeleeWeapon;
+import com.dnd.model.item.weapons.physical_weapons.PhysicalWeapon;
+import com.dnd.model.item.weapons.physical_weapons.RangedWeapon;
+import com.dnd.model.item.weapons.physical_weapons.ThrowingWeapon;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import java.io.IOException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class EntitySelectionPage implements Page {
     public enum Operation {
@@ -50,6 +78,61 @@ public class EntitySelectionPage implements Page {
             return body;
         }
     }
+
+    private static final int MAX_NESTED_DEPTH = 4;
+    private static final List<Class<?>> ITEM_TYPES = Arrays.asList(
+        Armor.class,
+        Book.class,
+        Potion.class,
+        Poison.class,
+        Oil.class,
+        Decoction.class,
+        MeleeWeapon.class,
+        RangedWeapon.class,
+        FinesseWeapon.class,
+        ThrowingWeapon.class,
+        DarkWeapon.class,
+        DivineWeapon.class,
+        ElementalWeapon.class,
+        IllusionWeapon.class,
+        NatureWeapon.class,
+        NecromancyWeapon.class,
+        TeleportationWeapon.class,
+        TransmutationWeapon.class,
+        WitcherSignsWeapon.class
+    );
+    private static final List<Class<?>> WEAPON_TYPES = Arrays.asList(
+        MeleeWeapon.class,
+        RangedWeapon.class,
+        FinesseWeapon.class,
+        ThrowingWeapon.class,
+        DarkWeapon.class,
+        DivineWeapon.class,
+        ElementalWeapon.class,
+        IllusionWeapon.class,
+        NatureWeapon.class,
+        NecromancyWeapon.class,
+        TeleportationWeapon.class,
+        TransmutationWeapon.class,
+        WitcherSignsWeapon.class
+    );
+    private static final List<Class<?>> ALCHEMY_TYPES = Arrays.asList(
+        Potion.class,
+        Poison.class,
+        Oil.class,
+        Decoction.class
+    );
+    private static final List<Class<?>> MAGIC_WEAPON_TYPES = Arrays.asList(
+        DarkWeapon.class,
+        DivineWeapon.class,
+        ElementalWeapon.class,
+        IllusionWeapon.class,
+        NatureWeapon.class,
+        NecromancyWeapon.class,
+        TeleportationWeapon.class,
+        TransmutationWeapon.class,
+        WitcherSignsWeapon.class
+    );
 
     private final Operation operation;
     private Page parent;
@@ -124,14 +207,18 @@ public class EntitySelectionPage implements Page {
 
         Object entity;
         try {
-            entity = type.getModelClass().getDeclaredConstructor().newInstance();
+            entity = createInstanceForType(type.getModelClass(), scanner, type.getLabel());
+            if (entity == null) {
+                System.out.println("Failed to initialize " + type.getLabel() + ".");
+                return this;
+            }
         } catch (Exception e) {
             System.out.println("Failed to initialize " + type.getLabel() + ": " + e.getMessage());
             return this;
         }
 
         setEntityName(entity, name);
-        populateProperties(entity, scanner, false, repositories);
+        populateProperties(entity, scanner, false, repositories, 0);
 
         String id = idHandler.generateId(name, type.getRegistryPath());
         setEntityId(entity, id);
@@ -182,7 +269,7 @@ public class EntitySelectionPage implements Page {
         printEntityDetails(existing);
 
         System.out.println("Enter updated values. Leave blank to keep current values.");
-        populateProperties(existing, scanner, true, repositories);
+        populateProperties(existing, scanner, true, repositories, 0);
 
         setEntityId(existing, selected.getId());
 
@@ -437,7 +524,6 @@ public class EntitySelectionPage implements Page {
         }
     }
 
-
     @SuppressWarnings("unchecked")
     private List<Object> listEntities(CampaignRepositories repositories, EntityType type) throws IOException {
         JsonRepository repository = type.getRepository(repositories);
@@ -473,87 +559,6 @@ public class EntitySelectionPage implements Page {
             Method method = entity.getClass().getMethod(methodName, String.class);
             method.invoke(entity, value);
         } catch (Exception ignored) {
-        }
-    }
-
-    private void populateProperties(Object entity, Scanner scanner, boolean editing, CampaignRepositories repositories) {
-        PropertyDescriptor[] descriptors;
-        try {
-            descriptors = Introspector.getBeanInfo(entity.getClass(), Object.class).getPropertyDescriptors();
-        } catch (Exception e) {
-            System.out.println("Failed to inspect fields: " + e.getMessage());
-            return;
-        }
-
-        Arrays.sort(descriptors, Comparator.comparing(PropertyDescriptor::getName));
-        for (PropertyDescriptor descriptor : descriptors) {
-            if (descriptor.getWriteMethod() == null || descriptor.getReadMethod() == null) {
-                continue;
-            }
-            String name = descriptor.getName();
-            if ("id".equals(name)) {
-                continue;
-            }
-            if (!editing && "name".equals(name)) {
-                continue;
-            }
-
-            if (descriptor.getPropertyType() == CoreStats.class) {
-                CoreStats stats = null;
-                try {
-                    stats = (CoreStats) descriptor.getReadMethod().invoke(entity);
-                } catch (Exception ignored) {
-                    stats = null;
-                }
-                CoreStats updated = editCoreStats(stats, scanner, editing);
-                if (updated != null) {
-                    try {
-                        descriptor.getWriteMethod().invoke(entity, updated);
-                    } catch (Exception e) {
-                        System.out.println("Failed to set " + name + ": " + e.getMessage());
-                    }
-                }
-                continue;
-            }
-
-            if (!isSupportedType(descriptor)) {
-                System.out.println("Skipping " + name + " (unsupported type).");
-                continue;
-            }
-
-            Object currentValue = null;
-            if (editing) {
-                try {
-                    currentValue = descriptor.getReadMethod().invoke(entity);
-                } catch (Exception ignored) {
-                    currentValue = null;
-                }
-            }
-
-            List<OptionEntry> options = getOptions(descriptor, repositories);
-            if (!options.isEmpty()) {
-                printOptions(options);
-            }
-
-            while (true) {
-                String prompt = buildPrompt(name, descriptor, currentValue, editing, options);
-                System.out.print(prompt);
-                String input = scanner.nextLine().trim();
-                if (input.isEmpty()) {
-                    break;
-                }
-
-                try {
-                    Object parsed = parseValue(input, descriptor, name, options);
-                    descriptor.getWriteMethod().invoke(entity, parsed);
-                    break;
-                } catch (IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-                } catch (Exception e) {
-                    System.out.println("Failed to set " + name + ": " + e.getMessage());
-                    break;
-                }
-            }
         }
     }
 
@@ -670,12 +675,6 @@ public class EntitySelectionPage implements Page {
     private void validateIntRange(String fieldName, int value) {
         if ("level".equalsIgnoreCase(fieldName)) {
             requireRange(fieldName, value, 1, 30);
-        }
-        if ("hitDie".equalsIgnoreCase(fieldName)) {
-            List<Integer> allowed = Arrays.asList(4, 6, 8, 10, 12);
-            if (!allowed.contains(value)) {
-                throw new IllegalArgumentException("Enter a standard hit die: 4, 6, 8, 10, or 12.");
-            }
         }
     }
 
@@ -877,6 +876,407 @@ public class EntitySelectionPage implements Page {
         List<?> get() throws IOException;
     }
 
+    private void populateProperties(Object entity, Scanner scanner, boolean editing, CampaignRepositories repositories, int depth) {
+        if (entity == null) {
+            return;
+        }
+        if (depth > MAX_NESTED_DEPTH) {
+            System.out.println("Nested object depth limit reached for " + entity.getClass().getSimpleName() + ".");
+            return;
+        }
+        PropertyDescriptor[] descriptors;
+        try {
+            descriptors = Introspector.getBeanInfo(entity.getClass(), Object.class).getPropertyDescriptors();
+        } catch (Exception e) {
+            System.out.println("Failed to inspect fields: " + e.getMessage());
+            return;
+        }
+
+        Arrays.sort(descriptors, Comparator.comparing(PropertyDescriptor::getName));
+        for (PropertyDescriptor descriptor : descriptors) {
+            if (descriptor.getWriteMethod() == null || descriptor.getReadMethod() == null) {
+                continue;
+            }
+            String name = descriptor.getName();
+            if ("id".equals(name)) {
+                continue;
+            }
+            if (!editing && "name".equals(name)) {
+                continue;
+            }
+
+            if (descriptor.getPropertyType() == CoreStats.class) {
+                CoreStats stats = null;
+                try {
+                    stats = (CoreStats) descriptor.getReadMethod().invoke(entity);
+                } catch (Exception ignored) {
+                    stats = null;
+                }
+                CoreStats updated = editCoreStats(stats, scanner, editing);
+                if (updated != null) {
+                    try {
+                        descriptor.getWriteMethod().invoke(entity, updated);
+                    } catch (Exception e) {
+                        System.out.println("Failed to set " + name + ": " + e.getMessage());
+                    }
+                }
+                continue;
+            }
+
+            if (descriptor.getPropertyType() == Dice.class) {
+                handleDiceField(entity, descriptor, scanner, editing, repositories);
+                continue;
+            }
+
+            if (Map.class.isAssignableFrom(descriptor.getPropertyType())) {
+                handleMapField(entity, descriptor, scanner, editing);
+                continue;
+            }
+
+            if (List.class.isAssignableFrom(descriptor.getPropertyType())) {
+                if (handleListField(entity, descriptor, scanner, editing, repositories, depth)) {
+                    continue;
+                }
+            }
+
+            if (!isSupportedType(descriptor)) {
+                if (handleNestedObjectField(entity, descriptor, scanner, editing, repositories, depth)) {
+                    continue;
+                }
+                System.out.println("Skipping " + name + " (unsupported type). ");
+                continue;
+            }
+
+            Object currentValue = null;
+            if (editing) {
+                try {
+                    currentValue = descriptor.getReadMethod().invoke(entity);
+                } catch (Exception ignored) {
+                    currentValue = null;
+                }
+            }
+
+            List<OptionEntry> options = getOptions(descriptor, repositories);
+            if (!options.isEmpty()) {
+                printOptions(options);
+            }
+
+            while (true) {
+                String prompt = buildPrompt(name, descriptor, currentValue, editing, options);
+                System.out.print(prompt);
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()) {
+                    break;
+                }
+
+                try {
+                    Object parsed = parseValue(input, descriptor, name, options);
+                    descriptor.getWriteMethod().invoke(entity, parsed);
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                } catch (Exception e) {
+                    System.out.println("Failed to set " + name + ": " + e.getMessage());
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean handleNestedObjectField(Object entity,
+                                            PropertyDescriptor descriptor,
+                                            Scanner scanner,
+                                            boolean editing,
+                                            CampaignRepositories repositories,
+                                            int depth) {
+        Class<?> type = descriptor.getPropertyType();
+        if (type.isPrimitive() || type.isEnum() || type == String.class) {
+            return false;
+        }
+        if (Modifier.isAbstract(type.getModifiers()) || type.isInterface()) {
+            Class<?> resolved = resolveConcreteClass(type, scanner, toLabel(descriptor.getName()));
+            if (resolved == null) {
+                return false;
+            }
+            type = resolved;
+        }
+
+        Object currentValue = null;
+        if (editing) {
+            try {
+                currentValue = descriptor.getReadMethod().invoke(entity);
+            } catch (Exception ignored) {
+                currentValue = null;
+            }
+        }
+
+        if (!shouldCreateNested(scanner, toLabel(descriptor.getName()), editing, currentValue != null)) {
+            return true;
+        }
+
+        Object nested = currentValue;
+        if (nested == null || nested.getClass() != type) {
+            nested = instantiateType(type);
+        }
+        if (nested == null) {
+            System.out.println("Skipping " + descriptor.getName() + " (no concrete type available).");
+            return true;
+        }
+
+        boolean nestedEditing = editing && currentValue != null;
+        populateProperties(nested, scanner, nestedEditing, repositories, depth + 1);
+        try {
+            descriptor.getWriteMethod().invoke(entity, nested);
+        } catch (Exception e) {
+            System.out.println("Failed to set " + descriptor.getName() + ": " + e.getMessage());
+        }
+        return true;
+    }
+
+    private boolean handleListField(Object entity,
+                                    PropertyDescriptor descriptor,
+                                    Scanner scanner,
+                                    boolean editing,
+                                    CampaignRepositories repositories,
+                                    int depth) {
+        Class<?> elementType = getListElementType(descriptor);
+        if (elementType == null) {
+            return false;
+        }
+        if (elementType == String.class) {
+            return false;
+        }
+
+        Object currentValue = null;
+        if (editing) {
+            try {
+                currentValue = descriptor.getReadMethod().invoke(entity);
+            } catch (Exception ignored) {
+                currentValue = null;
+            }
+        }
+
+        if (!shouldCreateNested(scanner, toLabel(descriptor.getName()), editing, currentValue != null)) {
+            return true;
+        }
+
+        List<Object> entries = new ArrayList<>();
+        int count = promptCount(scanner, "How many " + toLabel(descriptor.getName()) + " entries", editing);
+        for (int i = 0; i < count; i++) {
+            Class<?> concreteType = resolveConcreteClass(elementType, scanner, toLabel(descriptor.getName()));
+            if (concreteType == null) {
+                System.out.println("Skipping entry " + (i + 1) + " (no concrete type available).");
+                continue;
+            }
+            Object entry = instantiateType(concreteType);
+            if (entry == null) {
+                System.out.println("Skipping entry " + (i + 1) + " (failed to initialize).");
+                continue;
+            }
+            System.out.println("Entering " + toLabel(descriptor.getName()) + " entry " + (i + 1) + " of " + count + ":");
+            populateProperties(entry, scanner, false, repositories, depth + 1);
+            entries.add(entry);
+        }
+
+        try {
+            descriptor.getWriteMethod().invoke(entity, entries);
+        } catch (Exception e) {
+            System.out.println("Failed to set " + descriptor.getName() + ": " + e.getMessage());
+        }
+        return true;
+    }
+
+    private void handleMapField(Object entity, PropertyDescriptor descriptor, Scanner scanner, boolean editing) {
+        if (!shouldCreateNested(scanner, toLabel(descriptor.getName()), editing, false)) {
+            return;
+        }
+
+        Class<?> keyType = getMapKeyType(descriptor);
+        Class<?> valueType = getMapValueType(descriptor);
+        if (keyType != String.class || (valueType != String.class && valueType != Integer.class && valueType != int.class)) {
+            System.out.println("Skipping " + descriptor.getName() + " (unsupported map types).");
+            return;
+        }
+
+        int count = promptCount(scanner, "How many " + toLabel(descriptor.getName()) + " entries", editing);
+        Map<String, Object> values = new HashMap<>();
+        for (int i = 0; i < count; i++) {
+            System.out.print("Enter key " + (i + 1) + ": ");
+            String key = scanner.nextLine().trim();
+            if (key.isEmpty()) {
+                System.out.println("Key cannot be empty.");
+                i--;
+                continue;
+            }
+            Object parsedValue = promptMapValue(scanner, valueType, i + 1);
+            values.put(key, parsedValue);
+        }
+
+        try {
+            descriptor.getWriteMethod().invoke(entity, values);
+        } catch (Exception e) {
+            System.out.println("Failed to set " + descriptor.getName() + ": " + e.getMessage());
+        }
+    }
+
+    private Object promptMapValue(Scanner scanner, Class<?> valueType, int index) {
+        while (true) {
+            System.out.print("Enter value " + index + " (" + valueType.getSimpleName() + "): ");
+            String input = scanner.nextLine().trim();
+            if (valueType == String.class) {
+                return input;
+            }
+            if (input.isEmpty()) {
+                System.out.println("Value cannot be empty.");
+                continue;
+            }
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid integer.");
+            }
+        }
+    }
+
+    private int promptCount(Scanner scanner, String label, boolean editing) {
+        while (true) {
+            System.out.print(label + " (0 to skip): ");
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                return 0;
+            }
+            try {
+                int value = Integer.parseInt(input);
+                if (value < 0) {
+                    System.out.println("Enter 0 or a positive integer.");
+                    continue;
+                }
+                return value;
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid integer.");
+            }
+        }
+    }
+
+    private boolean shouldCreateNested(Scanner scanner, String label, boolean editing, boolean hasCurrent) {
+        if (!editing) {
+            System.out.print("Add " + label + "? (y/n, default y): ");
+        } else {
+            System.out.print("Edit " + label + "? (y/n, default n): ");
+        }
+        String input = scanner.nextLine().trim().toLowerCase(Locale.ROOT);
+        if (input.isEmpty()) {
+            return !editing;
+        }
+        return input.equals("y") || input.equals("yes");
+    }
+
+    private Class<?> getListElementType(PropertyDescriptor descriptor) {
+        Type generic = descriptor.getReadMethod().getGenericReturnType();
+        if (!(generic instanceof ParameterizedType)) {
+            return null;
+        }
+        Type arg = ((ParameterizedType) generic).getActualTypeArguments()[0];
+        if (arg instanceof Class<?>) {
+            return (Class<?>) arg;
+        }
+        return null;
+    }
+
+    private Class<?> getMapKeyType(PropertyDescriptor descriptor) {
+        Type generic = descriptor.getReadMethod().getGenericReturnType();
+        if (!(generic instanceof ParameterizedType)) {
+            return null;
+        }
+        Type arg = ((ParameterizedType) generic).getActualTypeArguments()[0];
+        if (arg instanceof Class<?>) {
+            return (Class<?>) arg;
+        }
+        return null;
+    }
+
+    private Class<?> getMapValueType(PropertyDescriptor descriptor) {
+        Type generic = descriptor.getReadMethod().getGenericReturnType();
+        if (!(generic instanceof ParameterizedType)) {
+            return null;
+        }
+        Type arg = ((ParameterizedType) generic).getActualTypeArguments()[1];
+        if (arg instanceof Class<?>) {
+            return (Class<?>) arg;
+        }
+        return null;
+    }
+
+    private Object createInstanceForType(Class<?> modelClass, Scanner scanner, String label) {
+        Class<?> resolved = resolveConcreteClass(modelClass, scanner, label);
+        if (resolved == null) {
+            return null;
+        }
+        return instantiateType(resolved);
+    }
+
+    private Object instantiateType(Class<?> type) {
+        try {
+            return type.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Class<?> resolveConcreteClass(Class<?> type, Scanner scanner, String label) {
+        if (type == null) {
+            return null;
+        }
+        if (!Modifier.isAbstract(type.getModifiers()) && !type.isInterface()) {
+            return type;
+        }
+
+        List<Class<?>> options = getConcreteOptions(type);
+        if (options.isEmpty()) {
+            System.out.println("No concrete types available for " + label + ".");
+            return null;
+        }
+
+        System.out.println("Choose " + label + " type:");
+        for (int i = 0; i < options.size(); i++) {
+            System.out.println("  " + (i + 1) + ") " + options.get(i).getSimpleName());
+        }
+
+        while (true) {
+            System.out.print("Enter choice (1-" + options.size() + ", blank to cancel): ");
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                return null;
+            }
+            try {
+                int index = Integer.parseInt(input);
+                if (index < 1 || index > options.size()) {
+                    System.out.println("Enter a number between 1 and " + options.size() + ".");
+                    continue;
+                }
+                return options.get(index - 1);
+            } catch (NumberFormatException e) {
+                System.out.println("Enter a valid number.");
+            }
+        }
+    }
+
+    private List<Class<?>> getConcreteOptions(Class<?> type) {
+        if (type == Item.class) {
+            return ITEM_TYPES;
+        }
+        if (type == Weapon.class || type == PhysicalWeapon.class) {
+            return WEAPON_TYPES;
+        }
+        if (type == AlchemyItem.class) {
+            return ALCHEMY_TYPES;
+        }
+        if (type == MagicWeapon.class) {
+            return MAGIC_WEAPON_TYPES;
+        }
+        return new ArrayList<>();
+    }
+
     private boolean isSupportedType(PropertyDescriptor descriptor) {
         Class<?> type = descriptor.getPropertyType();
         if (type == String.class || type == Integer.class || type == int.class
@@ -908,5 +1308,56 @@ public class EntitySelectionPage implements Page {
             return String.join(", ", items.stream().map(String::valueOf).collect(Collectors.toList()));
         }
         return String.valueOf(value);
+    }
+
+    private void handleDiceField(Object entity,
+                                 PropertyDescriptor descriptor,
+                                 Scanner scanner,
+                                 boolean editing,
+                                 CampaignRepositories repositories) {
+        List<OptionEntry> options = loadIdOptions(repositories, "Dice", repositories.dice()::list);
+        if (options.isEmpty()) {
+            System.out.println("No dice available. Create dice first.");
+            return;
+        }
+
+        Object currentValue = null;
+        if (editing) {
+            try {
+                currentValue = descriptor.getReadMethod().invoke(entity);
+            } catch (Exception ignored) {
+                currentValue = null;
+            }
+        }
+
+        printOptions(options);
+        while (true) {
+            String prompt = buildPrompt(descriptor.getName(), descriptor, currentValue, editing, options);
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) {
+                break;
+            }
+            try {
+                List<String> selected = parseOptionInput(input, options);
+                if (selected.isEmpty()) {
+                    System.out.println("Choose a dice option.");
+                    continue;
+                }
+                String diceId = selected.get(0);
+                Dice dice = repositories.dice().getById(diceId);
+                if (dice == null) {
+                    System.out.println("Unknown dice: " + diceId);
+                    continue;
+                }
+                descriptor.getWriteMethod().invoke(entity, dice);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Failed to set " + descriptor.getName() + ": " + e.getMessage());
+                break;
+            }
+        }
     }
 }

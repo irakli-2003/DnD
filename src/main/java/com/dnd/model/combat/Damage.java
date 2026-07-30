@@ -1,24 +1,26 @@
 package com.dnd.model.combat;
 
+import com.dnd.model.interfaces.Printable;
 import com.dnd.model.item.armors.Armor;
 import com.dnd.model.item.armors.ArmorMaterial;
+import com.dnd.model.world.Dice;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class Damage {
-    private int amount;
+public class Damage implements Printable {
+    private Dice amount;
     private String typeId;
 
     public Damage() {
     }
 
-    public Damage(int amount) {
+    public Damage(Dice amount) {
         this.amount = amount;
     }
 
-    public Damage(int amount, String typeId) {
+    public Damage(Dice amount, String typeId) {
         this.amount = amount;
         this.typeId = typeId;
     }
@@ -155,16 +157,17 @@ public class Damage {
                 break;
         }
 
-        int damageToTarget = (int) Math.round(amount * targetMultiplier);
-        int damageToArmor = (int) Math.round(amount * armorMultiplier);
+        int baseAmount = getAmountValue();
+        int damageToTarget = (int) Math.round(baseAmount * targetMultiplier);
+        int damageToArmor = (int) Math.round(baseAmount * armorMultiplier);
         return new DamageResolution(damageToTarget, damageToArmor, triggeredEffects);
     }
 
-    public int getAmount() {
+    public Dice getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Dice amount) {
         this.amount = amount;
     }
 
@@ -174,6 +177,15 @@ public class Damage {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
+    }
+
+    @Override
+    public String toString() {
+        return (amount != null ? amount.toString() : "0") + " " + (typeId != null ? typeId : "damage");
+    }
+
+    private int getAmountValue() {
+        return amount == null ? 0 : amount.getSides();
     }
 
     public static class DamageResolution {
@@ -215,5 +227,4 @@ public class Damage {
         }
     }
 }
-
 

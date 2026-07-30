@@ -1,8 +1,9 @@
 package com.dnd.model.character;
 
+import com.dnd.model.interfaces.Printable;
 import java.util.Map;
 
-public class CharacterRace {
+public class CharacterRace implements Printable {
     private String id;
     private String name;
     private String description;
@@ -59,6 +60,9 @@ public class CharacterRace {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
+    }
 }
-
-

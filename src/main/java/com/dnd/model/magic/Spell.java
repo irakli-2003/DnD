@@ -2,11 +2,12 @@ package com.dnd.model.magic;
 
 import com.dnd.model.combat.Damage;
 import com.dnd.model.combat.Effect;
+import com.dnd.model.interfaces.Printable;
 import com.dnd.model.item.Item;
 
 import java.util.List;
 
-public class Spell {
+public class Spell implements Printable {
     private String id;
     private String name;
     private String description;
@@ -154,5 +155,18 @@ public class Spell {
 
     public void setDamage(Damage damage) {
         this.damage = damage;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name != null ? name : id);
+        if (level > 0) {
+            sb.append(" (Level ").append(level).append(")");
+        }
+        if (school != null) {
+            sb.append(" [").append(school).append("]");
+        }
+        return sb.toString();
     }
 }

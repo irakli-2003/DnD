@@ -1,6 +1,8 @@
 package com.dnd.model.combat;
 
-public class Effect {
+import com.dnd.model.interfaces.Printable;
+
+public class Effect implements Printable {
     private String id;
     private String name;
     private String description;
@@ -76,6 +78,19 @@ public class Effect {
 
     public void setHealingAmount(int healingAmount) {
         this.healingAmount = healingAmount;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name != null ? name : id);
+        if (damaging && damageAmount > 0) {
+            sb.append(" (").append(damageAmount).append(" damage)");
+        }
+        if (healing && healingAmount > 0) {
+            sb.append(" (").append(healingAmount).append(" healing)");
+        }
+        return sb.toString();
     }
 }
 

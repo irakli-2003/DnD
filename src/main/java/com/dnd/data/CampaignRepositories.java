@@ -14,6 +14,7 @@ import com.dnd.data.dto.SpellCatalog;
 import com.dnd.data.dto.LanguageCatalog;
 import com.dnd.data.dto.AlchemyIngredientCatalog;
 import com.dnd.data.dto.BookCatalog;
+import com.dnd.data.dto.DiceCatalog;
 import com.dnd.model.character.CharacterClass;
 import com.dnd.model.character.CharacterRace;
 import com.dnd.model.character.PlayerCharacter;
@@ -28,6 +29,7 @@ import com.dnd.model.world.Place;
 import com.dnd.model.alchemy.AlchemyIngredient;
 import com.dnd.model.item.books.Book;
 import com.dnd.model.world.Language;
+import com.dnd.model.world.Dice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -51,6 +53,7 @@ public class CampaignRepositories {
     private JsonRepository<Language, LanguageCatalog> languages;
     private JsonRepository<AlchemyIngredient, AlchemyIngredientCatalog> alchemyIngredients;
     private JsonRepository<Book, BookCatalog> books;
+    private JsonRepository<Dice, DiceCatalog> dice;
 
     public CampaignRepositories(Path campaignRoot) {
         this.paths = new CampaignPaths(campaignRoot);
@@ -265,5 +268,20 @@ public class CampaignRepositories {
             );
         }
         return books;
+    }
+
+    public JsonRepository<Dice, DiceCatalog> dice() {
+        if (dice == null) {
+            dice = new JsonRepository<>(
+                paths.diceFile(),
+                mapper,
+                DiceCatalog::new,
+                DiceCatalog.class,
+                DiceCatalog::getDice,
+                DiceCatalog::setDice,
+                Dice::getId
+            );
+        }
+        return dice;
     }
 }

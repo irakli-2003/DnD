@@ -1,10 +1,11 @@
 package com.dnd.model.creature;
 
 import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.interfaces.Printable;
 
 import java.util.List;
 
-public class Npc {
+public class Npc implements Printable {
     private String id;
     private String name;
     private String description;
@@ -91,5 +92,10 @@ public class Npc {
 
     public void setLanguages(List<String> languages) {
         this.languages = languages;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }

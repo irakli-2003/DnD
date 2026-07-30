@@ -1,8 +1,9 @@
 package com.dnd.model.item.books;
 
+import com.dnd.model.interfaces.Printable;
 import com.dnd.model.item.Item;
 
-public class Book extends Item {
+public class Book extends Item implements Printable {
     private String overview;
 
     public Book() {
@@ -21,6 +22,11 @@ public class Book extends Item {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    @Override
+    public String toString() {
+        return getName() != null ? getName() : getId();
     }
 }
 

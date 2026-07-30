@@ -8,13 +8,19 @@ import java.util.Locale;
 public enum School {
     WITCHER_SIGNS("witcher signs"),
     ELEMENTAL("elemental magic"),
-    DIVINE("divine  magic"),
-    DARK("dark  magic"),
+    DIVINE("divine magic"),
+    DARK("dark magic"),
     NATURE("nature-based magic"),
     ILLUSION("illusion"),
     NECROMANCY("necromancy"),
     TRANSMUTATION("transmutation"),
-    TELEPORTATION("teleportation");
+    TELEPORTATION("teleportation"),
+    EVOCATION("evocation"),
+    ABJURATION("abjuration"),
+    CONJURATION("conjuration"),
+    DIVINATION("divination"),
+    ENCHANTMENT("enchantment"),
+    RESTORATION("restoration");
 
     private final String value;
 

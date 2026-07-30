@@ -3,6 +3,7 @@ package com.dnd.data;
 import com.dnd.model.character.CharacterClass;
 import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.world.Dice;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class JsonRepositoryTest {
             "fighter",
             "Fighter",
             "A master of martial combat.",
-            10,
+            new Dice("d10", "d10", 10),
             Arrays.asList("strength", "constitution"),
             Map.of("strength", 2)
         );

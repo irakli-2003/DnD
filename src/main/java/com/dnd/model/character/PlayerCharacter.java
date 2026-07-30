@@ -1,10 +1,11 @@
 package com.dnd.model.character;
 
 import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.interfaces.Printable;
 
 import java.util.List;
 
-public class PlayerCharacter {
+public class PlayerCharacter implements Printable {
     private String id;
     private String name;
     private String classId;
@@ -92,7 +93,12 @@ public class PlayerCharacter {
         this.spells = spells;
     }
 
-    public static class PlayerItem {
+    @Override
+    public String toString() {
+        return name != null ? name : id;
+    }
+
+    public static class PlayerItem implements Printable {
         private String itemId;
         private ItemCondition condition;
         private boolean equipped;
@@ -129,9 +135,14 @@ public class PlayerCharacter {
         public void setEquipped(boolean equipped) {
             this.equipped = equipped;
         }
+
+        @Override
+        public String toString() {
+            return itemId + (equipped ? " (equipped)" : "");
+        }
     }
 
-    public static class ItemCondition {
+    public static class ItemCondition implements Printable {
         private int durability;
 
         public ItemCondition() {
@@ -148,9 +159,14 @@ public class PlayerCharacter {
         public void setDurability(int durability) {
             this.durability = durability;
         }
+
+        @Override
+        public String toString() {
+            return "Durability: " + durability;
+        }
     }
 
-    public static class PlayerSpell {
+    public static class PlayerSpell implements Printable {
         private String spellId;
         private int rank;
         private boolean active;
@@ -186,6 +202,11 @@ public class PlayerCharacter {
 
         public void setActive(boolean active) {
             this.active = active;
+        }
+
+        @Override
+        public String toString() {
+            return spellId + " (Rank " + rank + ")" + (active ? "" : " [inactive]");
         }
     }
 }

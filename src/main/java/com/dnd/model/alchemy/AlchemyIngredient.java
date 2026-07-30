@@ -1,6 +1,8 @@
 package com.dnd.model.alchemy;
 
-public class AlchemyIngredient {
+import com.dnd.model.interfaces.Printable;
+
+public class AlchemyIngredient implements Printable {
     private String id;
     private String name;
     private String description;
@@ -36,6 +38,11 @@ public class AlchemyIngredient {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }
 

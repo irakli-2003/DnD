@@ -1,111 +1,139 @@
 # General Implementation Overview
 
 ## Purpose
-This document provides a high-level overview of how the DnD homebrew system should be implemented. Detailed design notes live in sub-packages under `Documentation/implementation/`.
+This document summarizes how the current DnD homebrew system is implemented, with emphasis on the CLI. Detailed flow notes live in `Documentation/implementation/user flow.md`.
+
+## Status Snapshot (Current Code)
+- **CLI mode** is implemented and is the active entry point.
+- **UI mode** is not implemented yet (placeholder only).
+- **Entity CRUD** (create, edit, delete, open) is implemented in the CLI for multiple entity types.
 
 ## Architecture Overview
-- **Pattern**: Use the Page Object Model (POM) to represent each navigable page/state.
-- **Modes**: Provide two entry points:
-  - **CLI mode**: primary implementation focus now.
-  - **UI mode**: reserved for later; keep a separate entry point.
+- **Pattern**: Page Object Model (POM). Each page provides title/body text and a command list.
+- **Controller**: `CliApp` wires pages and runs the render/input/transition loop.
+- **Core types**: `com.dnd.cli.core.Page`, `CommandSpec`, `CommandAction`, `CommandResolver`, `CliSession`.
 
-## Page Object Model (POM)
-- Each page is a class that:
-  - Knows its available commands (page links).
-  - Knows how to render its content and command list.
-  - Can resolve a user command to the next page (or an action).
-- A central controller (router) manages the current page and handles transitions.
+## CLI Runtime Behavior
+- The CLI loop renders the current page (title, body, commands) and waits for input.
+- Input is trimmed and case-insensitive.
+- Commands accept **unique prefixes** (e.g., `ex` for `exit`). Ambiguous prefixes are invalid.
+- Global commands:
+  - `exit` terminates the program.
+  - `back` or `b` returns to the parent page (if any).
+- Invalid input prints `invalid command` and re-prompts.
 
-## CLI Mode Behavior (Initial Target)
-- The CLI entry point runs an infinite loop that:
-  1. Displays the current page content and all available commands.
-  2. Waits for user input.
-  3. If input is invalid: prints `invalid command`, re-displays commands, and waits again.
-  4. If input is valid: transitions to the target page or performs an action.
-  5. Provides an **exit** command to terminate the loop and program.
+## Page Graph (Implemented)
+- **Landing Page**: `dm` -> Campaign Selection, `player` -> placeholder page.
+- **Campaign Selection**:
+  - `create` -> Create Campaign
+  - `rename` -> rename a campaign (with uniqueness handling)
+  - `delete` -> delete a campaign (requires `DELETE` confirmation)
+  - selecting a campaign name -> DM Menu
+- **Create Campaign**:
+  - `default` -> copy default campaign template
+  - `blank` -> same structure, empty arrays
+- **DM Menu**:
+  - `create`, `edit`, `delete`, `open` -> Entity Selection pages
+- **Entity Selection**:
+  - Choose a type, then CRUD actions based on the current operation.
 
-## Campaign Flow
-- Landing page asks whether the user is a Dungeon Master or a Player.
-- DM path goes to **campaign selection**:
-  - Choose an existing custom campaign, or
-  - Create a new campaign.
-- New campaign page provides:
-  - **Create default campaign**: copies the default campaign into custom campaigns.
-  - **Create blank campaign**: same structure/files as default, but empty arrays.
+## Entity Types (CLI CRUD)
+The CLI supports the following entity types (key -> label -> file):
+- `class` -> Class -> `world/classes.json`
+- `race` -> Race -> `world/races.json`
+- `item` -> Item -> `world/items.json`
+- `spell` -> Spell -> `world/spells.json`
+- `place` -> Place -> `world/places.json`
+- `effect` -> Effect -> `world/effects.json`
+- `damage-type` -> Damage Type -> `world/damage-types.json`
+- `beast` -> Beast -> `world/beasts.json`
+- `monster` -> Monster -> `world/monsters.json`
+- `npc` -> NPC -> `world/npcs.json`
+- `language` -> Language -> `world/languages.json`
+- `alchemy` -> Alchemy Ingredient -> `world/alchemy-ingredients.json`
+- `book` -> Book -> `world/books.json`
+- `player` -> Player -> `players/players.json`
+
+## Entity CRUD Behavior (Implementation Notes)
+- Entity creation/editing is **reflection-based** via Java bean getters/setters.
+- Supported field types:
+  - `String`, numeric primitives/wrappers, `boolean`, enums
+  - `List<String>`
+  - `CoreStats` (special prompt for STR/DEX/CON/INT/WIS/CHA)
+- **Nested objects** (non-primitive, non-enum) prompt recursively for their fields; lists of complex objects prompt for entry count and then walk each entry.
+- **Maps** with `String` keys and `String`/`int` values prompt for key/value entries (used by `savingThrowBonuses`, `abilityBonuses`, and `dictionary`).
+- Unsupported field types are skipped and logged as `Skipping <field> (unsupported type).`
+- During edit, blank input keeps the existing value; nested objects allow a per-field edit pass.
+- **Option lists** are provided for common foreign-key fields:
+  - `classId`, `raceId`, `itemId`, `spellId`, `languages`
+  - Users can enter an index or a custom value.
+- **Item creation** prompts for a concrete subtype (armor, book, alchemy items, physical/magic weapons) before collecting fields.
+- Delete and campaign deletion require a second confirmation (`DELETE`).
+
+## Campaign Storage Layout
+- Data root resolution:
+  - Uses `src/main/resources/data` when present (dev mode).
+  - Falls back to `data` when packaged (runtime mode).
+- Default template: `default-campaign/`
+- Custom campaigns: `custom-campaigns/<campaign-name>/`
+- Campaign name normalization:
+  - Lowercase, whitespace and invalid chars -> `-`
+  - Only `a-z`, `0-9`, `_`, `-` are preserved
+  - Unique names are auto-suffixed (`name-2`, `name-3`, ...)
+
+## Campaign Template Contents
+Each campaign has:
+- `world/`
+  - `classes.json`, `races.json`, `items.json`, `spells.json`, `places.json`
+  - `effects.json`, `damage-types.json`, `npcs.json`, `monsters.json`, `beasts.json`
+  - `languages.json`, `alchemy-ingredients.json`, `books.json`, `id-registry.json`
+- `players/`
+  - `players.json`
 
 ## JSON Data Guidelines
-- **Descriptive values** are strings (e.g., name, description).
-- **Logic-driven values** are numeric or boolean (e.g., stats, bonuses, effects).
-- **Collections** use arrays of nested objects (e.g., player items, spells).
+- **Descriptive values** are strings (name, description).
+- **Logic-driven values** are numeric or boolean (stats, bonuses, effects).
+- **Collections** use arrays of nested objects.
 - **Stats** use a structured stat block (strength, dexterity, constitution, intelligence, wisdom, charisma).
-- **Abilities** are objects (id, name, description, effects, range, recharge).
-- **Enums** such as habitat and challenge rating are stored as strings for readability.
+- **Enums** such as habitat and challenge rating are stored as strings.
 
 ## Data Model and Persistence
 - Model classes live under `src/main/java/com/dnd/model/`.
-- Core model groups:
-  - **CoreStats**: Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma.
-  - **Skills**: skill modifiers for Acrobatics through Survival.
-  - **CombatStats**: armor class, initiative, speed, hit points, temporary HP tracking, inspiration, proficiency bonus, death saves.
-  - **SavingThrows**: saving throw modifiers for each core stat.
-  - **Equipment**: armor slots, hand slots, battle-ready items, stored items.
-  - **Items**: `Item` base class with `Armor`, `Weapon`, `AlchemyItem`, and `Book` subclasses.
-  - **Damage**: damage type logic and resolution against armor.
-- JSON persistence uses repositories that support create, read, update, delete (CRUD):
-  - `com.dnd.data.JsonRepository` handles file I/O and list management.
+- JSON persistence uses repositories that support CRUD:
+  - `com.dnd.data.JsonRepository` for file I/O and list management.
   - `com.dnd.data.CampaignRepositories` exposes per-entity repositories.
-
-## Data Model Package Layout
-- `com.dnd.model.character`: characters, classes, races.
-- `com.dnd.model.character.stats`: core stats, skills, combat stats, saving throws.
-- `com.dnd.model.character.equipment`: equipment slots and loadouts.
-- `com.dnd.model.creature`: NPCs, monsters, beasts, creature enums.
-- `com.dnd.model.item`: base items, armor, weapons, books.
-- `com.dnd.model.item.alchemy`: alchemy items.
-- `com.dnd.model.item.books`: books.
-- `com.dnd.model.magic`: spells and casting.
-- `com.dnd.model.combat`: damage, effects, abilities.
-- `com.dnd.model.world`: places, languages, world objects.
-- `com.dnd.model.alchemy`: alchemy ingredients.
+- `com.dnd.data.CampaignPaths` defines canonical file locations for each entity.
 
 ## Spell Model Notes
 - `Spell.school` uses `com.dnd.model.magic.School`.
 - `Spell.castingMethod` uses `com.dnd.model.magic.CastingMethod`.
 - `Spell.effects` is a list of `com.dnd.model.combat.Effect` objects.
 - `Spell.damage` uses `com.dnd.model.combat.Damage`.
-- `Spell.concentration` uses `com.dnd.model.magic.Concentration` with difficulty/required roll rules.
+- `Spell.concentration` uses `com.dnd.model.magic.Concentration`.
 
 ## Id Registry
-- The campaign includes an `id-registry.json` in the `world/` package.
-- `com.dnd.data.IdHandler` loads existing ids from the registry and can add/remove entries.
-- Registry entries store the owning JSON file so ids can be resolved to their source data.
-
-## Campaign Storage Layout
-Project storage is organized into three packages (directories):
-- `src/main/java/com/dnd` (project core package): implementation logic.
-- `src/main/resources/data/default-campaign/` (default campaign package):
-  - `world/` JSON files for classes, races, items, spells, languages, alchemy ingredients, books, and id registry.
-  - `players/` JSON files for player data.
-  - This package is read-only from the CLI and used as a template.
-- `src/main/resources/data/custom-campaigns/` (custom campaigns package):
-  - One subfolder per custom campaign.
-  - Same structure and JSON files as the default campaign.
-  - Editable through the CLI.
+- Registry lives at `world/id-registry.json`.
+- `com.dnd.data.IdHandler`:
+  - Generates normalized, unique ids from names.
+  - Stores file ownership metadata (relative path).
+  - Saves best-effort; failures are tolerated.
 
 ## Packaging and Distribution
-- The project should build into a runnable artifact (e.g., a fat JAR).
-- Running the artifact should:
-  - Open a command-line window.
-  - Display the landing page and its available commands.
+- Maven builds a standard JAR with `com.dnd.cli.CliApp` as the main class.
+- Dependencies are not shaded by default; use the Maven build/run instructions in `README.md`.
 
-## Implementation Documentation Structure
-Sub-packages under `Documentation/implementation/` should include:
-- **cli/**: CLI flow, input parsing, and loop behavior.
-- **pages/**: Page Object Model definitions and page maps.
-- **routing/**: Navigation rules and transitions.
-- **domain/**: Rules, data, and game mechanics.
-- **persistence/**: Any storage or save/load strategy.
+## Documentation Structure (Current)
+- `Documentation/implementation/general implementation.md`: this overview.
+- `Documentation/implementation/user flow.md`: detailed CLI flow notes.
+- Future documentation folders (`cli/`, `pages/`, `routing/`, `domain/`, `persistence/`) are planned but not present yet.
 
-## Open Questions
-- Should invalid input be logged or just printed to console?
-- What is the minimum viable landing page content?
+## Known Issues
+
+### ~~Dice deserialization breaks Class catalog loading~~ (FIXED)
+- **Status**: Fixed with Jackson @JsonCreator support
+- **Resolution**: 
+  - Added @JsonCreator static factory method fromSides() to com.dnd.model.world.Dice
+  - The class now accepts both numeric values (e.g., "hitDie: 10) and full objects
+  - When deserializing from a number, the factory method automatically generates id and name as d{sides} format
+
+

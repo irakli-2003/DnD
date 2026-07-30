@@ -1,11 +1,12 @@
 package com.dnd.model.world;
 
 import com.dnd.model.creature.Habitat;
+import com.dnd.model.interfaces.Printable;
 
 import java.util.List;
 import java.util.Map;
 
-public class Place {
+public class Place implements Printable {
     private String id;
     private String name;
     private String description;
@@ -81,5 +82,10 @@ public class Place {
 
     public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }

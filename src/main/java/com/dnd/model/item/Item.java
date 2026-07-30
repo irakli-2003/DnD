@@ -1,6 +1,8 @@
 package com.dnd.model.item;
 
-public abstract class Item {
+import com.dnd.model.interfaces.Printable;
+
+public abstract class Item implements Printable {
     private String id;
     private String name;
     private String type;
@@ -88,7 +90,12 @@ public abstract class Item {
         this.durability = durability;
     }
 
-    public static class ItemDamage {
+    @Override
+    public String toString() {
+        return name != null ? name : id;
+    }
+
+    public static class ItemDamage implements Printable {
         private String dice;
         private String type;
 
@@ -115,9 +122,14 @@ public abstract class Item {
         public void setType(String type) {
             this.type = type;
         }
+
+        @Override
+        public String toString() {
+            return dice != null ? dice + " " + (type != null ? type : "damage") : "damage";
+        }
     }
 
-    public static class ItemDurability {
+    public static class ItemDurability implements Printable {
         private int max;
         private int current;
 
@@ -143,6 +155,11 @@ public abstract class Item {
 
         public void setCurrent(int current) {
             this.current = current;
+        }
+
+        @Override
+        public String toString() {
+            return current + "/" + max;
         }
     }
 }

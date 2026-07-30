@@ -28,7 +28,11 @@
         }
       ],
       "damage": {
-        "amount": 6,
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
         "typeId": "cold"
       }
     }

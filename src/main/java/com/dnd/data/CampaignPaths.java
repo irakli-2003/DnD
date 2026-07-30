@@ -80,4 +80,8 @@ public class CampaignPaths {
     public Path idRegistryFile() {
         return worldDir().resolve("id-registry.json");
     }
+
+    public Path diceFile() {
+        return worldDir().resolve("dice.json");
+    }
 }

@@ -1,10 +1,11 @@
 package com.dnd.model.world;
 
+import com.dnd.model.interfaces.Printable;
 import com.dnd.model.item.books.Book;
 
 import java.util.Map;
 
-public class Language {
+public class Language implements Printable {
     private String id;
     private String name;
     private Map<String, String> dictionary;
@@ -60,6 +61,11 @@ public class Language {
 
     public void setRequiredLongRests(int requiredLongRests) {
         this.requiredLongRests = requiredLongRests;
+    }
+
+    @Override
+    public String toString() {
+        return name != null ? name : id;
     }
 }
 
