@@ -1,5 +1,7 @@
 package com.dnd.data;
 
+import com.dnd.data.dto.MapCatalog;
+import com.dnd.model.world.map.GameMap;
 import com.dnd.data.dto.BeastCatalog;
 import com.dnd.data.dto.CharacterClassCatalog;
 import com.dnd.data.dto.CharacterRaceCatalog;
@@ -31,7 +33,6 @@ import com.dnd.model.item.books.Book;
 import com.dnd.model.world.Language;
 import com.dnd.model.world.Dice;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.nio.file.Path;
 
@@ -54,10 +55,11 @@ public class CampaignRepositories {
     private JsonRepository<AlchemyIngredient, AlchemyIngredientCatalog> alchemyIngredients;
     private JsonRepository<Book, BookCatalog> books;
     private JsonRepository<Dice, DiceCatalog> dice;
+    private JsonRepository<GameMap, MapCatalog> maps;
 
     public CampaignRepositories(Path campaignRoot) {
         this.paths = new CampaignPaths(campaignRoot);
-        this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        this.mapper = JsonMappers.create();
     }
 
     public JsonRepository<CharacterClass, CharacterClassCatalog> classes() {
@@ -283,5 +285,20 @@ public class CampaignRepositories {
             );
         }
         return dice;
+    }
+
+    public JsonRepository<GameMap, MapCatalog> maps() {
+        if (maps == null) {
+            maps = new JsonRepository<>(
+                paths.mapsFile(),
+                mapper,
+                MapCatalog::new,
+                MapCatalog.class,
+                MapCatalog::getMaps,
+                MapCatalog::setMaps,
+                GameMap::getId
+            );
+        }
+        return maps;
     }
 }

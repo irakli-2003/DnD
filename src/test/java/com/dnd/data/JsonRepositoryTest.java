@@ -52,7 +52,7 @@ public class JsonRepositoryTest {
             "fighter",
             "human",
             1,
-            new CoreStats(15, 12, 0, 0, 0, 0),
+            new CoreStats(15, 12, 10, 8, 10, 8),
             Collections.singletonList(new PlayerCharacter.PlayerItem(
                 "longsword",
                 new PlayerCharacter.ItemCondition(100),

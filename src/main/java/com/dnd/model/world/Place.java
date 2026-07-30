@@ -14,6 +14,13 @@ public class Place implements Printable {
     private Habitat habitat;
     private List<String> tags;
     private Map<String, String> attributes;
+    /**
+     * Id of the {@link com.dnd.model.world.map.GameMap} that belongs to this
+     * place.  {@code null} means no map has been created for this place yet.
+     * The map itself is stored in the campaign's {@code world/maps.json} file
+     * and looked up via {@code CampaignRepositories.maps().getById(mapId)}.
+     */
+    private String mapId;
 
     public Place() {
     }
@@ -26,6 +33,11 @@ public class Place implements Printable {
         this.habitat = habitat;
         this.tags = tags;
         this.attributes = attributes;
+    }
+
+    public Place(String id, String name, String description, String type, Habitat habitat, List<String> tags, Map<String, String> attributes, String mapId) {
+        this(id, name, description, type, habitat, tags, attributes);
+        this.mapId = mapId;
     }
 
     public String getId() {
@@ -82,6 +94,14 @@ public class Place implements Printable {
 
     public void setAttributes(Map<String, String> attributes) {
         this.attributes = attributes;
+    }
+
+    public String getMapId() {
+        return mapId;
+    }
+
+    public void setMapId(String mapId) {
+        this.mapId = mapId;
     }
 
     @Override

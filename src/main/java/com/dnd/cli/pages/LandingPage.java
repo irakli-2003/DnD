@@ -29,7 +29,7 @@ public class LandingPage implements Page {
     public List<CommandSpec> getCommands() {
         return Arrays.asList(
             new CommandSpec("dm", "Dungeon Master mode", campaignSelectionPage),
-            new CommandSpec("player", "Player mode (not implemented yet)", playerPage)
+            new CommandSpec("player", "Player mode", playerPage)
         );
     }
 

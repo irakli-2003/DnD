@@ -1,8 +1,22 @@
 package com.dnd.model.item;
 
 import com.dnd.model.interfaces.Printable;
+import com.dnd.model.item.alchemy.Potion;
+import com.dnd.model.item.armors.BodyArmor;
+import com.dnd.model.item.books.Book;
+import com.dnd.model.item.weapons.physical_weapons.MeleeWeapon;
+import com.dnd.model.interfaces.Pickable;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-public abstract class Item implements Printable {
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", defaultImpl = Book.class)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Book.class, name = "book"),
+    @JsonSubTypes.Type(value = BodyArmor.class, name = "armor"),
+    @JsonSubTypes.Type(value = MeleeWeapon.class, name = "weapon"),
+    @JsonSubTypes.Type(value = Potion.class, name = "alchemy")
+})
+public abstract class Item implements Printable, Pickable {
     private String id;
     private String name;
     private String type;
@@ -11,6 +25,12 @@ public abstract class Item implements Printable {
     private double weight;
     private ItemDamage damage;
     private ItemDurability durability;
+    /**
+     * Whether an actor standing on the same cell can pick this item up.
+     * Defaults to {@code true} for all items; set to {@code false} for
+     * fixed objects such as shrines, doors, or quest-locked items.
+     */
+    private boolean pickable = true;
 
     protected Item() {
     }
@@ -88,6 +108,15 @@ public abstract class Item implements Printable {
 
     public void setDurability(ItemDurability durability) {
         this.durability = durability;
+    }
+
+    @Override
+    public boolean isPickable() {
+        return pickable;
+    }
+
+    public void setPickable(boolean pickable) {
+        this.pickable = pickable;
     }
 
     @Override

@@ -1,0 +1,86 @@
+
+Findings confirmed. Here's the full architectural analysis:
+
+🏗️ Architecture Review — Broken Patterns & Recommendations
+🔴 Critical: EntitySelectionPage is a 1,364-line God Class
+This single file violates nearly every SOLID principle at once:
+// Lines 83-135: hardcoded class lists that must be manually updated for every new item type
+private static final List<Class<?>> ITEM_TYPES = Arrays.asList(Armor.class, Book.class, ...19 classes);
+private static final List<Class<?>> WEAPON_TYPES = Arrays.asList(...13 classes);
+// Lines 181-183: repositories re-instantiated on every single keystroke/command
+CampaignRepositories repositories = new CampaignRepositories(selectedSession.getCampaignContext().getPath());
+CampaignPaths paths = new CampaignPaths(...);
+IdHandler idHandler = new IdHandler(paths.idRegistryFile());
+It also does reflection-based bean population (lines 879-984) with hardcoded field-name checks ("level", "id", "name") and hardcoded validation ranges (1-30) baked into the CLI layer instead of the domain model.
+Recommendations:
+Split into: EntityFactory (creates instances via reflection/type registry), EntityPropertyEditor (interactive field population), EntityCrudService (add/edit/delete/list against repositories), and keep EntitySelectionPage as a thin Page that just delegates.
+Replace the four hardcoded List<Class<?>>` constants with an `EntityType` → `Class<?> registry (looks like EntityType.java may already partially do this — consolidate all type-to-class mapping there).
+Inject CampaignRepositories/IdHandler once per session (or per campaign selection), not reconstructed per keystroke.
+Move validation rules (level 1-30, stats 1-30) onto the model classes themselves (e.g., a setLevel(int) that throws IllegalArgumentException if out of range) — currently the model is anemic and enforces nothing.
+
+🔴 Silent Exception Swallowing (Data Integrity Risk)
+IdHandler.java:
+// line 70 — a corrupted/unreadable registry silently becomes an empty one
+catch (IOException ignored) { return new IdRegistry(); }
+
+// line 87 — failed saves are silently dropped, no logging, no retry
+catch (IOException ignored) { /* best-effort */ }
+This is dangerous: if saveRegistry() fails, the app has no way of knowing the ID registry is now out of sync with actual data. Same anti-pattern appears in CampaignStorage.deleteDirectory() (line 171) and CampaignStorage.listCustomCampaigns().
+Recommendation: Introduce a minimal logging facade (even just a System.err wrapper, or SLF4J + simple binding) and log every swallowed exception. For IdHandler, consider failing loudly (throw a RepositoryException) rather than silently returning empty state — a corrupted ID registry can cause duplicate IDs across entities.
+
+🟠 No DTO/Domain Separation — JSON Schema Coupled to Domain Model
+// CharacterClassCatalog.java, and all 15 other Catalog DTOs
+public class CharacterClassCatalog {
+    private List<CharacterClass> classes; // domain model, not a DTO
+}
+Model classes (PlayerCharacter, Item, etc.) are serialized directly. Any refactor of a domain class (e.g., renaming a field, changing a type for business-logic reasons) immediately breaks the JSON file format and forces a migration. There's no anti-corruption layer.
+Recommendation: For a project this size, full DTO mapping (MapStruct, manual mappers) may be overkill — but at minimum, isolate persistence concerns using Jackson's @JsonIgnore/@JsonProperty rather than assuming 1:1 field mapping, and document that these model classes are also the wire format intentionally. If the domain model needs to gain behavior (see anemic model issue below), split into PlayerCharacter (rich domain) + PlayerCharacterRecord (flat DTO) with a mapper between them.
+
+🟠 Anemic Domain Model
+PlayerCharacter, CharacterClass, Item, etc. are pure data bags — all public getters/setters, zero invariants, zero behavior. Validation logic (like the level/stat ranges) lives in the CLI page instead of the model. This means:
+Any other future entry point (a REST API, a GUI, import scripts) must reimplement the same validation.
+Objects can be constructed in invalid states (new PlayerCharacter() with negative HP, no class, etc.)
+Recommendation: Push validation into constructors/setters of the model classes (fail-fast). Example:
+public void setLevel(int level) {
+    if (level < 1 || level > 30) throw new IllegalArgumentException("Level must be 1-30");
+    this.level = level;
+}
+
+🟠 Inconsistent Error-Handling Strategy Across Layers
+JsonRepository → throws IOException (checked, propagates)
+IdHandler → catches and silently swallows
+CampaignStorage → catches and returns false/empty list
+Three different strategies for the same class of problem (file I/O failure) makes error handling unpredictable for callers.
+Recommendation: Pick one strategy — e.g., a custom unchecked CampaignStorageException thrown consistently everywhere, caught only at the CLI boundary (CliApp.runLoop) where it's translated into a user-facing message. This also plays nicely with the AppContext refactor already in place.
+
+🟡 Reflection-Based Property Population Is Brittle
+EntitySelectionPage (lines ~879-984) uses Introspector.getBeanInfo() and hand-rolled type dispatch for CoreStats, Dice, Map, List to interactively populate arbitrary model fields at runtime. Any new field type added to any model class silently fails or requires new special-case code here.
+Recommendation: This is really asking for a small reflection-based "form builder" abstraction — a PropertyEditorRegistry mapping Class<?> → PropertyEditor<?>, so new types register their own editor instead of extending a giant switch/if-chain in the page class.
+
+🟡 No View/Presenter Separation
+System.out.println is scattered across every page class directly mixed with business logic (e.g., CampaignSelectionPage has ~15 direct print calls). This makes the pages untestable without capturing stdout, and it means adding e.g. a GUI or web frontend later requires rewriting all pages from scratch.
+Recommendation: Introduce a minimal ConsoleView (or reuse the existing renderPage pattern in CliApp) that pages return structured output/prompts through, rather than calling System.out directly. Not urgent for a CLI-only tool, but flagged since it currently blocks unit testing of page behavior.
+
+🟡 Thread-Safety Inconsistency in IdHandler
+generateId, addId, removeId, find, list are all synchronized, but loadRegistry() (called from the constructor) is not synchronized and mutates this.registry directly — fine for single-threaded CLI use today, but a latent bug if this class is ever reused in a concurrent context (e.g., a future web backend).
+Recommendation: Low priority given current single-threaded CLI usage — just note it as a documented constraint, or make the constructor call thread-safe defensively.
+
+🟡 Duplicate Path Constants
+CampaignTemplate.java (16 hardcoded static path strings) duplicates path logic already defined in CampaignPaths.java.
+Recommendation: Have CampaignTemplate consume CampaignPaths methods instead of redefining string literals — single source of truth for file layout.
+
+🟡 Near-Zero Test Coverage
+Only CommandResolverTest and JsonRepositoryTest exist. Nothing covers:
+IdHandler (ID collision/sanitization logic)
+CampaignStorage (create/rename/delete campaign flows)
+EntitySelectionPage (impossible to test currently due to its design — another reason to break it up)
+Any model validation logic (once added)
+Recommendation: After splitting EntitySelectionPage, the extracted EntityFactory/EntityCrudService classes become independently testable. Prioritize tests for IdHandler (data integrity) and CampaignStorage (destructive file operations) since these carry the highest risk of silent data loss.
+
+Priority Order for Fixes
+Split EntitySelectionPage — highest impact, unblocks testing and future entity types.
+Fix silent exception swallowing in IdHandler — direct data-integrity risk.
+Push validation into domain model — prevents invalid state at the source.
+Standardize error handling strategy across data layer.
+Everything else (DTO separation, presenter layer, thread-safety notes) — lower urgency, address opportunistically.
+Want me to start implementing any of these fixes now — e.g., splitting EntitySelectionPage or fixing the IdHandler error handling?

@@ -11,6 +11,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Generic JSON-file-backed CRUD repository. All I/O failures surface as the
+ * unchecked {@link DataAccessException} (consistent with {@link IdHandler}
+ * and campaign storage) so callers aren't forced to handle checked
+ * IOException; invalid usage (missing/duplicate id) continues to throw
+ * {@link IllegalArgumentException}.
+ */
 public class JsonRepository<T, W> {
     private final Path filePath;
     private final ObjectMapper mapper;
@@ -36,12 +43,12 @@ public class JsonRepository<T, W> {
         this.idGetter = idGetter;
     }
 
-    public List<T> list() throws IOException {
+    public List<T> list() {
         W wrapper = readWrapper();
         return new ArrayList<>(listGetter.apply(wrapper));
     }
 
-    public T getById(String id) throws IOException {
+    public T getById(String id) {
         if (id == null) {
             return null;
         }
@@ -53,7 +60,7 @@ public class JsonRepository<T, W> {
         return null;
     }
 
-    public void add(T item) throws IOException {
+    public void add(T item) {
         String id = requireId(item);
         W wrapper = readWrapper();
         List<T> items = listGetter.apply(wrapper);
@@ -64,7 +71,7 @@ public class JsonRepository<T, W> {
         writeWrapper(wrapper);
     }
 
-    public void update(T item) throws IOException {
+    public void update(T item) {
         String id = requireId(item);
         W wrapper = readWrapper();
         List<T> items = listGetter.apply(wrapper);
@@ -76,7 +83,7 @@ public class JsonRepository<T, W> {
         writeWrapper(wrapper);
     }
 
-    public boolean delete(String id) throws IOException {
+    public boolean delete(String id) {
         if (id == null) {
             return false;
         }
@@ -111,9 +118,14 @@ public class JsonRepository<T, W> {
         return id;
     }
 
-    private W readWrapper() throws IOException {
+    private W readWrapper() {
         ensureFileExists();
-        W wrapper = mapper.readValue(filePath.toFile(), wrapperClass);
+        W wrapper;
+        try {
+            wrapper = mapper.readValue(filePath.toFile(), wrapperClass);
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to read " + filePath, e);
+        }
         List<T> items = listGetter.apply(wrapper);
         if (items == null) {
             items = new ArrayList<>();
@@ -122,19 +134,26 @@ public class JsonRepository<T, W> {
         return wrapper;
     }
 
-    private void writeWrapper(W wrapper) throws IOException {
-        Files.createDirectories(filePath.getParent());
-        mapper.writeValue(filePath.toFile(), wrapper);
+    private void writeWrapper(W wrapper) {
+        try {
+            Files.createDirectories(filePath.getParent());
+            mapper.writeValue(filePath.toFile(), wrapper);
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to write " + filePath, e);
+        }
     }
 
-    private void ensureFileExists() throws IOException {
+    private void ensureFileExists() {
         if (Files.exists(filePath)) {
             return;
         }
-        Files.createDirectories(filePath.getParent());
-        W wrapper = wrapperFactory.get();
-        listSetter.accept(wrapper, new ArrayList<>());
-        mapper.writeValue(filePath.toFile(), wrapper);
+        try {
+            Files.createDirectories(filePath.getParent());
+            W wrapper = wrapperFactory.get();
+            listSetter.accept(wrapper, new ArrayList<>());
+            mapper.writeValue(filePath.toFile(), wrapper);
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to initialize " + filePath, e);
+        }
     }
 }
-

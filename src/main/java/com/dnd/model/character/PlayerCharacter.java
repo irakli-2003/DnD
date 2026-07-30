@@ -6,6 +6,9 @@ import com.dnd.model.interfaces.Printable;
 import java.util.List;
 
 public class PlayerCharacter implements Printable {
+    public static final int MIN_LEVEL = 1;
+    public static final int MAX_LEVEL = 30;
+
     private String id;
     private String name;
     private String classId;
@@ -23,7 +26,7 @@ public class PlayerCharacter implements Printable {
         this.name = name;
         this.classId = classId;
         this.raceId = raceId;
-        this.level = level;
+        setLevel(level);
         this.stats = stats;
         this.items = items;
         this.spells = spells;
@@ -66,6 +69,9 @@ public class PlayerCharacter implements Printable {
     }
 
     public void setLevel(int level) {
+        if (level < MIN_LEVEL || level > MAX_LEVEL) {
+            throw new IllegalArgumentException("Level must be between " + MIN_LEVEL + " and " + MAX_LEVEL + " but was " + level);
+        }
         this.level = level;
     }
 

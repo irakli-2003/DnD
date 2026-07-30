@@ -1,7 +1,6 @@
 package com.dnd.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,15 +9,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * Tracks generated entity ids to guarantee uniqueness across all catalogs in a
+ * campaign, backed by a single JSON registry file.
+ *
+ * <p><b>Thread-safety:</b> every method that reads or mutates {@link #registry}
+ * is {@code synchronized}, so concurrent calls from multiple threads against
+ * the same {@code IdHandler} instance are safe. The registry is loaded once in
+ * the constructor and the field is {@code final}, so a fully-constructed
+ * instance is safely publishable to other threads (standard Java final-field
+ * safe-publication guarantee) as long as the constructing thread does not leak
+ * {@code this} before the constructor returns. In practice this class is only
+ * ever used from the single CLI input thread today; the synchronization here
+ * is a defensive guarantee for any future concurrent caller (e.g. a web
+ * backend), not a requirement of the current CLI.</p>
+ */
 public class IdHandler {
+    private static final Logger LOGGER = Logger.getLogger(IdHandler.class.getName());
+
     private final Path registryFile;
     private final ObjectMapper mapper;
-    private IdRegistry registry;
+    private final IdRegistry registry;
 
     public IdHandler(Path registryFile) {
         this.registryFile = registryFile;
-        this.mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+        this.mapper = JsonMappers.create();
         this.registry = loadRegistry();
     }
 
@@ -67,8 +85,10 @@ public class IdHandler {
         if (Files.exists(registryFile)) {
             try {
                 return mapper.readValue(registryFile.toFile(), IdRegistry.class);
-            } catch (IOException ignored) {
-                return new IdRegistry();
+            } catch (IOException e) {
+                throw new DataAccessException(
+                    "Failed to read ID registry at " + registryFile + ". Refusing to silently start with an "
+                        + "empty registry, since that could produce duplicate IDs across entities.", e);
             }
         }
         IdRegistry empty = new IdRegistry();
@@ -84,8 +104,10 @@ public class IdHandler {
         try {
             Files.createDirectories(registryFile.getParent());
             mapper.writeValue(registryFile.toFile(), source);
-        } catch (IOException ignored) {
-            // Persisting registry is best-effort for now.
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to persist ID registry at " + registryFile
+                + ". In-memory registry state and disk state are now out of sync.", e);
+            throw new DataAccessException("Failed to persist ID registry at " + registryFile, e);
         }
     }
 

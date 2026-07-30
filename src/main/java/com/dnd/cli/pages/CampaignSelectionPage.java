@@ -1,12 +1,13 @@
 package com.dnd.cli.pages;
 
 import com.dnd.cli.core.CampaignContext;
+import com.dnd.cli.core.ConsoleIO;
 import com.dnd.cli.storage.CampaignStorage;
 import com.dnd.cli.core.CliSession;
 import com.dnd.cli.core.CommandSpec;
 import com.dnd.cli.core.Page;
+import com.dnd.data.DataAccessException;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,88 +64,90 @@ public class CampaignSelectionPage implements Page {
     }
 
     private Page renameCampaign(CliSession selectedSession) {
+        ConsoleIO console = selectedSession.getConsole();
         List<String> campaigns = storage.listCustomCampaigns();
         if (campaigns.isEmpty()) {
-            System.out.println("No campaigns available to rename.");
+            console.println("No campaigns available to rename.");
             return this;
         }
 
-        System.out.println("Available campaigns:");
+        console.println("Available campaigns:");
         for (String campaign : campaigns) {
-            System.out.println("- " + campaign);
+            console.println("- " + campaign);
         }
 
-        System.out.print("Enter campaign name to rename: ");
-        String input = selectedSession.getScanner().nextLine();
+        console.print("Enter campaign name to rename: ");
+        String input = console.readLine();
         String currentName = resolveCampaignName(input, campaigns, true);
         if (currentName == null) {
-            System.out.println("Unknown campaign: " + input.trim());
+            console.println("Unknown campaign: " + input.trim());
             return this;
         }
 
-        System.out.print("Enter new campaign name: ");
-        String newInput = selectedSession.getScanner().nextLine();
+        console.print("Enter new campaign name: ");
+        String newInput = console.readLine();
         String requestedName = storage.normalizeCampaignName(newInput);
         if (requestedName.isEmpty()) {
-            System.out.println("Rename cancelled.");
+            console.println("Rename cancelled.");
             return this;
         }
 
         try {
             String updatedName = storage.renameCampaign(currentName, requestedName);
-            System.out.println("Renamed campaign to: " + updatedName);
+            console.println("Renamed campaign to: " + updatedName);
             CampaignContext context = selectedSession.getCampaignContext();
             if (context != null && context.getName().equals(currentName)) {
                 selectedSession.setCampaignContext(new CampaignContext(updatedName, storage.resolveCustomCampaignPath(updatedName)));
             }
-        } catch (IOException | IllegalArgumentException e) {
-            System.out.println("Failed to rename campaign: " + e.getMessage());
+        } catch (DataAccessException | IllegalArgumentException e) {
+            console.println("Failed to rename campaign: " + e.getMessage());
         }
 
         return this;
     }
 
     private Page deleteCampaign(CliSession selectedSession) {
+        ConsoleIO console = selectedSession.getConsole();
         List<String> campaigns = storage.listCustomCampaigns();
         if (campaigns.isEmpty()) {
-            System.out.println("No campaigns available to delete.");
+            console.println("No campaigns available to delete.");
             return this;
         }
 
-        System.out.println("Available campaigns:");
+        console.println("Available campaigns:");
         for (String campaign : campaigns) {
-            System.out.println("- " + campaign);
+            console.println("- " + campaign);
         }
 
-        System.out.print("Enter campaign name to delete: ");
-        String input = selectedSession.getScanner().nextLine();
+        console.print("Enter campaign name to delete: ");
+        String input = console.readLine();
         String name = resolveCampaignName(input, campaigns, false);
         if (name == null) {
-            System.out.println("Unknown campaign: " + input.trim());
+            console.println("Unknown campaign: " + input.trim());
             return this;
         }
 
-        System.out.print("Type DELETE to finalize: ");
-        String secondConfirm = selectedSession.getScanner().nextLine().trim();
+        console.print("Type DELETE to finalize: ");
+        String secondConfirm = console.readLine().trim();
 
         if (!"DELETE".equals(secondConfirm)) {
-            System.out.println("Delete cancelled.");
+            console.println("Delete cancelled.");
             return this;
         }
 
         try {
             boolean deleted = storage.deleteCampaign(name);
             if (deleted) {
-                System.out.println("Deleted campaign: " + name);
+                console.println("Deleted campaign: " + name);
                 CampaignContext context = selectedSession.getCampaignContext();
                 if (context != null && context.getName().equals(name)) {
                     selectedSession.setCampaignContext(null);
                 }
             } else {
-                System.out.println("Failed to delete campaign: " + name);
+                console.println("Failed to delete campaign: " + name);
             }
-        } catch (IOException e) {
-            System.out.println("Failed to delete campaign: " + e.getMessage());
+        } catch (DataAccessException e) {
+            console.println("Failed to delete campaign: " + e.getMessage());
         }
 
         return this;

@@ -1,57 +1,43 @@
 package com.dnd.cli.storage;
 
+import com.dnd.data.CampaignPaths;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class CampaignTemplate {
-    public static final String WORLD_DIR = "world";
-    public static final String PLAYERS_DIR = "players";
-
-    public static final String CLASSES_FILE = "classes.json";
-    public static final String RACES_FILE = "races.json";
-    public static final String ITEMS_FILE = "items.json";
-    public static final String SPELLS_FILE = "spells.json";
-    public static final String PLACES_FILE = "places.json";
-    public static final String EFFECTS_FILE = "effects.json";
-    public static final String DAMAGE_TYPES_FILE = "damage-types.json";
-    public static final String NPCS_FILE = "npcs.json";
-    public static final String MONSTERS_FILE = "monsters.json";
-    public static final String BEASTS_FILE = "beasts.json";
-    public static final String PLAYERS_FILE = "players.json";
-    public static final String LANGUAGES_FILE = "languages.json";
-    public static final String ALCHEMY_INGREDIENTS_FILE = "alchemy-ingredients.json";
-    public static final String BOOKS_FILE = "books.json";
-    public static final String DICE_FILE = "dice.json";
-    public static final String ID_REGISTRY_FILE = "id-registry.json";
-
     private CampaignTemplate() {
     }
 
     public static void writeTemplate(Path basePath, boolean blank) throws IOException {
-        Path worldPath = basePath.resolve(WORLD_DIR);
-        Path playersPath = basePath.resolve(PLAYERS_DIR);
+        CampaignPaths paths = new CampaignPaths(basePath);
 
-        Files.createDirectories(worldPath);
-        Files.createDirectories(playersPath);
+        Files.createDirectories(paths.worldDir());
+        Files.createDirectories(paths.playersDir());
 
-        Files.write(worldPath.resolve(CLASSES_FILE), (blank ? blankClassesJson() : defaultClassesJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(RACES_FILE), (blank ? blankRacesJson() : defaultRacesJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(ITEMS_FILE), (blank ? blankItemsJson() : defaultItemsJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(SPELLS_FILE), (blank ? blankSpellsJson() : defaultSpellsJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(PLACES_FILE), (blank ? blankPlacesJson() : defaultPlacesJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(EFFECTS_FILE), (blank ? blankEffectsJson() : defaultEffectsJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(DAMAGE_TYPES_FILE), (blank ? blankDamageTypesJson() : defaultDamageTypesJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(NPCS_FILE), (blank ? blankNpcsJson() : defaultNpcsJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(MONSTERS_FILE), (blank ? blankMonstersJson() : defaultMonstersJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(BEASTS_FILE), (blank ? blankBeastsJson() : defaultBeastsJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(playersPath.resolve(PLAYERS_FILE), (blank ? blankPlayersJson() : defaultPlayersJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(LANGUAGES_FILE), (blank ? blankLanguagesJson() : defaultLanguagesJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(ALCHEMY_INGREDIENTS_FILE), (blank ? blankAlchemyIngredientsJson() : defaultAlchemyIngredientsJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(BOOKS_FILE), (blank ? blankBooksJson() : defaultBooksJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(DICE_FILE), (blank ? blankDiceJson() : defaultDiceJson()).getBytes(StandardCharsets.UTF_8));
-        Files.write(worldPath.resolve(ID_REGISTRY_FILE), (blank ? blankIdRegistryJson() : defaultIdRegistryJson()).getBytes(StandardCharsets.UTF_8));
+        write(paths.classesFile(), blank ? blankClassesJson() : defaultClassesJson());
+        write(paths.racesFile(), blank ? blankRacesJson() : defaultRacesJson());
+        write(paths.itemsFile(), blank ? blankItemsJson() : defaultItemsJson());
+        write(paths.spellsFile(), blank ? blankSpellsJson() : defaultSpellsJson());
+        write(paths.placesFile(), blank ? blankPlacesJson() : defaultPlacesJson());
+        write(paths.effectsFile(), blank ? blankEffectsJson() : defaultEffectsJson());
+        write(paths.damageTypesFile(), blank ? blankDamageTypesJson() : defaultDamageTypesJson());
+        write(paths.npcsFile(), blank ? blankNpcsJson() : defaultNpcsJson());
+        write(paths.monstersFile(), blank ? blankMonstersJson() : defaultMonstersJson());
+        write(paths.beastsFile(), blank ? blankBeastsJson() : defaultBeastsJson());
+        write(paths.playersFile(), blank ? blankPlayersJson() : defaultPlayersJson());
+        write(paths.languagesFile(), blank ? blankLanguagesJson() : defaultLanguagesJson());
+        write(paths.alchemyIngredientsFile(), blank ? blankAlchemyIngredientsJson() : defaultAlchemyIngredientsJson());
+        write(paths.booksFile(), blank ? blankBooksJson() : defaultBooksJson());
+        write(paths.diceFile(), blank ? blankDiceJson() : defaultDiceJson());
+        write(paths.mapsFile(), blank ? blankMapsJson() : defaultMapsJson());
+        write(paths.idRegistryFile(), blank ? blankIdRegistryJson() : defaultIdRegistryJson());
+    }
+
+    private static void write(Path file, String content) throws IOException {
+        Files.write(file, content.getBytes(StandardCharsets.UTF_8));
     }
 
     public static String defaultClassesJson() {
@@ -214,7 +200,8 @@ public final class CampaignTemplate {
             "      \"attributes\": {\n" +
             "        \"population\": \"120\",\n" +
             "        \"faction\": \"wardens\"\n" +
-            "      }\n" +
+            "      },\n" +
+            "      \"mapId\": \"stonekeep-ground-floor\"\n" +
             "    }\n" +
             "  ]\n" +
             "}\n";
@@ -426,9 +413,40 @@ public final class CampaignTemplate {
             "    {\n" +
             "      \"id\": \"d20\",\n" +
             "      \"file\": \"world/dice.json\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "      \"id\": \"stonekeep-ground-floor\",\n" +
+            "      \"file\": \"world/maps.json\"\n" +
             "    }\n" +
             "  ]\n" +
             "}\n";
+    }
+
+    public static String defaultMapsJson() {
+        return "{\n" +
+            "  \"maps\": [\n" +
+            "    {\n" +
+            "      \"id\": \"stonekeep-ground-floor\",\n" +
+            "      \"name\": \"Stonekeep - Ground Floor\",\n" +
+            "      \"width\": 12,\n" +
+            "      \"height\": 8,\n" +
+            "      \"grid\": [\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
+            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}]\n" +
+            "      ]\n" +
+            "    }\n" +
+            "  ]\n" +
+            "}\n";
+    }
+
+    public static String blankMapsJson() {
+        return "{\n  \"maps\": []\n}\n";
     }
 
     public static String defaultNpcsJson() {

@@ -1,0 +1,125 @@
+{
+  "maps": [
+    {
+      "id": "stonekeep-ground-floor",
+      "name": "Stonekeep – Ground Floor",
+      "width": 12,
+      "height": 8,
+      "grid": [
+        [
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": true,  "occupants": []},
+          {"passable": false, "occupants": []}
+        ],
+        [
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []},
+          {"passable": false, "occupants": []}
+        ]
+      ]
+    }
+  ]
+}
+

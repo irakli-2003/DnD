@@ -1,12 +1,13 @@
 package com.dnd.cli.pages;
 
 import com.dnd.cli.core.CampaignContext;
+import com.dnd.cli.core.ConsoleIO;
 import com.dnd.cli.storage.CampaignStorage;
 import com.dnd.cli.core.CliSession;
 import com.dnd.cli.core.CommandSpec;
 import com.dnd.cli.core.Page;
+import com.dnd.data.DataAccessException;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,16 +52,17 @@ public class CreateCampaignPage implements Page {
     }
 
     private Page createCampaign(CliSession selectedSession, boolean blank) {
-        System.out.print("Enter campaign name: ");
-        String name = selectedSession.getScanner().nextLine();
+        ConsoleIO console = selectedSession.getConsole();
+        console.print("Enter campaign name: ");
+        String name = console.readLine();
 
         try {
             CampaignContext context = storage.createCampaignFromDefault(name, blank);
             selectedSession.setCampaignContext(context);
-            System.out.println("Created campaign: " + context.getName());
+            console.println("Created campaign: " + context.getName());
             return dmMenuPage;
-        } catch (IOException e) {
-            System.out.println("Failed to create campaign: " + e.getMessage());
+        } catch (DataAccessException e) {
+            console.println("Failed to create campaign: " + e.getMessage());
             return this;
         }
     }

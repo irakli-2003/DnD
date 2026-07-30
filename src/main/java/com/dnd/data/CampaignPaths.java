@@ -84,4 +84,8 @@ public class CampaignPaths {
     public Path diceFile() {
         return worldDir().resolve("dice.json");
     }
+
+    public Path mapsFile() {
+        return worldDir().resolve("maps.json");
+    }
 }

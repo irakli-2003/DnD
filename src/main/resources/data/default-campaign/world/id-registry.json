@@ -51,6 +51,34 @@
     {
       "id": "common_tongue",
       "file": "world/books.json"
+    },
+    {
+      "id": "d4",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d6",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d8",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d10",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d12",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d20",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "stonekeep-ground-floor",
+      "file": "world/maps.json"
     }
   ]
 }

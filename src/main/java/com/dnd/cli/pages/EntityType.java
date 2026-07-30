@@ -17,6 +17,7 @@ import com.dnd.model.magic.Spell;
 import com.dnd.model.world.Dice;
 import com.dnd.model.world.Language;
 import com.dnd.model.world.Place;
+import com.dnd.model.world.map.GameMap;
 
 import java.util.function.Function;
 
@@ -35,7 +36,8 @@ public enum EntityType {
     ALCHEMY_INGREDIENT("alchemy", "Alchemy Ingredient", AlchemyIngredient.class, CampaignRepositories::alchemyIngredients, "world/alchemy-ingredients.json"),
     BOOK("book", "Book", Book.class, CampaignRepositories::books, "world/books.json"),
     DICE("dice", "Dice", Dice.class, CampaignRepositories::dice, "world/dice.json"),
-    PLAYER("player", "Player", PlayerCharacter.class, CampaignRepositories::players, "players/players.json");
+    PLAYER("player", "Player", PlayerCharacter.class, CampaignRepositories::players, "players/players.json"),
+    MAP("map", "Map", GameMap.class, CampaignRepositories::maps, "world/maps.json");
 
     private final String key;
     private final String label;

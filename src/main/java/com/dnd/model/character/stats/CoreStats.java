@@ -1,6 +1,14 @@
 package com.dnd.model.character.stats;
 
+/**
+ * The six core ability scores. Values are constrained to the standard D&D
+ * range (1-30) at the point of mutation, so invalid stats can never enter the
+ * system regardless of which caller (CLI, future API, tests) creates them.
+ */
 public class CoreStats {
+    public static final int MIN_SCORE = 1;
+    public static final int MAX_SCORE = 30;
+
     private int strength;
     private int dexterity;
     private int constitution;
@@ -12,12 +20,12 @@ public class CoreStats {
     }
 
     public CoreStats(int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma) {
-        this.strength = strength;
-        this.dexterity = dexterity;
-        this.constitution = constitution;
-        this.intelligence = intelligence;
-        this.wisdom = wisdom;
-        this.charisma = charisma;
+        setStrength(strength);
+        setDexterity(dexterity);
+        setConstitution(constitution);
+        setIntelligence(intelligence);
+        setWisdom(wisdom);
+        setCharisma(charisma);
     }
 
     public int getStrength() {
@@ -25,7 +33,7 @@ public class CoreStats {
     }
 
     public void setStrength(int strength) {
-        this.strength = strength;
+        this.strength = requireValidScore(strength);
     }
 
     public int getDexterity() {
@@ -33,7 +41,7 @@ public class CoreStats {
     }
 
     public void setDexterity(int dexterity) {
-        this.dexterity = dexterity;
+        this.dexterity = requireValidScore(dexterity);
     }
 
     public int getConstitution() {
@@ -41,7 +49,7 @@ public class CoreStats {
     }
 
     public void setConstitution(int constitution) {
-        this.constitution = constitution;
+        this.constitution = requireValidScore(constitution);
     }
 
     public int getIntelligence() {
@@ -49,7 +57,7 @@ public class CoreStats {
     }
 
     public void setIntelligence(int intelligence) {
-        this.intelligence = intelligence;
+        this.intelligence = requireValidScore(intelligence);
     }
 
     public int getWisdom() {
@@ -57,7 +65,7 @@ public class CoreStats {
     }
 
     public void setWisdom(int wisdom) {
-        this.wisdom = wisdom;
+        this.wisdom = requireValidScore(wisdom);
     }
 
     public int getCharisma() {
@@ -65,9 +73,15 @@ public class CoreStats {
     }
 
     public void setCharisma(int charisma) {
-        this.charisma = charisma;
+        this.charisma = requireValidScore(charisma);
+    }
+
+    private static int requireValidScore(int value) {
+        if (value < MIN_SCORE || value > MAX_SCORE) {
+            throw new IllegalArgumentException("Ability score must be between " + MIN_SCORE + " and " + MAX_SCORE + " but was " + value);
+        }
+        return value;
     }
 }
-
 
 

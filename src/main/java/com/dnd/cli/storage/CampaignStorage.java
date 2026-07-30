@@ -1,6 +1,7 @@
 package com.dnd.cli.storage;
 
 import com.dnd.cli.core.CampaignContext;
+import com.dnd.data.DataAccessException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,9 +12,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * Manages campaign directories on disk. Every public method that touches the
+ * filesystem surfaces failures as the unchecked {@link DataAccessException}
+ * (consistent with {@link com.dnd.data.JsonRepository} and
+ * {@link com.dnd.data.IdHandler}), instead of a mix of checked IOException and
+ * silently-swallowed failures.
+ */
 public class CampaignStorage {
+    private static final Logger LOGGER = Logger.getLogger(CampaignStorage.class.getName());
     private static final Path RESOURCE_DATA_ROOT = Paths.get("src", "main", "resources", "data");
 
     private final Path dataRoot;
@@ -45,12 +57,16 @@ public class CampaignStorage {
         return customCampaignRoot;
     }
 
-    public void ensureInitialized() throws IOException {
-        Files.createDirectories(dataRoot);
-        Files.createDirectories(customCampaignRoot);
-        if (!Files.exists(defaultCampaignRoot)) {
-            Files.createDirectories(defaultCampaignRoot);
-            CampaignTemplate.writeTemplate(defaultCampaignRoot, false);
+    public void ensureInitialized() {
+        try {
+            Files.createDirectories(dataRoot);
+            Files.createDirectories(customCampaignRoot);
+            if (!Files.exists(defaultCampaignRoot)) {
+                Files.createDirectories(defaultCampaignRoot);
+                CampaignTemplate.writeTemplate(defaultCampaignRoot, false);
+            }
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to initialize campaign storage under " + dataRoot, e);
         }
     }
 
@@ -58,14 +74,17 @@ public class CampaignStorage {
         if (!Files.exists(customCampaignRoot)) {
             return Collections.emptyList();
         }
-        try {
-            return Files.list(customCampaignRoot)
+        try (Stream<Path> children = Files.list(customCampaignRoot)) {
+            return children
                 .filter(Files::isDirectory)
                 .map(path -> path.getFileName().toString())
                 .sorted()
                 .collect(Collectors.toList());
         } catch (IOException e) {
-            return Collections.emptyList();
+            // Consistent with the rest of the data layer: fail loudly with an unchecked
+            // exception rather than silently reporting "no campaigns exist", which could
+            // otherwise look like data loss to the user.
+            throw new DataAccessException("Failed to list custom campaigns under " + customCampaignRoot, e);
         }
     }
 
@@ -73,7 +92,7 @@ public class CampaignStorage {
         return customCampaignRoot.resolve(name);
     }
 
-    public CampaignContext createCampaignFromDefault(String requestedName, boolean blank) throws IOException {
+    public CampaignContext createCampaignFromDefault(String requestedName, boolean blank) {
         ensureInitialized();
 
         String name = sanitizeName(requestedName);
@@ -83,8 +102,12 @@ public class CampaignStorage {
         String uniqueName = ensureUniqueName(name);
 
         Path campaignPath = customCampaignRoot.resolve(uniqueName);
-        Files.createDirectories(campaignPath);
-        CampaignTemplate.writeTemplate(campaignPath, blank);
+        try {
+            Files.createDirectories(campaignPath);
+            CampaignTemplate.writeTemplate(campaignPath, blank);
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to create campaign at " + campaignPath, e);
+        }
 
         return new CampaignContext(uniqueName, campaignPath);
     }
@@ -114,7 +137,7 @@ public class CampaignStorage {
         return sanitizeName(input);
     }
 
-    public String renameCampaign(String currentName, String requestedName) throws IOException {
+    public String renameCampaign(String currentName, String requestedName) {
         ensureInitialized();
 
         String normalizedCurrent = sanitizeName(currentName);
@@ -138,11 +161,15 @@ public class CampaignStorage {
 
         String uniqueName = ensureUniqueName(normalizedRequested);
         Path newPath = customCampaignRoot.resolve(uniqueName);
-        Files.move(currentPath, newPath);
+        try {
+            Files.move(currentPath, newPath);
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to rename campaign " + normalizedCurrent + " to " + uniqueName, e);
+        }
         return uniqueName;
     }
 
-    public boolean deleteCampaign(String name) throws IOException {
+    public boolean deleteCampaign(String name) {
         ensureInitialized();
 
         String normalized = sanitizeName(name);
@@ -159,18 +186,27 @@ public class CampaignStorage {
         return true;
     }
 
-    private void deleteDirectory(Path path) throws IOException {
+    private void deleteDirectory(Path path) {
         if (!Files.exists(path)) {
             return;
         }
-        Files.walk(path)
-            .sorted(Comparator.reverseOrder())
-            .forEach(current -> {
-                try {
-                    Files.deleteIfExists(current);
-                } catch (IOException ignored) {
-                    // Best-effort delete; ignored entries will remain.
-                }
-            });
+        List<Path> failures = new ArrayList<>();
+        try (Stream<Path> walk = Files.walk(path)) {
+            walk.sorted(Comparator.reverseOrder())
+                .forEach(current -> {
+                    try {
+                        Files.deleteIfExists(current);
+                    } catch (IOException e) {
+                        LOGGER.log(Level.WARNING, "Failed to delete " + current + " while removing campaign directory " + path, e);
+                        failures.add(current);
+                    }
+                });
+        } catch (IOException e) {
+            throw new DataAccessException("Failed to walk campaign directory " + path + " for deletion", e);
+        }
+        if (!failures.isEmpty()) {
+            throw new DataAccessException("Failed to fully delete campaign directory " + path
+                + ". " + failures.size() + " entr" + (failures.size() == 1 ? "y" : "ies") + " could not be removed: " + failures);
+        }
     }
 }
