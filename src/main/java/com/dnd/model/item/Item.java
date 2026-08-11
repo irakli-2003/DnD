@@ -83,6 +83,9 @@ public abstract class Item implements Printable, Pickable {
     }
 
     public void setValueGold(int valueGold) {
+        if (valueGold < 0) {
+            throw new IllegalArgumentException("Item value must be non-negative but was " + valueGold);
+        }
         this.valueGold = valueGold;
     }
 
@@ -91,6 +94,9 @@ public abstract class Item implements Printable, Pickable {
     }
 
     public void setWeight(double weight) {
+        if (weight < 0) {
+            throw new IllegalArgumentException("Item weight must be non-negative but was " + weight);
+        }
         this.weight = weight;
     }
 
@@ -166,8 +172,8 @@ public abstract class Item implements Printable, Pickable {
         }
 
         public ItemDurability(int max, int current) {
-            this.max = max;
-            this.current = current;
+            setMax(max);
+            setCurrent(current);
         }
 
         public int getMax() {
@@ -175,6 +181,9 @@ public abstract class Item implements Printable, Pickable {
         }
 
         public void setMax(int max) {
+            if (max < 0) {
+                throw new IllegalArgumentException("Item durability max must be non-negative but was " + max);
+            }
             this.max = max;
         }
 
@@ -183,6 +192,12 @@ public abstract class Item implements Printable, Pickable {
         }
 
         public void setCurrent(int current) {
+            if (current < 0) {
+                throw new IllegalArgumentException("Item durability current must be non-negative but was " + current);
+            }
+            if (current > this.max) {
+                throw new IllegalArgumentException("Item durability current (" + current + ") cannot exceed max (" + this.max + ")");
+            }
             this.current = current;
         }
 

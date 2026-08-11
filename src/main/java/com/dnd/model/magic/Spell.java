@@ -8,6 +8,9 @@ import com.dnd.model.item.Item;
 import java.util.List;
 
 public class Spell implements Printable {
+    public static final int MIN_LEVEL = 0;
+    public static final int MAX_LEVEL = 9;
+
     private String id;
     private String name;
     private String description;
@@ -32,11 +35,11 @@ public class Spell implements Printable {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.level = level;
+        setLevel(level);
         this.school = school;
-        this.manaCost = manaCost;
-        this.range = range;
-        this.radius = radius;
+        setManaCost(manaCost);
+        setRange(range);
+        setRadius(radius);
         this.castingMethod = castingMethod;
         this.requiredConsumables = requiredConsumables;
         this.requiredTools = requiredTools;
@@ -74,6 +77,9 @@ public class Spell implements Printable {
     }
 
     public void setLevel(int level) {
+        if (level < MIN_LEVEL || level > MAX_LEVEL) {
+            throw new IllegalArgumentException("Spell level must be between " + MIN_LEVEL + " and " + MAX_LEVEL + " but was " + level);
+        }
         this.level = level;
     }
 
@@ -90,6 +96,9 @@ public class Spell implements Printable {
     }
 
     public void setManaCost(int manaCost) {
+        if (manaCost < 0) {
+            throw new IllegalArgumentException("Spell mana cost must be non-negative but was " + manaCost);
+        }
         this.manaCost = manaCost;
     }
 
@@ -98,6 +107,9 @@ public class Spell implements Printable {
     }
 
     public void setRange(int range) {
+        if (range < 0) {
+            throw new IllegalArgumentException("Spell range must be non-negative but was " + range);
+        }
         this.range = range;
     }
 
@@ -106,6 +118,9 @@ public class Spell implements Printable {
     }
 
     public void setRadius(int radius) {
+        if (radius < 0) {
+            throw new IllegalArgumentException("Spell radius must be non-negative but was " + radius);
+        }
         this.radius = radius;
     }
 

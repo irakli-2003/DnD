@@ -10,6 +10,9 @@ import java.util.Objects;
  * are printed in by {@link GameMap#print()}.
  */
 public class Position {
+    public static final int MIN_COORDINATE = 0;
+    public static final int MAX_COORDINATE = 999;
+
     private int x;
     private int y;
 
@@ -17,8 +20,8 @@ public class Position {
     }
 
     public Position(int x, int y) {
-        this.x = x;
-        this.y = y;
+        setX(x);
+        setY(y);
     }
 
     public int getX() {
@@ -26,6 +29,9 @@ public class Position {
     }
 
     public void setX(int x) {
+        if (x < MIN_COORDINATE || x > MAX_COORDINATE) {
+            throw new IllegalArgumentException("Position X must be between " + MIN_COORDINATE + " and " + MAX_COORDINATE + " but was " + x);
+        }
         this.x = x;
     }
 
@@ -34,6 +40,9 @@ public class Position {
     }
 
     public void setY(int y) {
+        if (y < MIN_COORDINATE || y > MAX_COORDINATE) {
+            throw new IllegalArgumentException("Position Y must be between " + MIN_COORDINATE + " and " + MAX_COORDINATE + " but was " + y);
+        }
         this.y = y;
     }
 

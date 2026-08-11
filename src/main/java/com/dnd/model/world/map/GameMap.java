@@ -11,6 +11,9 @@ import java.util.List;
  * top-left box, {@code x} grows rightward, {@code y} grows downward.
  */
 public class GameMap implements Printable {
+    public static final int MIN_DIMENSION = 1;
+    public static final int MAX_DIMENSION = 1000;
+
     private String id;
     private String name;
     private int width;
@@ -23,8 +26,8 @@ public class GameMap implements Printable {
     public GameMap(String id, String name, int width, int height) {
         this.id = id;
         this.name = name;
-        this.width = width;
-        this.height = height;
+        setWidth(width);
+        setHeight(height);
         this.grid = buildGrid(width, height);
     }
 
@@ -61,6 +64,9 @@ public class GameMap implements Printable {
     }
 
     public void setWidth(int width) {
+        if (width < MIN_DIMENSION || width > MAX_DIMENSION) {
+            throw new IllegalArgumentException("Map width must be between " + MIN_DIMENSION + " and " + MAX_DIMENSION + " but was " + width);
+        }
         this.width = width;
     }
 
@@ -69,6 +75,9 @@ public class GameMap implements Printable {
     }
 
     public void setHeight(int height) {
+        if (height < MIN_DIMENSION || height > MAX_DIMENSION) {
+            throw new IllegalArgumentException("Map height must be between " + MIN_DIMENSION + " and " + MAX_DIMENSION + " but was " + height);
+        }
         this.height = height;
     }
 

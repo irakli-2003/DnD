@@ -14,7 +14,7 @@ public class Dice {
     public Dice(String id, String name, int sides) {
         this.id = id;
         this.name = name;
-        this.sides = sides;
+        setSides(sides);
     }
 
     /**
@@ -69,6 +69,9 @@ public class Dice {
     }
 
     public void setSides(int sides) {
+        if (sides <= 0) {
+            throw new IllegalArgumentException("Dice sides must be greater than 0 but was " + sides);
+        }
         this.sides = sides;
     }
 

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 /**
  * Regression test for a bug where Dice's DELEGATING JsonCreator (originally
@@ -31,5 +32,30 @@ public class DiceTest {
         assertEquals("d6", dice.getName());
         assertEquals(6, dice.getSides());
     }
+
+    @Test
+    public void acceptsPositiveSides() {
+        Dice dice = new Dice("d20", "d20", 1);
+        assertEquals(1, dice.getSides());
+        dice.setSides(20);
+        assertEquals(20, dice.getSides());
+    }
+
+    @Test
+    public void rejectsZeroSides() {
+        Dice dice = new Dice("test", "test", 1);
+        assertThrows(IllegalArgumentException.class, () -> dice.setSides(0));
+    }
+
+    @Test
+    public void rejectsNegativeSides() {
+        assertThrows(IllegalArgumentException.class, () -> new Dice("test", "test", -5));
+    }
+
+    @Test
+    public void constructorValidatesSides() {
+        assertThrows(IllegalArgumentException.class, () -> new Dice("d0", "d0", 0));
+    }
 }
+
 
