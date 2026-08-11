@@ -7,19 +7,23 @@ import com.dnd.cli.core.Page;
 import java.util.Arrays;
 import java.util.List;
 
+import com.dnd.cli.pages.OnlineSessionPage;
+
 public class DmMenuPage implements Page {
     private final Page createPage;
     private final Page editPage;
     private final Page deletePage;
     private final Page openPage;
+    private final Page onlinePage;
     private final CliSession session;
     private Page parent;
 
-    public DmMenuPage(Page createPage, Page editPage, Page deletePage, Page openPage, CliSession session, Page parent) {
+    public DmMenuPage(Page createPage, Page editPage, Page deletePage, Page openPage, Page onlinePage, CliSession session, Page parent) {
         this.createPage = createPage;
         this.editPage = editPage;
         this.deletePage = deletePage;
         this.openPage = openPage;
+        this.onlinePage = onlinePage;
         this.session = session;
         this.parent = parent;
     }
@@ -45,7 +49,8 @@ public class DmMenuPage implements Page {
             new CommandSpec("create", "Create new content", createPage),
             new CommandSpec("edit", "Edit existing content", editPage),
             new CommandSpec("delete", "Delete existing content", deletePage),
-            new CommandSpec("open", "Open existing content", openPage)
+            new CommandSpec("open", "Open existing content", openPage),
+            new CommandSpec("online", "Manage online session" + (session.isOnline() ? " [LIVE]" : ""), onlinePage)
         );
     }
 

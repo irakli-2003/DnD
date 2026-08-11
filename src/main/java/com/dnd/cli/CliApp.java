@@ -5,12 +5,22 @@ import com.dnd.cli.core.CommandResolver;
 import com.dnd.cli.core.CommandSpec;
 import com.dnd.cli.core.ConsoleIO;
 import com.dnd.cli.core.Page;
+import com.dnd.cli.pages.DmMenuPage;
+import com.dnd.data.CampaignRepositories;
 import com.dnd.data.DataAccessException;
+import com.dnd.security.FirebaseSessionSync;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 
 public class CliApp {
     public static void main(String[] args) {
+        // Try to launch JavaFX GUI; fall back to CLI if no display is available
+        if (!isHeadless()) {
+            com.dnd.ui.GuiApp.launch(args);
+            return;
+        }
+
         AppContext context;
         try {
             context = AppContext.build();
@@ -20,6 +30,12 @@ public class CliApp {
         }
 
         runLoop(context.getLandingPage(), context.getSession());
+    }
+
+    private static boolean isHeadless() {
+        if (java.awt.GraphicsEnvironment.isHeadless()) return true;
+        // On Windows there's always a display unless explicitly headless
+        return false;
     }
 
     private static void runLoop(Page landingPage, CliSession session) {
@@ -44,6 +60,7 @@ public class CliApp {
             if (result.getType() == CommandResolver.ResultType.BACK) {
                 if (canGoBack) {
                     current = current.getParent();
+                    autoPushIfDmMenu(current, session, console);
                 }
                 continue;
             }
@@ -66,6 +83,7 @@ public class CliApp {
                 }
                 if (target != null) {
                     current = target;
+                    autoPushIfDmMenu(current, session, console);
                 }
                 continue;
             }
@@ -73,7 +91,41 @@ public class CliApp {
             Page target = command.getTarget();
             if (target != null) {
                 current = target;
+                autoPushIfDmMenu(current, session, console);
             }
+        }
+    }
+
+    /**
+     * If the DM just navigated (back or forward) to the main DM menu while an
+     * online session is active, silently push the latest campaign state to Firebase.
+     * This is the auto-sync hook — the DM never needs to manually trigger a push.
+     */
+    private static void autoPushIfDmMenu(Page current, CliSession session, ConsoleIO console) {
+        if (!(current instanceof DmMenuPage) || !session.isOnline()) {
+            return;
+        }
+        if (session.getCampaignContext() == null) {
+            return;
+        }
+        try {
+            ObjectMapper mapper = com.dnd.data.JsonMappers.create();
+            CampaignRepositories repos = new CampaignRepositories(session.getCampaignContext().getPath());
+
+            java.util.Map<String, Object> snapshot = new java.util.LinkedHashMap<>();
+            snapshot.put("campaign", session.getCampaignContext().getName());
+            snapshot.put("players", repos.players().list());
+            snapshot.put("maps", repos.maps().list());
+            snapshot.put("npcs", repos.npcs().list());
+            snapshot.put("monsters", repos.monsters().list());
+
+            String json = mapper.writeValueAsString(snapshot);
+            session.getFirebaseSync().push(json);
+            console.println("[SYNC] Session state pushed to players.");
+        } catch (FirebaseSessionSync.SyncException e) {
+            console.println("[SYNC] Warning: could not push to Firebase — " + e.getMessage());
+        } catch (Exception e) {
+            console.println("[SYNC] Warning: could not build snapshot — " + e.getMessage());
         }
     }
 

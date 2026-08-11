@@ -94,6 +94,10 @@ public class Npc implements Printable {
         this.languages = languages;
     }
 
+    private String imagePath;
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
     @Override
     public String toString() {
         return name != null ? name : id;

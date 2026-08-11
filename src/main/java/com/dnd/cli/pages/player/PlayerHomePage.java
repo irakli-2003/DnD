@@ -27,12 +27,16 @@ import java.util.List;
  * etc.) - only what the currently selected {@link PlayerCharacter} itself
  * can see and do.</p>
  */
+import com.dnd.cli.pages.player.PlayerOnlineSessionPage;
+
 public class PlayerHomePage implements Page {
     private final CliSession session;
+    private final Page onlinePage;
     private Page parent;
 
-    public PlayerHomePage(CliSession session, Page parent) {
+    public PlayerHomePage(CliSession session, Page onlinePage, Page parent) {
         this.session = session;
+        this.onlinePage = onlinePage;
         this.parent = parent;
     }
 
@@ -69,7 +73,8 @@ public class PlayerHomePage implements Page {
             new CommandSpec("stats",     "View your character's stats",   this::showStats),
             new CommandSpec("inventory", "View/inspect your inventory",   this::showInventory),
             new CommandSpec("abilities", "View your spells/abilities",    this::showAbilities),
-            new CommandSpec("map",       "View and act on the map",       this::openMap)
+            new CommandSpec("map",       "View and act on the map",       this::openMap),
+            new CommandSpec("online",    "Join or view live session" + (session.isOnline() ? " [CONNECTED]" : ""), onlinePage)
         );
     }
 

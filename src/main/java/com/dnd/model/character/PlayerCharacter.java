@@ -147,6 +147,10 @@ public class PlayerCharacter implements Printable {
         return PasswordHasher.matches(rawPassword, passwordSalt, passwordHash);
     }
 
+    private String imagePath;
+    public String getImagePath() { return imagePath; }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
     @Override
     public String toString() {
         return name != null ? name : id;

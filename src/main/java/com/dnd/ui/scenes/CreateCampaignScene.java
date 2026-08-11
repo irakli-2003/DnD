@@ -1,0 +1,48 @@
+package com.dnd.ui.scenes;
+
+import com.dnd.ui.SceneType;
+import com.dnd.ui.UiSession;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+
+public class CreateCampaignScene extends BaseScene {
+    public CreateCampaignScene(UiSession uiSession) { super(uiSession); }
+
+    @Override
+    public Scene build() {
+        VBox root = new VBox(0);
+        root.getStyleClass().add("root");
+        root.getChildren().add(backBar(SceneType.CAMPAIGN_SELECTION));
+
+        VBox content = new VBox(16);
+        content.setPadding(new Insets(30, 60, 40, 60));
+
+        TextField nameField = textField("Campaign name");
+        CheckBox blankCheck = new CheckBox("Start blank (no template data)");
+        blankCheck.setStyle("-fx-text-fill: #d0c5a8;");
+
+        Label error = body("");
+        error.setStyle("-fx-text-fill: #e07070;");
+
+        Button create = btn("Create Campaign", () -> {
+            String name = nameField.getText().trim();
+            if (name.isEmpty()) { error.setText("Name cannot be empty."); return; }
+            try {
+                com.dnd.cli.core.CampaignContext ctx =
+                    uiSession.getStorage().createCampaignFromDefault(name, blankCheck.isSelected());
+                uiSession.getSession().setCampaignContext(ctx);
+                uiSession.getRouter().goTo(SceneType.DM_MENU);
+            } catch (Exception e) {
+                error.setText("Failed: " + e.getMessage());
+            }
+        });
+
+        content.getChildren().addAll(
+            title("Create Campaign"), nameField, blankCheck, error, create
+        );
+        root.getChildren().add(content);
+        return wrapInScene(root);
+    }
+}

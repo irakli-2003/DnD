@@ -8,6 +8,8 @@ import com.dnd.cli.pages.CreateCampaignPage;
 import com.dnd.cli.pages.DmMenuPage;
 import com.dnd.cli.pages.EntitySelectionPage;
 import com.dnd.cli.pages.LandingPage;
+import com.dnd.cli.pages.OnlineSessionPage;
+import com.dnd.cli.pages.player.PlayerOnlineSessionPage;
 import com.dnd.cli.pages.player.PlayerCampaignSelectionPage;
 import com.dnd.cli.pages.player.PlayerCharacterSelectionPage;
 import com.dnd.cli.pages.player.PlayerHomePage;
@@ -43,7 +45,9 @@ public final class AppContext {
 
         CliSession session = new CliSession(storage, new SystemConsoleIO(new Scanner(System.in)));
 
-        PlayerHomePage playerHomePage = new PlayerHomePage(session, null);
+        PlayerOnlineSessionPage playerOnlinePage = new PlayerOnlineSessionPage(session, null);
+        PlayerHomePage playerHomePage = new PlayerHomePage(session, playerOnlinePage, null);
+        playerOnlinePage.setParent(playerHomePage);
         PlayerCharacterSelectionPage playerCharacterSelectionPage = new PlayerCharacterSelectionPage(session, playerHomePage, null);
         PlayerCampaignSelectionPage playerCampaignSelectionPage = new PlayerCampaignSelectionPage(storage, playerCharacterSelectionPage, null);
 
@@ -51,7 +55,9 @@ public final class AppContext {
         EntitySelectionPage editPage = new EntitySelectionPage(EntitySelectionPage.Operation.EDIT, null);
         EntitySelectionPage deletePage = new EntitySelectionPage(EntitySelectionPage.Operation.DELETE, null);
         EntitySelectionPage openPage = new EntitySelectionPage(EntitySelectionPage.Operation.OPEN, null);
-        DmMenuPage dmMenuPage = new DmMenuPage(createPage, editPage, deletePage, openPage, session, null);
+        OnlineSessionPage onlineSessionPage = new OnlineSessionPage(session, null);
+        DmMenuPage dmMenuPage = new DmMenuPage(createPage, editPage, deletePage, openPage, onlineSessionPage, session, null);
+        onlineSessionPage.setParent(dmMenuPage);
         CreateCampaignPage createCampaignPage = new CreateCampaignPage(session, storage, dmMenuPage, null);
         CampaignSelectionPage campaignSelectionPage = new CampaignSelectionPage(storage, createCampaignPage, dmMenuPage, null);
         LandingPage landingPage = new LandingPage(campaignSelectionPage, playerCampaignSelectionPage);

@@ -83,6 +83,19 @@ public class JsonRepository<T, W> {
         writeWrapper(wrapper);
     }
 
+    public void save(T entity) {
+        String id = requireId(entity);
+        W wrapper = readWrapper();
+        List<T> items = listGetter.apply(wrapper);
+        int index = findIndex(items, id);
+        if (index == -1) {
+            items.add(entity);
+        } else {
+            items.set(index, entity);
+        }
+        writeWrapper(wrapper);
+    }
+
     public boolean delete(String id) {
         if (id == null) {
             return false;

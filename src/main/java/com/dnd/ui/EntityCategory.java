@@ -1,0 +1,5 @@
+package com.dnd.ui;
+public enum EntityCategory {
+    PLAYER, NPC, MONSTER, BEAST, ITEM, SPELL, PLACE, MAP, CLASS, RACE,
+    DAMAGE_TYPE, EFFECT, LANGUAGE, ALCHEMY_INGREDIENT, BOOK, DICE
+}

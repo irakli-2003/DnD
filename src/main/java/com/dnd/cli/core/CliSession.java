@@ -1,6 +1,7 @@
 package com.dnd.cli.core;
 
 import com.dnd.cli.storage.CampaignStorage;
+import com.dnd.security.FirebaseSessionSync;
 
 public class CliSession {
     private final CampaignStorage storage;
@@ -12,6 +13,12 @@ public class CliSession {
      * {@code PlayerCharacterSelectionPage}. Unused in DM mode.
      */
     private String activePlayerCharacterId;
+    /**
+     * Active Firebase sync client, present when an online session is running.
+     * Set by the DM when starting an online session; set by players when joining
+     * via a session token. {@code null} when offline.
+     */
+    private FirebaseSessionSync firebaseSync;
 
     public CliSession(CampaignStorage storage, ConsoleIO console) {
         this.storage = storage;
@@ -40,5 +47,20 @@ public class CliSession {
 
     public void setActivePlayerCharacterId(String activePlayerCharacterId) {
         this.activePlayerCharacterId = activePlayerCharacterId;
+    }
+
+    public FirebaseSessionSync getFirebaseSync() {
+        return firebaseSync;
+    }
+
+    public void setFirebaseSync(FirebaseSessionSync firebaseSync) {
+        if (this.firebaseSync != null) {
+            this.firebaseSync.stopListening();
+        }
+        this.firebaseSync = firebaseSync;
+    }
+
+    public boolean isOnline() {
+        return firebaseSync != null;
     }
 }

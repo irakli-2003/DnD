@@ -1,0 +1,42 @@
+package com.dnd.ui;
+
+import com.dnd.cli.core.CliSession;
+import com.dnd.cli.storage.CampaignStorage;
+import javafx.stage.Stage;
+
+public class UiSession {
+    private final CliSession session;
+    private final CampaignStorage storage;
+    private final SceneRouter router;
+    private String sessionToken;
+    private EntityCategory activeEntityCategory;
+    private String activeEntityId;
+    private String activeMapId;
+    private boolean dm = false;
+
+    public UiSession(CliSession session, CampaignStorage storage, Stage stage) {
+        this.session = session;
+        this.storage = storage;
+        this.router = new SceneRouter(this, stage);
+    }
+
+    public CliSession getSession() { return session; }
+    public CampaignStorage getStorage() { return storage; }
+    public SceneRouter getRouter() { return router; }
+    public String getSessionToken() { return sessionToken; }
+    public void setSessionToken(String t) { sessionToken = t; }
+
+    public EntityCategory getActiveEntityCategory() { return activeEntityCategory; }
+    public void setActiveEntityCategory(EntityCategory cat) { this.activeEntityCategory = cat; }
+    public String getActiveEntityId() { return activeEntityId; }
+    public void setActiveEntityId(String id) { this.activeEntityId = id; }
+    public String getActiveMapId() { return activeMapId; }
+    public void setActiveMapId(String id) { this.activeMapId = id; }
+    public boolean isDm() { return dm; }
+    public void setDm(boolean dm) { this.dm = dm; }
+
+    public java.nio.file.Path campaignRoot() {
+        if (session.getCampaignContext() == null) return null;
+        return session.getCampaignContext().getPath();
+    }
+}

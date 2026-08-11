@@ -1,0 +1,34 @@
+package com.dnd.ui;
+
+import com.dnd.cli.core.CliSession;
+import com.dnd.cli.core.SystemConsoleIO;
+import com.dnd.cli.storage.CampaignStorage;
+import javafx.application.Application;
+import javafx.stage.Stage;
+
+import java.util.Scanner;
+
+public class GuiApp extends Application {
+    @Override
+    public void start(Stage primaryStage) {
+        CampaignStorage storage = new CampaignStorage();
+        storage.ensureInitialized();
+        CliSession session = new CliSession(storage, new SystemConsoleIO(new Scanner(System.in)));
+        UiSession uiSession = new UiSession(session, storage, primaryStage);
+        primaryStage.setTitle("DnD Campaign Manager");
+        primaryStage.setWidth(900);
+        primaryStage.setHeight(650);
+        primaryStage.setOnCloseRequest(e -> {
+            if (session.isOnline()) {
+                try { session.getFirebaseSync().delete(); } catch (Exception ignored) {}
+                session.setFirebaseSync(null);
+            }
+        });
+        uiSession.getRouter().goTo(SceneType.LANDING);
+        primaryStage.show();
+    }
+
+    public static void launch(String[] args) {
+        Application.launch(GuiApp.class, args);
+    }
+}

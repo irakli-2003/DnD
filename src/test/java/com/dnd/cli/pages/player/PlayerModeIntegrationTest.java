@@ -77,7 +77,7 @@ public class PlayerModeIntegrationTest {
         FakeConsoleIO console = new FakeConsoleIO();
         CliSession session = new CliSession(new CampaignStorage(campaignRoot.getParent()), console);
 
-        PlayerHomePage homePage = new PlayerHomePage(session, null);
+        PlayerHomePage homePage = new PlayerHomePage(session, null, null);
         PlayerCharacterSelectionPage characterPage = new PlayerCharacterSelectionPage(session, homePage, null);
         PlayerCampaignSelectionPage campaignPage = new PlayerCampaignSelectionPage(session.getStorage(), characterPage, null);
 
