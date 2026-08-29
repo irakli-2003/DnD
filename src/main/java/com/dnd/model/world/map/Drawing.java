@@ -23,6 +23,8 @@ public class Drawing {
     private boolean filled = false;
     /** Flat list of grid-space coordinates: {@code x0, y0, x1, y1, ...}. */
     private List<Double> points = new ArrayList<>();
+    /** Stacking order shared with {@link MapLayer}/{@link MapObjectGroup}; higher draws on top. */
+    private int zOrder = 0;
 
     public Drawing() {
     }
@@ -53,4 +55,7 @@ public class Drawing {
 
     public List<Double> getPoints() { return points; }
     public void setPoints(List<Double> points) { this.points = points != null ? points : new ArrayList<>(); }
+
+    public int getZOrder() { return zOrder; }
+    public void setZOrder(int zOrder) { this.zOrder = zOrder; }
 }

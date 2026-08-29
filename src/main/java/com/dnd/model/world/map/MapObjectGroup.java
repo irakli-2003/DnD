@@ -21,6 +21,8 @@ public class MapObjectGroup {
     private String id;
     private String label;
     private List<String> memberKeys = new ArrayList<>();
+    /** Stacking order shared with {@link MapLayer}/{@link Drawing}; higher draws on top. */
+    private int zOrder = 0;
 
     public MapObjectGroup() {
     }
@@ -39,4 +41,7 @@ public class MapObjectGroup {
 
     public List<String> getMemberKeys() { return memberKeys; }
     public void setMemberKeys(List<String> memberKeys) { this.memberKeys = memberKeys != null ? memberKeys : new ArrayList<>(); }
+
+    public int getZOrder() { return zOrder; }
+    public void setZOrder(int zOrder) { this.zOrder = zOrder; }
 }

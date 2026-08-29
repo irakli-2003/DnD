@@ -108,6 +108,11 @@ public class MapEditorScene extends BaseScene {
 
         VBox leftPanel = buildLeftPanel();
         leftPanel.setMinWidth(220);
+        ScrollPane leftScroll = new ScrollPane(leftPanel);
+        leftScroll.setFitToWidth(true);
+        leftScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        leftScroll.setStyle("-fx-background-color: #12122a;");
+        leftScroll.setMinWidth(220);
 
         double canvasW = map.getWidth() * CELL_SIZE;
         double canvasH = map.getHeight() * CELL_SIZE;
@@ -119,9 +124,23 @@ public class MapEditorScene extends BaseScene {
         ScrollPane canvasScroll = new ScrollPane(new Group(canvas));
         canvasScroll.setStyle("-fx-background-color: #1a1a2e;");
 
-        split.getItems().addAll(leftPanel, canvasScroll);
+        split.getItems().addAll(leftScroll, canvasScroll);
         root.getChildren().add(split);
-        return wrapInScene(root);
+        Scene scene = wrapInScene(root);
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                deselectAll();
+            }
+        });
+        return scene;
+    }
+
+    /** Clears the current object-tree/canvas selection (used by Esc and by clicking empty canvas). */
+    private void deselectAll() {
+        if (selectedKey == null && (objectsTree == null || objectsTree.getSelectionModel().getSelectedItems().isEmpty())) return;
+        selectedKey = null;
+        if (objectsTree != null) objectsTree.getSelectionModel().clearSelection();
+        renderCanvas();
     }
 
     private VBox buildLeftPanel() {
@@ -160,14 +179,8 @@ public class MapEditorScene extends BaseScene {
         objectsTree = tree;
         refreshObjectsTree();
 
-        Button upBtn = btn("↑ Forward", () -> {
-            MapLayer l = selectedLayer();
-            if (l != null) { l.setZOrder(l.getZOrder() + 1); renderCanvas(); }
-        });
-        Button downBtn = btn("↓ Back", () -> {
-            MapLayer l = selectedLayer();
-            if (l != null) { l.setZOrder(Math.max(0, l.getZOrder() - 1)); renderCanvas(); }
-        });
+        Button upBtn = btn("↑ Forward", () -> moveSelectedZ(1));
+        Button downBtn = btn("↓ Back", () -> moveSelectedZ(-1));
         Button addLayerBtn = btn("+ Add Layer", this::openAddLayerDialog);
         Button deleteBtn = dangerBtn("Delete", () -> deleteSelected(tree));
         Button groupBtn = btn("Group Selected", () -> groupSelected(tree));
@@ -206,22 +219,33 @@ public class MapEditorScene extends BaseScene {
         Set<String> nested = new HashSet<>();
         for (MapObjectGroup g : map.getGroups()) nested.addAll(g.getMemberKeys());
 
+        // Top-level entries (not nested inside any group), ordered so the topmost row in the
+        // tree is the most-forward object on the map - i.e. descending by shared z-order.
+        List<TopLevelEntry> entries = new ArrayList<>();
         for (MapObjectGroup g : map.getGroups()) {
-            if (!nested.contains("group:" + g.getId())) root.getChildren().add(buildGroupItem(g));
+            if (!nested.contains("group:" + g.getId())) entries.add(new TopLevelEntry(g.getZOrder(), buildGroupItem(g)));
         }
         for (MapLayer l : map.getLayers()) {
             if (!nested.contains("layer:" + l.getId())) {
-                root.getChildren().add(new TreeItem<>(new ObjNode("layer:" + l.getId(), "\uD83D\uDDBC " + l.getLabel())));
+                entries.add(new TopLevelEntry(l.getZOrder(),
+                    new TreeItem<>(new ObjNode("layer:" + l.getId(), "\uD83D\uDDBC " + l.getLabel()))));
             }
         }
         for (Drawing d : map.getDrawings()) {
             if (!nested.contains("drawing:" + d.getId())) {
-                root.getChildren().add(new TreeItem<>(new ObjNode("drawing:" + d.getId(), drawingLabel(d))));
+                entries.add(new TopLevelEntry(d.getZOrder(),
+                    new TreeItem<>(new ObjNode("drawing:" + d.getId(), drawingLabel(d)))));
             }
         }
+        entries.sort((a, b) -> Integer.compare(b.zOrder, a.zOrder));
+        for (TopLevelEntry entry : entries) root.getChildren().add(entry.item);
+
         objectsTree.setRoot(root);
         objectsTree.setShowRoot(false);
     }
+
+    /** Pairs a top-level tree item with its shared z-order, purely to sort the tree display. */
+    private record TopLevelEntry(int zOrder, TreeItem<ObjNode> item) { }
 
     private TreeItem<ObjNode> buildGroupItem(MapObjectGroup g) {
         TreeItem<ObjNode> item = new TreeItem<>(new ObjNode("group:" + g.getId(), "\uD83D\uDCC1 " + g.getLabel()));
@@ -268,6 +292,40 @@ public class MapEditorScene extends BaseScene {
     private MapLayer selectedLayer() {
         if (selectedKey != null && selectedKey.startsWith("layer:")) return findLayer(selectedKey.substring(6));
         return null;
+    }
+
+    /** Reads the shared stacking z-order of any layer/drawing/group key, or 0 if unresolved. */
+    private int zOrderOf(String key) {
+        if (key == null) return 0;
+        if (key.startsWith("layer:")) { MapLayer l = findLayer(key.substring(6)); return l != null ? l.getZOrder() : 0; }
+        if (key.startsWith("drawing:")) { Drawing d = findDrawing(key.substring(8)); return d != null ? d.getZOrder() : 0; }
+        if (key.startsWith("group:")) { MapObjectGroup g = findGroup(key.substring(6)); return g != null ? g.getZOrder() : 0; }
+        return 0;
+    }
+
+    private void setZOrderOf(String key, int z) {
+        if (key == null) return;
+        if (key.startsWith("layer:")) { MapLayer l = findLayer(key.substring(6)); if (l != null) l.setZOrder(z); }
+        else if (key.startsWith("drawing:")) { Drawing d = findDrawing(key.substring(8)); if (d != null) d.setZOrder(z); }
+        else if (key.startsWith("group:")) { MapObjectGroup g = findGroup(key.substring(6)); if (g != null) g.setZOrder(z); }
+    }
+
+    /** Moves the currently selected object one step forward/back in the shared layer/drawing/group stack. */
+    private void moveSelectedZ(int delta) {
+        if (selectedKey == null) return;
+        setZOrderOf(selectedKey, Math.max(0, zOrderOf(selectedKey) + delta));
+        refreshObjectsTree();
+        renderCanvas();
+    }
+
+    /** Highest z-order currently in use across layers/drawings/groups, plus one - so new objects
+     *  default to appearing in front of everything else already on the map. */
+    private int nextZOrder() {
+        int max = -1;
+        for (MapLayer l : map.getLayers()) max = Math.max(max, l.getZOrder());
+        for (Drawing d : map.getDrawings()) max = Math.max(max, d.getZOrder());
+        for (MapObjectGroup g : map.getGroups()) max = Math.max(max, g.getZOrder());
+        return max + 1;
     }
 
     /** Bounding box (in px) of the object referenced by key, recursively for groups. Null if unresolved. */
@@ -394,7 +452,9 @@ public class MapEditorScene extends BaseScene {
         if (res.isEmpty() || res.get().isBlank()) return;
 
         for (String k : keys) stripKeyFromAllGroups(k);
+        int groupZ = keys.stream().mapToInt(this::zOrderOf).max().orElse(0);
         MapObjectGroup group = new MapObjectGroup("group_" + System.currentTimeMillis(), res.get().trim(), new ArrayList<>(keys));
+        group.setZOrder(groupZ);
         map.getGroups().add(group);
         selectedKey = "group:" + group.getId();
         refreshObjectsTree();
@@ -463,25 +523,11 @@ public class MapEditorScene extends BaseScene {
         HBox widthRow = new HBox(6, body("Line width:"), widthSpinner);
         widthRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
-        Button clearBtn = dangerBtn("Clear All Drawings", () -> {
-            if (map.getDrawings().isEmpty()) return;
-            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
-                "Remove all hand-drawn shapes on this map?", ButtonType.OK, ButtonType.CANCEL);
-            styleDialog(confirm);
-            confirm.showAndWait().ifPresent(bt -> {
-                if (bt == ButtonType.OK) {
-                    map.getDrawings().clear();
-                    refreshObjectsTree();
-                    renderCanvas();
-                }
-            });
-        });
-
         Label hint = body("Pen/Line/Rect/Oval draw on the map. Eraser removes the shape under your click. "
             + "Passable Toggle flips a cell's passable/impassable state on click (impassable cells render solid black).");
         hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
 
-        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, clearBtn, hint);
+        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, hint);
         return box;
     }
 
@@ -610,7 +656,7 @@ public class MapEditorScene extends BaseScene {
                     Color chosen = colorPicked[0] ? layerColorPicker.getValue() : randomNonBlackColor();
                     fillColorHex = toHex(sanitizeColor(chosen));
                 }
-                int nextZ = map.getLayers().stream().mapToInt(MapLayer::getZOrder).max().orElse(-1) + 1;
+                int nextZ = nextZOrder();
                 MapLayer newLayer = new MapLayer(layerId, labelField.getText().trim(), rel,
                     xSpinner.getValue(), ySpinner.getValue(), wSpinner.getValue(), hSpinner.getValue(), nextZ);
                 newLayer.setFillColor(fillColorHex);
@@ -683,6 +729,9 @@ public class MapEditorScene extends BaseScene {
                         } else if (mx >= b[0] && mx <= b[2] && my >= b[1] && my <= b[3]) {
                             dragging = true;
                             dragLastX = mx; dragLastY = my;
+                        } else {
+                            // Clicked outside the selected object's bounds: deselect it.
+                            deselectAll();
                         }
                     }
                 }
@@ -821,6 +870,7 @@ public class MapEditorScene extends BaseScene {
         }
         Drawing d = new Drawing("drawing_" + System.currentTimeMillis() + "_" + (drawIdCounter++),
             type, toHex(sanitizeColor(drawColor)), drawLineWidth, drawFilled, gridPoints);
+        d.setZOrder(nextZOrder());
         map.getDrawings().add(d);
     }
 
@@ -905,6 +955,59 @@ public class MapEditorScene extends BaseScene {
         }
     }
 
+    /** Renders layers, drawings, and groups together, sorted ascending by their shared z-order,
+     *  so the "Map Objects" tree (sorted descending, top = front) and the canvas always agree. */
+    private void renderObjectsUnified(GraphicsContext gc) {
+        Set<String> nested = new HashSet<>();
+        for (MapObjectGroup g : map.getGroups()) nested.addAll(g.getMemberKeys());
+
+        List<String> topKeys = new ArrayList<>();
+        for (MapLayer l : map.getLayers()) if (!nested.contains("layer:" + l.getId())) topKeys.add("layer:" + l.getId());
+        for (Drawing d : map.getDrawings()) if (!nested.contains("drawing:" + d.getId())) topKeys.add("drawing:" + d.getId());
+        for (MapObjectGroup g : map.getGroups()) if (!nested.contains("group:" + g.getId())) topKeys.add("group:" + g.getId());
+        topKeys.sort(Comparator.comparingInt(this::zOrderOf));
+
+        for (String key : topKeys) renderKey(gc, key);
+    }
+
+    private void renderKey(GraphicsContext gc, String key) {
+        if (key.startsWith("layer:")) {
+            MapLayer layer = findLayer(key.substring(6));
+            if (layer != null) renderLayer(gc, layer);
+        } else if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            if (d != null) renderDrawing(gc, d);
+        } else if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g != null) {
+                List<String> members = new ArrayList<>(g.getMemberKeys());
+                members.sort(Comparator.comparingInt(this::zOrderOf));
+                for (String m : members) renderKey(gc, m);
+            }
+        }
+    }
+
+    private void renderLayer(GraphicsContext gc, MapLayer layer) {
+        double lx = layer.getX() * CELL_SIZE, ly = layer.getY() * CELL_SIZE;
+        double lw = layer.getWidth() * CELL_SIZE, lh = layer.getHeight() * CELL_SIZE;
+        boolean drewImage = false;
+        if (layer.getImagePath() != null && uiSession.campaignRoot() != null) {
+            Image img = ImageStore.load(uiSession.campaignRoot(), layer.getImagePath());
+            if (img != null) {
+                gc.drawImage(img, lx, ly, lw, lh);
+                drewImage = true;
+            }
+        }
+        if (!drewImage) {
+            if (layer.getFillColor() != null) {
+                try { gc.setFill(Color.web(layer.getFillColor())); } catch (Exception ex) { gc.setFill(Color.web("#44444488")); }
+            } else {
+                gc.setFill(Color.web("#44444488"));
+            }
+            gc.fillRect(lx, ly, lw, lh);
+        }
+    }
+
     private void renderCanvas() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -912,30 +1015,7 @@ public class MapEditorScene extends BaseScene {
         gc.setFill(Color.web("#1a1a1a"));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        if (map.getLayers() != null) {
-            List<MapLayer> sorted = map.getLayers().stream()
-                .sorted(Comparator.comparingInt(MapLayer::getZOrder)).toList();
-            for (MapLayer layer : sorted) {
-                double lx = layer.getX() * CELL_SIZE, ly = layer.getY() * CELL_SIZE;
-                double lw = layer.getWidth() * CELL_SIZE, lh = layer.getHeight() * CELL_SIZE;
-                boolean drewImage = false;
-                if (layer.getImagePath() != null && uiSession.campaignRoot() != null) {
-                    Image img = ImageStore.load(uiSession.campaignRoot(), layer.getImagePath());
-                    if (img != null) {
-                        gc.drawImage(img, lx, ly, lw, lh);
-                        drewImage = true;
-                    }
-                }
-                if (!drewImage) {
-                    if (layer.getFillColor() != null) {
-                        try { gc.setFill(Color.web(layer.getFillColor())); } catch (Exception ex) { gc.setFill(Color.web("#44444488")); }
-                    } else {
-                        gc.setFill(Color.web("#44444488"));
-                    }
-                    gc.fillRect(lx, ly, lw, lh);
-                }
-            }
-        }
+        renderObjectsUnified(gc);
 
         // Impassable cells render as solid black so the editor makes them visually obvious.
         gc.setFill(Color.BLACK);
@@ -956,12 +1036,7 @@ public class MapEditorScene extends BaseScene {
         for (int y = 0; y <= map.getHeight(); y++)
             gc.strokeLine(0, y * CELL_SIZE, map.getWidth() * CELL_SIZE, y * CELL_SIZE);
 
-        // Hand-drawn shapes: persisted ones first, then a live preview of whatever is in progress.
-        if (map.getDrawings() != null) {
-            for (Drawing d : map.getDrawings()) {
-                renderDrawing(gc, d);
-            }
-        }
+        // Live preview of whatever pen/shape drawing is currently in progress (not yet committed).
         if (currentTool == Tool.PEN && penPoints.size() > 1) {
             paintShape(gc, Drawing.Type.FREEHAND, penPoints, drawColor, drawLineWidth, false);
         } else if (shapeDrawing) {
