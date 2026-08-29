@@ -117,6 +117,12 @@ public class MapViewScene extends BaseScene {
             }
         }
 
+        if (map.getDrawings() != null) {
+            for (Drawing d : map.getDrawings()) {
+                renderDrawing(gc, d);
+            }
+        }
+
         for (int y = 0; y < map.getHeight(); y++) {
             for (int x = 0; x < map.getWidth(); x++) {
                 GridCell cell = map.getCell(x, y);
@@ -125,6 +131,43 @@ public class MapViewScene extends BaseScene {
                     drawToken(gc, obj, x, y, slot);
                     slot++;
                 }
+            }
+        }
+    }
+
+    private void renderDrawing(GraphicsContext gc, Drawing d) {
+        List<Double> gp = d.getPoints();
+        if (gp.size() < 2) return;
+        List<double[]> pts = new java.util.ArrayList<>();
+        for (int i = 0; i + 1 < gp.size(); i += 2) {
+            pts.add(new double[]{gp.get(i) * CELL_SIZE, gp.get(i + 1) * CELL_SIZE});
+        }
+        Color color;
+        try { color = Color.web(d.getColor()); } catch (Exception ex) { color = Color.web("#c9a84c"); }
+        gc.setStroke(color);
+        gc.setFill(color);
+        gc.setLineWidth(d.getLineWidth());
+        switch (d.getType()) {
+            case FREEHAND -> {
+                for (int i = 1; i < pts.size(); i++) {
+                    gc.strokeLine(pts.get(i - 1)[0], pts.get(i - 1)[1], pts.get(i)[0], pts.get(i)[1]);
+                }
+            }
+            case LINE -> {
+                double[] a = pts.get(0), b = pts.get(pts.size() - 1);
+                gc.strokeLine(a[0], a[1], b[0], b[1]);
+            }
+            case RECTANGLE -> {
+                double[] a = pts.get(0), b = pts.get(pts.size() - 1);
+                double x = Math.min(a[0], b[0]), y = Math.min(a[1], b[1]);
+                double w = Math.abs(b[0] - a[0]), h = Math.abs(b[1] - a[1]);
+                if (d.isFilled()) gc.fillRect(x, y, w, h); else gc.strokeRect(x, y, w, h);
+            }
+            case OVAL -> {
+                double[] a = pts.get(0), b = pts.get(pts.size() - 1);
+                double x = Math.min(a[0], b[0]), y = Math.min(a[1], b[1]);
+                double w = Math.abs(b[0] - a[0]), h = Math.abs(b[1] - a[1]);
+                if (d.isFilled()) gc.fillOval(x, y, w, h); else gc.strokeOval(x, y, w, h);
             }
         }
     }

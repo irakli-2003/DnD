@@ -246,3 +246,57 @@
     -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
+
+/* Map Editor: small tool-selection buttons, color picker, and spinners. */
+.tool-toggle-button {
+    -fx-background-color: #2d1b00;
+    -fx-text-fill: #c9a84c;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+    -fx-font-size: 11px;
+    -fx-padding: 5 9 5 9;
+    -fx-cursor: hand;
+    -fx-min-width: 0;
+}
+
+.tool-toggle-button:hover {
+    -fx-background-color: #4a2f00;
+    -fx-border-color: #e8c46a;
+}
+
+.tool-toggle-button:selected {
+    -fx-background-color: #c9a84c;
+    -fx-text-fill: #1a1a2e;
+    -fx-border-color: #e8c46a;
+}
+
+.spinner {
+    -fx-background-color: #0f0f1e;
+}
+
+.spinner .text-field {
+    -fx-background-color: #0f0f1e;
+    -fx-text-fill: #e0d5c0;
+}
+
+.color-picker {
+    -fx-background-color: #0f0f1e;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 1px;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.color-picker .color-picker-label {
+    -fx-text-fill: #e0d5c0;
+}
+
+.color-palette {
+    -fx-background-color: #1a1a2e;
+}
+
+.grid-pane {
+    -fx-background-color: transparent;
+}

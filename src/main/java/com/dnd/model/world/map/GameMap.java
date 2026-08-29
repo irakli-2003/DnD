@@ -20,6 +20,7 @@ public class GameMap implements Printable {
     private int height;
     private List<List<GridCell>> grid = new ArrayList<>();
     private List<MapLayer> layers = new ArrayList<>();
+    private List<Drawing> drawings = new ArrayList<>();
 
     public GameMap() {
     }
@@ -92,6 +93,9 @@ public class GameMap implements Printable {
 
     public List<MapLayer> getLayers() { return layers; }
     public void setLayers(List<MapLayer> layers) { this.layers = layers != null ? layers : new ArrayList<>(); }
+
+    public List<Drawing> getDrawings() { return drawings; }
+    public void setDrawings(List<Drawing> drawings) { this.drawings = drawings != null ? drawings : new ArrayList<>(); }
 
     /**
      * Resizes {@link #grid} to exactly {@code width} x {@code height}, padding any missing
