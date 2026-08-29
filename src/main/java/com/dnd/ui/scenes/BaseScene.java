@@ -3,11 +3,15 @@ package com.dnd.ui.scenes;
 import com.dnd.ui.UiSession;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 public abstract class BaseScene {
@@ -21,9 +25,24 @@ public abstract class BaseScene {
     public abstract Scene build();
 
     protected Scene wrapInScene(javafx.scene.Parent root) {
-        Scene scene = new Scene(root, 900, 650);
+        return themedScene(root, 900, 650);
+    }
+
+    /** Builds a {@link Scene} of the given size with the app's stylesheet applied, for windows/dialogs that shouldn't use the default 900x650 size. */
+    protected Scene themedScene(Parent root, double width, double height) {
+        Scene scene = new Scene(root, width, height);
         scene.getStylesheets().add(getClass().getResource(CSS_PATH).toExternalForm());
         return scene;
+    }
+
+    /**
+     * Applies the app's dark-blue stylesheet to a {@link Dialog}'s (Alert, TextInputDialog,
+     * ChoiceDialog, ...) own {@code DialogPane}. Dialogs open in their own {@code Scene} that
+     * does NOT inherit stylesheets from the scene that spawned them, so without this they
+     * render with JavaFX's default white/light-gray look.
+     */
+    protected void styleDialog(Dialog<?> dialog) {
+        dialog.getDialogPane().getStylesheets().add(getClass().getResource(CSS_PATH).toExternalForm());
     }
 
     protected Label title(String text) {
@@ -79,6 +98,30 @@ public abstract class BaseScene {
         pf.getStyleClass().add("dnd-text-field");
         pf.setMaxWidth(400);
         return pf;
+    }
+
+    /**
+     * Builds a {@link CheckBox} with an explicit, single-fire toggle handler.
+     *
+     * <p>Some environments (e.g. remote-desktop input) can deliver a click event to the
+     * default {@code CheckBox} skin twice, which toggles the selection twice and makes the
+     * control appear permanently "stuck" from the user's point of view. Handling the toggle
+     * manually and consuming the mouse event guarantees exactly one state flip per click.</p>
+     */
+    protected CheckBox checkBox(String label) {
+        CheckBox cb = new CheckBox(label);
+        cb.getStyleClass().add("dnd-check-box");
+        // Event FILTERS run in the capturing phase, before the control's own skin/behavior
+        // handles the event in the bubbling phase. Consuming here fully replaces the
+        // built-in toggle-on-click behavior with our own single, deterministic toggle,
+        // instead of layering a second toggle on top of it (which is what caused the
+        // reported "checkbox can't be unchecked" bug: two toggles per click net to no change).
+        cb.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            cb.requestFocus();
+            cb.setSelected(!cb.isSelected());
+            e.consume();
+        });
+        return cb;
     }
 
     protected Region spacer() {

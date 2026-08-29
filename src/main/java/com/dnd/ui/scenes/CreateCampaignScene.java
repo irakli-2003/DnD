@@ -20,7 +20,7 @@ public class CreateCampaignScene extends BaseScene {
         content.setPadding(new Insets(30, 60, 40, 60));
 
         TextField nameField = textField("Campaign name");
-        CheckBox blankCheck = new CheckBox("Start blank (no template data)");
+        CheckBox blankCheck = checkBox("Start blank (no template data)");
         blankCheck.setStyle("-fx-text-fill: #d0c5a8;");
 
         Label error = body("");

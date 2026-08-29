@@ -109,6 +109,7 @@ public class PlayerHomeScene extends BaseScene {
     private void info(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK);
         a.setHeaderText(null);
+        styleDialog(a);
         a.showAndWait();
     }
 }

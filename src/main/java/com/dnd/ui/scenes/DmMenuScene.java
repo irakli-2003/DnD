@@ -1,6 +1,11 @@
 package com.dnd.ui.scenes;
 
+import com.dnd.data.CampaignRepositories;
+import com.dnd.model.character.CharacterClass;
+import com.dnd.model.character.CharacterRace;
+import com.dnd.model.character.PlayerCharacter;
 import com.dnd.ui.EntityCategory;
+import com.dnd.ui.ImageStore;
 import com.dnd.ui.SceneType;
 import com.dnd.ui.UiSession;
 import javafx.geometry.Insets;
@@ -8,9 +13,24 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 
+import java.util.List;
+
 public class DmMenuScene extends BaseScene {
+
+    /** Every entity category managed in the Worldbuilding section (everything except players). */
+    private static final EntityCategory[] WORLDBUILDING_CATEGORIES = {
+        EntityCategory.NPC, EntityCategory.MONSTER, EntityCategory.BEAST, EntityCategory.ITEM,
+        EntityCategory.SPELL, EntityCategory.PLACE, EntityCategory.MAP, EntityCategory.CLASS,
+        EntityCategory.RACE, EntityCategory.DAMAGE_TYPE, EntityCategory.EFFECT, EntityCategory.LANGUAGE,
+        EntityCategory.ALCHEMY_INGREDIENT, EntityCategory.BOOK, EntityCategory.DICE
+    };
+
+    private static final double CARD_WIDTH = 120;
+
     public DmMenuScene(UiSession uiSession) { super(uiSession); }
 
     @Override
@@ -19,7 +39,7 @@ public class DmMenuScene extends BaseScene {
         root.getStyleClass().add("root");
         root.getChildren().add(backBar(SceneType.CAMPAIGN_SELECTION));
 
-        VBox content = new VBox(16);
+        VBox content = new VBox(20);
         content.setPadding(new Insets(20, 60, 40, 60));
         content.setAlignment(Pos.TOP_LEFT);
 
@@ -35,28 +55,12 @@ public class DmMenuScene extends BaseScene {
             header.getChildren().add(badge);
         }
 
-        content.getChildren().addAll(
-            header,
-            subtitle("Campaign: " + campaignName),
-            spacer()
-        );
+        content.getChildren().addAll(header, subtitle("Campaign: " + campaignName));
 
-        content.getChildren().add(sectionLabel("Manage Content"));
-        HBox row1 = new HBox(12);
-        row1.getChildren().addAll(
-            categoryBtn("Players",  EntityCategory.PLAYER),
-            categoryBtn("NPCs",     EntityCategory.NPC),
-            categoryBtn("Monsters", EntityCategory.MONSTER),
-            categoryBtn("Items",    EntityCategory.ITEM)
-        );
-        HBox row2 = new HBox(12);
-        row2.getChildren().addAll(
-            categoryBtn("Spells",   EntityCategory.SPELL),
-            categoryBtn("Places",   EntityCategory.PLACE),
-            categoryBtn("Maps",     EntityCategory.MAP),
-            categoryBtn("More...",  null)
-        );
-        content.getChildren().addAll(row1, row2);
+        content.getChildren().add(worldbuildingSection());
+        content.getChildren().add(playersSection());
+        content.getChildren().add(storylineSection());
+
         content.getChildren().add(
             btn("Online Session" + (uiSession.getSession().isOnline() ? "  ●" : ""),
                 () -> uiSession.getRouter().goTo(SceneType.DM_ONLINE_SESSION))
@@ -67,15 +71,143 @@ public class DmMenuScene extends BaseScene {
         return wrapInScene(root);
     }
 
-    private Button categoryBtn(String label, EntityCategory cat) {
-        return btn(label, () -> {
-            if (cat == null) {
-                uiSession.setActiveEntityCategory(EntityCategory.LANGUAGE);
-            } else {
+    /** "Worldbuilding": one button per non-player entity category, wrapping as needed. */
+    private VBox worldbuildingSection() {
+        VBox section = new VBox(10);
+        section.getChildren().add(sectionLabel("Worldbuilding"));
+
+        FlowPane grid = new FlowPane(10, 10);
+        for (EntityCategory cat : WORLDBUILDING_CATEGORIES) {
+            grid.getChildren().add(btn(categoryLabel(cat), () -> {
                 uiSession.setActiveEntityCategory(cat);
+                uiSession.getRouter().goTo(SceneType.ENTITY_LIST);
+            }));
+        }
+        section.getChildren().add(grid);
+        return section;
+    }
+
+    /** "Players": horizontally scrollable row of mini character cards, with scroll arrows. */
+    private VBox playersSection() {
+        VBox section = new VBox(10);
+        section.getChildren().add(sectionLabel("Players"));
+
+        HBox cardRow = new HBox(10);
+        cardRow.setPadding(new Insets(4));
+
+        if (uiSession.campaignRoot() != null) {
+            CampaignRepositories repos = new CampaignRepositories(uiSession.campaignRoot());
+            List<PlayerCharacter> players = repos.players().list();
+            for (PlayerCharacter pc : players) {
+                cardRow.getChildren().add(playerCard(pc, repos));
             }
-            uiSession.getRouter().goTo(SceneType.ENTITY_LIST);
+            if (players.isEmpty()) {
+                cardRow.getChildren().add(body("No player characters yet."));
+            }
+        }
+
+        ScrollPane scroll = new ScrollPane(cardRow);
+        scroll.setFitToHeight(true);
+        scroll.setPrefViewportHeight(150);
+        scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scroll.setStyle("-fx-background: #1a1a2e; -fx-background-color: #1a1a2e;");
+
+        Button left = btn("◀", () -> scroll.setHvalue(Math.max(0, scroll.getHvalue() - 0.2)));
+        Button right = btn("▶", () -> scroll.setHvalue(Math.min(1, scroll.getHvalue() + 0.2)));
+        left.setMinWidth(40);
+        right.setMinWidth(40);
+
+        HBox scrollRow = new HBox(8, left, scroll, right);
+        scrollRow.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(scroll, Priority.ALWAYS);
+
+        Button newPlayerBtn = btn("+ New Player", () -> {
+            uiSession.setActiveEntityCategory(EntityCategory.PLAYER);
+            uiSession.setActiveEntityId(null);
+            uiSession.getRouter().goTo(SceneType.ENTITY_DETAIL);
         });
+
+        section.getChildren().addAll(scrollRow, newPlayerBtn);
+        return section;
+    }
+
+    private VBox playerCard(PlayerCharacter pc, CampaignRepositories repos) {
+        ImageView img = new ImageView(ImageStore.loadOrPlaceholder(uiSession.campaignRoot(), pc.getImagePath()));
+        img.setFitWidth(56);
+        img.setFitHeight(56);
+        img.setPreserveRatio(true);
+
+        String className = lookupName(repos.classes().list(), pc.getClassId(), CharacterClass::getId, CharacterClass::getName);
+        String raceName = lookupName(repos.races().list(), pc.getRaceId(), CharacterRace::getId, CharacterRace::getName);
+
+        Label name = smallLabel(pc.getName() != null ? pc.getName() : pc.getId(), true);
+        Label level = smallLabel("Lvl " + pc.getLevel(), false);
+        Label cls = smallLabel(className, false);
+        Label race = smallLabel(raceName, false);
+        Label player = smallLabel(pc.getPlayerName() != null && !pc.getPlayerName().isBlank()
+            ? "Player: " + pc.getPlayerName() : "Player: -", false);
+
+        VBox card = new VBox(3, img, name, level, cls, race, player);
+        card.setAlignment(Pos.TOP_CENTER);
+        card.setPadding(new Insets(8));
+        card.setPrefWidth(CARD_WIDTH);
+        card.setMaxWidth(CARD_WIDTH);
+        card.getStyleClass().add("token-box");
+        card.setStyle(card.getStyle() + " -fx-cursor: hand;");
+        card.setOnMouseClicked(e -> {
+            uiSession.setActiveEntityCategory(EntityCategory.PLAYER);
+            uiSession.setActiveEntityId(pc.getId());
+            uiSession.getRouter().goTo(SceneType.ENTITY_DETAIL);
+        });
+        return card;
+    }
+
+    /** "Storyline": entry point to the story-arc file tree + timeline. */
+    private VBox storylineSection() {
+        VBox section = new VBox(10);
+        section.getChildren().add(sectionLabel("Storyline"));
+        section.getChildren().add(btn("Open Storyline", () -> uiSession.getRouter().goTo(SceneType.STORYLINE)));
+        return section;
+    }
+
+    private Label smallLabel(String text, boolean emphasis) {
+        Label l = new Label(text);
+        l.setWrapText(true);
+        l.setMaxWidth(CARD_WIDTH - 8);
+        l.setStyle("-fx-text-fill: " + (emphasis ? "#c9a84c" : "#a89060") + "; -fx-font-size: "
+            + (emphasis ? "11px" : "10px") + "; -fx-text-alignment: center;");
+        return l;
+    }
+
+    private <T> String lookupName(List<T> options, String id, java.util.function.Function<T, String> idFn, java.util.function.Function<T, String> nameFn) {
+        if (id == null) return "-";
+        return options.stream()
+            .filter(o -> id.equals(idFn.apply(o)))
+            .map(nameFn)
+            .findFirst()
+            .orElse(id);
+    }
+
+    private String categoryLabel(EntityCategory cat) {
+        return switch (cat) {
+            case NPC -> "NPCs";
+            case MONSTER -> "Monsters";
+            case BEAST -> "Beasts";
+            case ITEM -> "Items";
+            case SPELL -> "Spells";
+            case PLACE -> "Places";
+            case MAP -> "Maps";
+            case CLASS -> "Classes";
+            case RACE -> "Races";
+            case DAMAGE_TYPE -> "Damage Types";
+            case EFFECT -> "Effects";
+            case LANGUAGE -> "Languages";
+            case ALCHEMY_INGREDIENT -> "Alchemy Ingredients";
+            case BOOK -> "Books";
+            case DICE -> "Dice";
+            default -> cat.name();
+        };
     }
 }
 

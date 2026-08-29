@@ -88,4 +88,8 @@ public class CampaignPaths {
     public Path mapsFile() {
         return worldDir().resolve("maps.json");
     }
+
+    public Path storylineDir() {
+        return root.resolve("storyline");
+    }
 }

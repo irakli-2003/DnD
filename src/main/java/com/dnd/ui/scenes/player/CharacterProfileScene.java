@@ -69,7 +69,9 @@ public class CharacterProfileScene extends BaseScene {
                     repos.players().save(pc);
                     portrait.setImage(ImageStore.load(uiSession.campaignRoot(), rel));
                 } catch (Exception ex) {
-                    new Alert(Alert.AlertType.ERROR, "Upload failed: " + ex.getMessage()).showAndWait();
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Upload failed: " + ex.getMessage());
+                    styleDialog(alert);
+                    alert.showAndWait();
                 }
             }
         });

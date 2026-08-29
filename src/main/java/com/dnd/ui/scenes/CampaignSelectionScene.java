@@ -52,6 +52,7 @@ public class CampaignSelectionScene extends BaseScene {
                 "Delete campaign '" + selected + "'? This cannot be undone.",
                 ButtonType.OK, ButtonType.CANCEL);
             confirm.setHeaderText("Confirm Delete");
+            styleDialog(confirm);
             confirm.showAndWait().ifPresent(bt -> {
                 if (bt == ButtonType.OK) {
                     uiSession.getStorage().deleteCampaign(selected);

@@ -113,6 +113,11 @@
     -fx-text-fill: #c9a84c;
 }
 
+.dnd-check-box {
+    -fx-text-fill: #d0c5a8;
+    -fx-font-size: 13px;
+}
+
 .divider {
     -fx-background-color: #3a3a5a;
     -fx-pref-height: 1px;
@@ -144,4 +149,100 @@
     -fx-font-family: "Courier New", monospace;
     -fx-font-size: 11px;
     -fx-wrap-text: true;
+}
+
+/* ---- Global overrides so every scrollable/pop-up surface uses the app's dark
+   blue background instead of JavaFX's default (white/light gray) skin colors. ---- */
+
+.scroll-pane {
+    -fx-background-color: #1a1a2e;
+    -fx-background: #1a1a2e;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: #1a1a2e;
+}
+
+.scroll-pane .corner {
+    -fx-background-color: #1a1a2e;
+}
+
+.split-pane {
+    -fx-background-color: #1a1a2e;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-background-color: #3a3a5a;
+    -fx-padding: 0 1 0 1;
+}
+
+.tree-view {
+    -fx-background-color: #0f0f1e;
+    -fx-control-inner-background: #0f0f1e;
+}
+
+.tree-view .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d0c5a8;
+}
+
+.tree-view .tree-cell:filled:hover {
+    -fx-background-color: #2a2a4a;
+}
+
+.tree-view .tree-cell:filled:selected {
+    -fx-background-color: #2d1b00;
+    -fx-text-fill: #c9a84c;
+}
+
+.text-area {
+    -fx-background-color: #0f0f1e;
+    -fx-control-inner-background: #0f0f1e;
+    -fx-text-fill: #e0d5c0;
+}
+
+.text-area .content {
+    -fx-background-color: #0f0f1e;
+}
+
+.combo-box-base, .combo-box {
+    -fx-background-color: #0f0f1e;
+    -fx-text-fill: #e0d5c0;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 1px;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #0f0f1e;
+    -fx-text-fill: #e0d5c0;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #0f0f1e;
+    -fx-control-inner-background: #0f0f1e;
+}
+
+/* Alerts / TextInputDialog / ChoiceDialog: needs the app stylesheet attached to
+   the dialog's own DialogPane (see BaseScene.styleDialog) for these to apply. */
+.dialog-pane {
+    -fx-background-color: #1a1a2e;
+}
+
+.dialog-pane > *.button-bar > *.container {
+    -fx-background-color: #1a1a2e;
+}
+
+.dialog-pane .content.label {
+    -fx-text-fill: #e0d5c0;
+    -fx-font-size: 13px;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #14141f;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #c9a84c;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
 }

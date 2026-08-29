@@ -44,6 +44,10 @@ public class MapEditorScene extends BaseScene {
             return wrapInScene(root);
         }
 
+        // Defensive: repair maps whose stored grid doesn't match their width/height (e.g. maps
+        // created before GameMap.ensureGridSize() existed) so they can still be opened here.
+        map.ensureGridSize();
+
         HBox header = new HBox(12);
         header.setPadding(new Insets(8, 20, 4, 20));
         header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
@@ -110,7 +114,9 @@ public class MapEditorScene extends BaseScene {
                     refreshLayerList(layerList);
                     renderCanvas();
                 } catch (Exception ex) {
-                    new Alert(Alert.AlertType.ERROR, "Upload failed: " + ex.getMessage()).showAndWait();
+                    Alert alert = new Alert(Alert.AlertType.ERROR, "Upload failed: " + ex.getMessage());
+                    styleDialog(alert);
+                    alert.showAndWait();
                 }
             }
         });
@@ -363,9 +369,13 @@ public class MapEditorScene extends BaseScene {
     private void saveMap() {
         try {
             repos.maps().save(map);
-            new Alert(Alert.AlertType.INFORMATION, "Map saved.", ButtonType.OK).showAndWait();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Map saved.", ButtonType.OK);
+            styleDialog(alert);
+            alert.showAndWait();
         } catch (Exception ex) {
-            new Alert(Alert.AlertType.ERROR, "Save failed: " + ex.getMessage()).showAndWait();
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Save failed: " + ex.getMessage());
+            styleDialog(alert);
+            alert.showAndWait();
         }
     }
 }

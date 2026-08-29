@@ -70,6 +70,7 @@ public class EntityListScene extends BaseScene {
                 String id = getEntityId(selected);
                 Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
                     "Delete " + catName + " '" + id + "'?", ButtonType.OK, ButtonType.CANCEL);
+                styleDialog(confirm);
                 confirm.showAndWait().ifPresent(bt -> {
                     if (bt == ButtonType.OK) {
                         deleteEntity(repos, cat, id);
@@ -169,15 +170,22 @@ public class EntityListScene extends BaseScene {
     }
     private void deleteEntity(CampaignRepositories repos, EntityCategory cat, String id) {
         switch (cat) {
-            case PLAYER  -> repos.players().delete(id);
-            case NPC     -> repos.npcs().delete(id);
-            case MONSTER -> repos.monsters().delete(id);
-            case BEAST   -> repos.beasts().delete(id);
-            case ITEM    -> repos.items().delete(id);
-            case SPELL   -> repos.spells().delete(id);
-            case PLACE   -> repos.places().delete(id);
-            case MAP     -> repos.maps().delete(id);
-            default      -> {}
+            case PLAYER             -> repos.players().delete(id);
+            case NPC                -> repos.npcs().delete(id);
+            case MONSTER            -> repos.monsters().delete(id);
+            case BEAST              -> repos.beasts().delete(id);
+            case ITEM               -> repos.items().delete(id);
+            case SPELL              -> repos.spells().delete(id);
+            case PLACE              -> repos.places().delete(id);
+            case MAP                -> repos.maps().delete(id);
+            case CLASS              -> repos.classes().delete(id);
+            case RACE               -> repos.races().delete(id);
+            case DAMAGE_TYPE        -> repos.damageTypes().delete(id);
+            case EFFECT             -> repos.effects().delete(id);
+            case LANGUAGE           -> repos.languages().delete(id);
+            case ALCHEMY_INGREDIENT -> repos.alchemyIngredients().delete(id);
+            case BOOK               -> repos.books().delete(id);
+            case DICE               -> repos.dice().delete(id);
         }
     }
 

@@ -34,6 +34,10 @@ public class MapViewScene extends BaseScene {
             return wrapInScene(root);
         }
 
+        // Defensive: repair maps whose stored grid doesn't match their width/height (e.g. maps
+        // created before GameMap.ensureGridSize() existed) so they can still be viewed here.
+        map.ensureGridSize();
+
         Label titleLabel = title("Map: " + map.getName());
         HBox header = new HBox(12, titleLabel);
         header.setPadding(new Insets(10, 20, 0, 20));

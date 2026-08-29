@@ -14,5 +14,6 @@ public enum SceneType {
     ENTITY_DETAIL,
     MAP_VIEW,
     MAP_EDITOR,
-    CHARACTER_PROFILE
+    CHARACTER_PROFILE,
+    STORYLINE
 }

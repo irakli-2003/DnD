@@ -93,6 +93,32 @@ public class GameMap implements Printable {
     public List<MapLayer> getLayers() { return layers; }
     public void setLayers(List<MapLayer> layers) { this.layers = layers != null ? layers : new ArrayList<>(); }
 
+    /**
+     * Resizes {@link #grid} to exactly {@code width} x {@code height}, padding any missing
+     * rows/columns with fresh {@link GridCell}s and trimming any extra ones, while preserving
+     * existing cells (and their occupants) wherever the old and new dimensions overlap.
+     *
+     * <p>Needed because {@link #setWidth(int)}/{@link #setHeight(int)} only validate and store
+     * the new dimensions - they don't touch {@link #grid} - so a map created via the no-arg
+     * constructor (whose grid starts empty) or resized after creation would otherwise end up
+     * with a {@code grid} that doesn't match its declared {@code width}/{@code height}, causing
+     * {@link #getCell(int, int)} to throw {@link IndexOutOfBoundsException} the moment anything
+     * tries to render or edit it.</p>
+     */
+    public void ensureGridSize() {
+        List<List<GridCell>> resized = new ArrayList<>();
+        for (int y = 0; y < height; y++) {
+            List<GridCell> oldRow = y < grid.size() ? grid.get(y) : null;
+            List<GridCell> newRow = new ArrayList<>();
+            for (int x = 0; x < width; x++) {
+                GridCell existing = (oldRow != null && x < oldRow.size()) ? oldRow.get(x) : null;
+                newRow.add(existing != null ? existing : new GridCell());
+            }
+            resized.add(newRow);
+        }
+        this.grid = resized;
+    }
+
     public GridCell getCell(int x, int y) {
         requireInBounds(x, y);
         return grid.get(y).get(x);

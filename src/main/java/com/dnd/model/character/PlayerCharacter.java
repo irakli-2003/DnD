@@ -151,6 +151,11 @@ public class PlayerCharacter implements Printable {
     public String getImagePath() { return imagePath; }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
+    /** Name of the human player controlling this character (distinct from the character's own name). */
+    private String playerName;
+    public String getPlayerName() { return playerName; }
+    public void setPlayerName(String playerName) { this.playerName = playerName; }
+
     @Override
     public String toString() {
         return name != null ? name : id;

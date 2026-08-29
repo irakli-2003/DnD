@@ -16,6 +16,7 @@ public final class CampaignTemplate {
 
         Files.createDirectories(paths.worldDir());
         Files.createDirectories(paths.playersDir());
+        Files.createDirectories(paths.storylineDir());
 
         write(paths.classesFile(), blank ? blankClassesJson() : defaultClassesJson());
         write(paths.racesFile(), blank ? blankRacesJson() : defaultRacesJson());
