@@ -21,6 +21,7 @@ public class GameMap implements Printable {
     private List<List<GridCell>> grid = new ArrayList<>();
     private List<MapLayer> layers = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
+    private List<MapObjectGroup> groups = new ArrayList<>();
 
     public GameMap() {
     }
@@ -96,6 +97,9 @@ public class GameMap implements Printable {
 
     public List<Drawing> getDrawings() { return drawings; }
     public void setDrawings(List<Drawing> drawings) { this.drawings = drawings != null ? drawings : new ArrayList<>(); }
+
+    public List<MapObjectGroup> getGroups() { return groups; }
+    public void setGroups(List<MapObjectGroup> groups) { this.groups = groups != null ? groups : new ArrayList<>(); }
 
     /**
      * Resizes {@link #grid} to exactly {@code width} x {@code height}, padding any missing

@@ -4,6 +4,8 @@ public class MapLayer {
     private String id;
     private String label;
     private String imagePath;
+    /** Optional solid fill used when {@link #imagePath} is absent (e.g. a color-only layer). */
+    private String fillColor;
     private double x = 0;
     private double y = 0;
     private double width = 10;
@@ -24,6 +26,8 @@ public class MapLayer {
     public void setLabel(String label) { this.label = label; }
     public String getImagePath() { return imagePath; }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public String getFillColor() { return fillColor; }
+    public void setFillColor(String fillColor) { this.fillColor = fillColor; }
     public double getX() { return x; }
     public void setX(double x) { this.x = x; }
     public double getY() { return y; }

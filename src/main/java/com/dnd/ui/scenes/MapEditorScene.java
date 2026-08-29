@@ -3,6 +3,7 @@ package com.dnd.ui.scenes;
 import com.dnd.data.CampaignRepositories;
 import com.dnd.model.world.map.*;
 import com.dnd.ui.*;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.*;
@@ -24,19 +25,36 @@ import java.util.*;
 public class MapEditorScene extends BaseScene {
 
     private static final double CELL_SIZE = 48.0;
+    /** Half-size (px) of a corner resize-handle hit box, centered on the corner point. */
+    private static final double HANDLE = 8.0;
 
     /** Active canvas interaction mode, selected via the "Draw Tools" toggle buttons. */
-    private enum Tool { SELECT, PEN, LINE, RECT, OVAL, ERASER }
+    private enum Tool { SELECT, PEN, LINE, RECT, OVAL, ERASER, PASSABLE }
+
+    /** Lightweight display node for the "Map Objects" tree; key is a type-prefixed reference
+     *  ("layer:<id>", "drawing:<id>", "group:<id>") resolved against the GameMap's lists. */
+    private static final class ObjNode {
+        final String key;
+        final String label;
+        ObjNode(String key, String label) { this.key = key; this.label = label; }
+        @Override public String toString() { return label; }
+    }
 
     private GameMap map;
     private CampaignRepositories repos;
     private Canvas canvas;
+    private TreeView<ObjNode> objectsTree;
 
-    // Layer select/drag state
-    private MapLayer selectedLayer = null;
-    private double dragStartX, dragStartY;
-    private double layerDragOrigX, layerDragOrigY;
+    // Unified selection: null, or "layer:<id>" / "drawing:<id>" / "group:<id>".
+    private String selectedKey = null;
+
+    // Move state (applies to whichever object selectedKey refers to).
     private boolean dragging = false;
+    private double dragLastX, dragLastY;
+
+    // Resize state (layers only), anchored on the fixed opposite corner.
+    private boolean resizeActive = false;
+    private double anchorX, anchorY;
 
     // Drawing tool state
     private Tool currentTool = Tool.SELECT;
@@ -47,6 +65,7 @@ public class MapEditorScene extends BaseScene {
     private boolean shapeDrawing = false;
     private double shapeStartX, shapeStartY, shapeCurX, shapeCurY;
     private int drawIdCounter = 0;
+    private final Random rng = new Random();
 
     // Place-tokens panel controls, wired up so canvas clicks/drops can read the current selection
     private ComboBox<String> tokenTypeBox;
@@ -110,49 +129,7 @@ public class MapEditorScene extends BaseScene {
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-background-color: #12122a;");
 
-        panel.getChildren().add(sectionLabel("Background Layers"));
-
-        ListView<MapLayer> layerList = new ListView<>();
-        layerList.getStyleClass().add("dnd-list-view");
-        layerList.setPrefHeight(150);
-        refreshLayerList(layerList);
-
-        layerList.getSelectionModel().selectedItemProperty().addListener((obs, old, sel) -> {
-            selectedLayer = sel;
-            renderCanvas();
-        });
-
-        Button addLayerBtn = btn("+ Add Layer", () -> openAddLayerDialog(layerList));
-
-        Button removeLayerBtn = dangerBtn("Remove Layer", () -> {
-            MapLayer sel = layerList.getSelectionModel().getSelectedItem();
-            if (sel != null) {
-                map.getLayers().remove(sel);
-                selectedLayer = null;
-                refreshLayerList(layerList);
-                renderCanvas();
-            }
-        });
-
-        Button upBtn = btn("↑ Forward", () -> {
-            MapLayer sel = layerList.getSelectionModel().getSelectedItem();
-            if (sel == null) return;
-            sel.setZOrder(sel.getZOrder() + 1);
-            refreshLayerList(layerList);
-            renderCanvas();
-        });
-        Button downBtn = btn("↓ Back", () -> {
-            MapLayer sel = layerList.getSelectionModel().getSelectedItem();
-            if (sel == null) return;
-            sel.setZOrder(Math.max(0, sel.getZOrder() - 1));
-            refreshLayerList(layerList);
-            renderCanvas();
-        });
-
-        panel.getChildren().addAll(layerList,
-            new HBox(6, upBtn, downBtn),
-            new HBox(6, addLayerBtn, removeLayerBtn));
-
+        panel.getChildren().add(buildObjectsTreeSection());
         panel.getChildren().add(separator());
         panel.getChildren().add(buildDrawToolsSection());
         panel.getChildren().add(separator());
@@ -167,6 +144,280 @@ public class MapEditorScene extends BaseScene {
         return sep;
     }
 
+    // ---------------------------------------------------------------------
+    // Map Objects tree: layers, drawings, and groups; multi-select + grouping.
+    // ---------------------------------------------------------------------
+
+    private VBox buildObjectsTreeSection() {
+        VBox box = new VBox(6);
+        box.getChildren().add(sectionLabel("Map Objects"));
+
+        TreeView<ObjNode> tree = new TreeView<>();
+        tree.getStyleClass().add("dnd-list-view");
+        tree.setPrefHeight(190);
+        tree.setShowRoot(false);
+        tree.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        objectsTree = tree;
+        refreshObjectsTree();
+
+        Button upBtn = btn("↑ Forward", () -> {
+            MapLayer l = selectedLayer();
+            if (l != null) { l.setZOrder(l.getZOrder() + 1); renderCanvas(); }
+        });
+        Button downBtn = btn("↓ Back", () -> {
+            MapLayer l = selectedLayer();
+            if (l != null) { l.setZOrder(Math.max(0, l.getZOrder() - 1)); renderCanvas(); }
+        });
+        Button addLayerBtn = btn("+ Add Layer", this::openAddLayerDialog);
+        Button deleteBtn = dangerBtn("Delete", () -> deleteSelected(tree));
+        Button groupBtn = btn("Group Selected", () -> groupSelected(tree));
+        Button ungroupBtn = btn("Ungroup", () -> ungroupSelected(tree));
+        deleteBtn.setDisable(true);
+        groupBtn.setDisable(true);
+        ungroupBtn.setDisable(true);
+
+        tree.getSelectionModel().getSelectedItems().addListener((ListChangeListener<TreeItem<ObjNode>>) c -> {
+            List<TreeItem<ObjNode>> sel = tree.getSelectionModel().getSelectedItems();
+            if (sel.size() == 1 && sel.get(0) != null && sel.get(0).getValue() != null) {
+                selectedKey = sel.get(0).getValue().key;
+            } else {
+                selectedKey = null;
+            }
+            deleteBtn.setDisable(sel.isEmpty());
+            groupBtn.setDisable(sel.size() < 2);
+            ungroupBtn.setDisable(!(selectedKey != null && selectedKey.startsWith("group:")));
+            renderCanvas();
+        });
+
+        Label hint = body("Shift+click / Ctrl+click to select multiple objects, then Group.");
+        hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
+
+        box.getChildren().addAll(tree,
+            new HBox(6, upBtn, downBtn),
+            new HBox(6, addLayerBtn, deleteBtn),
+            new HBox(6, groupBtn, ungroupBtn),
+            hint);
+        return box;
+    }
+
+    private void refreshObjectsTree() {
+        if (objectsTree == null) return;
+        TreeItem<ObjNode> root = new TreeItem<>(new ObjNode("root", "root"));
+        Set<String> nested = new HashSet<>();
+        for (MapObjectGroup g : map.getGroups()) nested.addAll(g.getMemberKeys());
+
+        for (MapObjectGroup g : map.getGroups()) {
+            if (!nested.contains("group:" + g.getId())) root.getChildren().add(buildGroupItem(g));
+        }
+        for (MapLayer l : map.getLayers()) {
+            if (!nested.contains("layer:" + l.getId())) {
+                root.getChildren().add(new TreeItem<>(new ObjNode("layer:" + l.getId(), "\uD83D\uDDBC " + l.getLabel())));
+            }
+        }
+        for (Drawing d : map.getDrawings()) {
+            if (!nested.contains("drawing:" + d.getId())) {
+                root.getChildren().add(new TreeItem<>(new ObjNode("drawing:" + d.getId(), drawingLabel(d))));
+            }
+        }
+        objectsTree.setRoot(root);
+        objectsTree.setShowRoot(false);
+    }
+
+    private TreeItem<ObjNode> buildGroupItem(MapObjectGroup g) {
+        TreeItem<ObjNode> item = new TreeItem<>(new ObjNode("group:" + g.getId(), "\uD83D\uDCC1 " + g.getLabel()));
+        item.setExpanded(true);
+        for (String key : g.getMemberKeys()) {
+            TreeItem<ObjNode> child = buildItemForKey(key);
+            if (child != null) item.getChildren().add(child);
+        }
+        return item;
+    }
+
+    private TreeItem<ObjNode> buildItemForKey(String key) {
+        if (key.startsWith("layer:")) {
+            MapLayer l = findLayer(key.substring(6));
+            return l == null ? null : new TreeItem<>(new ObjNode(key, "\uD83D\uDDBC " + l.getLabel()));
+        }
+        if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            return d == null ? null : new TreeItem<>(new ObjNode(key, drawingLabel(d)));
+        }
+        if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            return g == null ? null : buildGroupItem(g);
+        }
+        return null;
+    }
+
+    private String drawingLabel(Drawing d) {
+        return "\u270F " + d.getType().name().toLowerCase() + " (" + d.getColor() + ")";
+    }
+
+    private MapLayer findLayer(String id) {
+        return map.getLayers().stream().filter(l -> id.equals(l.getId())).findFirst().orElse(null);
+    }
+
+    private Drawing findDrawing(String id) {
+        return map.getDrawings().stream().filter(d -> id.equals(d.getId())).findFirst().orElse(null);
+    }
+
+    private MapObjectGroup findGroup(String id) {
+        return map.getGroups().stream().filter(g -> id.equals(g.getId())).findFirst().orElse(null);
+    }
+
+    private MapLayer selectedLayer() {
+        if (selectedKey != null && selectedKey.startsWith("layer:")) return findLayer(selectedKey.substring(6));
+        return null;
+    }
+
+    /** Bounding box (in px) of the object referenced by key, recursively for groups. Null if unresolved. */
+    private double[] boundsOfKeyPx(String key) {
+        if (key == null) return null;
+        if (key.startsWith("layer:")) {
+            MapLayer l = findLayer(key.substring(6));
+            if (l == null) return null;
+            return new double[]{l.getX() * CELL_SIZE, l.getY() * CELL_SIZE,
+                (l.getX() + l.getWidth()) * CELL_SIZE, (l.getY() + l.getHeight()) * CELL_SIZE};
+        }
+        if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            if (d == null) return null;
+            List<Double> gp = d.getPoints();
+            if (gp.size() < 2) return null;
+            double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE, maxX = -Double.MAX_VALUE, maxY = -Double.MAX_VALUE;
+            for (int i = 0; i + 1 < gp.size(); i += 2) {
+                double px = gp.get(i) * CELL_SIZE, py = gp.get(i + 1) * CELL_SIZE;
+                minX = Math.min(minX, px); maxX = Math.max(maxX, px);
+                minY = Math.min(minY, py); maxY = Math.max(maxY, py);
+            }
+            return new double[]{minX, minY, maxX, maxY};
+        }
+        if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g == null) return null;
+            double minX = Double.MAX_VALUE, minY = Double.MAX_VALUE, maxX = -Double.MAX_VALUE, maxY = -Double.MAX_VALUE;
+            boolean any = false;
+            for (String m : g.getMemberKeys()) {
+                double[] b = boundsOfKeyPx(m);
+                if (b == null) continue;
+                any = true;
+                minX = Math.min(minX, b[0]); maxX = Math.max(maxX, b[2]);
+                minY = Math.min(minY, b[1]); maxY = Math.max(maxY, b[3]);
+            }
+            return any ? new double[]{minX, minY, maxX, maxY} : null;
+        }
+        return null;
+    }
+
+    /** Moves the object referenced by key by the given delta (in grid cells), recursing into groups. */
+    private void translateKey(String key, double dxCells, double dyCells) {
+        if (key == null) return;
+        if (key.startsWith("layer:")) {
+            MapLayer l = findLayer(key.substring(6));
+            if (l != null) {
+                l.setX(Math.max(0, l.getX() + dxCells));
+                l.setY(Math.max(0, l.getY() + dyCells));
+            }
+        } else if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            if (d != null) {
+                List<Double> pts = d.getPoints();
+                for (int i = 0; i + 1 < pts.size(); i += 2) {
+                    pts.set(i, pts.get(i) + dxCells);
+                    pts.set(i + 1, pts.get(i + 1) + dyCells);
+                }
+            }
+        } else if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g != null) {
+                for (String member : g.getMemberKeys()) translateKey(member, dxCells, dyCells);
+            }
+        }
+    }
+
+    private void stripKeyFromAllGroups(String key) {
+        for (MapObjectGroup g : map.getGroups()) g.getMemberKeys().remove(key);
+    }
+
+    private void deleteKeyCascade(String key) {
+        if (key == null) return;
+        if (key.startsWith("layer:")) {
+            String id = key.substring(6);
+            map.getLayers().removeIf(l -> id.equals(l.getId()));
+        } else if (key.startsWith("drawing:")) {
+            String id = key.substring(8);
+            map.getDrawings().removeIf(d -> id.equals(d.getId()));
+        } else if (key.startsWith("group:")) {
+            String id = key.substring(6);
+            MapObjectGroup g = findGroup(id);
+            if (g != null) {
+                List<String> members = new ArrayList<>(g.getMemberKeys());
+                map.getGroups().removeIf(gr -> id.equals(gr.getId()));
+                for (String m : members) deleteKeyCascade(m);
+            }
+        }
+        stripKeyFromAllGroups(key);
+    }
+
+    private void deleteSelected(TreeView<ObjNode> tree) {
+        List<String> keys = new ArrayList<>();
+        for (TreeItem<ObjNode> item : tree.getSelectionModel().getSelectedItems()) {
+            if (item != null && item.getValue() != null) keys.add(item.getValue().key);
+        }
+        if (keys.isEmpty()) return;
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+            "Delete " + keys.size() + " selected map object(s)?", ButtonType.OK, ButtonType.CANCEL);
+        styleDialog(confirm);
+        confirm.showAndWait().ifPresent(bt -> {
+            if (bt == ButtonType.OK) {
+                for (String key : keys) deleteKeyCascade(key);
+                selectedKey = null;
+                refreshObjectsTree();
+                renderCanvas();
+            }
+        });
+    }
+
+    private void groupSelected(TreeView<ObjNode> tree) {
+        List<String> keys = new ArrayList<>();
+        for (TreeItem<ObjNode> item : tree.getSelectionModel().getSelectedItems()) {
+            if (item != null && item.getValue() != null && !keys.contains(item.getValue().key)) {
+                keys.add(item.getValue().key);
+            }
+        }
+        if (keys.size() < 2) return;
+        TextInputDialog nameDialog = new TextInputDialog("Group");
+        styleDialog(nameDialog);
+        nameDialog.setHeaderText("Name this group");
+        nameDialog.setTitle("Group Objects");
+        Optional<String> res = nameDialog.showAndWait();
+        if (res.isEmpty() || res.get().isBlank()) return;
+
+        for (String k : keys) stripKeyFromAllGroups(k);
+        MapObjectGroup group = new MapObjectGroup("group_" + System.currentTimeMillis(), res.get().trim(), new ArrayList<>(keys));
+        map.getGroups().add(group);
+        selectedKey = "group:" + group.getId();
+        refreshObjectsTree();
+        renderCanvas();
+    }
+
+    private void ungroupSelected(TreeView<ObjNode> tree) {
+        TreeItem<ObjNode> item = tree.getSelectionModel().getSelectedItem();
+        if (item == null || item.getValue() == null || !item.getValue().key.startsWith("group:")) return;
+        String id = item.getValue().key.substring(6);
+        MapObjectGroup g = findGroup(id);
+        if (g == null) return;
+        map.getGroups().removeIf(gr -> id.equals(gr.getId()));
+        for (MapObjectGroup parent : map.getGroups()) {
+            if (parent.getMemberKeys().remove("group:" + id)) {
+                parent.getMemberKeys().addAll(g.getMemberKeys());
+            }
+        }
+        selectedKey = null;
+        refreshObjectsTree();
+        renderCanvas();
+    }
+
     /** Draw tools: shape selector, color picker, filled toggle, line width, and clear-all. */
     private VBox buildDrawToolsSection() {
         VBox box = new VBox(6);
@@ -179,6 +430,7 @@ public class MapEditorScene extends BaseScene {
         ToggleButton rectBtn = toolToggle("Rect", toolGroup);
         ToggleButton ovalBtn = toolToggle("Oval", toolGroup);
         ToggleButton eraserBtn = toolToggle("Eraser", toolGroup);
+        ToggleButton passableBtn = toolToggle("Passable Toggle", toolGroup);
         selectBtn.setSelected(true);
 
         toolGroup.selectedToggleProperty().addListener((obs, old, sel) -> {
@@ -189,12 +441,13 @@ public class MapEditorScene extends BaseScene {
             else if (sel == rectBtn) currentTool = Tool.RECT;
             else if (sel == ovalBtn) currentTool = Tool.OVAL;
             else if (sel == eraserBtn) currentTool = Tool.ERASER;
+            else if (sel == passableBtn) currentTool = Tool.PASSABLE;
             penPoints.clear();
             shapeDrawing = false;
             renderCanvas();
         });
 
-        FlowPane toolRow = new FlowPane(4, 4, selectBtn, penBtn, lineBtn, rectBtn, ovalBtn, eraserBtn);
+        FlowPane toolRow = new FlowPane(4, 4, selectBtn, penBtn, lineBtn, rectBtn, ovalBtn, eraserBtn, passableBtn);
 
         ColorPicker colorPicker = new ColorPicker(drawColor);
         colorPicker.setMaxWidth(Double.MAX_VALUE);
@@ -218,12 +471,14 @@ public class MapEditorScene extends BaseScene {
             confirm.showAndWait().ifPresent(bt -> {
                 if (bt == ButtonType.OK) {
                     map.getDrawings().clear();
+                    refreshObjectsTree();
                     renderCanvas();
                 }
             });
         });
 
-        Label hint = body("Pen/Line/Rect/Oval draw on the map. Eraser removes the shape under your click.");
+        Label hint = body("Pen/Line/Rect/Oval draw on the map. Eraser removes the shape under your click. "
+            + "Passable Toggle flips a cell's passable/impassable state on click (impassable cells render solid black).");
         hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
 
         box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, clearBtn, hint);
@@ -282,8 +537,8 @@ public class MapEditorScene extends BaseScene {
         return box;
     }
 
-    /** Dialog for adding a background layer: name, image, and placement/size within the map. */
-    private void openAddLayerDialog(ListView<MapLayer> layerList) {
+    /** Dialog for adding a background layer: name, optional image OR solid color, and placement/size. */
+    private void openAddLayerDialog() {
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         dialogStage.setTitle("Add Map Layer");
@@ -305,6 +560,15 @@ public class MapEditorScene extends BaseScene {
                 }
             }
         });
+        Button clearImageBtn = btn("No Image", () -> {
+            chosenFile[0] = null;
+            fileLabel.setText("No image selected.");
+        });
+
+        ColorPicker layerColorPicker = new ColorPicker();
+        layerColorPicker.setMaxWidth(Double.MAX_VALUE);
+        boolean[] colorPicked = {false};
+        layerColorPicker.setOnAction(e -> colorPicked[0] = true);
 
         Spinner<Integer> xSpinner = new Spinner<>(0, GameMap.MAX_DIMENSION, 0);
         Spinner<Integer> ySpinner = new Spinner<>(0, GameMap.MAX_DIMENSION, 0);
@@ -319,31 +583,39 @@ public class MapEditorScene extends BaseScene {
         grid.setHgap(8);
         grid.setVgap(8);
         grid.addRow(0, body("Name:"), labelField);
-        grid.addRow(1, body("Image:"), new HBox(6, chooseBtn, fileLabel));
-        grid.addRow(2, body("X (cells):"), xSpinner, body("Y (cells):"), ySpinner);
-        grid.addRow(3, body("Width (cells):"), wSpinner, body("Height (cells):"), hSpinner);
+        grid.addRow(1, body("Image:"), new HBox(6, chooseBtn, clearImageBtn, fileLabel));
+        grid.addRow(2, body("Color (if no image):"), layerColorPicker);
+        grid.addRow(3, body("X (cells):"), xSpinner, body("Y (cells):"), ySpinner);
+        grid.addRow(4, body("Width (cells):"), wSpinner, body("Height (cells):"), hSpinner);
+
+        Label hint = body("Leave color unset with no image to get a random color.");
+        hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px;");
 
         Label errorLabel = body("");
         errorLabel.setStyle("-fx-text-fill: #cc4444; -fx-font-size: 11px;");
 
         Button addBtn = btn("Add Layer", () -> {
-            if (chosenFile[0] == null) {
-                errorLabel.setText("Please choose an image for the layer.");
-                return;
-            }
             if (labelField.getText() == null || labelField.getText().isBlank()) {
                 errorLabel.setText("Please give the layer a name.");
                 return;
             }
             try {
                 String layerId = "layer_" + System.currentTimeMillis();
-                String rel = ImageStore.copyImage(uiSession.campaignRoot(),
-                    "maps/" + map.getId(), layerId, chosenFile[0]);
+                String rel = null;
+                String fillColorHex = null;
+                if (chosenFile[0] != null) {
+                    rel = ImageStore.copyImage(uiSession.campaignRoot(),
+                        "maps/" + map.getId(), layerId, chosenFile[0]);
+                } else {
+                    Color chosen = colorPicked[0] ? layerColorPicker.getValue() : randomNonBlackColor();
+                    fillColorHex = toHex(sanitizeColor(chosen));
+                }
                 int nextZ = map.getLayers().stream().mapToInt(MapLayer::getZOrder).max().orElse(-1) + 1;
                 MapLayer newLayer = new MapLayer(layerId, labelField.getText().trim(), rel,
                     xSpinner.getValue(), ySpinner.getValue(), wSpinner.getValue(), hSpinner.getValue(), nextZ);
+                newLayer.setFillColor(fillColorHex);
                 map.getLayers().add(newLayer);
-                refreshLayerList(layerList);
+                refreshObjectsTree();
                 renderCanvas();
                 dialogStage.close();
             } catch (Exception ex) {
@@ -355,35 +627,34 @@ public class MapEditorScene extends BaseScene {
         HBox buttons = new HBox(10, addBtn, cancelBtn);
         buttons.setPadding(new Insets(8, 0, 0, 0));
 
-        VBox layout = new VBox(10, grid, errorLabel, buttons);
+        VBox layout = new VBox(10, grid, hint, errorLabel, buttons);
         layout.setPadding(new Insets(14));
-        layout.setStyle("-fx-background-color: #1a1a2e;");
+        layout.getStyleClass().add("dialog-root");
 
-        dialogStage.setScene(themedScene(layout, 480, 320));
+        dialogStage.setScene(themedScene(layout, 480, 380));
         dialogStage.showAndWait();
     }
 
-    private void refreshLayerList(ListView<MapLayer> list) {
-        list.getItems().clear();
-        if (map.getLayers() != null) {
-            List<MapLayer> sorted = new ArrayList<>(map.getLayers());
-            sorted.sort(Comparator.comparingInt(MapLayer::getZOrder));
-            list.getItems().addAll(sorted);
-        }
-        list.setCellFactory(lv -> new ListCell<>() {
-            @Override protected void updateItem(MapLayer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) { setText(null); }
-                else { setText("z=" + item.getZOrder() + " | " + item.getLabel()); setStyle("-fx-text-fill: #d0c5a8;"); }
-            }
-        });
+    /** Substitutes dark grey for any near-black color, since black is reserved for impassable cells. */
+    private Color sanitizeColor(Color c) {
+        if (c == null) return randomNonBlackColor();
+        double brightness = Math.max(c.getRed(), Math.max(c.getGreen(), c.getBlue()));
+        if (brightness < 0.12) return Color.web("#333333");
+        return c;
+    }
+
+    private Color randomNonBlackColor() {
+        double hue = rng.nextDouble() * 360;
+        double sat = 0.5 + rng.nextDouble() * 0.4;
+        double bri = 0.55 + rng.nextDouble() * 0.35;
+        return Color.hsb(hue, sat, bri);
     }
 
     private void setupCanvasInteraction() {
         canvas.setOnMousePressed(e -> {
             double mx = e.getX(), my = e.getY();
-            dragStartX = mx; dragStartY = my;
             dragging = false;
+            resizeActive = false;
 
             switch (currentTool) {
                 case PEN -> { penPoints.clear(); penPoints.add(new double[]{mx, my}); }
@@ -393,16 +664,25 @@ public class MapEditorScene extends BaseScene {
                     shapeDrawing = true;
                 }
                 case ERASER -> eraseAt(mx, my);
+                case PASSABLE -> togglePassableAt(mx, my);
                 case SELECT -> {
-                    if (selectedLayer != null) {
-                        double lx = selectedLayer.getX() * CELL_SIZE;
-                        double ly = selectedLayer.getY() * CELL_SIZE;
-                        double lw = selectedLayer.getWidth() * CELL_SIZE;
-                        double lh = selectedLayer.getHeight() * CELL_SIZE;
-                        if (mx >= lx && mx <= lx + lw && my >= ly && my <= ly + lh) {
-                            layerDragOrigX = selectedLayer.getX();
-                            layerDragOrigY = selectedLayer.getY();
+                    double[] b = boundsOfKeyPx(selectedKey);
+                    if (b != null) {
+                        MapLayer sl = selectedLayer();
+                        int corner = sl != null ? hitCorner(mx, my, b[0], b[1], b[2], b[3]) : 0;
+                        if (corner != 0) {
+                            resizeActive = true;
+                            double origX = sl.getX(), origY = sl.getY();
+                            double origW = sl.getWidth(), origH = sl.getHeight();
+                            switch (corner) {
+                                case 1 -> { anchorX = origX + origW; anchorY = origY + origH; }
+                                case 2 -> { anchorX = origX; anchorY = origY + origH; }
+                                case 3 -> { anchorX = origX; anchorY = origY; }
+                                case 4 -> { anchorX = origX + origW; anchorY = origY; }
+                            }
+                        } else if (mx >= b[0] && mx <= b[2] && my >= b[1] && my <= b[3]) {
                             dragging = true;
+                            dragLastX = mx; dragLastY = my;
                         }
                     }
                 }
@@ -414,11 +694,23 @@ public class MapEditorScene extends BaseScene {
                 case PEN -> { penPoints.add(new double[]{e.getX(), e.getY()}); renderCanvas(); }
                 case LINE, RECT, OVAL -> { shapeCurX = e.getX(); shapeCurY = e.getY(); renderCanvas(); }
                 case SELECT -> {
-                    if (dragging && selectedLayer != null) {
-                        double dx = (e.getX() - dragStartX) / CELL_SIZE;
-                        double dy = (e.getY() - dragStartY) / CELL_SIZE;
-                        selectedLayer.setX(Math.max(0, layerDragOrigX + dx));
-                        selectedLayer.setY(Math.max(0, layerDragOrigY + dy));
+                    if (resizeActive) {
+                        double mxCells = e.getX() / CELL_SIZE, myCells = e.getY() / CELL_SIZE;
+                        double newW = Math.max(1, Math.abs(mxCells - anchorX));
+                        double newH = Math.max(1, Math.abs(myCells - anchorY));
+                        double newX = Math.max(0, mxCells < anchorX ? anchorX - newW : anchorX);
+                        double newY = Math.max(0, myCells < anchorY ? anchorY - newH : anchorY);
+                        MapLayer l = selectedLayer();
+                        if (l != null) {
+                            l.setX(newX); l.setY(newY);
+                            l.setWidth(newW); l.setHeight(newH);
+                        }
+                        renderCanvas();
+                    } else if (dragging && selectedKey != null) {
+                        double dx = (e.getX() - dragLastX) / CELL_SIZE;
+                        double dy = (e.getY() - dragLastY) / CELL_SIZE;
+                        translateKey(selectedKey, dx, dy);
+                        dragLastX = e.getX(); dragLastY = e.getY();
                         renderCanvas();
                     }
                 }
@@ -429,22 +721,26 @@ public class MapEditorScene extends BaseScene {
         canvas.setOnMouseReleased(e -> {
             switch (currentTool) {
                 case PEN -> {
-                    if (penPoints.size() > 1) commitDrawing(Drawing.Type.FREEHAND, new ArrayList<>(penPoints));
+                    if (penPoints.size() > 1) { commitDrawing(Drawing.Type.FREEHAND, new ArrayList<>(penPoints)); refreshObjectsTree(); }
                     penPoints.clear();
                     renderCanvas();
                 }
-                case LINE -> { commitShapeIfDrawing(Drawing.Type.LINE); renderCanvas(); }
-                case RECT -> { commitShapeIfDrawing(Drawing.Type.RECTANGLE); renderCanvas(); }
-                case OVAL -> { commitShapeIfDrawing(Drawing.Type.OVAL); renderCanvas(); }
+                case LINE -> { commitShapeIfDrawing(Drawing.Type.LINE); refreshObjectsTree(); renderCanvas(); }
+                case RECT -> { commitShapeIfDrawing(Drawing.Type.RECTANGLE); refreshObjectsTree(); renderCanvas(); }
+                case OVAL -> { commitShapeIfDrawing(Drawing.Type.OVAL); refreshObjectsTree(); renderCanvas(); }
                 case SELECT -> {
-                    boolean wasDragging = dragging;
-                    dragging = false;
-                    if (selectedLayer != null) {
-                        selectedLayer.setX(Math.round(selectedLayer.getX() * 2) / 2.0);
-                        selectedLayer.setY(Math.round(selectedLayer.getY() * 2) / 2.0);
+                    boolean wasActive = dragging || resizeActive;
+                    MapLayer l = selectedLayer();
+                    if (l != null) {
+                        l.setX(Math.round(l.getX() * 2) / 2.0);
+                        l.setY(Math.round(l.getY() * 2) / 2.0);
+                        l.setWidth(Math.round(l.getWidth() * 2) / 2.0);
+                        l.setHeight(Math.round(l.getHeight() * 2) / 2.0);
                     }
-                    if (!wasDragging) {
-                        // Not a layer drag: treat as a click-to-place for the selected token.
+                    dragging = false;
+                    resizeActive = false;
+                    if (!wasActive) {
+                        // Not a move/resize: treat as a click-to-place for the selected token.
                         placeSelectedTokenAt(e.getX(), e.getY());
                     }
                     renderCanvas();
@@ -454,14 +750,37 @@ public class MapEditorScene extends BaseScene {
         });
 
         canvas.setOnScroll(e -> {
-            if (selectedLayer != null && e.isControlDown()) {
+            MapLayer l = selectedLayer();
+            if (l != null && e.isControlDown()) {
                 double delta = e.getDeltaY() > 0 ? 0.5 : -0.5;
-                selectedLayer.setWidth(Math.max(1, selectedLayer.getWidth() + delta));
-                selectedLayer.setHeight(Math.max(1, selectedLayer.getHeight() + delta));
+                l.setWidth(Math.max(1, l.getWidth() + delta));
+                l.setHeight(Math.max(1, l.getHeight() + delta));
                 renderCanvas();
                 e.consume();
             }
         });
+    }
+
+    /** Returns which corner (1=NW,2=NE,3=SE,4=SW) of the box [x0,y0,x1,y1] the point is near, or 0. */
+    private int hitCorner(double mx, double my, double x0, double y0, double x1, double y1) {
+        if (near(mx, my, x0, y0)) return 1;
+        if (near(mx, my, x1, y0)) return 2;
+        if (near(mx, my, x1, y1)) return 3;
+        if (near(mx, my, x0, y1)) return 4;
+        return 0;
+    }
+
+    private boolean near(double mx, double my, double px, double py) {
+        return Math.abs(mx - px) <= HANDLE && Math.abs(my - py) <= HANDLE;
+    }
+
+    private void togglePassableAt(double px, double py) {
+        int cx = (int) (px / CELL_SIZE);
+        int cy = (int) (py / CELL_SIZE);
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        GridCell cell = map.getCell(cx, cy);
+        cell.setPassable(!cell.isPassable());
+        renderCanvas();
     }
 
     private void setupCanvasDragAndDrop() {
@@ -501,7 +820,7 @@ public class MapEditorScene extends BaseScene {
             gridPoints.add(p[1] / CELL_SIZE);
         }
         Drawing d = new Drawing("drawing_" + System.currentTimeMillis() + "_" + (drawIdCounter++),
-            type, toHex(drawColor), drawLineWidth, drawFilled, gridPoints);
+            type, toHex(sanitizeColor(drawColor)), drawLineWidth, drawFilled, gridPoints);
         map.getDrawings().add(d);
     }
 
@@ -527,7 +846,11 @@ public class MapEditorScene extends BaseScene {
             }
             double pad = 6;
             if (mx >= minX - pad && mx <= maxX + pad && my >= minY - pad && my <= maxY + pad) {
+                String key = "drawing:" + d.getId();
                 list.remove(i);
+                stripKeyFromAllGroups(key);
+                if (key.equals(selectedKey)) selectedKey = null;
+                refreshObjectsTree();
                 renderCanvas();
                 return;
             }
@@ -593,29 +916,34 @@ public class MapEditorScene extends BaseScene {
             List<MapLayer> sorted = map.getLayers().stream()
                 .sorted(Comparator.comparingInt(MapLayer::getZOrder)).toList();
             for (MapLayer layer : sorted) {
+                double lx = layer.getX() * CELL_SIZE, ly = layer.getY() * CELL_SIZE;
+                double lw = layer.getWidth() * CELL_SIZE, lh = layer.getHeight() * CELL_SIZE;
+                boolean drewImage = false;
                 if (layer.getImagePath() != null && uiSession.campaignRoot() != null) {
                     Image img = ImageStore.load(uiSession.campaignRoot(), layer.getImagePath());
                     if (img != null) {
-                        gc.drawImage(img,
-                            layer.getX() * CELL_SIZE, layer.getY() * CELL_SIZE,
-                            layer.getWidth() * CELL_SIZE, layer.getHeight() * CELL_SIZE);
-                    } else {
-                        gc.setFill(Color.web("#44444488"));
-                        gc.fillRect(layer.getX() * CELL_SIZE, layer.getY() * CELL_SIZE,
-                            layer.getWidth() * CELL_SIZE, layer.getHeight() * CELL_SIZE);
+                        gc.drawImage(img, lx, ly, lw, lh);
+                        drewImage = true;
                     }
                 }
-                if (layer == selectedLayer) {
-                    gc.setStroke(Color.web("#c9a84c"));
-                    gc.setLineWidth(2);
-                    gc.setLineDashes(6, 4);
-                    gc.strokeRect(layer.getX() * CELL_SIZE, layer.getY() * CELL_SIZE,
-                        layer.getWidth() * CELL_SIZE, layer.getHeight() * CELL_SIZE);
-                    gc.setLineDashes();
-                    double hx = (layer.getX() + layer.getWidth()) * CELL_SIZE - 6;
-                    double hy = (layer.getY() + layer.getHeight()) * CELL_SIZE - 6;
-                    gc.setFill(Color.web("#c9a84c"));
-                    gc.fillRect(hx, hy, 12, 12);
+                if (!drewImage) {
+                    if (layer.getFillColor() != null) {
+                        try { gc.setFill(Color.web(layer.getFillColor())); } catch (Exception ex) { gc.setFill(Color.web("#44444488")); }
+                    } else {
+                        gc.setFill(Color.web("#44444488"));
+                    }
+                    gc.fillRect(lx, ly, lw, lh);
+                }
+            }
+        }
+
+        // Impassable cells render as solid black so the editor makes them visually obvious.
+        gc.setFill(Color.BLACK);
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                GridCell cell = map.getCell(x, y);
+                if (cell != null && !cell.isPassable()) {
+                    gc.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 }
             }
         }
@@ -652,6 +980,25 @@ public class MapEditorScene extends BaseScene {
                     drawToken(gc, obj, x, y, slot);
                     slot++;
                 }
+            }
+        }
+
+        // Selection highlight (dashed box), with corner resize-handles for a selected layer.
+        double[] selBounds = boundsOfKeyPx(selectedKey);
+        if (selBounds != null) {
+            gc.setStroke(Color.web("#c9a84c"));
+            gc.setLineWidth(2);
+            gc.setLineDashes(6, 4);
+            gc.strokeRect(selBounds[0], selBounds[1], selBounds[2] - selBounds[0], selBounds[3] - selBounds[1]);
+            gc.setLineDashes();
+            if (selectedKey.startsWith("layer:")) {
+                gc.setFill(Color.web("#c9a84c"));
+                double hs = 10;
+                double[][] corners = {
+                    {selBounds[0], selBounds[1]}, {selBounds[2], selBounds[1]},
+                    {selBounds[2], selBounds[3]}, {selBounds[0], selBounds[3]}
+                };
+                for (double[] c : corners) gc.fillRect(c[0] - hs / 2, c[1] - hs / 2, hs, hs);
             }
         }
     }

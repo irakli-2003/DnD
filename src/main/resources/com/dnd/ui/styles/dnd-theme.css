@@ -2,6 +2,8 @@
     -fx-background-color: #1a1a2e;
     -fx-font-family: "Georgia", serif;
     -fx-text-fill: #e0d5c0;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 2px;
 }
 
 .title-label {
@@ -226,6 +228,8 @@
    the dialog's own DialogPane (see BaseScene.styleDialog) for these to apply. */
 .dialog-pane {
     -fx-background-color: #1a1a2e;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 2px;
 }
 
 .dialog-pane > *.button-bar > *.container {
@@ -245,6 +249,14 @@
     -fx-text-fill: #c9a84c;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
+}
+
+/* Reusable golden-bordered background for custom Stage dialogs (not JavaFX Dialog/Alert),
+   e.g. StorylineScene's file editor and MapEditorScene's Add Layer window. */
+.dialog-root {
+    -fx-background-color: #1a1a2e;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 2px;
 }
 
 /* Map Editor: small tool-selection buttons, color picker, and spinners. */

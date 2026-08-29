@@ -18,6 +18,9 @@ public class GuiApp extends Application {
         primaryStage.setTitle("DnD Campaign Manager");
         primaryStage.setWidth(900);
         primaryStage.setHeight(650);
+        // "Windowed full screen": maximized with the OS chrome still visible, not true
+        // (chromeless) full-screen mode - matches what the user asked for on every launch.
+        primaryStage.setMaximized(true);
         primaryStage.setOnCloseRequest(e -> {
             if (session.isOnline()) {
                 try { session.getFirebaseSync().delete(); } catch (Exception ignored) {}

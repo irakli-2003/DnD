@@ -263,7 +263,7 @@ public class StorylineScene extends BaseScene {
         buttons.setPadding(new Insets(8, 0, 0, 0));
         VBox layout = new VBox(8, area, buttons);
         layout.setPadding(new Insets(12));
-        layout.setStyle("-fx-background-color: #1a1a2e;");
+        layout.getStyleClass().add("dialog-root");
 
         dialogStage.setScene(themedScene(layout, 560, 480));
         dialogStage.showAndWait();

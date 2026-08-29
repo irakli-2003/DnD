@@ -89,13 +89,21 @@ public class MapViewScene extends BaseScene {
                 .sorted(Comparator.comparingInt(MapLayer::getZOrder))
                 .toList();
             for (MapLayer layer : sorted) {
+                double lx = layer.getX() * CELL_SIZE, ly = layer.getY() * CELL_SIZE;
+                double lw = layer.getWidth() * CELL_SIZE, lh = layer.getHeight() * CELL_SIZE;
+                boolean drewImage = false;
                 if (layer.getImagePath() != null && uiSession.campaignRoot() != null) {
                     Image img = ImageStore.load(uiSession.campaignRoot(), layer.getImagePath());
                     if (img != null) {
-                        gc.drawImage(img,
-                            layer.getX() * CELL_SIZE, layer.getY() * CELL_SIZE,
-                            layer.getWidth() * CELL_SIZE, layer.getHeight() * CELL_SIZE);
+                        gc.drawImage(img, lx, ly, lw, lh);
+                        drewImage = true;
                     }
+                }
+                if (!drewImage && layer.getFillColor() != null) {
+                    try {
+                        gc.setFill(Color.web(layer.getFillColor()));
+                        gc.fillRect(lx, ly, lw, lh);
+                    } catch (Exception ignored) { }
                 }
             }
         }
