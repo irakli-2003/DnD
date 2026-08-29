@@ -23,6 +23,12 @@
     -fx-wrap-text: true;
 }
 
+.error-label {
+    -fx-text-fill: #e05555;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
 .section-label {
     -fx-text-fill: #c9a84c;
     -fx-font-size: 16px;

@@ -21,7 +21,16 @@ public class SceneRouter {
         this.stage = stage;
     }
 
+    /** Scenes reachable without being logged in - everything else redirects to LOGIN. */
+    private static boolean isPublic(SceneType type) {
+        return type == SceneType.LOGIN || type == SceneType.REGISTER || type == SceneType.VERIFY_EMAIL
+            || type == SceneType.FORGOT_PASSWORD || type == SceneType.RESET_PASSWORD;
+    }
+
     public void goTo(SceneType type) {
+        if (!isPublic(type) && !uiSession.isLoggedIn()) {
+            type = SceneType.LOGIN;
+        }
         if (type == SceneType.DM_MENU) {
             autoPush();
         }
@@ -31,6 +40,11 @@ public class SceneRouter {
 
     private Scene buildScene(SceneType type) {
         switch (type) {
+            case LOGIN: return new com.dnd.ui.scenes.LoginScene(uiSession).build();
+            case REGISTER: return new com.dnd.ui.scenes.RegisterScene(uiSession).build();
+            case VERIFY_EMAIL: return new com.dnd.ui.scenes.VerifyEmailScene(uiSession).build();
+            case FORGOT_PASSWORD: return new com.dnd.ui.scenes.ForgotPasswordScene(uiSession).build();
+            case RESET_PASSWORD: return new com.dnd.ui.scenes.ResetPasswordScene(uiSession).build();
             case LANDING: return new LandingScene(uiSession).build();
             case CAMPAIGN_SELECTION: return new CampaignSelectionScene(uiSession).build();
             case CREATE_CAMPAIGN: return new CreateCampaignScene(uiSession).build();

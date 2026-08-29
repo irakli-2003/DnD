@@ -16,11 +16,14 @@ public class LandingScene extends BaseScene {
 
         root.getChildren().addAll(
             title("⚔  DnD Campaign Manager  ⚔"),
-            subtitle("Choose your role to begin"),
+            subtitle(uiSession.isLoggedIn()
+                ? "Logged in as " + uiSession.getCurrentUser().getUsername() + " - choose your role to begin"
+                : "Choose your role to begin"),
             spacer(),
             btn("Dungeon Master", () -> { uiSession.setDm(true); uiSession.getRouter().goTo(SceneType.CAMPAIGN_SELECTION); }),
             btn("Player", () -> { uiSession.setDm(false); uiSession.getRouter().goTo(SceneType.PLAYER_CAMPAIGN_SELECTION); }),
-            spacer()
+            spacer(),
+            btn("Log Out", () -> { uiSession.setCurrentUser(null); uiSession.getRouter().goTo(SceneType.LOGIN); })
         );
 
         return wrapInScene(root);

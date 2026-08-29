@@ -15,3 +15,6 @@
 /data/custom-campaigns/
 /src/main/resources/data/custom-campaigns/
 
+# User accounts + SMTP credentials (local, never committed)
+/data/auth/
+

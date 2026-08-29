@@ -27,7 +27,7 @@ public class GuiApp extends Application {
                 session.setFirebaseSync(null);
             }
         });
-        uiSession.getRouter().goTo(SceneType.LANDING);
+        uiSession.getRouter().goTo(SceneType.LOGIN);
         primaryStage.show();
     }
 

@@ -13,6 +13,9 @@ public class UiSession {
     private String activeEntityId;
     private String activeMapId;
     private boolean dm = false;
+    private com.dnd.auth.User currentUser;
+    /** Email address carried between Register/ForgotPassword and the following Verify/Reset scene. */
+    private String pendingAuthEmail;
 
     public UiSession(CliSession session, CampaignStorage storage, Stage stage) {
         this.session = session;
@@ -34,6 +37,12 @@ public class UiSession {
     public void setActiveMapId(String id) { this.activeMapId = id; }
     public boolean isDm() { return dm; }
     public void setDm(boolean dm) { this.dm = dm; }
+
+    public com.dnd.auth.User getCurrentUser() { return currentUser; }
+    public void setCurrentUser(com.dnd.auth.User currentUser) { this.currentUser = currentUser; }
+    public boolean isLoggedIn() { return currentUser != null; }
+    public String getPendingAuthEmail() { return pendingAuthEmail; }
+    public void setPendingAuthEmail(String email) { this.pendingAuthEmail = email; }
 
     public java.nio.file.Path campaignRoot() {
         if (session.getCampaignContext() == null) return null;

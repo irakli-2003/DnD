@@ -1,6 +1,11 @@
 package com.dnd.ui;
 
 public enum SceneType {
+    LOGIN,
+    REGISTER,
+    VERIFY_EMAIL,
+    FORGOT_PASSWORD,
+    RESET_PASSWORD,
     LANDING,
     CAMPAIGN_SELECTION,
     CREATE_CAMPAIGN,
