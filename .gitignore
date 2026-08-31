@@ -13,7 +13,9 @@
 
 # Custom campaigns (local data)
 /data/custom-campaigns/
-/src/main/resources/data/custom-campaigns/
+# Bundled campaign resources are tracked for now so the campaign is backed up
+# and shared. Re-enable this ignore to ship a generic build without campaign data.
+#/src/main/resources/data/custom-campaigns/
 
 # User accounts + SMTP credentials (local, never committed)
 /data/auth/

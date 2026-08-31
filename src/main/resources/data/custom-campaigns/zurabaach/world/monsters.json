@@ -1,0 +1,2085 @@
+{
+  "monsters": [
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "description": "A small, vicious raider that fights in numbers and runs the moment the numbers turn.",
+      "type": "humanoid",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 8,
+        "dexterity": 14,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 8,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "nimble_escape",
+          "name": "Nimble Escape",
+          "description": "Disengages or hides as a bonus action every turn.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "scimitar_slash",
+          "name": "Scimitar Slash",
+          "description": "A quick curved-blade cut.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "goblin-tongue"
+      ]
+    },
+    {
+      "id": "goblin-boss",
+      "name": "Goblin Boss",
+      "description": "The largest goblin in the warren, which is how these things are decided.",
+      "type": "humanoid",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 10,
+        "dexterity": 14,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 8,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "redirect_attack",
+          "name": "Redirect Attack",
+          "description": "Swaps places with a nearby underling to make it take the hit.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "multiattack",
+          "name": "Multiattack",
+          "description": "Two scimitar strikes in a turn.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "goblin-tongue"
+      ]
+    },
+    {
+      "id": "hobgoblin",
+      "name": "Hobgoblin",
+      "description": "A disciplined military goblinoid that fights in formation and does not rout.",
+      "type": "humanoid",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 13,
+        "dexterity": 12,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 9
+      },
+      "abilities": [
+        {
+          "id": "martial_advantage",
+          "name": "Martial Advantage",
+          "description": "Deals far more damage when an ally flanks the target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "goblin-tongue"
+      ]
+    },
+    {
+      "id": "bugbear",
+      "name": "Bugbear",
+      "description": "A hulking goblinoid ambusher that hits hardest on the first strike.",
+      "type": "humanoid",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 15,
+        "dexterity": 14,
+        "constitution": 13,
+        "intelligence": 8,
+        "wisdom": 11,
+        "charisma": 9
+      },
+      "abilities": [
+        {
+          "id": "surprise_attack",
+          "name": "Surprise Attack",
+          "description": "Deals massive extra damage against a target that has not yet acted.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "brute",
+          "name": "Brute",
+          "description": "Melee weapons deal an extra die of damage.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "goblin-tongue"
+      ]
+    },
+    {
+      "id": "kobold",
+      "name": "Kobold",
+      "description": "A cowardly, trap-loving little draconic humanoid, dangerous only in swarms.",
+      "type": "humanoid",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 7,
+        "dexterity": 15,
+        "constitution": 9,
+        "intelligence": 8,
+        "wisdom": 7,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Attacks with advantage while an ally is beside the same target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "draconic"
+      ]
+    },
+    {
+      "id": "orc-warrior",
+      "name": "Orc Warrior",
+      "description": "A muscular raider who closes distance with terrifying speed.",
+      "type": "humanoid",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 16,
+        "dexterity": 12,
+        "constitution": 16,
+        "intelligence": 7,
+        "wisdom": 11,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "aggressive",
+          "name": "Aggressive",
+          "description": "Charges toward the nearest enemy as a bonus action.",
+          "effects": [],
+          "range": 30.0,
+          "recharge": 0
+        },
+        {
+          "id": "greataxe_swing",
+          "name": "Greataxe Swing",
+          "description": "A two-handed axe blow.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "orcish"
+      ]
+    },
+    {
+      "id": "orc-war-chief",
+      "name": "Orc War Chief",
+      "description": "A battle-scarred leader whose presence drives the whole warband harder.",
+      "type": "humanoid",
+      "challengeRating": "4",
+      "stats": {
+        "strength": 18,
+        "dexterity": 12,
+        "constitution": 18,
+        "intelligence": 11,
+        "wisdom": 11,
+        "charisma": 16
+      },
+      "abilities": [
+        {
+          "id": "gruumshs_fury",
+          "name": "Battle Fury",
+          "description": "Adds crushing extra damage to every hit.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "battle_cry",
+          "name": "Battle Cry",
+          "description": "Allies who can hear it attack with advantage this round.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 60.0,
+          "recharge": 3
+        }
+      ],
+      "languages": [
+        "common",
+        "orcish"
+      ]
+    },
+    {
+      "id": "gnoll",
+      "name": "Gnoll",
+      "description": "A hyena-headed marauder driven by an endless, screeching hunger.",
+      "type": "humanoid",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 14,
+        "dexterity": 12,
+        "constitution": 11,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "rampage",
+          "name": "Rampage",
+          "description": "Moves and bites again immediately after felling a creature.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "bandit",
+      "name": "Bandit",
+      "description": "A desperate or greedy roadside robber with a crossbow and bad intentions.",
+      "type": "humanoid",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 11,
+        "dexterity": 12,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "scimitar_slash",
+          "name": "Scimitar Slash",
+          "description": "A quick curved-blade cut.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "bandit-captain",
+      "name": "Bandit Captain",
+      "description": "A charismatic outlaw who leads by a mix of profit-sharing and threat.",
+      "type": "humanoid",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 15,
+        "dexterity": 16,
+        "constitution": 14,
+        "intelligence": 14,
+        "wisdom": 11,
+        "charisma": 14
+      },
+      "abilities": [
+        {
+          "id": "parry",
+          "name": "Parry",
+          "description": "Turns aside one melee attack per round.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "multiattack",
+          "name": "Multiattack",
+          "description": "Two scimitar strikes and a dagger throw.",
+          "effects": [],
+          "range": 20.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "thieves-cant"
+      ]
+    },
+    {
+      "id": "cultist",
+      "name": "Cultist",
+      "description": "A robed fanatic who believes the ritual is worth whatever it costs.",
+      "type": "humanoid",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 11,
+        "dexterity": 12,
+        "constitution": 10,
+        "intelligence": 10,
+        "wisdom": 11,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "dark_devotion",
+          "name": "Dark Devotion",
+          "description": "Immune to fear while the ritual continues.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "abyssal"
+      ]
+    },
+    {
+      "id": "cult-fanatic",
+      "name": "Cult Fanatic",
+      "description": "A cult leader with real, borrowed divine power and no restraint about using it.",
+      "type": "humanoid",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 11,
+        "dexterity": 14,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 13,
+        "charisma": 14
+      },
+      "abilities": [
+        {
+          "id": "dark_devotion",
+          "name": "Dark Devotion",
+          "description": "Immune to fear.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "inflict_wounds",
+          "name": "Inflict Wounds",
+          "description": "A necrotic touch that withers flesh.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "abyssal"
+      ]
+    },
+    {
+      "id": "guard",
+      "name": "Guard",
+      "description": "A city watchman or keep sentry; competent, underpaid, and not looking for trouble.",
+      "type": "humanoid",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 13,
+        "dexterity": 12,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 11,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "spear_thrust",
+          "name": "Spear Thrust",
+          "description": "A disciplined thrust from behind a shield.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "veteran",
+      "name": "Veteran",
+      "description": "A professional soldier who has survived several wars and learned from each.",
+      "type": "humanoid",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 16,
+        "dexterity": 13,
+        "constitution": 14,
+        "intelligence": 10,
+        "wisdom": 11,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "multiattack",
+          "name": "Multiattack",
+          "description": "Two longsword strikes and a shortsword follow-up.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "knight",
+      "name": "Knight",
+      "description": "An armoured champion sworn to a lord, an order, or an ideal.",
+      "type": "humanoid",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 16,
+        "dexterity": 11,
+        "constitution": 14,
+        "intelligence": 11,
+        "wisdom": 11,
+        "charisma": 15
+      },
+      "abilities": [
+        {
+          "id": "brave",
+          "name": "Brave",
+          "description": "Cannot be frightened.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "leadership",
+          "name": "Leadership",
+          "description": "Steadies allies' rolls for a round.",
+          "effects": [
+            "blessed"
+          ],
+          "range": 30.0,
+          "recharge": 5
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "mage",
+      "name": "Mage",
+      "description": "A trained arcanist who solves problems from as far away as possible.",
+      "type": "humanoid",
+      "challengeRating": "6",
+      "stats": {
+        "strength": 9,
+        "dexterity": 14,
+        "constitution": 11,
+        "intelligence": 17,
+        "wisdom": 12,
+        "charisma": 11
+      },
+      "abilities": [
+        {
+          "id": "fire_bolt",
+          "name": "Fire Bolt",
+          "description": "A mote of flame streaks at a target.",
+          "effects": [
+            "burn"
+          ],
+          "range": 120.0,
+          "recharge": 0
+        },
+        {
+          "id": "fireball_cast",
+          "name": "Fireball",
+          "description": "A detonating sphere of flame.",
+          "effects": [
+            "area_damage",
+            "burn"
+          ],
+          "range": 150.0,
+          "recharge": 4
+        },
+        {
+          "id": "shield_cast",
+          "name": "Shield",
+          "description": "A force barrier turns aside one attack.",
+          "effects": [
+            "blessed"
+          ],
+          "range": 0.0,
+          "recharge": 2
+        }
+      ],
+      "languages": [
+        "common",
+        "draconic"
+      ]
+    },
+    {
+      "id": "priest",
+      "name": "Priest",
+      "description": "A temple's senior cleric, able to heal an ally or scorch an enemy as needed.",
+      "type": "humanoid",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 10,
+        "dexterity": 10,
+        "constitution": 12,
+        "intelligence": 13,
+        "wisdom": 16,
+        "charisma": 13
+      },
+      "abilities": [
+        {
+          "id": "guiding_bolt",
+          "name": "Guiding Bolt",
+          "description": "A lance of light that marks the target.",
+          "effects": [],
+          "range": 120.0,
+          "recharge": 0
+        },
+        {
+          "id": "cure_wounds_cast",
+          "name": "Cure Wounds",
+          "description": "Restores an ally's vitality.",
+          "effects": [
+            "invigorated"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "celestial"
+      ]
+    },
+    {
+      "id": "assassin",
+      "name": "Assassin",
+      "description": "A poisoner and professional who intends the fight to end before you know it started.",
+      "type": "humanoid",
+      "challengeRating": "8",
+      "stats": {
+        "strength": 11,
+        "dexterity": 16,
+        "constitution": 14,
+        "intelligence": 13,
+        "wisdom": 11,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "assassinate",
+          "name": "Assassinate",
+          "description": "Automatic critical against a surprised target.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "poison_blade",
+          "name": "Poison Blade",
+          "description": "A coated shortsword.",
+          "effects": [
+            "poisoned"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "thieves-cant"
+      ]
+    },
+    {
+      "id": "berserker",
+      "name": "Berserker",
+      "description": "A wild frontline fighter who ignores wounds until the fight is over.",
+      "type": "humanoid",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 16,
+        "dexterity": 12,
+        "constitution": 17,
+        "intelligence": 9,
+        "wisdom": 11,
+        "charisma": 9
+      },
+      "abilities": [
+        {
+          "id": "reckless",
+          "name": "Reckless",
+          "description": "Attacks with advantage and is struck just as easily.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "druid-npc",
+      "name": "Druid",
+      "description": "A guardian of the old places who would rather warn you off than fight.",
+      "type": "humanoid",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 10,
+        "dexterity": 12,
+        "constitution": 13,
+        "intelligence": 12,
+        "wisdom": 15,
+        "charisma": 11
+      },
+      "abilities": [
+        {
+          "id": "entangle_cast",
+          "name": "Entangle",
+          "description": "Roots erupt and hold intruders.",
+          "effects": [
+            "entangled",
+            "restrained"
+          ],
+          "range": 90.0,
+          "recharge": 0
+        },
+        {
+          "id": "wild_shape",
+          "name": "Wild Shape",
+          "description": "Assumes the form of a beast.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 5
+        }
+      ],
+      "languages": [
+        "common",
+        "druidic",
+        "sylvan"
+      ]
+    },
+    {
+      "id": "skeleton",
+      "name": "Skeleton",
+      "description": "Animated bones held together by dark magic and simple orders.",
+      "type": "undead",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 10,
+        "dexterity": 14,
+        "constitution": 15,
+        "intelligence": 6,
+        "wisdom": 8,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "shortbow_shot",
+          "name": "Shortbow Shot",
+          "description": "A rattling, accurate shot.",
+          "effects": [],
+          "range": 80.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "zombie",
+      "name": "Zombie",
+      "description": "A shambling corpse that keeps coming long after it should have fallen.",
+      "type": "undead",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 13,
+        "dexterity": 6,
+        "constitution": 16,
+        "intelligence": 3,
+        "wisdom": 6,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "undead_fortitude",
+          "name": "Undead Fortitude",
+          "description": "Refuses to drop unless the killing blow is radiant or a critical hit.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "ghoul",
+      "name": "Ghoul",
+      "description": "A ravenous corpse-eater whose claws lock a victim rigid.",
+      "type": "undead",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 13,
+        "dexterity": 15,
+        "constitution": 10,
+        "intelligence": 7,
+        "wisdom": 10,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "paralyzing_claws",
+          "name": "Paralyzing Claws",
+          "description": "A raking strike that freezes the victim in place.",
+          "effects": [
+            "paralyzed"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "wight",
+      "name": "Wight",
+      "description": "A once-mortal warrior bound to unlife, able to raise those it kills.",
+      "type": "undead",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 15,
+        "dexterity": 14,
+        "constitution": 16,
+        "intelligence": 10,
+        "wisdom": 13,
+        "charisma": 15
+      },
+      "abilities": [
+        {
+          "id": "life_drain_attack",
+          "name": "Life Drain",
+          "description": "Drains vitality and lowers the victim's maximum health.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "wraith",
+      "name": "Wraith",
+      "description": "A malevolent spirit that passes through walls and drains the living.",
+      "type": "undead",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 6,
+        "dexterity": 16,
+        "constitution": 16,
+        "intelligence": 12,
+        "wisdom": 14,
+        "charisma": 15
+      },
+      "abilities": [
+        {
+          "id": "incorporeal_movement",
+          "name": "Incorporeal Movement",
+          "description": "Moves through creatures and solid objects.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "life_drain_attack",
+          "name": "Life Drain",
+          "description": "A chilling touch that steals vitality.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "specter",
+      "name": "Specter",
+      "description": "A restless shade that hates the warmth of the living.",
+      "type": "undead",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 1,
+        "dexterity": 14,
+        "constitution": 11,
+        "intelligence": 10,
+        "wisdom": 10,
+        "charisma": 11
+      },
+      "abilities": [
+        {
+          "id": "life_drain_attack",
+          "name": "Life Drain",
+          "description": "A cold, wasting touch.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "mummy",
+      "name": "Mummy",
+      "description": "A bound and cursed corpse that punishes tomb robbers precisely as promised.",
+      "type": "undead",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 16,
+        "dexterity": 8,
+        "constitution": 15,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 12
+      },
+      "abilities": [
+        {
+          "id": "dreadful_glare",
+          "name": "Dreadful Glare",
+          "description": "A stare that roots the victim in terror.",
+          "effects": [
+            "frightened",
+            "paralyzed"
+          ],
+          "range": 60.0,
+          "recharge": 0
+        },
+        {
+          "id": "rotting_fist",
+          "name": "Rotting Fist",
+          "description": "A blow that spreads mummy rot.",
+          "effects": [
+            "infection"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "vampire-spawn",
+      "name": "Vampire Spawn",
+      "description": "A newly turned thrall, fast and thirsty and not yet subtle.",
+      "type": "undead",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 16,
+        "dexterity": 16,
+        "constitution": 16,
+        "intelligence": 11,
+        "wisdom": 10,
+        "charisma": 12
+      },
+      "abilities": [
+        {
+          "id": "bite_drain",
+          "name": "Bite",
+          "description": "A bite that drains blood and heals the spawn.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "regeneration_ability",
+          "name": "Regeneration",
+          "description": "Wounds close each round unless burned or blessed.",
+          "effects": [
+            "regeneration"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "lich",
+      "name": "Lich",
+      "description": "An archmage who traded death for eternity and now has centuries of preparation behind it.",
+      "type": "undead",
+      "challengeRating": "21",
+      "stats": {
+        "strength": 11,
+        "dexterity": 16,
+        "constitution": 16,
+        "intelligence": 20,
+        "wisdom": 14,
+        "charisma": 16
+      },
+      "abilities": [
+        {
+          "id": "paralyzing_touch",
+          "name": "Paralyzing Touch",
+          "description": "A touch of pure cold that locks the body.",
+          "effects": [
+            "paralyzed"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "finger_of_death_cast",
+          "name": "Finger of Death",
+          "description": "Necrotic energy tears the target apart.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 60.0,
+          "recharge": 5
+        },
+        {
+          "id": "frightening_gaze",
+          "name": "Frightening Gaze",
+          "description": "A look that empties the courage from a room.",
+          "effects": [
+            "frightened"
+          ],
+          "range": 60.0,
+          "recharge": 4
+        }
+      ],
+      "languages": [
+        "common",
+        "draconic",
+        "abyssal",
+        "infernal"
+      ]
+    },
+    {
+      "id": "ogre",
+      "name": "Ogre",
+      "description": "A dull-witted giant that solves everything with a tree trunk.",
+      "type": "giant",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 19,
+        "dexterity": 8,
+        "constitution": 16,
+        "intelligence": 5,
+        "wisdom": 7,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "greatclub_smash",
+          "name": "Greatclub Smash",
+          "description": "A crushing overhead blow.",
+          "effects": [
+            "prone"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "giant"
+      ]
+    },
+    {
+      "id": "hill-giant",
+      "name": "Hill Giant",
+      "description": "Enormous, hungry, and entirely willing to eat the horses.",
+      "type": "giant",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 21,
+        "dexterity": 8,
+        "constitution": 19,
+        "intelligence": 5,
+        "wisdom": 9,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "boulder_throw",
+          "name": "Boulder Throw",
+          "description": "Hurls a rock the size of a barrel.",
+          "effects": [
+            "knockback"
+          ],
+          "range": 60.0,
+          "recharge": 0
+        },
+        {
+          "id": "multiattack",
+          "name": "Multiattack",
+          "description": "Two greatclub swings.",
+          "effects": [],
+          "range": 10.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "giant"
+      ]
+    },
+    {
+      "id": "frost-giant",
+      "name": "Frost Giant",
+      "description": "A raider from the far north in mail made of frozen scale.",
+      "type": "giant",
+      "challengeRating": "8",
+      "stats": {
+        "strength": 23,
+        "dexterity": 9,
+        "constitution": 21,
+        "intelligence": 9,
+        "wisdom": 10,
+        "charisma": 12
+      },
+      "abilities": [
+        {
+          "id": "greataxe_swing",
+          "name": "Greataxe Swing",
+          "description": "A blow that can cleave a horse in two.",
+          "effects": [],
+          "range": 10.0,
+          "recharge": 0
+        },
+        {
+          "id": "icy_grip",
+          "name": "Icy Grip",
+          "description": "A freezing hold that numbs the limbs.",
+          "effects": [
+            "freeze"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "giant"
+      ]
+    },
+    {
+      "id": "troll",
+      "name": "Troll",
+      "description": "A gangly, foul-smelling regenerator that only fire and acid keep down.",
+      "type": "giant",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 18,
+        "dexterity": 13,
+        "constitution": 20,
+        "intelligence": 7,
+        "wisdom": 9,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "regeneration_ability",
+          "name": "Regeneration",
+          "description": "Regrows wounds each round unless burned or dissolved.",
+          "effects": [
+            "regeneration"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "rending_claws",
+          "name": "Rending Claws",
+          "description": "Two raking claws and a bite.",
+          "effects": [
+            "bleeding"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "giant"
+      ]
+    },
+    {
+      "id": "owlbear",
+      "name": "Owlbear",
+      "description": "A territorial nightmare with the beak of an owl and the temper of a bear.",
+      "type": "monstrosity",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 20,
+        "dexterity": 12,
+        "constitution": 17,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "beak_and_claw",
+          "name": "Beak and Claw",
+          "description": "A beak strike and a raking claw.",
+          "effects": [
+            "bleeding"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "harpy",
+      "name": "Harpy",
+      "description": "A winged predator whose song draws travellers off the cliff path.",
+      "type": "monstrosity",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 12,
+        "dexterity": 13,
+        "constitution": 12,
+        "intelligence": 7,
+        "wisdom": 10,
+        "charisma": 13
+      },
+      "abilities": [
+        {
+          "id": "luring_song",
+          "name": "Luring Song",
+          "description": "A song that pulls listeners helplessly toward it.",
+          "effects": [
+            "charmed"
+          ],
+          "range": 300.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "basilisk",
+      "name": "Basilisk",
+      "description": "A heavy, slow lizard whose gaze turns flesh to stone.",
+      "type": "monstrosity",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 16,
+        "dexterity": 8,
+        "constitution": 15,
+        "intelligence": 2,
+        "wisdom": 8,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "petrifying_gaze",
+          "name": "Petrifying Gaze",
+          "description": "Meeting its eyes begins turning a creature to stone.",
+          "effects": [
+            "petrified"
+          ],
+          "range": 30.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "mimic",
+      "name": "Mimic",
+      "description": "A shapeshifting predator that has been a treasure chest since before you entered the room.",
+      "type": "monstrosity",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 17,
+        "dexterity": 12,
+        "constitution": 15,
+        "intelligence": 5,
+        "wisdom": 13,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "adhesive",
+          "name": "Adhesive",
+          "description": "Anything that touches it is stuck fast.",
+          "effects": [
+            "grappled",
+            "restrained"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "false_appearance",
+          "name": "False Appearance",
+          "description": "Indistinguishable from an ordinary object while still.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "gelatinous-cube",
+      "name": "Gelatinous Cube",
+      "description": "A transparent ten-foot cube of acid that cleans corridors very thoroughly.",
+      "type": "ooze",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 14,
+        "dexterity": 3,
+        "constitution": 20,
+        "intelligence": 1,
+        "wisdom": 6,
+        "charisma": 1
+      },
+      "abilities": [
+        {
+          "id": "engulf",
+          "name": "Engulf",
+          "description": "Moves through a creature's space and absorbs it.",
+          "effects": [
+            "restrained",
+            "burn"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "rust-monster",
+      "name": "Rust Monster",
+      "description": "Harmless to flesh, catastrophic to anyone in plate armor.",
+      "type": "monstrosity",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 13,
+        "dexterity": 12,
+        "constitution": 13,
+        "intelligence": 2,
+        "wisdom": 13,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "rust_metal",
+          "name": "Rust Metal",
+          "description": "Corrodes any metal weapon or armor it touches.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "animated-armor",
+      "name": "Animated Armor",
+      "description": "An empty suit of plate that stands up when the room is entered.",
+      "type": "construct",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 14,
+        "dexterity": 11,
+        "constitution": 13,
+        "intelligence": 1,
+        "wisdom": 3,
+        "charisma": 1
+      },
+      "abilities": [
+        {
+          "id": "multiattack",
+          "name": "Multiattack",
+          "description": "Two slamming gauntlet blows.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "flesh-golem",
+      "name": "Flesh Golem",
+      "description": "Stitched together from many donors and animated by lightning.",
+      "type": "construct",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 19,
+        "dexterity": 9,
+        "constitution": 18,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "lightning_absorption",
+          "name": "Lightning Absorption",
+          "description": "Lightning heals it rather than harming it.",
+          "effects": [
+            "regeneration"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "berserk",
+          "name": "Berserk",
+          "description": "Attacks the nearest creature, friend or otherwise, when badly wounded.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "imp",
+      "name": "Imp",
+      "description": "A tiny devil, invisible when it wants to be, and always taking notes.",
+      "type": "fiend",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 6,
+        "dexterity": 17,
+        "constitution": 13,
+        "intelligence": 11,
+        "wisdom": 12,
+        "charisma": 14
+      },
+      "abilities": [
+        {
+          "id": "sting",
+          "name": "Sting",
+          "description": "A poisoned tail sting.",
+          "effects": [
+            "poisoned"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "shapechange",
+          "name": "Shapechange",
+          "description": "Becomes a rat, raven, or spider at will.",
+          "effects": [
+            "invisible"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "infernal",
+        "common"
+      ]
+    },
+    {
+      "id": "succubus",
+      "name": "Succubus",
+      "description": "A fiend that never needs to draw a weapon to ruin someone.",
+      "type": "fiend",
+      "challengeRating": "4",
+      "stats": {
+        "strength": 8,
+        "dexterity": 17,
+        "constitution": 13,
+        "intelligence": 15,
+        "wisdom": 12,
+        "charisma": 20
+      },
+      "abilities": [
+        {
+          "id": "charm_gaze",
+          "name": "Charm",
+          "description": "Binds a victim's affection completely.",
+          "effects": [
+            "charmed"
+          ],
+          "range": 30.0,
+          "recharge": 0
+        },
+        {
+          "id": "draining_kiss",
+          "name": "Draining Kiss",
+          "description": "Feeds on the victim's life force.",
+          "effects": [
+            "life_drain"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "abyssal",
+        "infernal",
+        "common"
+      ]
+    },
+    {
+      "id": "hell-hound",
+      "name": "Hell Hound",
+      "description": "A pack hunter from the lower planes that breathes fire.",
+      "type": "fiend",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 17,
+        "dexterity": 12,
+        "constitution": 14,
+        "intelligence": 6,
+        "wisdom": 13,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Attacks with advantage while an ally is beside the same target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "fire_breath",
+          "name": "Fire Breath",
+          "description": "A cone of hellish flame.",
+          "effects": [
+            "burn",
+            "area_damage"
+          ],
+          "range": 15.0,
+          "recharge": 3
+        }
+      ],
+      "languages": [
+        "infernal"
+      ]
+    },
+    {
+      "id": "air-elemental",
+      "name": "Air Elemental",
+      "description": "A howling vortex of living wind.",
+      "type": "elemental",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 14,
+        "dexterity": 20,
+        "constitution": 14,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "whirlwind",
+          "name": "Whirlwind",
+          "description": "Sweeps up everything nearby and flings it away.",
+          "effects": [
+            "knockback",
+            "prone"
+          ],
+          "range": 10.0,
+          "recharge": 4
+        }
+      ],
+      "languages": [
+        "primordial"
+      ]
+    },
+    {
+      "id": "fire-elemental",
+      "name": "Fire Elemental",
+      "description": "A roaring humanoid shape of pure flame that ignites what it touches.",
+      "type": "elemental",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 10,
+        "dexterity": 17,
+        "constitution": 16,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "fire_form",
+          "name": "Fire Form",
+          "description": "Burns anyone who touches it and sets fire to what it passes.",
+          "effects": [
+            "burn"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "primordial"
+      ]
+    },
+    {
+      "id": "earth-elemental",
+      "name": "Earth Elemental",
+      "description": "A slab of animate stone that swims through the ground.",
+      "type": "elemental",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 20,
+        "dexterity": 8,
+        "constitution": 20,
+        "intelligence": 5,
+        "wisdom": 10,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "earth_glide",
+          "name": "Earth Glide",
+          "description": "Moves through stone and earth as easily as air.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "primordial"
+      ]
+    },
+    {
+      "id": "water-elemental",
+      "name": "Water Elemental",
+      "description": "A surging wave with intent behind it.",
+      "type": "elemental",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 18,
+        "dexterity": 14,
+        "constitution": 18,
+        "intelligence": 5,
+        "wisdom": 10,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "whelm",
+          "name": "Whelm",
+          "description": "Engulfs and drowns creatures in its space.",
+          "effects": [
+            "restrained",
+            "grappled"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "primordial"
+      ]
+    },
+    {
+      "id": "dryad",
+      "name": "Dryad",
+      "description": "A fey bound to a single tree, gracious to guests and lethal to loggers.",
+      "type": "fey",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 10,
+        "dexterity": 12,
+        "constitution": 11,
+        "intelligence": 14,
+        "wisdom": 15,
+        "charisma": 18
+      },
+      "abilities": [
+        {
+          "id": "fey_charm",
+          "name": "Fey Charm",
+          "description": "A word that makes an enemy into a devoted friend.",
+          "effects": [
+            "charmed"
+          ],
+          "range": 30.0,
+          "recharge": 0
+        },
+        {
+          "id": "tree_stride",
+          "name": "Tree Stride",
+          "description": "Steps into one tree and out of another.",
+          "effects": [],
+          "range": 500.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "sylvan",
+        "elvish"
+      ]
+    },
+    {
+      "id": "pixie",
+      "name": "Pixie",
+      "description": "A tiny, invisible fey with a dangerous sense of humour.",
+      "type": "fey",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 2,
+        "dexterity": 20,
+        "constitution": 8,
+        "intelligence": 10,
+        "wisdom": 14,
+        "charisma": 15
+      },
+      "abilities": [
+        {
+          "id": "superior_invisibility",
+          "name": "Superior Invisibility",
+          "description": "Invisible at will, even while acting.",
+          "effects": [
+            "invisible"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "sleep_dust",
+          "name": "Sleep Dust",
+          "description": "A pinch of dust that drops a target where it stands.",
+          "effects": [
+            "unconscious"
+          ],
+          "range": 30.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "sylvan"
+      ]
+    },
+    {
+      "id": "mind-flayer",
+      "name": "Mind Flayer",
+      "description": "An illithid that regards your skull as a lunch container.",
+      "type": "aberration",
+      "challengeRating": "7",
+      "stats": {
+        "strength": 11,
+        "dexterity": 12,
+        "constitution": 12,
+        "intelligence": 19,
+        "wisdom": 17,
+        "charisma": 17
+      },
+      "abilities": [
+        {
+          "id": "mind_blast",
+          "name": "Mind Blast",
+          "description": "A cone of psychic force that stuns everything caught.",
+          "effects": [
+            "stunned"
+          ],
+          "range": 60.0,
+          "recharge": 5
+        },
+        {
+          "id": "extract_brain",
+          "name": "Extract Brain",
+          "description": "Kills an incapacitated target outright.",
+          "effects": [],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "deep-speech",
+        "undercommon"
+      ]
+    },
+    {
+      "id": "beholder",
+      "name": "Beholder",
+      "description": "A floating sphere of eyes, paranoia, and ten separate ways to end you.",
+      "type": "aberration",
+      "challengeRating": "13",
+      "stats": {
+        "strength": 10,
+        "dexterity": 14,
+        "constitution": 18,
+        "intelligence": 17,
+        "wisdom": 15,
+        "charisma": 17
+      },
+      "abilities": [
+        {
+          "id": "antimagic_cone",
+          "name": "Antimagic Cone",
+          "description": "Its central eye suppresses all magic in a wide cone.",
+          "effects": [],
+          "range": 150.0,
+          "recharge": 0
+        },
+        {
+          "id": "eye_rays",
+          "name": "Eye Rays",
+          "description": "Three random rays from its ten eyestalks.",
+          "effects": [
+            "area_damage",
+            "paralyzed",
+            "slowed"
+          ],
+          "range": 120.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "deep-speech",
+        "undercommon"
+      ]
+    },
+    {
+      "id": "young-red-dragon",
+      "name": "Young Red Dragon",
+      "description": "An arrogant adolescent dragon already convinced the valley belongs to it.",
+      "type": "dragon",
+      "challengeRating": "10",
+      "stats": {
+        "strength": 23,
+        "dexterity": 10,
+        "constitution": 21,
+        "intelligence": 14,
+        "wisdom": 11,
+        "charisma": 19
+      },
+      "abilities": [
+        {
+          "id": "fire_breath",
+          "name": "Fire Breath",
+          "description": "A cone of roaring flame.",
+          "effects": [
+            "burn",
+            "area_damage"
+          ],
+          "range": 30.0,
+          "recharge": 5
+        },
+        {
+          "id": "frightful_presence",
+          "name": "Frightful Presence",
+          "description": "Its sheer presence unnerves everything nearby.",
+          "effects": [
+            "frightened"
+          ],
+          "range": 120.0,
+          "recharge": 0
+        },
+        {
+          "id": "multiattack",
+          "name": "Multiattack",
+          "description": "A bite and two raking claws.",
+          "effects": [
+            "bleeding"
+          ],
+          "range": 10.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "draconic"
+      ]
+    },
+    {
+      "id": "adult-white-dragon",
+      "name": "Adult White Dragon",
+      "description": "A cold, feral hunter that keeps its kills frozen for later.",
+      "type": "dragon",
+      "challengeRating": "13",
+      "stats": {
+        "strength": 22,
+        "dexterity": 10,
+        "constitution": 22,
+        "intelligence": 8,
+        "wisdom": 12,
+        "charisma": 12
+      },
+      "abilities": [
+        {
+          "id": "cold_breath",
+          "name": "Cold Breath",
+          "description": "A cone of killing frost.",
+          "effects": [
+            "freeze",
+            "area_damage"
+          ],
+          "range": 60.0,
+          "recharge": 5
+        },
+        {
+          "id": "frightful_presence",
+          "name": "Frightful Presence",
+          "description": "Terror radiates from it.",
+          "effects": [
+            "frightened"
+          ],
+          "range": 120.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "common",
+        "draconic"
+      ]
+    },
+    {
+      "id": "ember-wyrm",
+      "name": "Ember Wyrm",
+      "description": "A serpentine lesser dragon that nests in volcanic vents and breathes embers.",
+      "type": "dragon",
+      "challengeRating": "4",
+      "stats": {
+        "strength": 16,
+        "dexterity": 14,
+        "constitution": 15,
+        "intelligence": 6,
+        "wisdom": 10,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "ember_breath",
+          "name": "Ember Breath",
+          "description": "Exhales a cone of scorching embers.",
+          "effects": [
+            "burn",
+            "area_damage"
+          ],
+          "range": 15.0,
+          "recharge": 3
+        },
+        {
+          "id": "wing_buffet",
+          "name": "Wing Buffet",
+          "description": "Strikes nearby foes with a winged gust.",
+          "effects": [
+            "knockback"
+          ],
+          "range": 5.0,
+          "recharge": 1
+        }
+      ],
+      "languages": [
+        "common",
+        "draconic"
+      ]
+    },
+    {
+      "id": "wyvern",
+      "name": "Wyvern",
+      "description": "A two-legged dragon cousin with a venomous stinger and no interest in conversation.",
+      "type": "dragon",
+      "challengeRating": "6",
+      "stats": {
+        "strength": 19,
+        "dexterity": 10,
+        "constitution": 16,
+        "intelligence": 5,
+        "wisdom": 12,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "stinger",
+          "name": "Stinger",
+          "description": "A tail sting that pumps in venom.",
+          "effects": [
+            "poisoned"
+          ],
+          "range": 10.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "treant",
+      "name": "Treant",
+      "description": "An ancient awakened tree, slow to anger and impossible to reason with once it is.",
+      "type": "plant",
+      "challengeRating": "9",
+      "stats": {
+        "strength": 23,
+        "dexterity": 8,
+        "constitution": 21,
+        "intelligence": 12,
+        "wisdom": 16,
+        "charisma": 12
+      },
+      "abilities": [
+        {
+          "id": "animate_trees",
+          "name": "Animate Trees",
+          "description": "Wakes two nearby trees to fight alongside it.",
+          "effects": [],
+          "range": 60.0,
+          "recharge": 5
+        },
+        {
+          "id": "rock_throw",
+          "name": "Rock Throw",
+          "description": "Hurls a boulder with enormous force.",
+          "effects": [
+            "knockback"
+          ],
+          "range": 180.0,
+          "recharge": 0
+        }
+      ],
+      "languages": [
+        "sylvan",
+        "druidic",
+        "common"
+      ]
+    },
+    {
+      "id": "shambling-mound",
+      "name": "Shambling Mound",
+      "description": "A heap of rotting vegetation that engulfs and digests.",
+      "type": "plant",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 18,
+        "dexterity": 8,
+        "constitution": 16,
+        "intelligence": 5,
+        "wisdom": 10,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "engulf",
+          "name": "Engulf",
+          "description": "Wraps a creature inside its mass.",
+          "effects": [
+            "restrained",
+            "grappled"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    },
+    {
+      "id": "stirge",
+      "name": "Stirge",
+      "description": "A fist-sized flying bloodsucker that latches on and does not let go.",
+      "type": "monstrosity",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 4,
+        "dexterity": 16,
+        "constitution": 11,
+        "intelligence": 2,
+        "wisdom": 8,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "blood_drain",
+          "name": "Blood Drain",
+          "description": "Attaches and drains blood each round.",
+          "effects": [
+            "life_drain",
+            "bleeding"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ],
+      "languages": []
+    }
+  ]
+}

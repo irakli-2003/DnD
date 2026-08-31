@@ -1,0 +1,628 @@
+{
+  "players": [
+    {
+      "id": "player-balthazar",
+      "name": "Balthazar Boombard",
+      "playerName": "Unassigned",
+      "classId": "bard",
+      "raceId": "human",
+      "level": 5,
+      "stats": {
+        "strength": 10,
+        "dexterity": 15,
+        "constitution": 14,
+        "intelligence": 12,
+        "wisdom": 11,
+        "charisma": 18
+      },
+      "items": [
+        {
+          "itemId": "thunderkiss",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "rapier",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "leather-armor",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "dagger",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "component-pouch",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "potion-of-healing",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "waterskin",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [
+        {
+          "spellId": "minor-illusion",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "prestidigitation",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "light",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "charm-person",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "healing-word",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "thunderwave",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "faerie-fire",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "invisibility",
+          "rank": 2,
+          "active": true
+        },
+        {
+          "spellId": "hold-person",
+          "rank": 2,
+          "active": true
+        },
+        {
+          "spellId": "haste",
+          "rank": 3,
+          "active": true
+        },
+        {
+          "spellId": "dispel-magic",
+          "rank": 3,
+          "active": false
+        }
+      ],
+      "imagePath": null
+    },
+    {
+      "id": "player-silvan",
+      "name": "Silvan",
+      "playerName": "Unassigned",
+      "classId": "ranger",
+      "raceId": "wood-elf",
+      "level": 5,
+      "stats": {
+        "strength": 12,
+        "dexterity": 18,
+        "constitution": 14,
+        "intelligence": 11,
+        "wisdom": 15,
+        "charisma": 10
+      },
+      "items": [
+        {
+          "itemId": "silvan-hunting-sword",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "shortbow",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "studded-leather",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "elven-cloak",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "leaf-pendant",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "rope-hempen",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "rations",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "bedroll",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [
+        {
+          "spellId": "hunters-mark",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "cure-wounds",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "entangle",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "darkness",
+          "rank": 2,
+          "active": true
+        },
+        {
+          "spellId": "lesser-restoration",
+          "rank": 2,
+          "active": false
+        }
+      ],
+      "imagePath": null
+    },
+    {
+      "id": "player-vaerak",
+      "name": "Vaerak",
+      "playerName": "Unassigned",
+      "classId": "barbarian",
+      "raceId": "revenant",
+      "level": 5,
+      "stats": {
+        "strength": 18,
+        "dexterity": 12,
+        "constitution": 18,
+        "intelligence": 10,
+        "wisdom": 13,
+        "charisma": 8
+      },
+      "items": [
+        {
+          "itemId": "rhaz-warhammer",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "kaavor-whip",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "hide-armor",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "rations",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "waterskin",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "potion-of-greater-healing",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [],
+      "imagePath": null
+    },
+    {
+      "id": "player-cucaratcha",
+      "name": "El Cucaratcha",
+      "playerName": "Unassigned",
+      "classId": "rogue",
+      "raceId": "human",
+      "level": 5,
+      "stats": {
+        "strength": 11,
+        "dexterity": 18,
+        "constitution": 14,
+        "intelligence": 13,
+        "wisdom": 14,
+        "charisma": 10
+      },
+      "items": [
+        {
+          "itemId": "sixfold-judgment",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "monokatana",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "studded-leather",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "gravitic-anchor-node",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "thieves-tools",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "manacles",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "potion-of-healing",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [],
+      "imagePath": null
+    },
+    {
+      "id": "player-lavenos",
+      "name": "Lavenos",
+      "playerName": "Unassigned",
+      "classId": "fighter",
+      "raceId": "human",
+      "level": 5,
+      "stats": {
+        "strength": 16,
+        "dexterity": 16,
+        "constitution": 15,
+        "intelligence": 11,
+        "wisdom": 12,
+        "charisma": 12
+      },
+      "items": [
+        {
+          "itemId": "longsword",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "shield",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "breastplate",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "dagger",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "word-lavenos",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "rations",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "potion-of-healing",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [],
+      "imagePath": null
+    },
+    {
+      "id": "player-gorlok",
+      "name": "Gorlok the Destroyer",
+      "playerName": "Unassigned",
+      "classId": "barbarian",
+      "raceId": "goblin",
+      "level": 5,
+      "stats": {
+        "strength": 18,
+        "dexterity": 12,
+        "constitution": 18,
+        "intelligence": 7,
+        "wisdom": 9,
+        "charisma": 8
+      },
+      "items": [
+        {
+          "itemId": "gorloks-giant-axe",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "dwarven-heavy-plate",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "handaxe",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "rations",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "torch",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "tinderbox",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [],
+      "imagePath": null
+    },
+    {
+      "id": "player-tasha",
+      "name": "Tasha",
+      "playerName": "Unassigned",
+      "classId": "cleric",
+      "raceId": "tiefling",
+      "level": 5,
+      "stats": {
+        "strength": 11,
+        "dexterity": 12,
+        "constitution": 14,
+        "intelligence": 10,
+        "wisdom": 18,
+        "charisma": 14
+      },
+      "items": [
+        {
+          "itemId": "morningstar",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "light-crossbow",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "shield",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "leather-armor",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "holy-symbol",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": true
+        },
+        {
+          "itemId": "healers-kit",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        },
+        {
+          "itemId": "holy-water",
+          "condition": {
+            "durability": 100
+          },
+          "equipped": false
+        }
+      ],
+      "spells": [
+        {
+          "spellId": "sacred-flame",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "guidance",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "light",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "thaumaturgy",
+          "rank": 0,
+          "active": true
+        },
+        {
+          "spellId": "cure-wounds",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "healing-word",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "bless",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "detect-magic",
+          "rank": 1,
+          "active": true
+        },
+        {
+          "spellId": "lesser-restoration",
+          "rank": 2,
+          "active": true
+        },
+        {
+          "spellId": "spiritual-weapon",
+          "rank": 2,
+          "active": true
+        },
+        {
+          "spellId": "hold-person",
+          "rank": 2,
+          "active": true
+        },
+        {
+          "spellId": "revivify",
+          "rank": 3,
+          "active": true
+        },
+        {
+          "spellId": "dispel-magic",
+          "rank": 3,
+          "active": false
+        }
+      ],
+      "imagePath": null
+    }
+  ]
+}

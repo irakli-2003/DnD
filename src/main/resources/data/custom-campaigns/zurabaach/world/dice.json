@@ -1,0 +1,39 @@
+{
+  "dice": [
+    {
+      "id": "d4",
+      "name": "d4",
+      "sides": 4
+    },
+    {
+      "id": "d6",
+      "name": "d6",
+      "sides": 6
+    },
+    {
+      "id": "d8",
+      "name": "d8",
+      "sides": 8
+    },
+    {
+      "id": "d10",
+      "name": "d10",
+      "sides": 10
+    },
+    {
+      "id": "d12",
+      "name": "d12",
+      "sides": 12
+    },
+    {
+      "id": "d20",
+      "name": "d20",
+      "sides": 20
+    },
+    {
+      "id": "d100",
+      "name": "d100",
+      "sides": 100
+    }
+  ]
+}

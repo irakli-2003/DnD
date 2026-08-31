@@ -1,0 +1,268 @@
+{
+  "classes": [
+    {
+      "id": "barbarian",
+      "name": "Barbarian",
+      "description": "A furious warrior who channels rage into raw damage and refuses to go down while the fight is still on.",
+      "hitDie": {
+        "id": "d12",
+        "name": "d12",
+        "sides": 12
+      },
+      "primaryAbilities": [
+        "strength",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      }
+    },
+    {
+      "id": "bard",
+      "name": "Bard",
+      "description": "An inspiring performer whose magic comes from words and music, and who somehow knows a little of everything.",
+      "hitDie": {
+        "id": "d8",
+        "name": "d8",
+        "sides": 8
+      },
+      "primaryAbilities": [
+        "charisma",
+        "dexterity"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "cleric",
+      "name": "Cleric",
+      "description": "A divine caster who channels a deity's power to heal allies, turn undead, and smite the unworthy.",
+      "hitDie": {
+        "id": "d8",
+        "name": "d8",
+        "sides": 8
+      },
+      "primaryAbilities": [
+        "wisdom",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 2,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "druid",
+      "name": "Druid",
+      "description": "A guardian of the wild who shapes the elements and takes the form of beasts.",
+      "hitDie": {
+        "id": "d8",
+        "name": "d8",
+        "sides": 8
+      },
+      "primaryAbilities": [
+        "wisdom",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 2,
+        "wisdom": 2,
+        "charisma": 0
+      }
+    },
+    {
+      "id": "fighter",
+      "name": "Fighter",
+      "description": "A master of every weapon and armor there is, defined by sheer martial versatility and staying power.",
+      "hitDie": {
+        "id": "d10",
+        "name": "d10",
+        "sides": 10
+      },
+      "primaryAbilities": [
+        "strength",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      }
+    },
+    {
+      "id": "monk",
+      "name": "Monk",
+      "description": "A martial artist who turns body and ki into a weapon, striking many times in the space others take to swing once.",
+      "hitDie": {
+        "id": "d8",
+        "name": "d8",
+        "sides": 8
+      },
+      "primaryAbilities": [
+        "dexterity",
+        "wisdom"
+      ],
+      "savingThrowBonuses": {
+        "strength": 2,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      }
+    },
+    {
+      "id": "paladin",
+      "name": "Paladin",
+      "description": "A holy warrior bound by an oath, blending heavy armor with divine smites and an aura that steadies allies.",
+      "hitDie": {
+        "id": "d10",
+        "name": "d10",
+        "sides": 10
+      },
+      "primaryAbilities": [
+        "strength",
+        "charisma"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 2,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "ranger",
+      "name": "Ranger",
+      "description": "A hunter and tracker at home in the wilds, deadly at range and unmatched at finding what does not want to be found.",
+      "hitDie": {
+        "id": "d10",
+        "name": "d10",
+        "sides": 10
+      },
+      "primaryAbilities": [
+        "dexterity",
+        "wisdom"
+      ],
+      "savingThrowBonuses": {
+        "strength": 2,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      }
+    },
+    {
+      "id": "rogue",
+      "name": "Rogue",
+      "description": "A precise, opportunistic striker who lives by stealth, skill, and knowing exactly where to put the knife.",
+      "hitDie": {
+        "id": "d8",
+        "name": "d8",
+        "sides": 8
+      },
+      "primaryAbilities": [
+        "dexterity",
+        "intelligence"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 2,
+        "wisdom": 0,
+        "charisma": 0
+      }
+    },
+    {
+      "id": "sorcerer",
+      "name": "Sorcerer",
+      "description": "A caster whose magic is innate rather than learned, bending spells into new shapes on instinct.",
+      "hitDie": {
+        "id": "d6",
+        "name": "d6",
+        "sides": 6
+      },
+      "primaryAbilities": [
+        "charisma",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "warlock",
+      "name": "Warlock",
+      "description": "A caster who traded with something powerful and strange, and pays for the privilege in ways best not discussed.",
+      "hitDie": {
+        "id": "d8",
+        "name": "d8",
+        "sides": 8
+      },
+      "primaryAbilities": [
+        "charisma",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 2,
+        "charisma": 2
+      }
+    },
+    {
+      "id": "wizard",
+      "name": "Wizard",
+      "description": "A scholar of magic whose power comes from study, preparation, and a very carefully guarded spellbook.",
+      "hitDie": {
+        "id": "d6",
+        "name": "d6",
+        "sides": 6
+      },
+      "primaryAbilities": [
+        "intelligence",
+        "constitution"
+      ],
+      "savingThrowBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 2,
+        "wisdom": 2,
+        "charisma": 0
+      }
+    }
+  ]
+}

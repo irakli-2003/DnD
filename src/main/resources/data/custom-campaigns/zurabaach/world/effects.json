@@ -1,0 +1,310 @@
+{
+  "effects": [
+    {
+      "id": "blinded",
+      "name": "Blinded",
+      "description": "Cannot see; automatically fails sight-based checks and attacks at disadvantage.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "charmed",
+      "name": "Charmed",
+      "description": "Cannot attack the charmer, who has advantage on social checks against the target.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "deafened",
+      "name": "Deafened",
+      "description": "Cannot hear; automatically fails hearing-based checks.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "frightened",
+      "name": "Frightened",
+      "description": "Disadvantage while the source of fear is in sight, and cannot willingly approach it.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "fear",
+      "name": "Fear",
+      "description": "Panic that overrides tactics; the victim flees or freezes.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "grappled",
+      "name": "Grappled",
+      "description": "Speed drops to zero until the grapple ends.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "incapacitated",
+      "name": "Incapacitated",
+      "description": "Can take no actions or reactions.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "invisible",
+      "name": "Invisible",
+      "description": "Cannot be seen without magic; attacks against the target are made at disadvantage.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "paralyzed",
+      "name": "Paralyzed",
+      "description": "Incapacitated and unable to move or speak; nearby attacks land as critical hits.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "petrified",
+      "name": "Petrified",
+      "description": "Transformed to stone, unaware of surroundings, and resistant to all damage.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "poisoned",
+      "name": "Poisoned",
+      "description": "Disadvantage on attack rolls and ability checks.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 1,
+      "healingAmount": 0
+    },
+    {
+      "id": "prone",
+      "name": "Prone",
+      "description": "Knocked flat; movement costs double and melee attackers gain advantage.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "restrained",
+      "name": "Restrained",
+      "description": "Speed is zero, attacks are made at disadvantage, and dexterity saves suffer.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "stunned",
+      "name": "Stunned",
+      "description": "Incapacitated, unable to move, and barely able to speak.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "unconscious",
+      "name": "Unconscious",
+      "description": "Prone, incapacitated, and unaware of anything happening nearby.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "exhaustion",
+      "name": "Exhaustion",
+      "description": "Cumulative fatigue that erodes speed, accuracy, and finally life itself.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "burn",
+      "name": "Burning",
+      "description": "Flames cling to the target and keep searing it each round.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 3,
+      "healingAmount": 0
+    },
+    {
+      "id": "heated_armor",
+      "name": "Heated Armor",
+      "description": "Metal armor glows hot, scalding the wearer.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 2,
+      "healingAmount": 0
+    },
+    {
+      "id": "freeze",
+      "name": "Freeze",
+      "description": "Numbing cold slows movement and dulls reactions.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "shock",
+      "name": "Shock",
+      "description": "Muscles lock under a surge of electricity, costing the victim its reaction.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "infection",
+      "name": "Infection",
+      "description": "A festering wound that worsens without treatment.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 2,
+      "healingAmount": 0
+    },
+    {
+      "id": "bleeding",
+      "name": "Bleeding",
+      "description": "An open wound that keeps costing blood until it is bound.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 2,
+      "healingAmount": 0
+    },
+    {
+      "id": "entangled",
+      "name": "Entangled",
+      "description": "Roots, webs, or vines hold the target fast.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "silenced",
+      "name": "Silenced",
+      "description": "No sound can be made, blocking any spell that needs a spoken word.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "blessed",
+      "name": "Blessed",
+      "description": "A faint radiance steadies the target's aim and nerve.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "hasted",
+      "name": "Hasted",
+      "description": "Time seems to slow; the target moves and acts far faster than normal.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "slowed",
+      "name": "Slowed",
+      "description": "Every movement drags as if through deep water.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "invigorated",
+      "name": "Invigorated",
+      "description": "Vitality floods back into the target.",
+      "damaging": false,
+      "healing": true,
+      "damageAmount": 0,
+      "healingAmount": 5
+    },
+    {
+      "id": "regeneration",
+      "name": "Regeneration",
+      "description": "Wounds knit closed a little more each round.",
+      "damaging": false,
+      "healing": true,
+      "damageAmount": 0,
+      "healingAmount": 3
+    },
+    {
+      "id": "stabilized",
+      "name": "Stabilized",
+      "description": "A dying creature stops losing life and holds on at zero.",
+      "damaging": false,
+      "healing": true,
+      "damageAmount": 0,
+      "healingAmount": 1
+    },
+    {
+      "id": "area_damage",
+      "name": "Area Damage",
+      "description": "Harm spread across everything caught in the area.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 4,
+      "healingAmount": 0
+    },
+    {
+      "id": "knockback",
+      "name": "Knockback",
+      "description": "Force enough to hurl the target away from its attacker.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "advantage_on_attack",
+      "name": "Advantage on Attack",
+      "description": "Roll the attack twice and keep the better result.",
+      "damaging": false,
+      "healing": false,
+      "damageAmount": 0,
+      "healingAmount": 0
+    },
+    {
+      "id": "life_drain",
+      "name": "Life Drain",
+      "description": "Life is torn from the victim and fed to the attacker.",
+      "damaging": true,
+      "healing": false,
+      "damageAmount": 5,
+      "healingAmount": 0
+    }
+  ]
+}

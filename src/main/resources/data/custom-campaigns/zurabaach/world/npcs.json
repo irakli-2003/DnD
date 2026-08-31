@@ -1,0 +1,539 @@
+{
+  "npcs": [
+    {
+      "id": "warden-elya",
+      "name": "Warden Elya",
+      "description": "Commander of Stonekeep. Fair, tired, and running out of soldiers.",
+      "role": "commander",
+      "level": 5,
+      "stats": {
+        "strength": 14,
+        "dexterity": 12,
+        "constitution": 13,
+        "intelligence": 12,
+        "wisdom": 10,
+        "charisma": 15
+      },
+      "traits": [
+        "brave",
+        "strategist",
+        "fair"
+      ],
+      "languages": [
+        "common",
+        "dwarvish"
+      ]
+    },
+    {
+      "id": "brannock-the-keeper",
+      "name": "Brannock the Keeper",
+      "description": "Owner of the Gilded Stag. Hears everything, repeats about half.",
+      "role": "tavern keeper",
+      "level": 2,
+      "stats": {
+        "strength": 12,
+        "dexterity": 10,
+        "constitution": 14,
+        "intelligence": 12,
+        "wisdom": 13,
+        "charisma": 15
+      },
+      "traits": [
+        "gossip",
+        "generous",
+        "observant"
+      ],
+      "languages": [
+        "common",
+        "halfling-tongue"
+      ]
+    },
+    {
+      "id": "mira-swiftfoot",
+      "name": "Mira Swiftfoot",
+      "description": "A halfling barmaid who is also, quietly, the best source of rumours in town.",
+      "role": "barmaid",
+      "level": 3,
+      "stats": {
+        "strength": 9,
+        "dexterity": 16,
+        "constitution": 11,
+        "intelligence": 12,
+        "wisdom": 13,
+        "charisma": 14
+      },
+      "traits": [
+        "quick",
+        "curious",
+        "discreet"
+      ],
+      "languages": [
+        "common",
+        "halfling-tongue",
+        "thieves-cant"
+      ]
+    },
+    {
+      "id": "torvin-ironhand",
+      "name": "Torvin Ironhand",
+      "description": "The village blacksmith. Dwarf, deaf in one ear, sells nothing on credit.",
+      "role": "blacksmith",
+      "level": 4,
+      "stats": {
+        "strength": 17,
+        "dexterity": 11,
+        "constitution": 16,
+        "intelligence": 11,
+        "wisdom": 12,
+        "charisma": 9
+      },
+      "traits": [
+        "gruff",
+        "honest",
+        "skilled"
+      ],
+      "languages": [
+        "common",
+        "dwarvish"
+      ]
+    },
+    {
+      "id": "sister-anwen",
+      "name": "Sister Anwen",
+      "description": "Priestess of the Dawnfather. Heals anyone; asks questions afterward.",
+      "role": "priest",
+      "level": 5,
+      "stats": {
+        "strength": 10,
+        "dexterity": 11,
+        "constitution": 12,
+        "intelligence": 13,
+        "wisdom": 17,
+        "charisma": 14
+      },
+      "traits": [
+        "compassionate",
+        "stubborn",
+        "devout"
+      ],
+      "languages": [
+        "common",
+        "celestial"
+      ]
+    },
+    {
+      "id": "archivist-pell",
+      "name": "Archivist Pell",
+      "description": "A gnome scholar who knows the answer and will take an hour to give it.",
+      "role": "sage",
+      "level": 6,
+      "stats": {
+        "strength": 8,
+        "dexterity": 11,
+        "constitution": 10,
+        "intelligence": 18,
+        "wisdom": 14,
+        "charisma": 10
+      },
+      "traits": [
+        "pedantic",
+        "brilliant",
+        "distracted"
+      ],
+      "languages": [
+        "common",
+        "gnomish",
+        "draconic",
+        "elvish"
+      ]
+    },
+    {
+      "id": "captain-hollis",
+      "name": "Captain Hollis",
+      "description": "Head of the town watch. Believes strongly in paperwork.",
+      "role": "guard captain",
+      "level": 5,
+      "stats": {
+        "strength": 15,
+        "dexterity": 13,
+        "constitution": 14,
+        "intelligence": 11,
+        "wisdom": 12,
+        "charisma": 12
+      },
+      "traits": [
+        "disciplined",
+        "suspicious",
+        "loyal"
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "silas-crane",
+      "name": "Silas Crane",
+      "description": "A travelling merchant whose prices are fair and whose goods are usually legal.",
+      "role": "merchant",
+      "level": 3,
+      "stats": {
+        "strength": 10,
+        "dexterity": 12,
+        "constitution": 11,
+        "intelligence": 14,
+        "wisdom": 12,
+        "charisma": 16
+      },
+      "traits": [
+        "shrewd",
+        "charming",
+        "well-travelled"
+      ],
+      "languages": [
+        "common",
+        "dwarvish",
+        "gnomish"
+      ]
+    },
+    {
+      "id": "nessa-quickfingers",
+      "name": "Nessa Quickfingers",
+      "description": "Fence, thief, and the person to see when something must disappear.",
+      "role": "fence",
+      "level": 4,
+      "stats": {
+        "strength": 10,
+        "dexterity": 17,
+        "constitution": 12,
+        "intelligence": 14,
+        "wisdom": 12,
+        "charisma": 13
+      },
+      "traits": [
+        "sly",
+        "practical",
+        "well-connected"
+      ],
+      "languages": [
+        "common",
+        "thieves-cant",
+        "undercommon"
+      ]
+    },
+    {
+      "id": "old-hask",
+      "name": "Old Hask",
+      "description": "A half-orc hermit living past the treeline. Knows the woods better than the maps do.",
+      "role": "hermit",
+      "level": 6,
+      "stats": {
+        "strength": 15,
+        "dexterity": 13,
+        "constitution": 16,
+        "intelligence": 10,
+        "wisdom": 16,
+        "charisma": 8
+      },
+      "traits": [
+        "reclusive",
+        "wise",
+        "blunt"
+      ],
+      "languages": [
+        "common",
+        "orcish",
+        "druidic"
+      ]
+    },
+    {
+      "id": "lady-veyra",
+      "name": "Lady Veyra Ashdown",
+      "description": "Local noble. Gracious in public, ruthless about her family's holdings.",
+      "role": "noble",
+      "level": 4,
+      "stats": {
+        "strength": 9,
+        "dexterity": 12,
+        "constitution": 11,
+        "intelligence": 15,
+        "wisdom": 13,
+        "charisma": 18
+      },
+      "traits": [
+        "poised",
+        "ambitious",
+        "calculating"
+      ],
+      "languages": [
+        "common",
+        "elvish",
+        "infernal"
+      ]
+    },
+    {
+      "id": "magister-orin",
+      "name": "Magister Orin",
+      "description": "The town's licensed wizard, which mostly means he fixes wards and complains.",
+      "role": "wizard",
+      "level": 8,
+      "stats": {
+        "strength": 9,
+        "dexterity": 12,
+        "constitution": 12,
+        "intelligence": 18,
+        "wisdom": 14,
+        "charisma": 11
+      },
+      "traits": [
+        "arrogant",
+        "precise",
+        "helpful when paid"
+      ],
+      "languages": [
+        "common",
+        "draconic",
+        "primordial"
+      ]
+    },
+    {
+      "id": "greta-thornby",
+      "name": "Greta Thornby",
+      "description": "The alchemist. Missing two fingers and entirely unbothered by it.",
+      "role": "alchemist",
+      "level": 5,
+      "stats": {
+        "strength": 11,
+        "dexterity": 14,
+        "constitution": 13,
+        "intelligence": 16,
+        "wisdom": 13,
+        "charisma": 10
+      },
+      "traits": [
+        "experimental",
+        "fearless",
+        "untidy"
+      ],
+      "languages": [
+        "common",
+        "gnomish"
+      ]
+    },
+    {
+      "id": "bram-the-ferryman",
+      "name": "Bram the Ferryman",
+      "description": "Poles the river crossing at all hours for the right coin.",
+      "role": "ferryman",
+      "level": 2,
+      "stats": {
+        "strength": 14,
+        "dexterity": 12,
+        "constitution": 14,
+        "intelligence": 9,
+        "wisdom": 12,
+        "charisma": 11
+      },
+      "traits": [
+        "taciturn",
+        "reliable",
+        "superstitious"
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "sergeant-dol",
+      "name": "Sergeant Dol",
+      "description": "A veteran who trains the militia and expects them to be worse than useless.",
+      "role": "drill sergeant",
+      "level": 6,
+      "stats": {
+        "strength": 16,
+        "dexterity": 12,
+        "constitution": 16,
+        "intelligence": 10,
+        "wisdom": 12,
+        "charisma": 11
+      },
+      "traits": [
+        "harsh",
+        "fair",
+        "experienced"
+      ],
+      "languages": [
+        "common",
+        "orcish"
+      ]
+    },
+    {
+      "id": "elowen-nightbreeze",
+      "name": "Elowen Nightbreeze",
+      "description": "An elven ranger who guides caravans through the old forest.",
+      "role": "ranger",
+      "level": 7,
+      "stats": {
+        "strength": 12,
+        "dexterity": 18,
+        "constitution": 13,
+        "intelligence": 12,
+        "wisdom": 16,
+        "charisma": 12
+      },
+      "traits": [
+        "patient",
+        "watchful",
+        "private"
+      ],
+      "languages": [
+        "common",
+        "elvish",
+        "sylvan"
+      ]
+    },
+    {
+      "id": "fenwick-mudd",
+      "name": "Fenwick Mudd",
+      "description": "Stablehand. Fifteen, talkative, and desperate to be an adventurer.",
+      "role": "stablehand",
+      "level": 1,
+      "stats": {
+        "strength": 11,
+        "dexterity": 13,
+        "constitution": 12,
+        "intelligence": 10,
+        "wisdom": 9,
+        "charisma": 12
+      },
+      "traits": [
+        "eager",
+        "naive",
+        "hardworking"
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "mother-sable",
+      "name": "Mother Sable",
+      "description": "Runs the orphanage, and a very quiet information network alongside it.",
+      "role": "matron",
+      "level": 5,
+      "stats": {
+        "strength": 9,
+        "dexterity": 11,
+        "constitution": 12,
+        "intelligence": 15,
+        "wisdom": 16,
+        "charisma": 15
+      },
+      "traits": [
+        "kind",
+        "shrewd",
+        "protective"
+      ],
+      "languages": [
+        "common",
+        "halfling-tongue",
+        "thieves-cant"
+      ]
+    },
+    {
+      "id": "garrick-vane",
+      "name": "Garrick Vane",
+      "description": "A disgraced knight drinking through the last of his family's name.",
+      "role": "fallen knight",
+      "level": 6,
+      "stats": {
+        "strength": 16,
+        "dexterity": 11,
+        "constitution": 15,
+        "intelligence": 11,
+        "wisdom": 10,
+        "charisma": 13
+      },
+      "traits": [
+        "bitter",
+        "honourable",
+        "self-destructive"
+      ],
+      "languages": [
+        "common"
+      ]
+    },
+    {
+      "id": "the-hooded-man",
+      "name": "The Hooded Man",
+      "description": "Appears at the crossroads inn every third night. Buys drinks. Asks about the crypt.",
+      "role": "mystery",
+      "level": 9,
+      "stats": {
+        "strength": 12,
+        "dexterity": 15,
+        "constitution": 13,
+        "intelligence": 16,
+        "wisdom": 15,
+        "charisma": 17
+      },
+      "traits": [
+        "secretive",
+        "generous",
+        "dangerous"
+      ],
+      "languages": [
+        "common",
+        "infernal",
+        "undercommon"
+      ]
+    },
+    {
+      "id": "korga-splitshield",
+      "name": "Korga Splitshield",
+      "description": "An orc mercenary captain currently between employers.",
+      "role": "mercenary captain",
+      "level": 7,
+      "stats": {
+        "strength": 18,
+        "dexterity": 13,
+        "constitution": 17,
+        "intelligence": 10,
+        "wisdom": 11,
+        "charisma": 12
+      },
+      "traits": [
+        "direct",
+        "professional",
+        "expensive"
+      ],
+      "languages": [
+        "common",
+        "orcish",
+        "giant"
+      ]
+    },
+    {
+      "id": "tam-the-miller",
+      "name": "Tam the Miller",
+      "description": "Grinds the district's grain and knows exactly who is short this season.",
+      "role": "miller",
+      "level": 2,
+      "stats": {
+        "strength": 14,
+        "dexterity": 10,
+        "constitution": 13,
+        "intelligence": 11,
+        "wisdom": 12,
+        "charisma": 11
+      },
+      "traits": [
+        "practical",
+        "grumbling",
+        "kind"
+      ],
+      "languages": [
+        "common"
+      ]
+    }
+  ]
+}

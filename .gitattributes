@@ -1,0 +1,6 @@
+# Campaign data is authored content, not source. Store it byte-for-byte so
+# core.autocrlf cannot rewrite line endings underneath the storyline files.
+src/main/resources/data/custom-campaigns/** -text
+
+# Fonts are binary; never apply text or diff conversion to them.
+*.ttf binary

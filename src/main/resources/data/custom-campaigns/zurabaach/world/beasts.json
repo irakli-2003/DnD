@@ -1,0 +1,739 @@
+{
+  "beasts": [
+    {
+      "id": "wolf",
+      "name": "Wolf",
+      "description": "A lean pack hunter that circles before it commits.",
+      "habitat": "forest",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 12,
+        "dexterity": 15,
+        "constitution": 12,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Attacks with advantage while an ally is beside the same target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "dire-wolf",
+      "name": "Dire Wolf",
+      "description": "A wolf the size of a pony, and just as strong as that sounds.",
+      "habitat": "forest",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 17,
+        "dexterity": 15,
+        "constitution": 15,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Attacks with advantage while an ally is beside the same target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "bite",
+          "name": "Bite",
+          "description": "A savage bite that can drag a target down.",
+          "effects": [
+            "prone"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "brown-bear",
+      "name": "Brown Bear",
+      "description": "Territorial, enormously strong, and best avoided in spring.",
+      "habitat": "forest",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 19,
+        "dexterity": 10,
+        "constitution": 16,
+        "intelligence": 2,
+        "wisdom": 13,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "claw_swipe",
+          "name": "Claw Swipe",
+          "description": "A raking swipe of one huge paw.",
+          "effects": [
+            "bleeding"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "cave-bear",
+      "name": "Cave Bear",
+      "description": "A pale, oversized bear that has never seen daylight.",
+      "habitat": "underdark",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 20,
+        "dexterity": 10,
+        "constitution": 16,
+        "intelligence": 2,
+        "wisdom": 13,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "boar",
+      "name": "Boar",
+      "description": "A bad-tempered tusker that charges first.",
+      "habitat": "forest",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 13,
+        "dexterity": 11,
+        "constitution": 12,
+        "intelligence": 2,
+        "wisdom": 9,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "charge",
+          "name": "Charge",
+          "description": "A goring rush that knocks the target flat.",
+          "effects": [
+            "prone"
+          ],
+          "range": 20.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-boar",
+      "name": "Giant Boar",
+      "description": "The same temperament, four times the mass.",
+      "habitat": "forest",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 17,
+        "dexterity": 10,
+        "constitution": 16,
+        "intelligence": 2,
+        "wisdom": 7,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "charge",
+          "name": "Charge",
+          "description": "A goring rush that knocks the target flat.",
+          "effects": [
+            "prone"
+          ],
+          "range": 20.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-spider",
+      "name": "Giant Spider",
+      "description": "A wolf-sized ambusher that wraps prey and waits.",
+      "habitat": "underdark",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 14,
+        "dexterity": 16,
+        "constitution": 12,
+        "intelligence": 2,
+        "wisdom": 11,
+        "charisma": 4
+      },
+      "abilities": [
+        {
+          "id": "web_shot",
+          "name": "Web Shot",
+          "description": "A line of sticky web that pins a target.",
+          "effects": [
+            "restrained",
+            "entangled"
+          ],
+          "range": 60.0,
+          "recharge": 0
+        },
+        {
+          "id": "venomous_bite",
+          "name": "Venomous Bite",
+          "description": "A bite that pumps in paralytic venom.",
+          "effects": [
+            "poisoned"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-rat",
+      "name": "Giant Rat",
+      "description": "Dog-sized, diseased, and never encountered alone.",
+      "habitat": "urban",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 7,
+        "dexterity": 15,
+        "constitution": 11,
+        "intelligence": 2,
+        "wisdom": 10,
+        "charisma": 4
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Attacks with advantage while an ally is beside the same target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "swarm-of-rats",
+      "name": "Swarm of Rats",
+      "description": "A carpet of rats that flows under doors and over boots.",
+      "habitat": "urban",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 9,
+        "dexterity": 11,
+        "constitution": 9,
+        "intelligence": 2,
+        "wisdom": 10,
+        "charisma": 3
+      },
+      "abilities": [
+        {
+          "id": "swarm",
+          "name": "Swarm",
+          "description": "Occupies another creature's space and bites from every side.",
+          "effects": [
+            "bleeding"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-bat",
+      "name": "Giant Bat",
+      "description": "A leathery flier that navigates perfectly in total darkness.",
+      "habitat": "underdark",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 15,
+        "dexterity": 16,
+        "constitution": 11,
+        "intelligence": 2,
+        "wisdom": 12,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "panther",
+      "name": "Panther",
+      "description": "A silent stalker that drops from branches.",
+      "habitat": "forest",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 14,
+        "dexterity": 15,
+        "constitution": 10,
+        "intelligence": 3,
+        "wisdom": 14,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        },
+        {
+          "id": "pounce",
+          "name": "Pounce",
+          "description": "Leaps onto prey and bears it to the ground.",
+          "effects": [
+            "prone"
+          ],
+          "range": 15.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "lion",
+      "name": "Lion",
+      "description": "A pride hunter of the open grass.",
+      "habitat": "grassland",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 17,
+        "dexterity": 15,
+        "constitution": 13,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 8
+      },
+      "abilities": [
+        {
+          "id": "pack_tactics",
+          "name": "Pack Tactics",
+          "description": "Attacks with advantage while an ally is beside the same target.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        },
+        {
+          "id": "pounce",
+          "name": "Pounce",
+          "description": "A leaping charge that flattens the target.",
+          "effects": [
+            "prone"
+          ],
+          "range": 15.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-eagle",
+      "name": "Giant Eagle",
+      "description": "An intelligent raptor with a wingspan wider than a cart.",
+      "habitat": "mountain",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 16,
+        "dexterity": 17,
+        "constitution": 13,
+        "intelligence": 8,
+        "wisdom": 14,
+        "charisma": 10
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "crocodile",
+      "name": "Crocodile",
+      "description": "A patient ambusher that drags prey under and rolls.",
+      "habitat": "swamp",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 15,
+        "dexterity": 10,
+        "constitution": 13,
+        "intelligence": 2,
+        "wisdom": 10,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "death_roll",
+          "name": "Death Roll",
+          "description": "Clamps on and rolls, drowning the victim.",
+          "effects": [
+            "grappled",
+            "restrained"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-crocodile",
+      "name": "Giant Crocodile",
+      "description": "Twenty feet of armoured patience.",
+      "habitat": "swamp",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 21,
+        "dexterity": 9,
+        "constitution": 17,
+        "intelligence": 2,
+        "wisdom": 10,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "death_roll",
+          "name": "Death Roll",
+          "description": "Clamps on and rolls.",
+          "effects": [
+            "grappled",
+            "restrained"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-snake",
+      "name": "Giant Constrictor Snake",
+      "description": "Fifteen feet of muscle that squeezes rather than bites.",
+      "habitat": "swamp",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 19,
+        "dexterity": 14,
+        "constitution": 12,
+        "intelligence": 1,
+        "wisdom": 10,
+        "charisma": 3
+      },
+      "abilities": [
+        {
+          "id": "constrict",
+          "name": "Constrict",
+          "description": "Coils around the target and tightens.",
+          "effects": [
+            "grappled",
+            "restrained"
+          ],
+          "range": 10.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-scorpion",
+      "name": "Giant Scorpion",
+      "description": "Two claws, one stinger, and no hesitation.",
+      "habitat": "desert",
+      "challengeRating": "3",
+      "stats": {
+        "strength": 15,
+        "dexterity": 13,
+        "constitution": 15,
+        "intelligence": 1,
+        "wisdom": 9,
+        "charisma": 3
+      },
+      "abilities": [
+        {
+          "id": "sting",
+          "name": "Sting",
+          "description": "A venomous tail strike.",
+          "effects": [
+            "poisoned"
+          ],
+          "range": 5.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "warhorse",
+      "name": "Warhorse",
+      "description": "A trained destrier that fights alongside its rider.",
+      "habitat": "plains",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 18,
+        "dexterity": 12,
+        "constitution": 13,
+        "intelligence": 2,
+        "wisdom": 12,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "trampling_charge",
+          "name": "Trampling Charge",
+          "description": "Rears and comes down on a fallen enemy.",
+          "effects": [
+            "prone"
+          ],
+          "range": 20.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "riding-horse",
+      "name": "Riding Horse",
+      "description": "A steady mount for the road, not the battlefield.",
+      "habitat": "plains",
+      "challengeRating": "1/4",
+      "stats": {
+        "strength": 16,
+        "dexterity": 10,
+        "constitution": 12,
+        "intelligence": 2,
+        "wisdom": 11,
+        "charisma": 7
+      },
+      "abilities": []
+    },
+    {
+      "id": "mastiff",
+      "name": "Mastiff",
+      "description": "A loyal guard dog trained to hold rather than kill.",
+      "habitat": "urban",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 13,
+        "dexterity": 14,
+        "constitution": 12,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "mule",
+      "name": "Mule",
+      "description": "Astonishingly strong, astonishingly stubborn.",
+      "habitat": "hills",
+      "challengeRating": "1/8",
+      "stats": {
+        "strength": 14,
+        "dexterity": 10,
+        "constitution": 13,
+        "intelligence": 2,
+        "wisdom": 10,
+        "charisma": 5
+      },
+      "abilities": []
+    },
+    {
+      "id": "polar-bear",
+      "name": "Polar Bear",
+      "description": "A white killer that hunts across pack ice.",
+      "habitat": "arctic",
+      "challengeRating": "2",
+      "stats": {
+        "strength": 20,
+        "dexterity": 10,
+        "constitution": 16,
+        "intelligence": 2,
+        "wisdom": 13,
+        "charisma": 7
+      },
+      "abilities": [
+        {
+          "id": "keen_smell",
+          "name": "Keen Smell",
+          "description": "Tracks by scent with uncanny accuracy.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-shark",
+      "name": "Giant Shark",
+      "description": "Thirty feet long and drawn from miles away by blood.",
+      "habitat": "ocean",
+      "challengeRating": "5",
+      "stats": {
+        "strength": 23,
+        "dexterity": 11,
+        "constitution": 21,
+        "intelligence": 1,
+        "wisdom": 10,
+        "charisma": 5
+      },
+      "abilities": [
+        {
+          "id": "blood_frenzy",
+          "name": "Blood Frenzy",
+          "description": "Attacks wounded creatures with advantage.",
+          "effects": [
+            "advantage_on_attack"
+          ],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "octopus-giant",
+      "name": "Giant Octopus",
+      "description": "An ambusher of the shallows with eight grasping arms.",
+      "habitat": "coast",
+      "challengeRating": "1",
+      "stats": {
+        "strength": 17,
+        "dexterity": 13,
+        "constitution": 13,
+        "intelligence": 4,
+        "wisdom": 10,
+        "charisma": 4
+      },
+      "abilities": [
+        {
+          "id": "ink_cloud",
+          "name": "Ink Cloud",
+          "description": "A cloud of ink that blinds and covers escape.",
+          "effects": [
+            "blinded"
+          ],
+          "range": 15.0,
+          "recharge": 3
+        }
+      ]
+    },
+    {
+      "id": "raven",
+      "name": "Raven",
+      "description": "Clever, watchful, and quite possibly someone's familiar.",
+      "habitat": "urban",
+      "challengeRating": "0",
+      "stats": {
+        "strength": 2,
+        "dexterity": 14,
+        "constitution": 8,
+        "intelligence": 2,
+        "wisdom": 12,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "mimicry",
+          "name": "Mimicry",
+          "description": "Imitates simple sounds and voices.",
+          "effects": [],
+          "range": 0.0,
+          "recharge": 0
+        }
+      ]
+    },
+    {
+      "id": "giant-goat",
+      "name": "Giant Goat",
+      "description": "A cliff-dwelling ram that headbutts intruders off ledges.",
+      "habitat": "mountain",
+      "challengeRating": "1/2",
+      "stats": {
+        "strength": 17,
+        "dexterity": 11,
+        "constitution": 12,
+        "intelligence": 3,
+        "wisdom": 12,
+        "charisma": 6
+      },
+      "abilities": [
+        {
+          "id": "ram",
+          "name": "Ram",
+          "description": "A charging headbutt.",
+          "effects": [
+            "knockback",
+            "prone"
+          ],
+          "range": 20.0,
+          "recharge": 0
+        }
+      ]
+    }
+  ]
+}

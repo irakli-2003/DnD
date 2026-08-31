@@ -1,0 +1,2301 @@
+{
+  "items": [
+    {
+      "id": "club",
+      "name": "Club",
+      "type": "weapon",
+      "description": "A length of hard wood. Cheap, legal to carry everywhere, and surprisingly effective.",
+      "valueGold": 1,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "dagger",
+      "name": "Dagger",
+      "type": "weapon",
+      "description": "A short blade for close work and quick throws.",
+      "valueGold": 2,
+      "weight": 1.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "greatclub",
+      "name": "Greatclub",
+      "type": "weapon",
+      "description": "A two-handed slab of wood that hits like a falling tree.",
+      "valueGold": 2,
+      "weight": 10.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "handaxe",
+      "name": "Handaxe",
+      "type": "weapon",
+      "description": "A light axe balanced for both chopping and throwing.",
+      "valueGold": 5,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "javelin",
+      "name": "Javelin",
+      "type": "weapon",
+      "description": "A throwing spear with a long iron head.",
+      "valueGold": 5,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "light-hammer",
+      "name": "Light Hammer",
+      "type": "weapon",
+      "description": "A one-handed hammer light enough to throw.",
+      "valueGold": 2,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "mace",
+      "name": "Mace",
+      "type": "weapon",
+      "description": "A flanged head on a short haft, made for crushing armor.",
+      "valueGold": 5,
+      "weight": 4.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "quarterstaff",
+      "name": "Quarterstaff",
+      "type": "weapon",
+      "description": "A simple staff, and the most underestimated weapon on this list.",
+      "valueGold": 1,
+      "weight": 4.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "sickle",
+      "name": "Sickle",
+      "type": "weapon",
+      "description": "A curved farm blade that found other work.",
+      "valueGold": 1,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "spear",
+      "name": "Spear",
+      "type": "weapon",
+      "description": "A versatile thrusting weapon, usable in one hand or two.",
+      "valueGold": 1,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "light-crossbow",
+      "name": "Light Crossbow",
+      "type": "weapon",
+      "description": "Slow to reload, but anyone can be taught to aim it in an afternoon.",
+      "valueGold": 25,
+      "weight": 5.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "dart",
+      "name": "Dart",
+      "type": "weapon",
+      "description": "A weighted throwing spike.",
+      "valueGold": 1,
+      "weight": 1.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 20,
+        "current": 20
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "shortbow",
+      "name": "Shortbow",
+      "type": "weapon",
+      "description": "A compact bow suited to horseback and forest work.",
+      "valueGold": 25,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "sling",
+      "name": "Sling",
+      "type": "weapon",
+      "description": "A leather strap and a stone. Ancient and quietly lethal.",
+      "valueGold": 1,
+      "weight": 1.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "battleaxe",
+      "name": "Battleaxe",
+      "type": "weapon",
+      "description": "A broad-bladed axe built for war rather than wood.",
+      "valueGold": 10,
+      "weight": 4.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "flail",
+      "name": "Flail",
+      "type": "weapon",
+      "description": "A spiked head on a chain; hard to use, harder to block.",
+      "valueGold": 10,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "glaive",
+      "name": "Glaive",
+      "type": "weapon",
+      "description": "A heavy blade on a long pole, for keeping enemies at arm's length.",
+      "valueGold": 20,
+      "weight": 6.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "greataxe",
+      "name": "Greataxe",
+      "type": "weapon",
+      "description": "Two hands, one swing, one problem solved.",
+      "valueGold": 30,
+      "weight": 7.0,
+      "damage": {
+        "dice": "1d12",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d12",
+          "name": "d12",
+          "sides": 12
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "greatsword",
+      "name": "Greatsword",
+      "type": "weapon",
+      "description": "An enormous blade that trades finesse for terrifying reach and weight.",
+      "valueGold": 50,
+      "weight": 6.0,
+      "damage": {
+        "dice": "2d6",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "halberd",
+      "name": "Halberd",
+      "type": "weapon",
+      "description": "Axe, spike, and hook on one pole. A tool for every kind of unpleasantness.",
+      "valueGold": 20,
+      "weight": 6.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "lance",
+      "name": "Lance",
+      "type": "weapon",
+      "description": "Devastating from horseback, awkward everywhere else.",
+      "valueGold": 10,
+      "weight": 6.0,
+      "damage": {
+        "dice": "1d12",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d12",
+          "name": "d12",
+          "sides": 12
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "longsword",
+      "name": "Longsword",
+      "type": "weapon",
+      "description": "The classic knightly blade: balanced, versatile, and a status symbol.",
+      "valueGold": 15,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "maul",
+      "name": "Maul",
+      "type": "weapon",
+      "description": "A two-handed sledge that turns plate armor into a problem for the wearer.",
+      "valueGold": 10,
+      "weight": 10.0,
+      "damage": {
+        "dice": "2d6",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "morningstar",
+      "name": "Morningstar",
+      "type": "weapon",
+      "description": "A spiked ball on a haft. Punches through mail where a sword would skid.",
+      "valueGold": 15,
+      "weight": 4.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "pike",
+      "name": "Pike",
+      "type": "weapon",
+      "description": "An enormously long spear, best used shoulder to shoulder with others.",
+      "valueGold": 5,
+      "weight": 18.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "rapier",
+      "name": "Rapier",
+      "type": "weapon",
+      "description": "A slender thrusting sword rewarding precision over strength.",
+      "valueGold": 25,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "scimitar",
+      "name": "Scimitar",
+      "type": "weapon",
+      "description": "A curved, light blade made for fast draw-cuts.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "cutting"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "cutting"
+      },
+      "effects": []
+    },
+    {
+      "id": "shortsword",
+      "name": "Shortsword",
+      "type": "weapon",
+      "description": "A stabbing blade favoured by scouts and anyone fighting in a corridor.",
+      "valueGold": 10,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "trident",
+      "name": "Trident",
+      "type": "weapon",
+      "description": "A three-pronged spear, common among coastal folk.",
+      "valueGold": 5,
+      "weight": 4.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "war-pick",
+      "name": "War Pick",
+      "type": "weapon",
+      "description": "A narrow spike designed to punch straight through plate.",
+      "valueGold": 5,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "warhammer",
+      "name": "Warhammer",
+      "type": "weapon",
+      "description": "A hammer on one side, a spike on the other, and no wasted motion.",
+      "valueGold": 15,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "whip",
+      "name": "Whip",
+      "type": "weapon",
+      "description": "Reaches further than any blade and disarms as easily as it wounds.",
+      "valueGold": 2,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "blowgun",
+      "name": "Blowgun",
+      "type": "weapon",
+      "description": "Silent, nearly harmless on its own, and the perfect delivery system for poison.",
+      "valueGold": 10,
+      "weight": 1.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "hand-crossbow",
+      "name": "Hand Crossbow",
+      "type": "weapon",
+      "description": "Small enough to conceal under a cloak.",
+      "valueGold": 75,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "heavy-crossbow",
+      "name": "Heavy Crossbow",
+      "type": "weapon",
+      "description": "Slow, heavy, and capable of punching through a shield.",
+      "valueGold": 50,
+      "weight": 18.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "longbow",
+      "name": "Longbow",
+      "type": "weapon",
+      "description": "Takes years to master and outranges everything else on the field.",
+      "valueGold": 50,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "flametongue",
+      "name": "Flametongue Longsword",
+      "type": "weapon",
+      "description": "Speak the command word and the blade sheathes itself in fire.",
+      "valueGold": 1500,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "fire"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "fire"
+      },
+      "effects": []
+    },
+    {
+      "id": "frostbrand",
+      "name": "Frostbrand",
+      "type": "weapon",
+      "description": "A blade rimed with permanent frost that numbs whatever it touches.",
+      "valueGold": 1800,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "cold"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "cold"
+      },
+      "effects": []
+    },
+    {
+      "id": "thunderstrike-maul",
+      "name": "Thunderstrike Maul",
+      "type": "weapon",
+      "description": "Each impact releases a clap of thunder audible for a mile.",
+      "valueGold": 1600,
+      "weight": 10.0,
+      "damage": {
+        "dice": "2d6",
+        "type": "thunder"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "thunder"
+      },
+      "effects": []
+    },
+    {
+      "id": "vampiric-dagger",
+      "name": "Vampiric Dagger",
+      "type": "weapon",
+      "description": "A cursed blade that feeds a little of every wound back to its wielder.",
+      "valueGold": 1200,
+      "weight": 1.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "necrotic"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "necrotic"
+      },
+      "effects": []
+    },
+    {
+      "id": "holy-avenger",
+      "name": "Holy Avenger",
+      "type": "weapon",
+      "description": "A paladin's blade that burns the undead and steadies nearby allies.",
+      "valueGold": 4000,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "radiant"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "radiant"
+      },
+      "effects": []
+    },
+    {
+      "id": "padded-armor",
+      "name": "Padded Armor",
+      "type": "armor",
+      "description": "Quilted layers of cloth. Cheap, warm, and noisy.",
+      "valueGold": 5,
+      "weight": 8.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CLOTH",
+      "armorClassBonus": 1
+    },
+    {
+      "id": "leather-armor",
+      "name": "Leather Armor",
+      "type": "armor",
+      "description": "Boiled and shaped hide; the standard for anyone who needs to move.",
+      "valueGold": 10,
+      "weight": 10.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "LEATHER",
+      "armorClassBonus": 1
+    },
+    {
+      "id": "studded-leather",
+      "name": "Studded Leather",
+      "type": "armor",
+      "description": "Leather reinforced with close-set rivets.",
+      "valueGold": 45,
+      "weight": 13.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "LEATHER",
+      "armorClassBonus": 2
+    },
+    {
+      "id": "hide-armor",
+      "name": "Hide Armor",
+      "type": "armor",
+      "description": "Thick furs and pelts, crude but effective.",
+      "valueGold": 10,
+      "weight": 12.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "LEATHER",
+      "armorClassBonus": 2
+    },
+    {
+      "id": "chain-shirt",
+      "name": "Chain Shirt",
+      "type": "armor",
+      "description": "A mail shirt worn under clothing, concealable at a glance.",
+      "valueGold": 50,
+      "weight": 20.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CHAIN",
+      "armorClassBonus": 3
+    },
+    {
+      "id": "scale-mail",
+      "name": "Scale Mail",
+      "type": "armor",
+      "description": "Overlapping metal scales on a leather backing.",
+      "valueGold": 50,
+      "weight": 45.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CHAIN",
+      "armorClassBonus": 4
+    },
+    {
+      "id": "breastplate",
+      "name": "Breastplate",
+      "type": "armor",
+      "description": "A fitted steel chest piece that leaves the limbs free.",
+      "valueGold": 400,
+      "weight": 20.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 4
+    },
+    {
+      "id": "half-plate",
+      "name": "Half Plate",
+      "type": "armor",
+      "description": "Plate for the vital areas, mail for everything else.",
+      "valueGold": 750,
+      "weight": 40.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 5
+    },
+    {
+      "id": "ring-mail",
+      "name": "Ring Mail",
+      "type": "armor",
+      "description": "Heavy leather sewn with iron rings. Outdated but affordable.",
+      "valueGold": 30,
+      "weight": 40.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CHAIN",
+      "armorClassBonus": 4
+    },
+    {
+      "id": "chain-mail",
+      "name": "Chain Mail",
+      "type": "armor",
+      "description": "A full suit of interlocking rings with padding beneath.",
+      "valueGold": 75,
+      "weight": 55.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CHAIN",
+      "armorClassBonus": 6
+    },
+    {
+      "id": "splint-armor",
+      "name": "Splint Armor",
+      "type": "armor",
+      "description": "Vertical metal strips riveted to a leather backing.",
+      "valueGold": 200,
+      "weight": 60.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 7
+    },
+    {
+      "id": "plate-armor",
+      "name": "Plate Armor",
+      "type": "armor",
+      "description": "A full articulated suit. The finest protection money can buy.",
+      "valueGold": 1500,
+      "weight": 65.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 8
+    },
+    {
+      "id": "shield",
+      "name": "Shield",
+      "type": "armor",
+      "description": "A banded wooden shield strapped to the forearm.",
+      "valueGold": 10,
+      "weight": 6.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 2
+    },
+    {
+      "id": "tower-shield",
+      "name": "Tower Shield",
+      "type": "armor",
+      "description": "A wall you can carry, at the cost of ever moving quickly again.",
+      "valueGold": 40,
+      "weight": 25.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 3
+    },
+    {
+      "id": "mithral-chain",
+      "name": "Mithral Chain Mail",
+      "type": "armor",
+      "description": "Mail forged from mithral: as strong as steel and light as cloth.",
+      "valueGold": 4000,
+      "weight": 20.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CHAIN",
+      "armorClassBonus": 6
+    },
+    {
+      "id": "dragonscale-plate",
+      "name": "Dragonscale Plate",
+      "type": "armor",
+      "description": "Plate faced with dragon scale, resistant to that dragon's element.",
+      "valueGold": 6000,
+      "weight": 50.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 9
+    },
+    {
+      "id": "elven-cloak",
+      "name": "Elven Cloak",
+      "type": "armor",
+      "description": "A shifting grey cloak that blurs the outline of whoever wears it.",
+      "valueGold": 800,
+      "weight": 1.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "CLOTH",
+      "armorClassBonus": 1
+    },
+    {
+      "id": "leather-helm",
+      "name": "Leather Helm",
+      "type": "armor",
+      "description": "A padded cap with a reinforced brow.",
+      "valueGold": 5,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "LEATHER",
+      "armorClassBonus": 1
+    },
+    {
+      "id": "steel-helm",
+      "name": "Steel Helm",
+      "type": "armor",
+      "description": "A full steel helm with a narrow visor slit.",
+      "valueGold": 30,
+      "weight": 6.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 2
+    },
+    {
+      "id": "gauntlets",
+      "name": "Steel Gauntlets",
+      "type": "armor",
+      "description": "Articulated plate gloves.",
+      "valueGold": 25,
+      "weight": 4.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 1
+    },
+    {
+      "id": "greaves",
+      "name": "Steel Greaves",
+      "type": "armor",
+      "description": "Plate protection for the shins and knees.",
+      "valueGold": 35,
+      "weight": 8.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 1
+    },
+    {
+      "id": "potion-of-healing",
+      "name": "Potion of Healing",
+      "type": "alchemy",
+      "description": "A red draught that closes wounds within seconds of drinking.",
+      "valueGold": 50,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "sunblossom",
+          "name": "Sunblossom",
+          "description": "A yellow flower that only opens at dawn."
+        },
+        {
+          "id": "purified-water",
+          "name": "Purified Water",
+          "description": "Thrice-filtered and blessed."
+        }
+      ],
+      "effects": [
+        {
+          "id": "invigorated",
+          "name": "Invigorated",
+          "description": "Restores a burst of vitality.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 7
+        }
+      ]
+    },
+    {
+      "id": "potion-of-greater-healing",
+      "name": "Potion of Greater Healing",
+      "type": "alchemy",
+      "description": "A deeper red brew for serious injuries.",
+      "valueGold": 150,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "kingsfoil",
+          "name": "Kingsfoil",
+          "description": "A potent healing herb."
+        },
+        {
+          "id": "sunblossom",
+          "name": "Sunblossom",
+          "description": "A yellow flower that only opens at dawn."
+        }
+      ],
+      "effects": [
+        {
+          "id": "invigorated",
+          "name": "Invigorated",
+          "description": "Restores a large amount of vitality.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 18
+        }
+      ]
+    },
+    {
+      "id": "antitoxin",
+      "name": "Antitoxin",
+      "type": "alchemy",
+      "description": "A bitter tincture that neutralises most common venoms.",
+      "valueGold": 50,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "silverleaf",
+          "name": "Silverleaf",
+          "description": "Prized for antivenoms."
+        }
+      ],
+      "effects": [
+        {
+          "id": "stabilized",
+          "name": "Stabilized",
+          "description": "Halts the spread of poison.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 2
+        }
+      ]
+    },
+    {
+      "id": "potion-of-fire-resistance",
+      "name": "Potion of Fire Resistance",
+      "type": "alchemy",
+      "description": "Drinking it leaves the skin faintly cool to the touch.",
+      "valueGold": 300,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "emberroot",
+          "name": "Emberroot",
+          "description": "A root that smoulders when crushed."
+        },
+        {
+          "id": "dragon-scale-powder",
+          "name": "Dragon Scale Powder",
+          "description": "Lends elemental resistance."
+        }
+      ],
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Warded",
+          "description": "Flame does half its usual harm.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "oil-of-sharpness",
+      "name": "Oil of Sharpness",
+      "type": "alchemy",
+      "description": "Applied to a blade, it holds an impossible edge for an hour.",
+      "valueGold": 400,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "ironbark-shavings",
+          "name": "Ironbark Shavings",
+          "description": "Used in armor-hardening oils."
+        }
+      ],
+      "effects": [
+        {
+          "id": "advantage_on_attack",
+          "name": "Keen Edge",
+          "description": "The coated weapon bites deeper than it should.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "potion-of-invisibility",
+      "name": "Potion of Invisibility",
+      "type": "alchemy",
+      "description": "The drinker fades from sight along with everything they carry.",
+      "valueGold": 500,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "ghost-mushroom",
+          "name": "Ghost Mushroom",
+          "description": "A translucent fungus from haunted ground."
+        }
+      ],
+      "effects": [
+        {
+          "id": "invisible",
+          "name": "Invisible",
+          "description": "Cannot be seen without magic.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "potion-of-speed",
+      "name": "Potion of Speed",
+      "type": "alchemy",
+      "description": "The world slows to a crawl around the drinker.",
+      "valueGold": 800,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "moonpetal",
+          "name": "Moonpetal",
+          "description": "Blooms only under a full moon."
+        },
+        {
+          "id": "phoenix-ash",
+          "name": "Phoenix Ash",
+          "description": "Warm ash that never quite goes out."
+        }
+      ],
+      "effects": [
+        {
+          "id": "hasted",
+          "name": "Hasted",
+          "description": "Move and act far faster than normal.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "basic-poison",
+      "name": "Basic Poison",
+      "type": "alchemy",
+      "description": "A vial sufficient to coat one blade or three arrows.",
+      "valueGold": 100,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "nightshade",
+          "name": "Nightshade",
+          "description": "The base of half the poisons in the world."
+        }
+      ],
+      "effects": [
+        {
+          "id": "poisoned",
+          "name": "Poisoned",
+          "description": "Disadvantage on attacks and checks.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 5,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "alchemists-fire",
+      "name": "Alchemist's Fire",
+      "type": "alchemy",
+      "description": "A sticky liquid that ignites the moment the flask breaks.",
+      "valueGold": 50,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "emberroot",
+          "name": "Emberroot",
+          "description": "A root that smoulders when crushed."
+        }
+      ],
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling and keep searing.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 4,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "holy-water",
+      "name": "Holy Water",
+      "type": "alchemy",
+      "description": "Consecrated water, agony to fiends and undead.",
+      "valueGold": 25,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "purified-water",
+          "name": "Purified Water",
+          "description": "Thrice-filtered and blessed."
+        }
+      ],
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Consecrated",
+          "description": "Sears undead and fiends on contact.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "potion-of-climbing",
+      "name": "Potion of Climbing",
+      "type": "alchemy",
+      "description": "The drinker's hands grip stone as if it were a ladder.",
+      "valueGold": 75,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "cave-lichen",
+          "name": "Cave Lichen",
+          "description": "A faintly glowing lichen."
+        }
+      ],
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Sure Grip",
+          "description": "Climb any surface without slipping.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ]
+    },
+    {
+      "id": "elixir-of-health",
+      "name": "Elixir of Health",
+      "type": "alchemy",
+      "description": "Purges disease, blindness, and paralysis in one swallow.",
+      "valueGold": 250,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [
+        {
+          "id": "mandrake-root",
+          "name": "Mandrake Root",
+          "description": "Used in restoration and curse-breaking."
+        },
+        {
+          "id": "kingsfoil",
+          "name": "Kingsfoil",
+          "description": "A potent healing herb."
+        }
+      ],
+      "effects": [
+        {
+          "id": "stabilized",
+          "name": "Cured",
+          "description": "Ends most lingering afflictions.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 5
+        }
+      ]
+    },
+    {
+      "id": "rope-hempen",
+      "name": "Hempen Rope (50 ft)",
+      "type": "gear",
+      "description": "Fifty feet of sturdy hemp rope.",
+      "valueGold": 1,
+      "weight": 10.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Fifty feet of sturdy hemp rope."
+    },
+    {
+      "id": "torch",
+      "name": "Torch",
+      "type": "gear",
+      "description": "Burns for about an hour and lights a small room.",
+      "valueGold": 1,
+      "weight": 1.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Burns for about an hour and lights a small room."
+    },
+    {
+      "id": "lantern-hooded",
+      "name": "Hooded Lantern",
+      "type": "gear",
+      "description": "A shuttered oil lantern; the hood dims it to a narrow beam.",
+      "valueGold": 5,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A shuttered oil lantern; the hood dims it to a narrow beam."
+    },
+    {
+      "id": "rations",
+      "name": "Rations (1 day)",
+      "type": "gear",
+      "description": "Dried meat, hard bread, and dried fruit for one day.",
+      "valueGold": 1,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Dried meat, hard bread, and dried fruit for one day."
+    },
+    {
+      "id": "waterskin",
+      "name": "Waterskin",
+      "type": "gear",
+      "description": "Holds four pints when full.",
+      "valueGold": 1,
+      "weight": 5.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Holds four pints when full."
+    },
+    {
+      "id": "bedroll",
+      "name": "Bedroll",
+      "type": "gear",
+      "description": "A padded roll that makes hard ground survivable.",
+      "valueGold": 1,
+      "weight": 7.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A padded roll that makes hard ground survivable."
+    },
+    {
+      "id": "thieves-tools",
+      "name": "Thieves' Tools",
+      "type": "gear",
+      "description": "Picks, a small file, mirror, and narrow-bladed scissors.",
+      "valueGold": 25,
+      "weight": 1.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Picks, a small file, mirror, and narrow-bladed scissors."
+    },
+    {
+      "id": "healers-kit",
+      "name": "Healer's Kit",
+      "type": "gear",
+      "description": "Bandages, salves, and splints; ten uses before it runs dry.",
+      "valueGold": 5,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Bandages, salves, and splints; ten uses before it runs dry."
+    },
+    {
+      "id": "crowbar",
+      "name": "Crowbar",
+      "type": "gear",
+      "description": "Grants leverage where leverage is what you need.",
+      "valueGold": 2,
+      "weight": 5.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Grants leverage where leverage is what you need."
+    },
+    {
+      "id": "grappling-hook",
+      "name": "Grappling Hook",
+      "type": "gear",
+      "description": "Three iron prongs on a ring, best paired with rope.",
+      "valueGold": 2,
+      "weight": 4.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Three iron prongs on a ring, best paired with rope."
+    },
+    {
+      "id": "holy-symbol",
+      "name": "Holy Symbol",
+      "type": "gear",
+      "description": "An emblem of a deity, used as a spellcasting focus.",
+      "valueGold": 5,
+      "weight": 1.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "An emblem of a deity, used as a spellcasting focus."
+    },
+    {
+      "id": "arcane-focus",
+      "name": "Arcane Focus",
+      "type": "gear",
+      "description": "A crystal-tipped rod used to channel arcane spells.",
+      "valueGold": 10,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A crystal-tipped rod used to channel arcane spells."
+    },
+    {
+      "id": "component-pouch",
+      "name": "Component Pouch",
+      "type": "gear",
+      "description": "A belt pouch of compartments for spell materials.",
+      "valueGold": 25,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A belt pouch of compartments for spell materials."
+    },
+    {
+      "id": "spellbook",
+      "name": "Spellbook",
+      "type": "gear",
+      "description": "A blank leather-bound tome of a hundred vellum pages.",
+      "valueGold": 50,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A blank leather-bound tome of a hundred vellum pages."
+    },
+    {
+      "id": "tinderbox",
+      "name": "Tinderbox",
+      "type": "gear",
+      "description": "Flint, steel, and tinder for starting a fire.",
+      "valueGold": 1,
+      "weight": 1.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Flint, steel, and tinder for starting a fire."
+    },
+    {
+      "id": "caltrops",
+      "name": "Caltrops (bag of 20)",
+      "type": "gear",
+      "description": "Scattered on the floor, they end a pursuit quickly.",
+      "valueGold": 1,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Scattered on the floor, they end a pursuit quickly."
+    },
+    {
+      "id": "manacles",
+      "name": "Manacles",
+      "type": "gear",
+      "description": "Iron wrist restraints with a simple lock.",
+      "valueGold": 2,
+      "weight": 6.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Iron wrist restraints with a simple lock."
+    },
+    {
+      "id": "mirror-steel",
+      "name": "Steel Mirror",
+      "type": "gear",
+      "description": "A polished hand mirror, useful around corners and basilisks.",
+      "valueGold": 5,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A polished hand mirror, useful around corners and basilisks."
+    },
+    {
+      "id": "ball-bearings",
+      "name": "Ball Bearings (bag of 1000)",
+      "type": "gear",
+      "description": "Spilled across a floor, they make it treacherous.",
+      "valueGold": 1,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Spilled across a floor, they make it treacherous."
+    },
+    {
+      "id": "climbers-kit",
+      "name": "Climber's Kit",
+      "type": "gear",
+      "description": "Pitons, boot tips, gloves, and a harness.",
+      "valueGold": 25,
+      "weight": 12.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Pitons, boot tips, gloves, and a harness."
+    },
+    {
+      "id": "thunderkiss",
+      "name": "Thunderkiss",
+      "type": "weapon",
+      "description": "Balthazar's lute, rebuilt out of whatever survived the alchemist's accident. It is genuinely a fine instrument. It also converts a held chord into a directed detonation, which is why nobody sits in the front row twice.",
+      "valueGold": 900,
+      "weight": 4.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "thunder"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "thunder"
+      },
+      "effects": []
+    },
+    {
+      "id": "silvan-hunting-sword",
+      "name": "Silvan's Hunting Sword",
+      "type": "weapon",
+      "description": "A mid-length hunting sword with a dark wood grip, given by a father who said almost nothing. Small marks are scratched along the blade - a private teaching language that nobody else can read.",
+      "valueGold": 75,
+      "weight": 2.5,
+      "damage": {
+        "dice": "1d6",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "rhaz-warhammer",
+      "name": "Rhaz, the Horn Hammer",
+      "type": "weapon",
+      "description": "A war hammer cut from the horn of a rhinoceros Vaerak found dying and did not let die. One end is blunt, the other is a point. Raaz's spirit still lends weight to the swing, and the swing still costs blood.",
+      "valueGold": 1200,
+      "weight": 9.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "bludgeoning"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "bludgeoning"
+      },
+      "effects": []
+    },
+    {
+      "id": "kaavor-whip",
+      "name": "Kaavor, the Sinew Lash",
+      "type": "weapon",
+      "description": "A braided whip of lynx sinew with claws and eye-teeth woven into its length. It opens unarmoured flesh and keeps it open. It will not cut steel and Vaerak knows it.",
+      "valueGold": 1200,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d4",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "sixfold-judgment",
+      "name": "The Sixfold Judgment",
+      "type": "weapon",
+      "description": "A six-shot revolver of black steel and silver, faint violet runes along the barrel, and no visible way to load it. It is bound to the Gravitic Anchor Node, which condenses gravity into six rounds and refills them over a long rest. No gunsmith has reproduced it.",
+      "valueGold": 2500,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "force"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "force"
+      },
+      "effects": []
+    },
+    {
+      "id": "monokatana",
+      "name": "Monokatana",
+      "type": "weapon",
+      "description": "A single-edged blade honed to a width the eye keeps losing. It came through the change unaltered, which Kael finds more unsettling than anything that did change.",
+      "valueGold": 1500,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d10",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "gorloks-giant-axe",
+      "name": "Gorlok's Giant Axe",
+      "type": "weapon",
+      "description": "Stolen from giants. Three times too large and three times too heavy for the goblin carrying it, which has never once been relevant. He killed the giants with it on the way out.",
+      "valueGold": 800,
+      "weight": 60.0,
+      "damage": {
+        "dice": "1d12",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": false,
+      "weaponDamage": {
+        "amount": {
+          "id": "d12",
+          "name": "d12",
+          "sides": 12
+        },
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "dwarven-heavy-plate",
+      "name": "Looted Dwarven Heavy Armour",
+      "type": "armor",
+      "description": "Dwarf-forged heavy plate, taken off its previous owner by hand and by force, then torn and rebent until it fit something a great deal shorter and a great deal wider.",
+      "valueGold": 950,
+      "weight": 60.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "material": "STEEL",
+      "armorClassBonus": 8
+    },
+    {
+      "id": "leaf-pendant",
+      "name": "Silvan's Leaf Pendant",
+      "type": "gear",
+      "description": "A leaf-shaped pendant cut from ordinary forest stone on a woven cord, made by his mother and straightened by her at the gate. He touches it when he is anxious and has nearly worn the edge smooth.",
+      "valueGold": 5,
+      "weight": 0.1,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A leaf-shaped pendant cut from ordinary forest stone on a woven cord, made by his mother and straightened by her at the gate. He touches it when he is anxious and has nearly worn the edge smooth."
+    },
+    {
+      "id": "gravitic-anchor-node",
+      "name": "Gravitic Anchor Node",
+      "type": "gear",
+      "description": "A spine of arcane cores running along Kael's back. It was a military combat implant in a world that no longer exists. It now lets him bend his own gravity, feeds the Sixfold Judgment, and feels to him like technology and magic are two words for the same thing.",
+      "valueGold": 3000,
+      "weight": 0.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A spine of arcane cores running along Kael's back. It was a military combat implant in a world that no longer exists. It now lets him bend his own gravity, feeds the Sixfold Judgment, and feels to him like technology and magic are two words for the same thing."
+    },
+    {
+      "id": "word-lavenos",
+      "name": "The Word 'Lavenos'",
+      "type": "gear",
+      "description": "A page torn from a book of a dead language, bearing one word: lavenos - suppleness, freedom, and an old exalted form of address whose original subject nobody remembers. A young noblewoman read it aloud once and made it his name.",
+      "valueGold": 0,
+      "weight": 0.1,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A page torn from a book of a dead language, bearing one word: lavenos - suppleness, freedom, and an old exalted form of address whose original subject nobody remembers. A young noblewoman read it aloud once and made it his name."
+    }
+  ]
+}

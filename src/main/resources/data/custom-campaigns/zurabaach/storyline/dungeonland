@@ -1,0 +1,2970 @@
+WONDERLAND - THE LAST NOTE OF THE FIRST TRAVELLER
+A one-chapter descent. Dystopian horror with a laugh track nobody asked for.
+
+============================================================
+== CONTENTS
+============================================================
+
+  HOW TO RUN THIS CHAPTER ....... format key, tone dial, pacing, content note
+  THE DM ONE-PAGER .............. everything you need mid-session, on one screen
+  THE CAST ...................... six NPCs, their wants, secrets and opening lines
+
+  ACT 0  THE LIGHT AT THE END ... the running / out
+  ACT 1  THE ASH GARDEN ......... something small in the trees / the orchard
+  ACT 2  THE QUIET VILLAGE ...... the people with no mouths / the road / THE SPLIT
+  ACT 3  THE HEARTLESS QUEEN .... the yard / the audience / the game of court / the card
+  ACT 4  THE MAD HATTER ......... the card / the tea party / the eight cups / the fight
+  ACT 5  INSIDE THE HAT ......... down / the clocktower / ropes / bridge / the pin / the grin
+  ACT 6  THE MIRROR LAIR ........ the doors / what the cat knows / the gifts
+  ACT 7  THE DOLLHOUSE .......... the house / the shelf / the note / the look / the ending
+  ACT 8  OUT .................... the plughole / the aftermath / recap
+
+  APPENDIX A  THE GNOME TABLE ... d20, roll it in the open
+  APPENDIX B  ITEMS ............. eleven items, all of them consequences
+  APPENDIX C  STATBLOCKS ........ the big three, the yard, the Queen, the cat
+  APPENDIX D  QUICK REFERENCE ... puzzle answers, DCs, initiative, pacing, tracker
+  APPENDIX E  PLAYER HANDOUTS ... hand these over. Do not paraphrase them.
+
+============================================================
+== THE DM ONE-PAGER
+============================================================
+
+{Everything below is repeated in full later. This page exists so that you are not
+flipping through eight acts at the table. If you print one page of this document,
+print this one.}
+
+  THE THREE THINGS THAT MAKE THIS CHAPTER WORK
+    1. The horror is sincere. The comedy is accidental. Never blend them on purpose.
+    2. The Gnome is rolled in the OPEN, every scene, and you never fudge it.
+    3. Alice cannot be beaten tonight. Run Act 7 so they believe otherwise.
+
+  INITIATIVE
+    MAD HATTER    roll normally. d4 hat at the START of each of his turns.
+    CLOCKWORKER   acts on 30, first, every round. Lair action on 20.
+    ALICE         acts on 15. ONE decision per turn. Never two. House acts with her.
+
+  DCs AT A GLANCE
+    5 trivial | 10 easy | 12-13 most Investigation/History | 15-16 stealth & grapples
+    18 talking the Queen round | DO NOT ROLL anything Alice decides
+
+  PUZZLE ANSWERS IN ONE LINE EACH
+    Wardens   ask either "which gate would the OTHER send me to?", then take the other.
+    Court     back player calls parity of the hearts he can see; the rest deduce.
+    Teacups   binary search, three questions, eight cups.
+    Ropes     A lit both ends + B one end; when A dies light B's far end. 30+15=45.
+    Bridge    1+2 over, 1 back, 5+10 over, 2 back, 1+2 over. 17 minutes.
+    Dolls     3 groups of 3, weigh A vs B, then 1 vs 1. Two weighings.
+
+  TRACK THESE ON A SCRAP OF PAPER ALL NIGHT
+    [ ] Who sent character details ahead   [ ] Was the cave mouth sealed
+    [ ] Did the Queen get her heart back   [ ] Whose name the Queen kept
+    [ ] Who pulled the pin                 [ ] Gnome results used (no repeats)
+    [ ] Unmirror charges (3)               [ ] Notice track (6)
+    [ ] Has the Name of a Door been read
+
+  IF YOU ARE RUNNING LONG - cut the Act 4 teacups and the Act 5 bridge. NEVER cut
+  Act 6; the party needs the gifts and the briefing or Act 7 is unfair.
+
+  IF THE TABLE GOES SOMEWHERE YOU DID NOT WRITE - ask the Gnome. Out loud. In front
+  of them. It answers yes/no truthfully about the literal question, and it will buy
+  you the twenty seconds you need to invent the rest.
+
+============================================================
+== HOW TO RUN THIS CHAPTER
+============================================================
+
+{Read this whole section before the session. Everything after it is written so you
+can play straight down the page, top to bottom, without preparing anything else.}
+
+FORMAT KEY
+  [READ ALOUD] ... [/READ ALOUD]   Read this to the table, word for word if you like.
+  [DM NOTE] ... [/DM NOTE]         Never read this out. This is what is really going on.
+  {curly brackets}                 A quick aside to you mid-scene. Do not read.
+  [CHECK] skill DC n               A roll, with the success and failure branch written out.
+  [LOOT]                           What they find.
+  [map:blackfen-cave-map|The Cave - Blackfen]   Double-click any link like this to open
+                                   the battle map. Try this one now, before the session.
+  === SCENE: ===                   A unit of play. Each one has a Goal so you know when to move on.
+  >> CHOICE <<                     A fork with two or three real options. Never punish the third one.
+
+TONE DIAL
+  This is a horror chapter that keeps giggling at the wrong moments. The rule is:
+  the horror is always sincere, the comedy is always accidental. Nothing in Wonderland
+  is TRYING to be funny. The Gnome conjures a grand piano over a monster's head with
+  the same blank face it has when a child is being flayed. That contrast is the whole
+  flavour. If the table laughs, let them, then immediately show them something that
+  makes the laugh curdle.
+
+  Say the word "Alice" rarely. Every NPC flinches from it. By hour four the players
+  should be lowering their own voices when they say it, without you ever asking them to.
+
+PACING - a 6 to 9 hour table
+  Act 0   The Light at the End                 20-30 min
+  Act 1   The Ash Garden (the Gnome)           45-60 min
+  Act 2   The Quiet Village + the Gate         60-75 min   {first puzzle}
+  Act 3   The Heartless Queen                  75-90 min   {card game + siege, splits the party}
+  Act 4   The Mad Hatter                       45-60 min   {big fight}
+  Act 5   Inside the Hat: the Clocktower       90-120 min  {two puzzles, boss}
+  Act 6   The Cheshire's Mirrors               30-40 min   {breather, gear up}
+  Act 7   The Dollhouse                        75-90 min   {stealth horror, finale}
+  Act 8   Out                                  15-20 min
+
+  Natural break points: end of Act 3 (before the Hatter) and end of Act 5 (after the
+  clock). If you are running two sessions instead of one long one, cut at Act 5.
+
+WHO THIS IS BALANCED FOR
+  Five or six characters at 3rd to 5th level. Every fight below has a "SCALING" line.
+  {Your table is six level-3s. Use the "as written" numbers. The Cheshire's gifts in
+  Act 6 are the equaliser for Act 7 - do not skip that scene, and do not let them
+  reach Alice without the gifts.}
+
+THE ONE RULE OF THIS WORLD - tell the players this out loud in Act 6, not before:
+  Wonderland is flexible reality. It bends to whoever imagines hardest. Alice imagines
+  hardest. That is the only reason she rules it.
+  {Mechanically this is your permission slip. If a player describes something clever
+  and vivid, let it work, and let the world be a little more theirs for it. If a player
+  is timid, the world is stone. Reward imagination literally.}
+
+FREEDOM vs RAILS
+  Fixed points (these WILL happen): they arrive; the Hatter is freed and fought; the
+  pin comes out of the clock; the Cheshire returns; Alice is dissolved by the Gnome.
+  Everything else is negotiable - order, method, who does what, and whether they ever
+  learn why any of it happened. If the party finds a sideways solution to a scene,
+  take it. There are three or four written routes to every locked door in here and
+  the fifth one they invent is better than all of them.
+
+CONTENT NOTE FOR THE TABLE - say this before you start:
+  Body horror, mutilation, stitched mouths, harm to a child-shaped thing, and one
+  animal death described in detail. Nothing sexual. Ask if anyone wants a line drawn
+  and honour it silently.
+
+------------------------------------------------------------
+== THE CAST
+------------------------------------------------------------
+
+--- NPC: THE GARDEN GNOME ---
+Wants: unknowable. Possibly nothing.
+Secret: it is the most powerful thing in this chapter and does not appear to know it.
+Voice / mannerism: does not speak, ever. Its painted face is either :) or :( and it
+  changes between the two with a small ceramic CLICK. That is its entire vocabulary.
+Opening line: (none - it clicks to :) and a bell rings somewhere for no reason)
+
+  It is eleven inches of painted ceramic. Red hat, blue coat, gold buttons, one chipped
+  boot. It does not walk; it is simply somewhere else when you look back.
+  {THE GNOME IS YOUR PRESSURE VALVE AND YOUR PUNCHLINE. Once per scene, and any time
+  the table's energy sags, roll on the Gnome table in the Appendix. Roll it openly.
+  Let them watch you roll. The Gnome is a boolean oracle: point at a thing, ask a
+  yes/no question, and it clicks to :) or :( - and it is ALWAYS truthful, but only
+  about the literal question asked. This is a puzzle tool. The players will work that
+  out in Act 2 and it will feel like their idea.}
+  {It never helps in combat on purpose. Every Gnome effect in a fight is rolled
+  randomly and may hit anyone at all. Except once. See Act 7. Do not foreshadow that.}
+
+--- NPC: TWISTED ALICE ---
+Wants: for it to keep being interesting. Nothing else. There is nothing else.
+Secret: she is not a demon, a god, or a curse. She is a little girl who fell down a
+  hole with an imagination and was never once told to stop.
+Voice / mannerism: bright, polite, slightly bored. Says "oh, LOVELY" at horrors.
+  Never raises her voice. Physically she is a nine-year-old in a stained blue dress.
+Opening line: "You're new. Say something new."
+
+--- NPC: THE CHESHIRE ---
+Wants: to be alive again, and then to be owed a favour.
+Secret: it was losing to her long before she killed it.
+Voice / mannerism: arrives as a grin, then a face, then never quite the rest of it.
+  Speaks in helpful sentences that turn out, later, to have been warnings.
+Opening line: "Oh, don't stop on my account. You were doing so beautifully."
+
+--- NPC: THE QUEEN OF HEARTS (the Heartless Queen) ---
+Wants: her heart back. Failing that, a fair game, which she has not had in years.
+Secret: without the heart she cannot feel anger, which was the only thing that ever
+  made her decisive. She is now merely procedural, and procedure is a door.
+Voice / mannerism: a cavity in her chest the exact shape and size of a fist. She
+  keeps a folded handkerchief tucked in it. She speaks in rules and clauses.
+Opening line: "Names. Papers. Or wait outside with the others and see what comes."
+
+--- NPC: THE MAD HATTER (cursed) ---
+Wants: nothing any more. He is a picture on a card that wants to be a person again.
+Secret: he was the last one who tried to fight her and the closest one to winning.
+Voice / mannerism: a laugh with no breath behind it. Talks in tea-party etiquette
+  while doing violence. "Elbows off the table."
+Opening line: "You're EARLY. Nobody's ever early. Sit DOWN."
+
+--- NPC: THE CLOCKWORKER RABBIT ---
+Wants: to be let go. Nobody has asked it what it wants in a very long time.
+Secret: it is not Alice's servant. It is her second victim, and the clock is a wound.
+Voice / mannerism: speaks only in time. "Late. Late. Nine seconds late. Twelve."
+Opening line: "You're four minutes early and I hate you for it."
+
+============================================================
+== ACT 0 - THE LIGHT AT THE END
+============================================================
+
+=== SCENE: THE RUNNING ===
+Location: the deep cave, wherever last session left them
+Present: the party, and whatever was chasing them
+Goal: get them through the light with their hearts already going
+
+[map:blackfen-cave-map|The Cave - Blackfen]
+
+{Open cold. Do not recap. Recap afterwards, over the first campfire. Start the
+session mid-sprint - it sets the tempo for the whole chapter.}
+
+[READ ALOUD]
+You have been running long enough that your legs have stopped asking permission.
+The tunnel narrows, then narrows again, and the sound behind you - that wet,
+patient, unhurried sound - has not got any further away.
+
+And then: light.
+
+Ahead, past a throat of broken stone, there is daylight. Real daylight, the kind
+you have not seen in three days. It is red. You tell yourself that is the sunset.
+[/READ ALOUD]
+
+[DM NOTE]
+It is not the sunset. It is never anything else in there.
+Whatever is chasing them does not follow through the gap. It stops about forty feet
+back and makes a noise that, if you listen honestly, is a whimper. Let a character
+with a high passive Perception notice that the thing hunting them is afraid of what
+is ahead of them. Do not explain it. Never explain it.
+[/DM NOTE]
+
+[CHECK] Athletics or Acrobatics DC 10 (to squeeze the last gap at a dead run)
+  Success: through, upright, weapon still in hand.
+  Failure: through, on your face, 1d4 bludgeoning. No other penalty.
+  {Nobody fails their way out of Act 0. This roll exists so the first die of the
+  night hits the table before any exposition does.}
+
+>> CHOICE << at the mouth of the cave:
+  A) Run straight out into the light.
+  B) Hold the gap and fight the thing behind them.
+     {It will not come. After two rounds of nothing they hear it walking AWAY. That
+     is more frightening than a fight and it costs you nothing to run.}
+  C) Seal the gap - collapse it, spike it, ward it.
+     {Let this work completely, first try, no roll. Then in Act 8, when they need to
+     come back out this way, remember that they sealed it. Do not warn them now. Do
+     not gloat later either - just let it quietly be one of the reasons Act 8 is tense.}
+
+------------------------------------------------------------
+
+=== SCENE: OUT ===
+Location: a hillside above a dead forest
+Present: everyone
+Goal: the establishing shot. Take your time. This is the thesis of the chapter.
+
+[READ ALOUD]
+You come out onto a hillside, and the world is wrong in a way that takes a few
+seconds to name.
+
+The sky is red. Not sunset-red - flat, even, wall-to-wall red, like the inside of
+something. There is no sun in it anywhere. The light arrives from every direction at
+once and casts no shadows, which is why each of you keeps glancing down at your own
+feet and finding nothing there.
+
+Below you, a forest. Every tree in it is black and dead and perfectly upright, and
+they are all precisely the same height, as though someone drew them with a ruler and
+never went back to fix it.
+
+The ground is grey and gives underfoot like flour. It is not soil. When you kneel to
+touch it, it is warm.
+
+And it is silent. No birds, no wind, no insects. The silence has a pressure to it,
+the way deep water does.
+
+Somewhere very far off, a bell rings once. Nothing answers it.
+[/READ ALOUD]
+
+[DM NOTE]
+The grey ground is ash. Sixty years of it. Do not say so.
+If someone spends a full minute searching it: [CHECK] Investigation DC 13 - packed
+into the ash they find a child's shoe, a bird's skull the size of a fist, and the
+handle off a wooden teacup. All three worn smooth, like river stones.
+
+Nobody casts a shadow anywhere in Wonderland. Mention it twice more across the night,
+offhand, then never again. It is not a puzzle. It is a temperature.
+[/DM NOTE]
+
+[CHECK] Survival DC 12 (which way?)
+  Success: three directions are walkable.
+    - Downhill into the dead forest, where something small is standing very still
+      among the trunks. {The Gnome.}
+    - Along the ridge, towards a thin smear of chimney smoke. {The village.}
+    - Towards a distant red-black silhouette on the horizon: a castle, spade-shaped,
+      absurdly tall, with a road running to it that is visibly crowded. {The Queen.}
+  Failure: every direction looks identical. Try again after ten minutes of walking.
+    Meanwhile they hear, very distinctly, a small ceramic CLICK behind them.
+    When they turn: nothing there.
+
+{Whichever they pick, the Gnome finds them first - see Act 1. That is not a rail.
+The Gnome is simply everywhere, and it has decided about them.}
+
+
+============================================================
+== ACT 1 - THE ASH GARDEN
+============================================================
+
+{TONE THIS ACT: nobody has a shadow. Mention it once, offhand, while they are looking
+at something else. Do not let anyone investigate it. The word "Alice" has not been
+said out loud yet by anyone in the world, and it should not be said tonight until the
+village teaches them why.}
+
+=== SCENE: SOMETHING SMALL IN THE TREES ===
+Location: the black forest at the foot of the hill
+Present: the party, the Garden Gnome
+Goal: introduce the Gnome, establish that it is funny, then establish that it is not
+
+[map:forest-clearing-map|The Black Forest]
+
+[READ ALOUD]
+The trees are not wood. Up close, the black bark has a grain like burnt sugar and it
+crumbles when you lean on it. Nothing has leaves. Nothing has ever had leaves.
+
+In a clearing about thirty feet ahead, standing in the ash with its back to you,
+there is a garden gnome.
+
+It is eleven inches tall. Red pointed hat. Blue coat, gold buttons. One boot chipped
+down to the white clay underneath. It is the single most ordinary object any of you
+have seen in three days and it is, for that reason, deeply upsetting.
+
+As you watch, it turns around. Not by walking. It is simply facing you now.
+
+Its painted face is a smile.
+[/READ ALOUD]
+
+[DM NOTE]
+The Gnome will not speak, fight on command, follow instructions, or explain itself.
+It will follow the party for the entire chapter, and it can never be left behind - if
+they abandon it, it is simply standing in the next room, in the ash, in the mirror,
+on the tea table, ahead of them.
+
+TEACH THE THREE THINGS, in this order, in the first ten minutes:
+
+1. IT DOES SOMETHING RANDOM.
+   Roll on the GNOME TABLE (Appendix A) in the open, right now, before anyone speaks.
+   Whatever comes up, describe it perfectly flatly. A grand piano appears thirty feet
+   in the air above a dead tree and detonates it. A live trout falls into Brann's
+   hood. Every button on the Gnome's coat plays a single note of a lullaby.
+   Then: CLICK. The face is a frown. Then: CLICK. Smiling again.
+
+2. IT ANSWERS YES AND NO.
+   The moment any player asks the Gnome a question, do this:
+     - If the question is a yes/no question, the Gnome clicks to :) for yes or :( for
+       no, and IT IS ALWAYS TRUTHFUL. Always. This never breaks, all night.
+     - If the question is anything else - "who are you", "what happened here",
+       "where do we go" - the face cycles :) :( :) :( four or five times, very fast,
+       and stops on whichever it started on. That is the Gnome shrugging.
+   Do not tell the players this rule. Let them discover it and say it out loud
+   themselves. When they do, nod once and say nothing.
+   {It answers only the LITERAL question. "Is it safe?" is a different question from
+   "Will we survive it?" Players who learn to word questions carefully are playing
+   this chapter correctly. Reward precision brutally in both directions.}
+
+3. IT IS NOT SAFE.
+   About five minutes after they've started enjoying it, roll the Gnome table again
+   and pick, deliberately, one of the horrible results. A jet of boiling tea. A swarm
+   of moths made of paper with faces printed on them. Have it land on the PARTY. Hurt
+   somebody for 2d6. The Gnome's face does not change at all while it happens.
+   That is the moment the table stops treating it as a mascot. That is the point.
+[/DM NOTE]
+
+[CHECK] Arcana DC 15 (what IS it?)
+  Success: "There is no spell on this thing, and no spell in it. Magic is not being
+    CAST here - it is leaking. This is what a hole in the world looks like when
+    someone has painted a face on it."
+  Failure: "It's a lawn ornament. Absolutely nothing about it is magical." {This is
+    also true, and that is worse.}
+
+[CHECK] Insight DC 16 (watching the face)
+  Success: the smile and the frown are not moods. They are answers. It has been
+    waiting for someone to ask it something.
+  Failure: nothing. It is a painted face.
+
+>> CHOICE << what do they do with it?
+  A) Take it with them. {It permits this. It weighs eleven pounds, which is far too
+     much, and whoever carries it will mention that all night.}
+  B) Leave it. {It is in the next scene, standing in the road, facing them.}
+  C) Break it. {Let them. Roll d20: on 1-19 the pieces are gone from their hands and
+     it is standing behind them, intact, frowning. On a 20 it stays broken for one
+     hour of game time and the party has no Gnome for the Quiet Village, which is
+     substantially more dangerous. Then it comes back. It is never angry about this.}
+
+------------------------------------------------------------
+
+=== SCENE: THE ORCHARD OF THE FIRST TRAVELLER ===
+Location: deeper in, where the trees are planted in rows
+Present: the party
+Goal: the first real lore drop, entirely optional, entirely skippable
+
+[map:open-field-map|The Orchard of the First Traveller]
+
+{This scene is here so that a curious party gets rewarded and an impatient party
+loses nothing. If they walk past it, cut it. The information reappears in Act 6.}
+
+[READ ALOUD]
+The trees begin to fall into rows. This was an orchard once. In the middle of it
+there is a low stone bench, and beside the bench a signpost with four arms, and every
+arm has been snapped off flush except one, which reads, in a neat and cheerful hand:
+
+    THIS WAY TO EVERYTHING
+
+It points straight up.
+[/READ ALOUD]
+
+[CHECK] Investigation DC 12 (the bench)
+  Success: carved into the underside, upside down, where you would only see it lying
+    on your back beneath it:
+      "I have written it all down. Someone will come. Someone always comes.
+       There are notes hidden in every one of us. Find the last one. - T."
+  Failure: it's a bench.
+
+[DM NOTE]
+"T" is the First Traveller. The party does not need to know more than this all night.
+What they will eventually learn, in Act 6:
+
+  The First Traveller came down here before Alice did. He mapped Wonderland, wrote
+  down what it was and how it actually WORKS, and split the record into notes hidden
+  in the world's residents. He was the one who worked out that reality here bends to
+  whoever imagines hardest. Alice found that out from him and then made sure nobody
+  else would.
+
+  The Last Note is the final page. It is the page that says how to leave, and what is
+  waiting on the other side. Alice keeps it. She keeps it because it is the only
+  thing in Wonderland she is frightened of, and she likes having it close.
+
+  DO NOT let the party read the note this session. That is next chapter. Let them
+  hold it. Let them look at the first line. Then get them out.
+[/DM NOTE]
+
+[LOOT]
+  Coins: 0
+  Items: a brass signpost arm, snapped off, engraved THIS WAY TO EVERYTHING.
+    {Pure flavour, but a clever player can use it in Act 6 as a component for a door.
+    If they do, say yes.}
+
+============================================================
+== ACT 2 - THE QUIET VILLAGE
+============================================================
+
+=== SCENE: THE PEOPLE WITH NO MOUTHS ===
+Location: a village of leaning houses under the red sky
+Present: forty-odd villagers
+Goal: horror. Not a fight, not a puzzle. Let it be unbearable and then let them leave.
+
+[map:greenhollow-square|The Quiet Village]
+
+[READ ALOUD]
+It is a village. That is the worst part - it is an ordinary village, thatch and
+whitewash and a well in the square, and washing hung out to dry under a sky the
+colour of a wound.
+
+There are people here. Perhaps forty. They are going about their evening: a man
+carrying a bucket, two women turning a mattress, a boy chasing a hoop with a stick.
+
+Every one of them has had their mouth sewn shut.
+
+The stitching is neat. Black thread, evenly spaced, six or seven loops each, done
+carefully, done by hand, some of it long healed and some of it fresh and weeping.
+The boy with the hoop has it too. His stitches are the newest.
+
+They see you. All of them, at once, the way birds turn.
+
+And then, very calmly, without hurrying, without a sound, every single one of them
+walks indoors and closes the door.
+
+The boy leaves his hoop rolling. It goes on rolling for a long time, and falls over,
+and the sound it makes when it falls over is the loudest thing in the village.
+[/READ ALOUD]
+
+[DM NOTE]
+Sit in the silence. Do not fill it. Let a player break it.
+
+The villagers are not hostile, cursed, or undead. They are people. They sewed their
+own mouths shut - or their neighbours did, for them, kindly. It is the only reliable
+protection: Alice is drawn to interesting speech. Silence is camouflage.
+
+RULES OF THE VILLAGE (apply consistently, never announce them):
+  - No villager will open a door while a player is speaking out loud.
+  - If the party goes entirely silent - gestures, notes, chalk, mime - doors open.
+    This is the puzzle of this scene and it is a soft one. Do not hint at it for at
+    least ten minutes. Let them try shouting first. Let shouting fail.
+  - Say the word "Alice" out loud anywhere in the village and EVERY door in earshot
+    slams, and a woman upstairs starts hammering nails into her own window frame.
+    Use this exactly once. It teaches the lesson for the rest of the night.
+[/DM NOTE]
+
+>> CHOICE << how do they make contact?
+  A) Knock, talk, demand. {Nothing. All night. No villager ever answers a voice.}
+  B) Go silent and write, draw, or gesture.
+     {A door opens four inches. An old woman - grey, exhausted, stitched - holds out
+     a slate and a nub of chalk. She will answer written questions in writing. She
+     writes slowly and in small letters, as if even her handwriting is trying to be
+     quiet. Her name is MARGARET.}
+  C) Force a door. {It opens. The family inside kneel down and hold still, eyes
+     closed, waiting to be hurt, and do not resist anything at all. This is worse for
+     the players than any fight. Let them feel it. No mechanical penalty. None needed.}
+  D) Ask the GNOME yes/no questions about the village. {Fully valid and it works.
+     This is where most tables realise what the Gnome is for. Answer honestly:
+     "Are these people dangerous?" :( ... "Are they afraid of us?" :( ...
+     "Are they afraid of something else?" :) ... "Is it here?" :( ... "Will it come?" :) }
+
+MARGARET'S SLATE - what she will write, one line at a time, if asked in silence:
+  - "We are not permitted to be interesting."
+  - "She hears clever things. Do not be clever near her."
+  - "The Queen's castle takes people in. Some of them. If your papers are in order."
+  - "Do not go to the tea house. Nobody comes back from a party."
+  - "The cat is dead. She has it on the table. She keeps it dead ON PURPOSE."
+  - If asked about the Gnome, she looks at it for a long moment and writes:
+    "That was here first. That was here before HER." Then she rubs it out fast.
+  - If asked how to leave: she writes "the last note", stops, stares at what she has
+    written, and scrubs the slate so hard the chalk snaps.
+
+[LOOT]
+  Coins: they will not accept money. If pressed, Margaret writes: "Nothing to buy."
+  Items: if the party gives the village something - food, a blanket, healing, a name
+    written down - Margaret gives them a SPOOL OF BLACK THREAD, and writes:
+    "For your mouths. When she looks at you."
+    {This is real and it is mechanical. See Appendix B: Margaret's Thread. It is one
+    of only three ways to survive being noticed in Act 7. Give it out with weight.}
+
+------------------------------------------------------------
+
+=== SCENE: THE ROAD OF PETITIONERS ===
+Location: the road up to the spade-shaped castle
+Present: a queue of the desperate; two wardens at the gate
+Goal: the first hard puzzle, and the moment that splits the party
+
+[map:bandit-camp-map|The Road of Petitioners]
+
+[READ ALOUD]
+The road to the castle is packed.
+
+Hundreds of people are queued along it, stretching back a quarter-mile, and none of
+them are talking, because none of them can. They stand in a line under a red sky
+holding pieces of paper. Some of the papers are beautiful - illuminated, ribboned,
+sealed. Some are scraps of bark. One woman near the front is holding out both hands,
+palms up, with nothing in them at all, and she has clearly been standing there for
+a very long time.
+
+At the gate, under a portcullis shaped like a heart with a bite out of it, there are
+two guards. They are enormous and identical and they are, unmistakably, twins: round,
+pink, jacketed, buttoned to the chin. Their mouths are NOT sewn. That is the first
+thing you notice about them, and it is somehow the most alarming thing on this road.
+
+The left one says, cheerfully: "Papers, please!"
+The right one says, cheerfully: "Papers, please!"
+[/READ ALOUD]
+
+[DM NOTE]
+These are DUM and DEE. They are the gate protocol made flesh, and they are the puzzle.
+
+THE SITUATION, which they will explain freely and honestly if asked:
+  - There are two doors under the portcullis. One leads INTO the castle and the
+    audience chamber. The other leads into the KENNEL, which is where the Queen's
+    unfed things are, and which is a death sentence.
+  - Each guard stands at one door.
+  - ONE of the twins always tells the truth. The OTHER always lies. They will not say
+    which is which and neither will admit anything about the other.
+  - The party may ask ONE guard ONE yes/no question. Total. Not one each. One.
+  - "Those who sent word ahead" - see below - are waved through without any of this.
+
+THE SOLUTION (the classic, and there are several valid forms - accept any of them):
+  Ask either guard: "If I asked the OTHER guard whether YOUR door is the way in,
+  would he say yes?"
+    - If the answer is NO, the door you asked at is the way in.
+    - If the answer is YES, take the other door.
+  Why: the double-negation launders the lie. Truth-teller reporting a liar and liar
+  reporting a truth-teller both produce a flipped answer, so the flip is guaranteed
+  and can be inverted.
+
+  ALSO ACCEPT, without argument:
+    - "Would you say your door is the way in?" (works on both, since a liar lying
+      about his own lie tells the truth)
+    - Any question about a fact the party can verify independently, used to identify
+      which twin is which first, THEN a straight question - clever, costs two
+      questions, so charge them: the second question makes the twins bored, and bored
+      wardens send you to the back of the queue for an hour of game time.
+    - Asking the GNOME instead. This is completely legal, works perfectly, and is
+      hilarious. The twins are outraged; there is no rule against it; they let it
+      stand while grumbling. Let the player who thought of it feel like a genius.
+
+  IF THEY GUESS AND GET IT WRONG: they go into the Kennel. Do not kill them. Run the
+  Kennel as a two-round scramble - 2 hell-hounds and a pack of 4 dire-wolves in a
+  pitch-dark stone run, with a portcullis they can lift with a DC 15 Athletics by two
+  characters working together. Bloody them, then let them out into the courtyard,
+  filthy and alive and having learned the price of guessing.
+  [map:ironhand-smithy-map|The Kennel]
+  {Run the smithy map lights-out: the party sees 10 feet, the hounds see everything.
+  Statblocks in Appendix C under THE KENNEL.}
+
+[CHECK] Insight DC 18 (watching the twins before asking)
+  Success: the liar blinks twice before he speaks. Every time. Give them this - it
+    does not solve the puzzle, it only confirms their answer afterwards, which is
+    exactly the right amount of help.
+  Failure: they are identical in every observable way.
+[/DM NOTE]
+
+>> CHOICE << THE SPLIT - this is the important one:
+
+  The twins announce, loudly, over the queue:
+    "Those what SENT AHEAD may enter! Papers in order, names on the list, all proper!
+     Those what DIDN'T may wait in the yard! In the yard! With whatever's in it!"
+
+  {THIS IS THE OUT-OF-CHARACTER BEAT. Players who sent you their character details in
+  advance - background, name, description, a written paragraph, whatever you asked
+  them for - are ON THE LIST and walk straight in. Players who did not, wait outside.
+  Say this at the table plainly and with a straight face. It lands as a joke and then
+  it lands as a consequence, which is the tone of this entire chapter.
+
+  Do not be cruel about it. The yard is survivable and it is FUN - it is a defensive
+  fight with a clear win condition and good loot. Nobody is benched. The two groups
+  are playing two different games for the next 45 minutes and then they reunite.
+
+  If EVERY player sent details: run the yard fight anyway, but as the queue being
+  attacked while the party is inside, and cut to it twice - "you hear screaming from
+  the courtyard" - so the card game has a clock on it.
+
+  If NOBODY sent details: the whole party fights the yard, then the twins shrug and
+  let them in bleeding, and the Queen is unimpressed, which raises the card game's
+  difficulty by one step. See Act 3.}
+
+
+============================================================
+== ACT 3 - THE HEARTLESS QUEEN
+============================================================
+
+{TONE THIS ACT: the Queen is the only creature in Wonderland who says the name without
+flinching, and she refuses to use it anyway - "the child". Let the table notice that a
+woman with a hole in her chest is the bravest thing they have met. Shadows: forty card
+soldiers, all of them flat, none of them casting anything. Say it once.}
+
+{The party is now split. Run the two scenes in ALTERNATING CHUNKS - about ten
+minutes each - and cut on cliffhangers. Outside gets a fight; inside gets a puzzle.
+Cutting between them makes both feel faster than they are. Keep a scrap of paper with
+both groups' initiative and hit points and switch without apologising.}
+
+------------------------------------------------------------
+
+=== ENCOUNTER: THE YARD (players who did NOT send their character details) ===
+Enemies: paper soldiers, then flamingo-things, then one Unfed
+Terrain / hazards: an open flagged courtyard, a dry well, the queue of petitioners
+Tactics: they come for the QUEUE first, not for the party
+Treasure: see LOOT
+Scaling if the party struggles: cut wave 2 entirely, or start wave 3 already Bloodied
+
+[map:stonekeep-ground-floor|The Castle Yard]
+
+[READ ALOUD]
+The portcullis comes down between you and the others with a sound like a jaw closing.
+
+The yard is a hundred feet of grey flagstones, a dry well at the centre, and four
+hundred silent people pressed against the walls holding their paperwork.
+
+For about a minute, nothing happens.
+
+Then the flagstones begin to lift. Not break - LIFT, at the corners, like the pages
+of a book in a draught. And out from underneath them, unfolding, standing up,
+smoothing themselves flat, come soldiers made of card. Man-height. Two-dimensional.
+When they turn sideways they vanish, and then they are somehow six feet closer.
+
+The nearest one turns its flat painted face towards the queue - towards a woman with
+a baby and a piece of birch bark in her hand - and raises a paper halberd.
+[/READ ALOUD]
+
+[DM NOTE]
+STATBLOCKS: Appendix C - THE YARD (paper soldier, flamingo-thing, the Unfed). Written
+out in full so you never have to reskin at the table mid-siege.
+
+WIN CONDITION - say it out loud so the group knows what winning looks like:
+  Survive FIVE ROUNDS and keep the queue alive. Every round, at the top of the round,
+  the paper soldiers kill one petitioner UNLESS a character is engaging them.
+  Track it publicly: draw five tally marks. Erase one per petitioner lost. This turns
+  a mook fight into a moral clock and it is what makes this scene good.
+
+WAVE 1 (rounds 1-2): PAPER SOLDIERS - use SKELETON (CR 1/4), 2 per player outside.
+  Reskin: AC 13, they take HALF damage from piercing and slashing (paper closes over
+  the cut), and DOUBLE damage from fire. The first player to think of fire should feel
+  like they solved the encounter, because they did.
+  When one dies it does not fall - it flutters, and it takes a full round to land.
+
+WAVE 2 (round 3): FLAMINGO-THINGS - use HARPY (CR 1), 1 per two players outside.
+  Reskin: long pink birds folded wrong, used as croquet mallets for so long that
+  their necks are permanently bent into a striking curve. Their Luring Song is not a
+  song - they mime a song, silently, with their mouths sewn shut, and it still works,
+  which is worse. Wis save DC 11.
+
+WAVE 3 (rounds 4-5): ONE UNFED - use WIGHT (CR 3). Only one, regardless of party size.
+  Reskin: it is a former petitioner. It still has its paperwork. It holds the papers
+  out to the party with one hand while it kills with the other, and it does not stop
+  holding them out, and it is very obviously still trying to be let in.
+  {If your outside group is two characters or fewer, use a GHOUL (CR 1) instead.}
+
+SPECIAL - THE GNOME IS OUTSIDE. It stayed with whoever it liked best, or, if the
+party carried it inside, it is in the yard anyway, because it is.
+  At the start of EACH round of this fight, roll on the GNOME TABLE (Appendix A) and
+  apply the result to a RANDOM target in the yard - roll a die among every creature
+  present, including petitioners, including the party. Announce the roll. Do not
+  fudge it. The single funniest and most horrible moment of the whole session usually
+  happens right here and you will not have planned it.
+
+MERCY VALVE: if the outside group is genuinely going down, the portcullis grinds up
+three feet at the end of round 4 and Dee bellows "OI. IN. NOW." Let them crawl in.
+Nobody dies in the yard. Losing the queue is the real cost and it is enough.
+[/DM NOTE]
+
+[LOOT]
+  Coins: 40 gp in loose coin, swept up out of the cracks between the flagstones
+  Items: - A PAPER HALBERD. Weightless. Does 1d10 slashing but cannot be used
+           against anyone whose name you know. {Yes, this is a trap for later. It is
+           also genuinely good if they think about it.}
+         - The Unfed's paperwork: a petition, forty years old, written by a man
+           asking permission to bury his daughter. It is correctly filled in. It was
+           never stamped. {If a player takes it to the Queen in the throne room, she
+           stamps it, and her hands shake while she does. Give that player
+           inspiration, or advantage on their next roll, or both.}
+
+------------------------------------------------------------
+
+=== SCENE: THE AUDIENCE (players who DID send their character details) ===
+Location: the Court of Clubs, inside
+Present: the Queen of Hearts, forty card soldiers, one small hole in the world
+Goal: the card game
+
+[map:temple-dawnfather-map|The Court of Clubs]
+
+[READ ALOUD]
+Inside, the noise stops. All of it. The screaming from the yard behind you cuts off
+mid-syllable, as though the door had opinions about what is worth hearing.
+
+The hall is enormous and almost empty. Forty card soldiers stand along the walls,
+flat and painted and perfectly still, and every single one of them is a Club or a
+Spade. There is not one red card in the room.
+
+At the end of the hall there is a throne, and on it there is a woman.
+
+She is tall. Her gown is the deep clotted red of old wine and her crown sits slightly
+crooked and she has not fixed it in a long time. Her face is - kind is not the right
+word. Composed. Administrative.
+
+There is a hole in her chest.
+
+It is a clean cavity about the size of a fist, edged in white where the ribs show,
+and it does not bleed. Folded neatly and tucked into it, the way you would tuck a
+letter into a pocket, there is a handkerchief.
+
+She looks up. She does not smile. She says:
+
+"Names."
+[/READ ALOUD]
+
+[DM NOTE]
+THE QUEEN IS NOT AN ENEMY. She is a bureaucrat in unbearable pain who has replaced
+feeling with procedure. She will not attack, ever, unless someone touches her chest.
+
+Her deal, stated plainly if asked:
+  - She has one Joker in her possession. She knows exactly what it contains and she
+    is not sentimental about it. She will part with it to anyone who beats her at
+    Court. Nobody has beaten her at Court.
+  - She cannot simply give it away. "That is not a rule I am permitted to break. It
+    is nearly the only one I have left."
+  - What she actually wants, and will never say aloud: her heart back. Alice tore it
+    out, and turned it into a playing card, and hid it inside the Queen's own deck,
+    which is a joke Alice has been enjoying for sixty years. The Queen cannot see it.
+    Nobody can see their own heart. That is the entire trick of this scene.
+
+If asked about Alice, she does not flinch like the villagers. She says, evenly:
+"I do not discuss the child." And then, after a pause: "She was a guest. Once."
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE GAME OF COURT ===
+Goal: the puzzle. Budget 30-40 minutes. It is worth every one of them.
+
+[READ ALOUD]
+"The game is Court," she says. "It is very old and very simple and I have not lost it
+in sixty years, which I would enjoy more if anyone had come close.
+
+Five of you will stand in a line, facing my throne. One behind the other. Each of you
+will wear a card upon your brow, placed there by my soldiers, and you will not see
+your own card, not ever, not by any means. You will see every card in front of you.
+You will see nothing behind you.
+
+There are only two suits in this deck. Hearts, and Spades.
+
+I will begin at the back and I will work forward. Each of you, in turn, will say one
+word. That word will be 'Hearts' or that word will be 'Spades' and it will be the
+suit of the card on your own brow. It will be one of those two words and nothing
+else. You may not sigh, or wink, or lean, or cough, or emphasise, or weep. One word.
+
+You may confer for one minute before the first card is placed. After that, silence.
+
+Be right, and go free. Be wrong, and I keep your name."
+
+She says the last part the way a clerk reads a fee schedule.
+[/READ ALOUD]
+
+[DM NOTE]
+THE RULES, on the table, exactly as written:
+  1. Five participants in a line, facing away from the back of the line. Each sees
+     every card in front of them and none behind.
+  2. Two suits only: Hearts and Spades. Any mix. They are not told how many of each.
+  3. The Queen asks from BACK to FRONT. Back one goes first.
+  4. Each says exactly one word: "Hearts" or "Spades".
+  5. Everyone hears every answer.
+  6. One minute to confer beforehand. Nothing after.
+  7. Wrong answer: the Queen keeps that character's NAME. See the cost below.
+
+THE SOLUTION - the parity code:
+  The person at the BACK cannot deduce their own card. They are a sacrifice, and
+  their job is to spend their one word as a SIGNAL rather than an answer.
+  Agree beforehand: the back player counts the Hearts they can see in front of them.
+    - Odd number of Hearts  -> they say "Hearts"
+    - Even number of Hearts -> they say "Spades"
+  The back player has a coin-flip chance of being right by luck.
+  EVERY OTHER PLAYER IS THEN CERTAIN. The fourth player counts the Hearts in front of
+  them and compares with the parity the back player announced; the difference is
+  their own card. The third does the same, accounting for what the fourth said. And
+  so on to the front, who has heard everything and seen nothing, and knows exactly.
+
+  Guaranteed: 4 of 5. At risk: 1 of 5, on a coin flip.
+
+RUNNING IT AT THE TABLE - do this physically, it is so much better:
+  Use real playing cards. Deal five face down. Have the five players hold their card
+  to their forehead without looking. You, the DM, describe what each can see, or just
+  let them look at each other, which is more fun and completely fair.
+  Then run the round for real. Their code either works or it does not.
+  DO NOT COACH. If they solve it, it will be the best twenty minutes of the session.
+
+IF THEY CANNOT CRACK IT - escalating help, spaced ten minutes apart:
+  Hint 1 (from the Queen, bored): "The one at the back cannot win. Stop trying to make
+    him win. Ask instead what he might be worth."
+  Hint 2 (from a card soldier, whispering, a Spade who is tired of this): "Counting.
+    They always forget they are allowed to count."
+  Hint 3 (from the GNOME): if any player asks it yes/no questions about the code they
+    are designing - "Will this plan save four of us?" - it answers honestly. This is
+    the intended fallback and it is not cheating, it is the tool working.
+  Hint 4: let them play it out wrong. Losing this is survivable and interesting.
+    See below.
+
+THE COST OF LOSING - "I keep your name":
+  This is real and it is not a death sentence. If a character answers wrong:
+    - The Queen writes their name in a ledger and closes it, and from that moment on
+      NO NPC IN WONDERLAND CAN SAY OR PERCEIVE THAT NAME. Other players still can.
+      Written records of them blur. Introductions fail. It is lonely and it is eerie
+      and you should play it every single time it would come up.
+    - AND: a nameless thing is very hard to notice. That character has ADVANTAGE on
+      every Stealth check in Act 7, and Alice's Notice mechanic (Appendix C) takes an
+      extra failed roll to trigger against them.
+  {Losing this puzzle makes the endgame EASIER and the roleplay sadder. That is a
+  good trade and it means you never have to fudge the outcome. Let the dice fall.}
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE CARD AT THE FRONT ===
+Goal: the twist. This is the emotional peak of Act 3.
+
+[DM NOTE]
+Here is the thing you have not told them.
+
+THE CARD ON THE FRONT PLAYER'S FOREHEAD IS THE QUEEN OF HEARTS.
+
+It is not a normal card. It is her heart. Alice cut it out, pressed it flat, printed
+a face on it, and slipped it back into the Queen's own deck, where the Queen would
+shuffle it and deal it and hand it out and never once be able to see it, because
+nobody can see their own heart. It has been in circulation for sixty years.
+
+EVERY OTHER PLAYER IN THE LINE CAN SEE IT. They are looking straight at it. And under
+the rules they may say one word, and that word must be "Hearts" or "Spades", so they
+cannot tell the front player what it is.
+
+WHEN THE FRONT PLAYER'S TURN COMES, the Queen adds one line she has not mentioned
+before. She says it flatly, and every card soldier in the hall turns its head:
+
+  "You at the front. You may say your suit, as the others did. Or you may name your
+   card exactly - suit and rank, both. Name it right and I will grant you a thing
+   beyond this game. Name it wrong and I keep your name, and I keep your voice."
+
+HOW THE PLAYER CAN POSSIBLY KNOW:
+  a) The GNOME. "Is my card the Queen of Hearts?" - :) . This is the intended route
+     and it is the pay-off for two hours of learning what the Gnome is. If a player
+     does this, do not hesitate for one second. Reward it enormously.
+  b) Deduction from the room: [CHECK] Investigation DC 15, allowed to anyone who has
+     been paying attention to the hall - "there is not one red card in this room,
+     among forty soldiers, and she has been dealing from a deck that is short exactly
+     one card, and there is a hole in her chest the size of a fist."
+  c) A player simply GUESSES it because the scene is written well enough that guessing
+     it is a reasonable leap. If they guess it: yes. Absolutely yes. That is the best
+     possible version of this.
+  d) The other players in the line breaking the rules to tell them. Let them try. The
+     card soldiers will physically stop it - a Spade's halberd comes down across the
+     mouth. But if a player finds a way that does not involve speech, sound, or
+     movement... say yes, and let the Queen pretend not to have noticed.
+
+WHEN IT IS NAMED CORRECTLY - read this:
+[/DM NOTE]
+
+[READ ALOUD]
+You say it. "The Queen of Hearts."
+
+Nothing happens for about two seconds.
+
+Then the card on your forehead goes warm - unpleasantly warm, blood warm - and it is
+not a card any more, it is soft and wet and it is beating, and it is far too big to
+have ever been a card, and it is in your hand.
+
+Every soldier in the hall drops to one knee at once. It sounds like a building
+falling over.
+
+The Queen has not moved. Her hands are on the arms of the throne and her knuckles
+are white and her face has not changed at all, because it has not been able to change
+in sixty years.
+
+She says, very carefully, as though the words are heavy: "Bring it here. Please."
+
+And then she says: "Please." Again. Like she is testing the word out.
+[/READ ALOUD]
+
+[DM NOTE]
+If they give it back:
+  She puts it in the hole in her chest herself, with both hands, badly, the way you
+  would repack a bag in a hurry. The handkerchief flutters to the floor.
+  Then she FEELS things, all sixty years of them, in about four seconds, and it is
+  awful to watch. She screams once - the first sound of real feeling anyone in this
+  world has made in decades, and every window in the castle cracks - and then she
+  sits back down and weeps like a person, not like a queen.
+  Rewards: the JOKER, freely given. Plus the CROQUET MALLET OF THE FIRST GAME
+  (Appendix B). Plus ten card soldiers who will fight for the party ONCE, at a moment
+  of the party's choosing, if they can get word to the castle. {They can. In Act 8.}
+  She also says the single most useful thing anyone says all night:
+    "The cat had a note in it. She gutted it looking for the note. She did not find
+     the note, because the cat was cleverer than her about exactly one thing, and it
+     is the only reason any of us still have a chance."
+
+If they keep it:
+  She does not fight them for it. She simply stops. She says "Ah." and sits back and
+  looks at the ceiling, and the card soldiers begin, very quietly, to leave the room.
+  Rewards: they keep a beating heart that grants advantage on saves against fear
+  while held - and the Joker, which the Queen tosses at their feet without looking.
+  Consequence: the castle falls before dawn, in Act 8, and the queue outside dies,
+  and the party will see it burning behind them as they run. Do not moralise about
+  it. Just show them.
+  {Both outcomes are legitimate. Do not signal which one you prefer.}
+
+IF NOBODY NAMES THE CARD: the front player says a suit, wins or loses on the parity
+code like everyone else, and the Queen hands over the Joker for winning the game at
+all - four out of five is a win; nobody has ever managed four. The heart stays in
+circulation. She is exactly as she was. That is the sadder ending and it is fine.
+[/DM NOTE]
+
+[LOOT]
+  Coins: 200 gp, counted out by a soldier who licks a finger to turn each coin
+  Items: THE JOKER (see Act 4), and whichever of the above applies
+
+============================================================
+== ACT 4 - THE MAD HATTER
+============================================================
+
+{PARTY REUNITED. Do not start this until everyone is in the same room. If your table
+is taking a meal break, take it here.}
+
+=== SCENE: THE CARD ===
+
+[READ ALOUD]
+The Joker is heavier than a card should be.
+
+The face on it is a man in an enormous hat, mid-laugh, arms flung wide, drawn in
+loose black ink. The longer you look at it the less it reads as laughing.
+
+He is not printed on the card. He is BEHIND it, at a distance, the way a face is
+behind a window, and the ink is a very thin thing to have between you and him.
+
+Written along the bottom edge, in the same neat cheerful hand as the signpost in the
+orchard:
+    "Play me and I am released. There is no other way to open a hat."
+[/READ ALOUD]
+
+[DM NOTE]
+Everything they need is now in place and they will very likely work out the shape of
+it themselves:
+  - The Cheshire is dead on Alice's altar, held in stopped time.
+  - The thing stopping the time is the Rabbit's pocket clock.
+  - The Rabbit and the clock are hidden inside the Hatter's hat.
+  - The hat is on the Hatter, who is inside this card, cursed and no longer himself.
+  - To get the hat, they must let him out, and then take it off him.
+
+Let them decide WHEN to play the card. Do not rush it. A party that spends twenty
+minutes buffing, setting traps, choosing ground, and arguing about it is a party
+that is invested. Reward preparation properly - see Tactics.
+
+>> CHOICE << where do they play it?
+  A) In the Queen's hall. {The card soldiers will not help - "That is not our
+     business, that is a HAT business" - but the space is huge and open and the
+     Hatter's teleporting tea table is less effective. Easiest.}
+  B) Outside in the yard. {The queue is still there. If the party fights here,
+     petitioners die - one per round they take. Hardest and worst.}
+  C) Somewhere they prepare first - the dry well, a barricaded room, the orchard.
+     {Let ANY reasonable preparation give real benefit: difficult terrain of their
+     making, a choke point, oil and fire. Give them one full free round of surprise
+     if they set an actual ambush. This fight is meant to be won by people who
+     thought about it.}
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE TEA PARTY ===
+
+[READ ALOUD]
+The card lands face up and does not stop falling.
+
+It goes THROUGH the floor - not breaking it, just declining to be stopped by it - and
+out of the hole it leaves comes a table.
+
+A long table, dressed for tea, laid for forty and set for one, dragging itself up
+into the room like something being born. Cups. Saucers. Three hundred teaspoons.
+A cake with a bite out of it that is still steaming after sixty years.
+
+And at the head of it, standing on the tabletop in boots, is a man in a hat.
+
+The hat is four feet tall. It is not a hat shape; it is a hat's IDEA, too tall,
+folding slightly in the middle, with a price ticket in the band that reads 10/6.
+
+His face is a smear of joy. His eyes are two black stitches. When he laughs there is
+no breath in it, no air moving, just the sound arriving.
+
+"You're EARLY," he says, delighted. "Nobody's ever early."
+
+He picks up a teapot.
+
+"SIT DOWN."
+[/READ ALOUD]
+
+------------------------------------------------------------
+
+=== SCENE: THE EIGHT CUPS (optional - offer it, do not require it) ===
+Goal: give clever parties a way to gut the boss fight before it starts
+
+[DM NOTE]
+Before the Hatter attacks, he does what he always does: he pours.
+
+Eight cups appear in front of the party, in a row, numbered 1 to 8 by the little
+painted numerals on the saucers. He announces, with enormous warmth:
+
+  "Seven of these will kill you. ONE of them is TEA. Drink with me and I will hear
+   you out - I have not been heard out in sixty years and I should like it very much.
+   Refuse, and we shall skip to the part where I hurt you, which I shall also enjoy,
+   but less."
+
+THE PUZZLE: identify the safe cup.
+  The Gnome is standing on the table. It has been standing on the table since before
+  the table arrived. The players may ask it yes/no questions and it cannot lie.
+  BUT the Hatter permits only THREE questions - "three is the number of questions at
+  a tea party, everyone knows that" - and eight cups is more than three.
+
+  SOLUTION: binary search. Three yes/no questions distinguish exactly eight things.
+    Q1: "Is the tea in cups 1 to 4?"   -> splits 8 into 4
+    Q2: "Is it in cups 1 and 2?" (or 5 and 6) -> splits 4 into 2
+    Q3: "Is it cup 1?" (or whichever) -> splits 2 into 1
+  Any equivalent halving works. Accept clumsy phrasings that still halve.
+  {Watch for the classic error - a player asking "Is it cup 3?", "Is it cup 5?",
+  "Is it cup 7?" That is three questions for a 3-in-8 chance. Let them do it if they
+  insist. Do not warn them. The Gnome will answer :( three times with total serenity
+  and the table will groan and it will be a better lesson than any hint.}
+
+  ALSO ACCEPT: a paladin's Divine Sense, a Detect Poison and Disease, an antitoxin
+  chugged in advance, a familiar drinking first, a druid who simply eats poison for
+  breakfast. Any of these bypasses it. Say yes and move on - the puzzle is a gift,
+  not a gate.
+
+REWARD FOR DRINKING THE RIGHT CUP:
+  The Hatter is DELIGHTED. Genuinely. He sits down. For four minutes he is almost a
+  person, and he tells them:
+    - "She put a rabbit in my hat. I can feel it running. It has been running for
+      sixty years and I cannot get it out and I cannot sleep for the ticking."
+    - "The cat is on her table. She keeps it dead the way you keep jam in a jar."
+    - "I nearly had her, you know. I was CLOSE." (He is proud of this. It is the last
+      real thing left in him.)
+    - "You'll want the hat off me. Yes. Well. I can't just GIVE it to you." And then,
+      sadly, and this is the important line: "It has to come off. It doesn't have to
+      come off a live man, though. That's the only kindness on the menu."
+  MECHANICALLY: he begins the fight at HALF hit points, has already used his Teapot,
+  and on the round he drops below Bloodied he stops fighting for one full round and
+  says "thank you" to whoever poured. That is a huge swing. It should be.
+
+PENALTY FOR DRINKING A WRONG CUP: 4d6 poison damage, Con save DC 14 for half, and the
+character is poisoned for the fight. Nobody dies from this - if it would drop them,
+they go to 1 hit point and vomit something with legs in it.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== ENCOUNTER: THE MAD HATTER ===
+Enemies: the Mad Hatter (Appendix C), plus 3 animated tea services
+Terrain / hazards: the long table, which is difficult terrain and also a weapon
+Tactics: he does not chase. He makes you come to the table.
+Treasure: THE HAT
+Scaling if the party struggles: drop the tea services; he skips his Legendary-ish
+  "Refill" once; the Gnome table roll goes his way less often
+
+[map:gilded-stag-ground|The Long Table]
+
+[DM NOTE]
+STATBLOCK: Appendix C - THE MAD HATTER (CURSED).
+
+TACTICS, in priority order:
+  1. He opens with SIT DOWN: every creature within 30 feet makes a DC 14 Strength
+     save or is dragged to a chair at the table and restrained by it until they use
+     an action to break free (DC 13 Athletics). Being seated is not just flavour - a
+     seated character has disadvantage on attacks against anyone not also at the table.
+  2. He fights ALONG the table, never off it. He will not step down. If the whole
+     party refuses to come to the table, the table extends towards them, one 10-foot
+     section per round, laying itself out ahead of him with cups and saucers, and he
+     walks forward at a stroll. This is unnerving and it should be. Do not let the
+     party solve this fight by standing far away, but make the solution to their
+     standing far away be a slow horrible approach rather than a ranged attack.
+  3. THE TEAPOT (recharge 5-6): a 30-foot line of scalding tea, 5d6 fire, Dex DC 14
+     for half. He apologises after every single use. "Sorry. Sorry. It's hot."
+  4. THE HAT is a valid target. AC 12, 25 hit points, and it MOVES - it is not
+     attached to him so much as balanced on him. Damaging the hat does nothing to
+     him but it makes something inside it SCREAM, and it is not his voice, and any
+     character who hears it must make a DC 12 Wisdom save or spend their reaction
+     staring at it. {This is the Rabbit. Foreshadowing.}
+  5. AT HALF HIT POINTS he stops laughing. Mid-laugh. Read the block below.
+
+THE GNOME IN THIS FIGHT: roll once on the GNOME TABLE at the start of each round and
+apply it to a random creature. Yes, including the Hatter. Yes, including the party.
+Announce every roll before you know what it does.
+[/DM NOTE]
+
+{Read the following aloud the moment the Hatter drops to half hit points.}
+
+[READ ALOUD]
+He stops laughing.
+
+Not gradually. The laugh cuts off exactly halfway through, like a door closing on it,
+and what is standing on the table now is a very tired man in an absurd hat with two
+black stitches where his eyes should be.
+
+He says, in a completely different voice - quiet, hoarse, ordinary:
+
+"Oh. Oh, thank God. Please keep going."
+
+And then the laugh comes back on, all at once, at full volume, and he is gone again.
+[/READ ALOUD]
+
+[DM NOTE]
+IF THEY TRY TO SAVE HIM: they cannot. Not tonight. Say so, through the Cheshire, in
+Act 6, in exactly these words: "You'd need her dead for that, and she isn't yet."
+Let a player who really tries carry the failure. That is worth more than a win here.
+
+WHEN HE DIES:
+  He does not fall down. He sits down, in the chair at the head of the table, and
+  puts his hands in his lap, and the hat comes off on its own and rolls along the
+  table and stops in front of the party, brim up, like a bowl.
+  Then he is a card again - the Joker, lying on the seat, ink drawn much smaller and
+  quieter now. {If a player keeps it, good. The Hatter is not gone. Next chapter.}
+
+  And out of the mouth of the hat, faintly, from a very long way down, comes ticking.
+[/DM NOTE]
+
+[LOOT]
+  Coins: 0
+  Items: - THE HAT (see Appendix B). It is a door.
+         - The Joker card, now quiet.
+         - A teaspoon. There are three hundred of them, but this one is warm, and it
+           stays warm all night, and no one can explain it. {Free. Costs nothing.
+           Players remember objects like this for years.}
+
+
+============================================================
+== ACT 5 - INSIDE THE HAT
+============================================================
+
+{TONE THIS ACT: by now the players should be lowering their own voices when they say
+the name. If they are not, have the Rabbit stop dead mid-sentence the first time one
+of them says it, and stare, and then carry on counting. Do it once. Shadows: inside
+the hat there ARE shadows, and they are all wrong ones - too many, too long, and none
+of them belonging to anybody present. Mention it and move on.}
+
+=== SCENE: DOWN ===
+Location: the inside of a hat
+Present: everyone who steps in
+Goal: establish the Inventory World and its rules in ninety seconds of dread
+
+[READ ALOUD]
+The hat is two feet across at the brim and the hole in the middle of it is dark in a
+way that hurts to look into for too long.
+
+You step in.
+
+There is no falling. That is the first wrong thing. You simply arrive.
+
+You are standing on a floor made of things. Not a floor WITH things on it - a floor
+made of them, compacted, fused: chair legs and dinner plates and doorknobs and shoes
+and cutlery and hundreds upon hundreds of hats, pressed flat into a surface you can
+walk on. It goes to the horizon in every direction.
+
+Above you there is no sky. There is a CEILING, at about four hundred feet, and it is
+made of the same thing, and it is upside down, and if you look at it too long you
+become certain that you are the one who is upside down.
+
+The light comes from candles. Thousands of them, at every angle, some burning
+upwards, some burning sideways, some burning down. None of them are getting shorter.
+
+And somewhere - everywhere - there is ticking. Not one clock. Thousands, and none of
+them agree, and none of them are keeping time with each other, and the sound of it
+gets into your back teeth.
+
+In the middle distance, rising out of the floor of objects, there is a tower.
+[/READ ALOUD]
+
+[DM NOTE]
+THE RULES OF THE INVENTORY WORLD - introduce each by demonstration, not by lecture:
+
+  1. NOTHING IS LOST HERE. Everything anyone in Wonderland has ever misplaced is on
+     this floor. A player who searches for a specific ordinary object FINDS it, with
+     no roll, within one minute. Keys. Rope. A spoon. A ladder. Lamp oil.
+     {This is a gift. Let them use it. It makes the puzzles in this act solvable by
+     resourceful players and it is genuinely delightful the first three times.}
+     What they cannot find: anything unique, anything alive, anything they have not
+     lost themselves or seen lost.
+
+  2. TIME IS LOCAL. Different regions of this world run at different speeds, and the
+     boundaries are visible as faint shimmering seams in the air, like heat haze.
+     Cross a seam and you can watch your own party moving at half speed or double
+     behind you. Mechanically, when you want tension: crossing a seam costs a
+     character 1 round of "lag" - they act on the round AFTER they arrive.
+
+  3. THINGS THAT WERE PUT IN HERE ARE STILL IN HERE. Including the things Alice put
+     in. See the Sinister Inventory below.
+
+  4. THE PARTY CANNOT LEAVE THE WAY THEY CAME. The brim of the hat, seen from inside,
+     is a circle of red sky about a mile up, and it is closing at roughly a foot an
+     hour. Tell them this in the first five minutes. It is a clock and they should
+     hear it ticking from the start. {In truth Act 5's ending overrides this, but
+     they must not know that.}
+
+THE SINISTER INVENTORY - roll or pick, one per twenty minutes of wandering:
+  1. A SWARM OF LEFT SHOES, moving as one animal. Use SWARM OF RATS. Harmless-looking
+     and genuinely dangerous, which is this chapter's whole personality.
+  2. THE COAT RACK. Use ANIMATED ARMOR, but it is nine feet tall and hung with the
+     coats of everyone who has ever died in Wonderland, and it wants one more.
+  3. A DOOR STANDING FREE IN THE OPEN. Locked. Knocking is answered. Do not ever say
+     by what. If they open it, they find themselves, six hours older, walking away.
+  4. THE COLLECTION. A tidy pile of 4,000 identical brass keys, arranged with obvious
+     care by someone who never found the lock. [CHECK] Investigation DC 14: one of
+     them is warm. {It opens the clocktower's front door, saving them the climb.
+     Give this to any party that stops to look at things.}
+  5. THE MIRROR. Face down under a heap of umbrellas. {THIS MATTERS. See Act 6. If
+     they find it now, do not explain it. Let them carry a heavy mirror around for
+     an hour. It pays off.}
+  6. GRANDFATHER CLOCKS, forty of them, standing in a circle facing inwards, all
+     showing a different time, all ticking, none of them agreeing. Standing in the
+     middle of the circle for more than a minute: DC 13 Wisdom save or take 2d6
+     psychic and age visibly - one grey streak, one new line at the eye. Permanent.
+     Cosmetic only. Players hate this far more than damage. Use it once.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE PARADOX CLOCKTOWER ===
+Location: a tower that is taller inside than outside and shorter going up than down
+Present: the party
+Goal: two puzzles, then a boss. This is the longest act. Pace it.
+
+[map:orins-tower-map|The Clocktower]
+
+[READ ALOUD]
+The tower is a clocktower the way a scream is a conversation.
+
+It is perhaps sixty feet across at the base and it goes up until it goes out of
+sight, and there are clock faces set into it at every height and every angle,
+including several that face directly into the stone. None of them show the same time.
+The hands on the nearest one are moving backwards, slowly, and confidently.
+
+The door is at the bottom and it is standing open, and beyond it the stairs go UP.
+
+You climb for what feels like ten minutes and arrive at a landing, and the landing
+has a door in it, and through the door is the outside of the tower again, at ground
+level, looking at the door you came in through, which is standing open, and you can
+see yourselves about to walk through it.
+[/READ ALOUD]
+
+[DM NOTE]
+THE LABYRINTH IS NOT MAPPED AND YOU DO NOT NEED TO MAP IT. Run it as a sequence of
+four LANDINGS. The party experiences them in order. Between landings, describe one
+paradox from the list. That is the whole structure - it feels enormous and it costs
+you nothing.
+
+PARADOXES between landings, pick freely:
+  - They pass themselves on the stairs going the other way. Neither group is a copy.
+    Both groups continue. Nobody feels good about it. If a player waves, they get a
+    wave back, and it is not the one they gave.
+  - A staircase that goes down to arrive above where it started.
+  - A window looking out at the party, from outside, three minutes ago.
+  - A room they have already been in, with their own footprints, and their own
+    footprints leaving by a door they have not used yet.
+  - A dropped coin that has not landed and will not land, hanging at knee height,
+    slowly rotating. It can be picked up. It is very slightly warm. {It is a normal
+    coin. It never lands again, for anyone, ever, including in their pocket.}
+
+LANDING ONE: nothing. A chair, and a book on the chair. The book is the tower's
+  logbook and every entry is in the same hand, and the last four hundred entries all
+  read: "Still Tuesday."
+
+LANDING TWO: THE ROPE ROOM - puzzle 1 below.
+LANDING THREE: THE LANTERN BRIDGE - puzzle 2 below.
+LANDING FOUR: THE RABBIT.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: PUZZLE - THE ROPE ROOM (landing two) ===
+
+[READ ALOUD]
+The landing opens into a round room with a locked iron door on the far side, and set
+into the door is a thick glass panel showing a mechanism inside: a bolt, held back by
+a spring, held in place by a wax seal.
+
+Above the door, painted in the neat cheerful hand you are starting to recognise:
+
+    THE BOLT DRAWS BACK FOR FORTY-FIVE MINUTES OF FIRE.
+    NOT A MINUTE MORE. NOT A MINUTE LESS.
+    THERE IS NO CLOCK IN THIS ROOM AND THERE NEVER WILL BE.
+
+On a hook beside the door hang two lengths of grey rope, and beneath them a tinderbox.
+
+A brass plate under the hook reads:
+
+    EACH ROPE BURNS FOR EXACTLY ONE HOUR, END TO END.
+    NEITHER ROPE BURNS EVENLY. HALF A ROPE IS NOT HALF AN HOUR.
+    YOU HAVE TWO ROPES. THERE ARE NO MORE ROPES.
+[/READ ALOUD]
+
+[DM NOTE]
+THE PUZZLE: measure exactly 45 minutes using two unevenly-burning one-hour ropes.
+
+THE SOLUTION:
+  - At time zero: light rope A at BOTH ends, and rope B at ONE end.
+  - Rope A, burning from both ends, is consumed in exactly 30 minutes, whatever the
+    unevenness, because the two flames together always eat the whole hour's worth of
+    rope at double rate.
+  - The instant rope A is gone (30 minutes), light the SECOND end of rope B.
+    Rope B has 30 minutes of burn left; from both ends that takes 15 minutes.
+  - Rope B is gone at 45 minutes exactly. The bolt draws back.
+
+RUNNING IT: the wax seal in the glass panel is your feedback. As soon as they light
+anything, the wax begins to soften. If they get it right, at the 45 minute mark the
+seal cracks and the bolt slams back. If they get it wrong - too long or too short -
+the wax RE-HARDENS and the ropes are restored on their hook, unburnt, as though
+nothing happened, and one clock somewhere in the tower gains an hour.
+  {THIS PUZZLE HAS INFINITE RETRIES. Say so implicitly by letting the first failure
+  reset cleanly. It removes all the pressure and makes the table settle in and
+  actually think, which is what you want. The cost of failure is TIME, and time is
+  about to matter enormously - see the Rabbit.}
+
+HINTS, spaced out:
+  1. The Gnome, if asked yes/no: "Can a rope be lit at both ends?" :) - that single
+     question cracks the whole thing for most tables and it is a completely fair use
+     of the tool.
+  2. A clock on the wall outside the room chimes the half hour. Someone will notice
+     that 30 is half of 60 and that half of the remainder is 15.
+  3. Direct, from a scratched note on the underside of the hook, if they are stuck
+     twenty minutes: "TWO ENDS BURN TWICE AS FAST. - T."
+
+ALTERNATE SOLUTIONS TO ACCEPT: a character with a reliable internal sense of time
+(a monk, a warforged, a spell) can simply count it. Say yes. Do not defend the puzzle.
+[/DM NOTE]
+
+[LOOT]
+  Coins: 0
+  Items: a coil of unburnt rope from the reset {it never runs out; it is the world's
+    most boring infinite resource and a smart party will find a use for it}
+
+------------------------------------------------------------
+
+=== SCENE: PUZZLE - THE LANTERN BRIDGE (landing three) ===
+
+[READ ALOUD]
+The stairs end at the edge of a gap.
+
+The tower's interior opens into a shaft, and the far side is sixty feet away across a
+bridge of clock hands - dozens of them, laid flat and lashed together, black iron,
+thin, and visibly not very well attached.
+
+There is one lantern. It is the only light. Twenty feet out from either end the dark
+is total, and the dark here is not empty; something in it is keeping pace with the
+lantern, just outside the edge of it, and you can hear it being careful.
+
+Painted on the last stair, in that same neat hand:
+
+    THE BRIDGE HOLDS TWO. NEVER THREE.
+    THE LANTERN DOES NOT THROW. THE LANTERN IS CARRIED.
+    WHAT IS IN THE DARK WILL NOT ENTER THE LIGHT.
+    AND IN NINETEEN MINUTES THIS SHAFT WILL BE FULL OF BELLS.
+[/READ ALOUD]
+
+[DM NOTE]
+THE PUZZLE: the whole party must cross. Two at a time, maximum. The lantern must be
+carried with any crossing group, and must be walked back for the next group. A pair
+crossing together moves at the SLOWER one's pace. Total time available: 19 minutes.
+
+CROSSING TIMES - assign these to the four slowest characters, or use these NPC-ish
+labels and let the party sort out who is who:
+    Fastest character:  1 minute
+    Second:             2 minutes
+    Third:              5 minutes
+    Slowest:           10 minutes
+  {If your party has more than four, the extras cross for free tucked between - or,
+  better, give them a time of 2 minutes each and add 2 minutes to the budget per
+  extra character. The puzzle's structure is unaffected.}
+
+THE NAIVE SOLUTION (the trap): the fastest shuttles everyone.
+    1+10 = 10, back 1, 1+5 = 5, back 1, 1+2 = 2. Total 19... which is EXACTLY the
+    budget, so a table that finds this has technically survived - but see below, the
+    bells are already ringing as the last foot lands. Let them have it. It is a win.
+    {Most tables find this. It is a legitimate answer to the riddle as posed and it
+    makes them feel clever. GOOD. If your table finds it fast, tighten the budget to
+    17 minutes and let them find the real answer.}
+
+THE ELEGANT SOLUTION (17 minutes) - the two slowest cross TOGETHER:
+    1 and 2 cross         -> 2 minutes   (total 2)
+    1 walks the lantern back -> 1 minute (total 3)
+    5 and 10 cross together  -> 10 minutes (total 13)
+    2 walks the lantern back -> 2 minutes (total 15)
+    1 and 2 cross            -> 2 minutes (total 17)
+  The insight is that the two slow characters should never be spent separately -
+  pair them so the 10 and the 5 happen at the same time.
+
+WHAT IS IN THE DARK: do not stat it. It never attacks. It only ever gets CLOSER, and
+it is always exactly at the edge of the lantern light, and once - just once, at your
+choosing - it should say a player's name, correctly, in that player's own voice.
+  If they take longer than the budget: the bells. Every clock in the tower strikes at
+  once. Anyone still on the bridge takes 4d6 thunder and must make a DC 14 Dexterity
+  save or fall. Falling is not death - they land, badly, forty feet down, in the
+  Inventory floor, take 3d6, and have to climb back up alone in the dark, which is
+  the actual punishment and it is enough.
+
+HINTS:
+  1. "The lantern always has to come back. Who is cheapest to spend on a walk back?"
+  2. The Gnome: "Will the two slowest walking together save us time?" :)
+  3. If truly stuck: a clock hand in the bridge has scratched into it, "TWO SLOW ONES
+     TOGETHER. THEY ONLY COST ONCE. - T."
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== ENCOUNTER: THE CLOCKWORKER RABBIT (landing four) ===
+Enemies: the Clockworker Rabbit (Appendix C)
+Terrain / hazards: the clock room - gears, seams of local time, a 200-foot drop
+Tactics: it does not want to kill them. It wants them to be LATE.
+Treasure: the pocket clock
+Scaling if the party struggles: it stops using Rewind; it uses Haste on the party
+  by accident once, and looks appalled
+
+[map:orins-tower-map|The Clock Room]
+
+[READ ALOUD]
+The top of the tower is one room and it is full of gears.
+
+They are the size of cartwheels and the size of dinner plates and one of them is the
+size of the room, and they are all turning, and they are all turning at different
+speeds, and about a third of them are turning the wrong way.
+
+In the middle of it, on a stool that is too small for it, there is a rabbit.
+
+It is four feet tall. It is wearing a waistcoat that used to be very fine. Its fur
+was white once. It has the exhausted, over-groomed look of something that has been
+holding still for a very long time on purpose.
+
+It is holding a pocket watch in both hands, the way you would hold a bird.
+
+Without looking up, it says:
+
+"You're four minutes early and I hate you for it."
+[/READ ALOUD]
+
+[DM NOTE]
+TALK FIRST. This is not a fight you should open with initiative. The Rabbit will
+converse, at length, in a state of total exhaustion, and everything it says is true:
+  - "I am not her servant. Do stop saying that."
+  - "She put the clock in my hands and closed my hands. That is the whole of it."
+  - "If it stops being stopped, the cat comes back. If the cat comes back, she notices.
+    If she notices, she comes HERE. Do you understand what you are asking me to have
+    happen to me?"
+  - "No. No, you may not have it. I am sorry. I am extremely sorry. No."
+
+>> CHOICE << three routes, all valid:
+  A) FIGHT IT. Straightforward. See the statblock. It is a nasty, tricky, mobile
+     fight and it is the intended default.
+  B) CONVINCE IT. [CHECK] Persuasion DC 20, with ADVANTAGE and a -5 to the DC if the
+     party can offer any of the following, which they may well have:
+       - the Queen's heart restored (word travels; the Rabbit weeps at this)
+       - a promise, sworn on something the Rabbit can verify with the Gnome
+       - Margaret's Thread, offered to it {"...for after. For when she looks at me."}
+     On a success it hands over the clock, sits back down, and says "Thank you. Do it
+     quickly, please, I should like to see it." Then it closes its eyes and waits.
+     {This is the best outcome and the hardest. Let it be possible.}
+  C) STEAL IT. The clock is in its hands and its hands are closed. A DC 20 Sleight of
+     Hand, at disadvantage, with a truly excellent distraction. If the Gnome causes a
+     distraction {roll the table - if the result is loud, grant advantage}, allow it.
+     On a failure the fight starts with the Rabbit having a surprise round.
+
+THE FIGHT - TIME TRICKS. Use these and do not hold back; the fight is short:
+  - REWIND (recharge 5-6): the Rabbit undoes the last round. Rewind ALL damage dealt
+    since the start of its previous turn, on both sides, and everyone re-takes their
+    turn in the same initiative order. {Do this ONCE, maximum twice. It is
+    spectacular the first time and infuriating the third. It also, importantly, does
+    not undo player CHOICES - let them do something different this time. That is the
+    point of the mechanic: it teaches them the room.}
+  - LATE: as a bonus action, it touches a creature. That creature's next turn happens
+    at the very bottom of the round order instead of where it should. No save.
+  - SEAMS: the room has four shimmering seams of local time. The Rabbit crosses them
+    constantly. A creature that starts its turn in a fast seam gets an extra action;
+    a creature in a slow seam has its speed halved and cannot take reactions. The
+    seams MOVE at the end of each round - roll a d4 for which quadrant is fast and
+    which is slow, and tell the players before they act. {This makes positioning the
+    whole fight. Players love it.}
+  - It never attacks a downed character. Not once. It says "that's enough" and moves
+    on. Make sure the table notices.
+
+AT 0 HIT POINTS it does not die. It sits down hard, and its hands come open.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE PIN ===
+Goal: the reveal, and the trigger for the whole endgame
+
+[READ ALOUD]
+The pocket watch is heavier than it looks and warmer than it should be.
+
+It is beautiful - rose gold, worn smooth, engraved with a pattern of leaves that
+someone once loved. The glass is fogged from the inside.
+
+The hands are not moving.
+
+They are TRYING to move. You can feel it through the case, a constant, straining,
+insect pressure, like something small and desperate pushing against a door. It has
+been pushing for sixty years.
+
+You turn it over.
+
+Driven straight through the back of the case, into the works, bent over on itself and
+hammered flat so it cannot slide out, is a hairpin.
+
+It is a little girl's hairpin. Cheap. Pretty. Enamelled with a pattern of daisies.
+
+Scratched along its length, in the wobbly capitals of a child who has just learned to
+write her own name and is still very proud of it, it says:
+
+    A L I C E
+[/READ ALOUD]
+
+[DM NOTE]
+Let this sit. Do not narrate over it. Somebody at the table will say something.
+
+Pulling the pin out takes an action and no roll. Anyone can do it. Ask WHO does it
+and write their name down; it matters in Act 6 - the Cheshire will thank that person
+specifically and by name, and being thanked by that thing is a mixed blessing.
+
+The Rabbit, watching, says only: "Yes. Go on."
+
+WHEN THE PIN COMES OUT - read the next block immediately, no pause, no questions.
+[/DM NOTE]
+
+[READ ALOUD]
+The pin comes out with almost no resistance at all. It has been waiting.
+
+The second hand moves one tick.
+
+And every clock in the tower goes off at once.
+
+Not chiming - SCREAMING. Ten thousand bells and cuckoos and gongs and alarms, all
+firing simultaneously, all of them sixty years overdue, and the sound is a solid
+thing, it is a wall, it is in your chest and behind your eyes.
+
+And the world starts to age.
+
+The gears go orange with rust as you watch. The waistcoat on the rabbit greys and
+frays and comes apart at the shoulder. The candles - the ones that never burned
+down - go down all at once like a dropped curtain, and the floor of the world, that
+endless floor of shoes and plates and keys and hats, dulls and softens and begins to
+sag, sixty years arriving all in one place at one time.
+
+Below you, distantly, something enormous made of found objects collapses inward.
+
+And a mile above your heads, the circle of red sky that was your way out closes with
+a small polite sound.
+[/READ ALOUD]
+
+------------------------------------------------------------
+
+=== SCENE: THE GRIN ===
+Goal: rescue, in the worst possible shape
+
+[READ ALOUD]
+Between one blink and the next, there is a face in the room.
+
+It is enormous. It is thirty feet from ear to ear, and it is not attached to a body,
+and it is not attached to anything at all - it is simply THERE, occupying the space
+where the far wall was, in front of the gears and behind them at the same time.
+
+It is a cat's face. Grey and green and grinning, and the grin has too many teeth in
+it by a factor of about four.
+
+It says - and its voice arrives inside your ribs rather than your ears -
+
+"OH, thank you. Thank you, honestly, genuinely, thank you. Do you know how long I have
+been lying on that table? I do. It was one moment. It was the SAME moment. Sixty
+years of the same moment, and you have no idea, none, what that is like.
+
+Now. I would run, if I were you, and I am not, and I have never been more relieved
+about anything.
+
+This place is coming apart and everything in it is coming apart with it, including
+the parts of it that you are standing on and the parts of it that are you."
+
+The grin widens. It keeps widening. It goes on widening past the point where it is a
+grin at all, and the mouth opens, and it opens further, and it is a doorway, and it
+is wet, and there is a room on the other side of it with mirrors in it.
+
+"In you get."
+[/READ ALOUD]
+
+[DM NOTE]
+>> CHOICE << and it is a real one - do not push them:
+
+  A) GO INTO THE MOUTH. It is exactly as unpleasant as it sounds. It is warm and it
+     smells of pennies and the walk is about four steps and takes about a minute.
+     They arrive in the Mirror Lair. No cost. {Ask each player individually. Make
+     them each say it out loud. "You. Do you walk into the cat's mouth?"}
+
+  B) REFUSE. Anyone who refuses, the Cheshire regards with real approval, and says:
+     "Sensible. Horrid, but sensible. Then find a mirror. Any mirror. Look into it
+     and want to be somewhere else more than you want to be here - properly want it,
+     not politely - and walk in. Mirrors are doors and always have been. Everyone
+     knows that. Everyone just doesn't do it."
+     They now need a mirror, at speed, in a collapsing world. THEY HAVE ONE if they
+     picked up the Sinister Inventory mirror earlier. If they did not:
+       [CHECK] Investigation DC 12, one attempt per character, in the aging debris.
+       Success: a hand mirror, tarnished. Failure: 3d6 bludgeoning as a tower of
+       fused furniture comes down on them, and they may try once more.
+     No character can actually fail their way out of this scene. If they run out of
+     rolls, the Rabbit throws them its own shaving mirror without a word.
+
+  C) SOMETHING ELSE ENTIRELY. Teleport, plane shift, dig, climb for the closing brim,
+     open a portal. Say YES to all of it - and then have it deliver them to the Mirror
+     Lair anyway, because the Cheshire's lair is between everywhere and everywhere
+     else and there is nowhere else to arrive from here. Do not make this feel like a
+     rail. Let the clever plan work perfectly and land in the same room.
+
+THE RABBIT: it does not come. Ask them if they invite it - most parties do. It says:
+"No. Thank you. I have been late for sixty years and I should very much like to be
+on time for one thing." And it sits on its stool with its empty hands open and waits
+for the ceiling. {If a player physically drags it out, allow it. It survives, it is
+inconsolable, and it becomes an NPC for the rest of the campaign who is extremely
+useful and extremely sad. That is a good outcome. Do not block it.}
+[/DM NOTE]
+
+
+============================================================
+== ACT 6 - THE MIRROR LAIR
+============================================================
+
+=== SCENE: THE ROOM OF DOORS THAT ARE NOT DOORS ===
+Location: nowhere in particular, between everywhere
+Present: the Cheshire
+Goal: breathe. Give lore. Hand out the gear. Then aim them at Alice.
+
+[map:gilded-stag-upper|The Mirror Lair]
+
+{This is the only safe scene in the chapter. Let it be genuinely calming for about
+four minutes before the Cheshire ruins it. Players need one place to sit down.}
+
+[READ ALOUD]
+The room is small, and warm, and entirely made of mirrors.
+
+Floor, ceiling, all four walls - mirrors, in every shape: shaving mirrors, wardrobe
+mirrors, hand mirrors, a cracked one the size of a barn door, dozens of little oval
+ones in tarnished frames. They do not agree about how many of you there are.
+
+There is a rug. There is a low fire in a grate that has no chimney. It is the first
+warm, ordinary, kind thing any of you have seen since you left the cave, and it is
+very hard not to sit down.
+
+The cat is in the mirrors.
+
+Not in the room - in the MIRRORS, moving between them, appearing in one, crossing
+behind your reflection, and stepping out of another one across the room. It is
+enormous in some and kitten-sized in others. In one, very briefly, it is nothing but
+a long wet red shape on a stone table with its ribs opened out like a book, and then
+it moves on and that mirror is empty again.
+
+"Sit," it says. "You have about a quarter of an hour and then it stops being safe,
+and I am afraid I am going to spend most of that talking."
+[/READ ALOUD]
+
+------------------------------------------------------------
+
+=== SCENE: WHAT THE CAT KNOWS ===
+Goal: the lore drop. Deliver it as ANSWERS to their questions, not as a speech.
+
+[DM NOTE]
+Do not monologue. Let them ask. Below is everything it will tell them, in the order
+it usually comes up. If they do not ask, it does not say. A party that leaves this
+room without asking the right questions goes into Act 7 half-blind, and that is a
+legitimate consequence of not asking - but the three items in the next scene are
+given UNCONDITIONALLY, so no party is ever doomed by it.
+
+ON WHAT THIS PLACE IS:
+  "Wonderland is not a place. It is a habit. It runs on imagination the way a mill
+   runs on water. Whatever is imagined most FIRMLY here becomes the most true thing
+   here. That is the whole physics of it, and it is why everything is so stupid."
+
+ON HER:
+  "She was a guest. Do you understand? She fell in like a coin down a drain and we
+   were POLITE to her. She was nine. She is still nine. She will always be nine,
+   because she never once imagined being anything else, and here that is all it takes.
+   She is not strong. She has the arms of a small girl and I could have killed her
+   with one paw at any point in the first year.
+   She simply believes harder than the rest of us, and that turns out to be the only
+   statistic that matters."
+
+ON THE MOUTHS:
+  "She likes interesting things. Interesting things get her attention. Her attention
+   is a disease. So they made themselves boring, in the only permanent way anyone
+   could think of, and it WORKS, and that is the single most damning fact about my
+   world."
+
+ON ITSELF:
+  "She gutted me on her table looking for something. She did not find it. I am
+   extremely pleased about that and it cost me approximately everything."
+  {If asked what she was looking for, the cat's grin does not change and it says
+  nothing at all for four full seconds and then changes the subject. It knows. It
+  will not say tonight. Next chapter.}
+
+ON THE FIRST TRAVELLER:
+  "There was a man before her. He mapped all of this. He wrote down what it is and
+   how it works and what is on the other side, and he split the record up and hid the
+   pieces inside the residents, because we were the only lockboxes he had.
+   She has been collecting the pieces ever since. She has all of them but one."
+
+ON THE LAST NOTE - the mission:
+  "The last page is in her house. She keeps it close because it is the only object in
+   this world that frightens her, and she is a child, and children keep the frightening
+   thing under the pillow where they can watch it.
+   You want that page. You want it because it says how to LEAVE, and because you are
+   going to want to know what it says the moment you are safe, and because as long as
+   she has it, nobody else ever gets out. Not you. Not the boy with the hoop."
+
+ON FIGHTING HER - say this slowly and clearly, it is the mission briefing:
+  "Do NOT fight her.
+   I want to be precise, because you are the sort of people who hear that as a
+   difficulty setting. I do not mean it will be hard. I mean it is not a fight. It is
+   a category error. She does not have hit points in any sense you would find useful.
+   You will hit her and she will decide she was not hit.
+   Go in. Do not be interesting. Take the page. Leave.
+   If she looks at you - properly LOOKS at you - then you have already made the only
+   mistake that was available to you, and the rest is up to how fast you can run."
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE GIFTS ===
+Goal: hand out the Act 7 toolkit. Do not skip. Do not let them decline.
+
+[READ ALOUD]
+"Now. You are going into her house with nothing, which is charming, so I shall fix it."
+
+The cat reaches into a mirror - into it, up to the shoulder, and the reflection of its
+arm does not go the same way - and takes things out, and drops them on the rug.
+[/READ ALOUD]
+
+[DM NOTE]
+Give ALL of these, regardless of what the party did or asked. Read each aloud with
+its instruction. Full stats in Appendix B.
+
+  1. THE GRIN (one per character). A small curved sliver of white, like a tooth or a
+     nail paring. "Put it under your tongue. While it is there you make no sound at
+     all - none, not footsteps, not breath, not a scream. It does not make you
+     invisible and it will not stop you being STUPID."
+     {Mechanically: advantage on Stealth, and automatic silence. It cannot be used to
+     speak, cast with verbal components, or shout a warning. Choosing when to spit it
+     out is the whole point of the item.}
+
+  2. THE UNMIRROR (one, for the party). A hand mirror with no reflection in it at all.
+     "Show this to a thing that is pretending. It will stop pretending. It will be
+     very cross about it, but it will stop."
+     {Reveals any mimic, illusion or disguise within 30 feet for one round. Three
+     uses; the glass cracks a little more each time. This is the tool for the Doll
+     Room and it is not the ONLY tool - see the puzzle.}
+
+  3. THE NAME OF A DOOR (one, on a folded scrap). "You may not read it. Not yet, and
+     not here. When you are in her house and you want to be out of her house, unfold
+     it and read what is on it aloud, and there will be a door, and it will be
+     exactly where you need it to be, once."
+     {This is the escape hatch for Act 8. It works exactly once and it works
+     absolutely. If they open it early: it is blank, and stays blank, and they have
+     wasted it. Say so plainly BEFORE they do it, once. Then let them.}
+
+  4. To whoever pulled the pin, specifically and by name - the Cheshire looks at them
+     for a moment too long and says:
+     "And you. You put me back. I owe you a thing, and I always pay, and you will not
+      enjoy how." {Write this down. It is a next-chapter hook. Do not resolve it.}
+
+FINAL LINE, as they leave - this is the Act 7 rules briefing, disguised as a joke:
+[/DM NOTE]
+
+[READ ALOUD]
+"One last thing, and I cannot stress this enough.
+
+In her house, almost everything is pretending to be furniture.
+
+Not most things. Not many things. ALMOST EVERYTHING. The chairs. The stairs. Three of
+the four walls in the hall, on a bad day. Her house is a mouth with wallpaper.
+
+The good news is they are stupid and they will not move until you touch them.
+
+The bad news is she has counted them, and she will know."
+[/READ ALOUD]
+
+============================================================
+== ACT 7 - THE DOLLHOUSE
+============================================================
+
+{THE HORROR ACT. Slow down. Speak more quietly than you have all night. Make the
+players describe exactly where they are standing and what they are touching.}
+
+{TONE THIS ACT: saying the name out loud in this room adds 1 to the Notice track.
+Tell them that rule before the scene starts - it is the only time all night you
+explain the taboo instead of showing it, and it works precisely because you spent
+seven acts not explaining it. Shadows: she has one. She is the only thing in
+Wonderland that does. Do not point at it. Just describe it, once, moving when she
+moves, and let whoever notices go cold.}
+
+=== SCENE: THE HOUSE ===
+Location: Alice's layer
+Present: her
+Goal: establish the Notice track before anything else happens
+
+[map:barrow-crypt-map|The Dollhouse]
+
+[READ ALOUD]
+You step out of a mirror into a nursery.
+
+It is enormous - the ceiling is sixty feet up - and it is scaled for something the
+size of a house. The rug is the size of a village green and the pattern in it is
+rabbits. The wallpaper is yellow, with roses, and it is peeling in long curls high up
+where nobody could ever have reached to start it.
+
+There is a dollhouse against one wall. It is fourteen feet tall. Through its little
+windows you can see rooms, and in the rooms there are figures, and they are people
+you have seen: a woman with a slate; a man in a very tall hat; a queue of tiny
+figures on a tiny road, holding tiny pieces of paper.
+
+The far end of the nursery is a table. On the table is a shape under a white cloth,
+long and low, and the cloth has been white for a long time except in one place.
+
+And in the middle of the floor, sitting cross-legged with her back to you, there is a
+little girl in a blue dress, and she is playing.
+
+You can hear her doing all the voices.
+[/READ ALOUD]
+
+[DM NOTE]
+SET UP THE NOTICE TRACK NOW, in the open, where the players can see it.
+Put six tokens, six coins, or six tally marks on the table. Tell them exactly this:
+
+  "This is how much of her attention you have. At six, she looks up. You do not want
+   to know what happens at six. Yes, you can spend the whole scene watching it."
+
+WHAT ADDS NOTICE (add 1 each, silently, and let them SEE the counter move):
+  - Any loud noise: a dropped item, a fight of more than one round, a shout.
+  - Any spell cast with a verbal component within 60 feet of her.
+  - Waking a mimic without the Unmirror.
+  - Being interesting: a magnificent joke, a beautiful lie, a piece of showing off.
+    {Yes, really. Tell them this rule. It creates the most delicious tension of the
+    night, because your players are exactly the sort of people who cannot resist
+    being interesting, and now it is a resource they have to spend.}
+  - Speaking her name aloud. Add 2 for this one.
+
+WHAT REMOVES NOTICE (remove 1 each):
+  - Complete stillness and silence by the whole party for one full minute.
+  - Margaret's Thread, used on a character's own mouth {Appendix B}. Once per thread.
+  - Doing something profoundly boring in her sight line. A player who has their
+    character tidy up, count things, or sort objects by size removes 1 and deserves it.
+  - The Gnome doing something so loud and stupid elsewhere in the house that it draws
+    her ear. {You may offer this once. It costs the party their Gnome for a scene.}
+
+AT SIX: she looks up. Go to THE LOOK, below. She will hit six eventually. That is the
+design. The track is not about avoiding her - it is about controlling WHEN.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: WHAT SHE IS PLAYING ===
+Goal: the most upsetting thirty seconds of the session. Deliver it deadpan.
+
+[READ ALOUD]
+She has laid out a little scene on the rug.
+
+There is a village made of blocks. There are perhaps forty figures standing in it,
+each one about three inches high, each one beautifully made, each one with a tiny
+black stitch across the face where the mouth should be.
+
+She is moving them around. She is doing the voices - all of them, in a bright little
+sing-song, one after another:
+
+"Good MORNING. Good morning. Lovely day. Lovely day. Have you heard, have you heard.
+No I haven't. No I haven't. Isn't it AWFUL. Isn't it awful."
+
+She picks up one of the figures - a small one, a boy, with a hoop - and she looks at
+it for a moment, and she says, in her own voice, quite thoughtfully:
+
+"You're boring now."
+
+And she puts him in her mouth, and there is a small sound, and she goes back to
+playing with the others.
+
+She has not turned around. She does not know you are here.
+
+Yet.
+[/READ ALOUD]
+
+------------------------------------------------------------
+
+=== SCENE: PUZZLE - THE DOLL SHELF ===
+Location: between the party and the table with the cloth
+Goal: a puzzle under stealth pressure, with a loud failure state
+
+[READ ALOUD]
+Between you and the table there is a shelf at floor level, running the length of the
+room, and you have to pass along it, and there is no other way that does not cross her
+sight line.
+
+On the shelf, sitting in a neat row, there are nine porcelain dolls.
+
+They are identical. Same size, same painted face, same blue dress, same little shoes.
+They are facing out. They are facing you.
+
+One of them is not a doll.
+
+You know this the way you know a wasp is in the room. One of them is heavier than a
+porcelain doll should be, because one of them is full.
+[/READ ALOUD]
+
+[DM NOTE]
+THE PUZZLE: identify the mimic among nine, using the brass scales that are sitting on
+the shelf beside them {a doll's tea-set balance, big enough for four dolls a side}.
+
+  - All nine look and feel identical.
+  - The mimic is HEAVIER. The party knows this - the Cheshire warned them, or a
+    [CHECK] Nature DC 10 confirms mimics are denser than what they imitate.
+  - You may use the scales TWICE. On the third use the scales creak loudly enough to
+    add 1 Notice, and every use after that adds 1 more.
+  - Touching a doll to pick it up is safe. Touching THE mimic wakes it. Putting dolls
+    on the scale is not touching them enough to matter. {Say this rule out loud.}
+
+THE SOLUTION - two weighings, guaranteed:
+  Weighing 1: split into three groups of three. Put group A on the left, group B on
+    the right, leave group C on the shelf.
+      - If the scales BALANCE, the mimic is in group C.
+      - If one side is heavier, the mimic is in that group.
+  Weighing 2: take the group of three. Put one doll on the left, one on the right,
+    leave one off.
+      - Balance means it is the one left off. Otherwise it is the heavy side.
+  Two weighings. Nine dolls. Always works.
+
+  {The failure most tables make is weighing one against one, six times. Let them. The
+  scales creak. The counter climbs. They will feel the mistake in their spine and
+  they will fix it themselves, which is much better than you fixing it for them.}
+
+FOR A CONFIDENT TABLE - the hard version: twelve dolls, and you do NOT know whether
+  the mimic is heavier or lighter, and you get three weighings. That is the full
+  classic and it is genuinely hard. Offer it only if your players ask for more.
+
+ALTERNATE SOLUTIONS - all of these work, no argument:
+  - The UNMIRROR. Burns a charge. Instant. This is a completely valid use and it is
+    why they have three charges; spending one here is a real cost for Act 8.
+  - The GNOME. Two or three yes/no questions and it is solved. Also completely valid.
+    {If they use the Gnome here, quietly enjoy it: they have now used the same tool
+    to solve four different puzzles tonight, and that is the arc of the Gnome.}
+  - Detect Magic, a familiar sent to touch each, a thrown pebble, a druid's sense of
+    smell. Say yes. Say yes to all of it.
+  - Simply not going along the shelf: crawling under it, going over, or across the
+    rug in her sight line with the Grin under their tongues. Allow it. It is a DC 16
+    group Stealth check and failure adds 2 Notice and starts the mimics anyway.
+
+IF THEY WAKE IT: see the encounter below. Add 1 Notice immediately.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== ENCOUNTER: THE FURNITURE ===
+Enemies: 1 mimic if they were careful, 4 if they were not, plus 2 per round of noise
+Terrain / hazards: everything is a mimic, including things behind them
+Tactics: they do not pursue. They HOLD. Each mimic that grabs a character stops that
+  character from moving, and the horror is being pinned in the open while the counter
+  climbs.
+Treasure: nothing. Mimics in her house eat and eat and never keep anything.
+Scaling: this fight is not meant to be survived by killing things. Reward disengaging.
+
+[DM NOTE]
+Use MIMIC (CR 2) from the campaign, with two changes:
+  - They are silent. Completely. No roar, no shriek. A character being crushed by one
+    makes more noise than the mimic does, which is the entire problem.
+  - They do not chase. A mimic that loses its grip goes back to being a chair, in
+    place, and waits. The party can simply LEAVE. Tell them so by demonstration:
+    have one release a character and become a footstool again, mid-fight, pointedly.
+
+EVERY ROUND OF COMBAT ADDS 1 NOTICE. Say the number out loud each round. Watch the
+table's behaviour change. This is the best mechanic in the chapter and it costs
+nothing to run.
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE TABLE AND THE NOTE ===
+Goal: the objective. Then everything goes wrong.
+
+[READ ALOUD]
+The table is fourteen feet long and the cloth over it is heavy and stained in exactly
+one place, an old brown stain about the size of a wagon wheel, right in the middle.
+
+Under the cloth, the shape is long, and low, and it has not moved in sixty years,
+and it does not smell of anything at all, which is the wrongest part.
+
+Pinned to the cloth with a hairpin - a cheap, pretty one, enamelled with daisies,
+identical to the one you took out of the clock - there is a single sheet of paper.
+
+It is folded twice. It is very old. The ink is brown.
+
+You can read the first line without unfolding it:
+
+    "If you are reading this, you are not the first, and I am so terribly sorry."
+[/READ ALOUD]
+
+[DM NOTE]
+DO NOT LET THEM READ THE REST TONIGHT. If they try, the words move. Every time. It is
+readable only somewhere that is not Wonderland, which is a fact they can establish
+with one [CHECK] Arcana DC 12 and which is also the entire hook for next chapter.
+
+TAKING THE NOTE OFF THE PIN: an action. And it adds 2 NOTICE, automatically, no save,
+no stealth check, nothing. Say so before they do it:
+  "Taking this will put the counter up by two. Do you want to do it now, or do you
+   want to get everyone into position first?"
+{This is the single best decision point in the chapter. Let them plan. Let them set
+up an escape route, a distraction, a marching order, a Gnome deployment. Give them
+five real minutes of table time. Then let them pull the pin.}
+
+WHATEVER THE COUNTER IS AT, WHEN THE NOTE COMES OFF THE PIN, SHE LOOKS UP.
+{If the counter did not reach six, she looks up anyway, but the party gets one full
+round of free movement first, and they have earned it, and it may well save a life.}
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE LOOK ===
+Goal: terror. This is not a fight yet. Do not roll initiative.
+
+[READ ALOUD]
+She stops doing the voices.
+
+The silence that arrives is enormous. The little figures on the rug stand exactly
+where she left them, mid-conversation.
+
+She turns her head. Just her head, first, over her shoulder, the way a bird does.
+
+She is nine years old. She has a round face and a slightly upturned nose and a
+smudge of something on her cheek. Her hair is fair and badly brushed and there is a
+hairpin missing from it. Her dress was blue once. There are three buttons undone at
+the collar and one of them is missing.
+
+She looks at you with an expression of absolutely genuine, uncomplicated delight.
+
+"Oh," she says. "Oh, you're NEW."
+
+She stands up. The room does not get darker or colder or louder. Nothing dramatic
+happens at all, and that is what is wrong with it.
+
+"Say something new," she says. "Go on. Say something I haven't heard."
+
+And behind her, every single piece of furniture in a sixty-foot room stands up.
+[/READ ALOUD]
+
+------------------------------------------------------------
+
+=== ENCOUNTER: RUN ===
+Enemies: Alice (Appendix C), and the house
+Terrain / hazards: all of it
+Tactics: she does not chase. The house does. She strolls.
+Treasure: their lives
+Scaling: see below - this fight has a fixed ending and cannot be lost
+
+[DM NOTE]
+READ THIS BEFORE YOU RUN IT. This encounter is a SCRIPTED THREE ROUNDS. It is not a
+fight the party can win, and it is not a fight the party can lose, and you must run
+it so that they believe both of those things are false.
+
+  ROUND 1 - THE HOUSE COMES. Every mimic in the room animates: use 8 mimics, or as
+    many as you can be bothered to track, and treat them as a hazard rather than
+    creatures - at the end of each character's turn, if they are within 10 feet of any
+    furniture, DC 14 Dex save or take 2d6 and be grabbed (escape DC 13).
+    Alice does nothing at all this round. She is choosing.
+
+  ROUND 2 - SHE PLAYS. On her turn she does exactly ONE of these, chosen for maximum
+    theatre, and it does not miss and it does not allow a save, because she is not
+    casting anything, she is deciding:
+      - "You're a chair." One character becomes a chair until the end of Alice's next
+        turn. They can see and hear. They cannot act. They are a nice chair.
+      - "That's not yours." The Last Note is in her hand. It was in their hand. It is
+        now in her hand. {If she does this, the party must take it back to escape -
+        see below - which is a superb complication. Use it if the fight feels flat.}
+      - "Down." Every character within 30 feet is prone and takes 3d6 bludgeoning as
+        the floor becomes briefly, sincerely, the ceiling.
+      - She simply walks up to whoever is most interesting, takes their hand, and
+        says "come and see". If nobody stops her, that character is at 0 hit points.
+        Anyone may stop her by being MORE interesting, immediately, out loud, with a
+        real line from the player. If the player says something genuinely good, it
+        works, and she turns to them instead, and now it is their hand she is holding.
+
+  ROUND 3 - THE GNOME.
+    At the top of round 3 - before anyone acts, before initiative, before anything -
+    stop the table. Then read THE ENDING, below.
+
+WHAT IF THE PARTY IS WINNING? They are not. Any damage dealt to Alice is described as
+landing and then not having landed. "The axe goes into her shoulder and she looks at
+it, and then it hasn't." Do this once, coldly, and the table will understand the
+category of thing they are dealing with.
+
+WHAT IF A CHARACTER DIES? Nobody dies here. Characters go to 0 and are stable. She
+does not kill things she is enjoying. Death saves are made at advantage in this room
+because she is, in her way, being careful with her toys. {If your table has a
+character who has been begging for a heroic death all campaign - let it happen here,
+and let it be the reason the others get out, and give them the biggest moment in the
+chapter. Otherwise: nobody dies.}
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE ENDING ===
+Goal: the payoff for eight hours of a lawn ornament
+
+[DM NOTE]
+Do this properly. Stand up if you are the sort of DM who stands up.
+
+Say, out loud: "Before anyone goes - the Gnome takes its turn."
+Then pick up a die and roll it in the open, where they can all see, and it does not
+matter what it says, and DO NOT LOOK AT IT. Then read this.
+[/DM NOTE]
+
+[READ ALOUD]
+The garden gnome has been standing by the skirting board this entire time.
+
+Nobody put it there. Nobody has been carrying it since the tower. It is eleven inches
+of painted ceramic with a chipped boot, and it has been there for the whole fight,
+and it has not done anything at all.
+
+Its face clicks.
+
+Not to a smile. Not to a frown. To something else - a third face, which none of you
+have seen, which none of you knew it had, and which none of you will ever be able to
+describe afterwards, and which every single one of you will try to.
+
+Nine feet above Alice's head, the air stops being air.
+
+There is no sound. That is the part that stays with you. There is a sphere of perfect
+black about the size of a cartwheel, and it is not dark, it is EMPTY, it is a hole in
+the fact of the room, and the light near it bends towards it and does not come back.
+
+Alice looks up.
+
+For the first time all night, her face does something other than delight. She has
+just enough time for it - a quarter of a second of a nine-year-old girl looking up
+and realising - and then her hair goes upward, and then she goes upward, and she is
+drawn into it in absolute silence, all at once, without a scream, without a sound,
+like water going down a plughole.
+
+The wallpaper follows her. Then the dolls. Then the far wall.
+
+The sphere hangs there, quietly eating the room.
+
+And the gnome's face clicks back to a smile.
+[/READ ALOUD]
+
+============================================================
+== ACT 8 - OUT
+============================================================
+
+=== SCENE: THE PLUGHOLE ===
+Goal: fifteen minutes of pure downhill panic, and then daylight
+
+[map:barrow-crypt-map|The Dollhouse - Collapsing]
+{Same map as the nursery. Mark the far end and eat it, ten feet a round, in front of
+them. A map that visibly gets smaller does more for panic than any description.}
+
+[DM NOTE]
+THE CLOCK: the black sphere consumes 10 feet of the room per round, from the far end,
+and it accelerates. Once the party is moving, count down out loud from six. Do not
+roll for it. Just count. "Six." "Five."
+
+WAYS OUT - all valid, and they will probably use more than one:
+  A) THE NAME OF A DOOR. They unfold the Cheshire's scrap and read it aloud, and a
+     door is exactly where they need it. It opens onto the hillside above the dead
+     forest, in the red light, exactly where Act 0 ended. This is the clean exit.
+  B) THE HAT. If they still have it, they can go into it - but the Inventory World
+     aged to dust in Act 5, so what they arrive in is a grey powdered plain under a
+     falling ceiling. It works, it is horrible, it costs each of them 2d6 and one
+     random non-magical item, ruined. {Excellent choice for a party who lost the
+     scrap.}
+  C) A MIRROR. Any mirror, wanted at hard enough. The Cheshire told them how. If any
+     player quotes that instruction back at you, let it work instantly and beautifully.
+  D) THE CAT. It appears in the last unswallowed mirror in the room, grins, and holds
+     the doorway open with what is visibly some effort. "I said I always pay. I did
+     not say I would enjoy it. IN."
+  {If they take route D, the Cheshire's debt to the pin-puller is considered paid,
+  which is worse for them narratively and better for them immediately. Let them
+  choose it without warning them. Note it for next chapter.}
+
+THE GNOME: it is standing by the door, whichever door they choose, before they get
+there. Of course it is. If a player picks it up, it permits this. It weighs eleven
+pounds. Somebody will complain about carrying it, and everybody at the table will
+laugh, and that is exactly the right note to end eight hours of this on.
+[/DM NOTE]
+
+[READ ALOUD]
+You come out onto a hillside, and the sky is still red, and the trees are still black,
+and nothing about this world has been fixed by anything you did tonight.
+
+But down in the village, a door is open. Not much. Four inches.
+
+There is an old woman standing in it, and she has a slate in her hand, and she is
+watching the castle on the horizon, where somebody has raised a lamp in the highest
+window and is swinging it, slowly, back and forth, in a signal that nobody in this
+world has had a reason to use in sixty years.
+
+And out of the dark behind you, in the tunnel you came from, there is a sound.
+
+It is a sound you have not heard since you got here.
+
+It is somebody laughing. Properly. Out loud.
+
+You have no idea whose it is.
+[/READ ALOUD]
+
+[DM NOTE]
+END THE SESSION THERE. Do not answer the question. Do not let them investigate the
+laugh. Say "that's where we stop" and close the book.
+
+{The laugh is the Mad Hatter's, from inside the Joker card. He is free-er than he was.
+That is next chapter's opening scene and it will be waiting for them.}
+[/DM NOTE]
+
+------------------------------------------------------------
+
+=== SCENE: THE AFTERMATH ===
+Goal: five minutes. Read only the lines that their scrap of paper earned them.
+
+{Do this AFTER the laugh, after you have closed the book, while they are packing dice
+away and levelling up. Deliver each one flat, like a fact, and do not discuss it.
+This is where eight hours of tracked decisions get handed back to them, and it is the
+difference between a good session and one they talk about for a year.}
+
+  IF THE CAVE MOUTH WAS SEALED IN ACT 0
+[READ ALOUD]
+The tunnel you came out of is not there. There is a hillside, and a scar of fresh
+rock, and your own spikes driven into it from the other side.
+[/READ ALOUD]
+    {They are in Wonderland's hillside with no way back to the campaign world except
+    the Last Note. Do not solve this tonight. Let them sit with it.}
+
+  IF THE CAVE MOUTH WAS NOT SEALED
+[READ ALOUD]
+The tunnel is open, and it is quiet, and the thing that chased you in here three days
+ago is nowhere in it. Something moved it. Nothing in this world is strong enough to
+have moved it.
+[/READ ALOUD]
+
+  IF THE QUEEN GOT HER HEART BACK
+[READ ALOUD]
+On the horizon, the spade-shaped castle has lowered its portcullis for the first time
+in sixty years, and the queue is walking in. All of it. At once.
+[/READ ALOUD]
+    {She is an ally next chapter. She will not say so and will deny it if asked.}
+
+  IF THE QUEEN DID NOT GET HER HEART BACK
+[READ ALOUD]
+On the horizon, the castle is dark, and the queue is still standing in the road, and
+it is longer than it was this morning.
+[/READ ALOUD]
+    {She is not an enemy either. She is simply still filing. That is worse.}
+
+[DM NOTE]
+  WHOSE NAME THE QUEEN KEPT
+    That character does not dream tonight. They do not dream tomorrow night either.
+    On the third night they dream of standing in a queue, holding a piece of paper
+    with their own name on it, waiting to be let in. {One line, once a session, until
+    they get the name back. Never more than one line.}
+
+  WHOEVER PULLED THE PIN
+    If the Cheshire did NOT hold the door in Act 8, the debt is still open. Sometime in
+    the next chapter, at the worst possible moment, a grin appears near that character
+    and something enormous is paid for. They do not get to choose when.
+
+  IF THE PARTY LEFT THE VILLAGE SOMETHING
+    Margaret's door is the open one on the hillside. Next chapter, forty people with
+    stitched mouths know exactly who the party are, and they are the only forty people
+    in Wonderland who will take a risk for them.
+
+  IF THE PARTY GAVE THE VILLAGE NOTHING
+    The door on the hillside closes before they reach the bottom of the hill.
+
+  THE GNOME
+    It comes with them. Whatever they decided about that. If they left it behind, it
+    is in the first bag anyone opens after they get out.
+    {Never explain this. Not this chapter, not next chapter, not ever. The day you
+    explain the Gnome is the day it stops being the best thing in this adventure.}
+[/DM NOTE]
+
+=== RECAP ===
+Previously: fled the cave, came out under a red sky in a world of ash where the people
+  have sewn their own mouths shut to avoid the attention of a nine-year-old god.
+Open threads:
+  - The Last Note is in the party's hands and cannot be read inside Wonderland.
+  - The Cheshire owes a debt to whoever pulled the pin, and intends to pay it.
+  - The Mad Hatter is in the Joker card, still cursed, and is now laughing.
+  - The Queen either has her heart or does not. Her castle either stands or does not.
+  - Alice went into the sphere. Nobody watched it close.
+  - Nobody has any idea what the Gnome is, and it is coming with them.
+Next session hooks:
+  - Read the note. Somewhere else. Preferably somewhere with a lot of doors.
+  - The villagers can talk now if they want to. Most of them will not risk it.
+  - Something laughed in the tunnel.
+
+[LOOT] - end of chapter, if you award by milestone
+  Coins: 240 gp total, plus whatever they took from the yard
+  Items: the Hat, the Joker, the Unmirror (cracked), any unused Grins, Margaret's
+    Thread, the Queen's croquet mallet, a warm teaspoon, a coin that will not land
+  XP: treat the chapter as four hard encounters and two deadly ones. A six-character
+    3rd-level party should finish this at 5th level. Level them up at the table before
+    everyone goes home - it is a good last beat.
+
+
+============================================================
+== APPENDIX A - THE GNOME TABLE
+============================================================
+
+[DM NOTE]
+HOW TO USE IT: roll d20 ONCE per scene the Gnome is present, and ONCE per round of any
+combat it is present for. Roll it OPENLY, in the middle of the table, where everyone
+can see. That is not optional - the shared "oh no, he's rolling the gnome die" is the
+single best recurring joke in the chapter.
+
+TARGET: unless the result says otherwise, pick the target RANDOMLY, including the
+party, including the Gnome itself. Do not aim it. It is not on their side. It is not
+on anyone's side. It is on its own side and its side is nonsense.
+
+THE ONE RULE: the Gnome never does the same thing twice in a session. Cross off what
+you roll. Reroll duplicates.
+
+THE ONE EXCEPTION: in the finale, it casts Doom. That is not on this table, it is not
+random, and you must not foreshadow it. If a player asks whether the Gnome can do
+something like that, the correct answer is a shrug.
+[/DM NOTE]
+
+d20  EFFECT
+ 1   A grand piano, full-size, rosewood, in tune, appears 30 feet directly above the
+     nearest hostile creature and is subject to gravity. DC 15 Dex save; 8d6
+     bludgeoning on a fail, half on a success. Afterwards there is a wrecked piano
+     there for the rest of the scene and it is very difficult terrain and someone
+     will absolutely try to play it.
+ 2   Every piece of metal within 60 feet becomes briefly, sincerely warm, like a cup
+     of tea. No damage. Everyone flinches. Anyone holding a drawn weapon must make a
+     DC 8 save or drop it, which is humiliating and consumes their reaction to pick
+     back up.
+ 3   It conjures a chair. Just a chair. A perfectly nice wooden chair, in the middle
+     of everything, facing the wrong way.
+ 4   Rain, indoors, in a column exactly 5 feet across, centred on a random creature,
+     for one minute. It is cold. It puts out fires. It ruins parchment. It follows
+     the target.
+ 5   All the doors in a 100-foot radius open at once, including doors nobody knew
+     were there, including at least one that should not exist and which you should
+     absolutely describe and then never explain.
+ 6   A random creature's voice and a different random creature's voice swap for ten
+     minutes. Both keep their own languages and knowledge. It is purely a nuisance
+     and it will be the funniest thing that happens for an hour.
+ 7   Nine hundred moths. From nowhere. Heavily obscured for one round in a 20-foot
+     cube, then they are gone, and there is a single moth left, and it stays with the
+     party for the rest of the session and one player will name it.
+ 8   The Gnome conjures a small door, three feet high, standing free in the air. It
+     opens onto a broom cupboard. A very ordinary broom cupboard, somewhere else,
+     with a mop in it. It is real. It can be hidden in. It closes after a minute.
+ 9   Gravity reverses in a 20-foot cube for exactly six seconds. Everything in it
+     falls up to the ceiling, then falls back down. 2d6 to everything that isn't
+     nailed down, including the ceiling, which is now cracked.
+10   A random creature is healed for 4d8. Fully, warmly, kindly. If it is an enemy,
+     it is healed anyway, and the Gnome's face is very happy about it.
+11   Every light source within 60 feet goes out. Simultaneously. Including magical
+     ones. Including the sun, if you can see it, for one round. Then they come back.
+     Nobody involved will ever be entirely comfortable again.
+12   A single enormous bell, somewhere overhead, rings once. Every creature that can
+     hear it must make a DC 13 Con save or be deafened for a minute. The Gnome's face
+     is sad about this one.
+13   A perfect, hot, enormous meal appears on the ground: roast, bread, gravy, four
+     puddings, cutlery for twelve. It is real food. It is genuinely excellent. Eating
+     a full meal of it counts as a short rest. It rots to nothing in ten minutes.
+14   The nearest creature to the Gnome is teleported 60 feet in a random horizontal
+     direction. Roll for it. If that puts them in a wall, put them against the wall,
+     prone, and apologise on the Gnome's behalf.
+15   Every creature in 30 feet must speak in rhyme for ten minutes or take 1d4
+     psychic damage per failed sentence. {Enforce this on NPCs with great enthusiasm
+     and on players with mercy.}
+16   A mirror, six feet tall, in a gilt frame, appears standing upright. It shows the
+     room correctly except that everybody in it has their mouth sewn shut. It lasts
+     one minute. {If used with the Cheshire's instruction, it is a real doorway. Roll
+     this at a moment when that would be useful and you have done a lovely thing.}
+17   Something enormous is briefly audible from a very long way away - a footstep,
+     mountain-sized, once. Nothing comes of it. Nothing at all. Never explain it.
+18   A random non-magical item in a random character's pack turns into a live goose.
+     The goose is loyal to nobody and is having the worst day of its life.
+19   Twenty-four hours of a random creature's memory becomes briefly, vividly public:
+     it plays out in the air above them, silently, in colour, for one round, visible
+     to everyone. {Ask the player whose character it is what everyone sees. Whatever
+     they say is canon. This is a gift; hand it to the quietest player at the table.}
+20   Absolutely nothing happens. The Gnome's face clicks to a smile. It is enormously
+     pleased with itself and something, somewhere, has gone the way it wanted, and
+     you should let that sit there and rot for the rest of the evening.
+
+============================================================
+== APPENDIX B - ITEMS
+============================================================
+
+--- MARGARET'S THREAD ---
+  A short length of black waxed thread and a bone needle, in a twist of paper.
+  Given quietly by the woman with the slate in Act 2, to one character, if the party
+  was kind to her village.
+  Use: as an action, a character may run the thread across their own lips. For one
+  hour they cannot speak, cannot cast with verbal components, and cannot be
+  perceived as interesting by anything in Wonderland. In Act 7 this removes 1 from
+  the Notice track, once per thread.
+  {It is not magic. It is a habit that this world respects. That is worse.}
+
+--- THE HAT ---
+  The Mad Hatter's, taken from his body in Act 4. Battered black silk, 7 1/2, price
+  tag still in the band reading "In this style, 10/6".
+  Use: a doorway into the Inventory World, which as of Act 5 is a plain of grey dust
+  under a collapsing sky. Anything put into the hat is gone until someone goes in
+  after it. It is a bag of holding with a horizon and it is still aging.
+
+--- THE JOKER ---
+  A single playing card, warm to the touch, faintly convex, as though something
+  inside it is pressing outward.
+  Played once in Act 4 to release the Hatter. It has been played. It should be inert.
+  It is warmer now than it was.
+
+--- THE UNMIRROR ---
+  A hand mirror with no reflection at all. Given by the Cheshire.
+  Use: an action. Every disguised, illusory, invisible or mimicking thing within 30
+  feet is revealed for one round and cannot re-disguise until the end of the next.
+  Three charges; the glass cracks visibly with each. At zero charges it is a very
+  ordinary mirror with a spiderweb of cracks, and it is still a mirror, and the
+  Cheshire did mention what mirrors are for.
+
+--- THE GRIN ---
+  A small curved sliver of white. One per character. Placed under the tongue.
+  Use: while held under the tongue, the bearer makes no sound whatsoever - footsteps,
+  breath, armour, screaming - and has advantage on Stealth. They cannot speak or cast
+  with verbal components. Removing it is a free action; putting it back is an action.
+  It dissolves at the end of the chapter, or when swallowed, which one player will do.
+
+--- THE NAME OF A DOOR ---
+  A folded scrap in the Cheshire's handwriting, which is terrible.
+  Use: read aloud, once, ever. A door appears within 30 feet, in a place that makes
+  the reader's escape possible. It opens where they most need it to open. Then it is
+  a blank scrap of paper forever.
+  If unfolded before it is needed: blank. Permanently. Warn them once.
+
+--- THE CROQUET MALLET OF THE FIRST GAME ---
+  From the Queen's hall, if they thought to ask for it. Flamingo-headed, and the
+  flamingo is long dead and quite stiff and its eyes follow the ball.
+  +1 club. On a critical hit, the target is knocked 15 feet in a direction of the
+  wielder's choosing and lands prone, and the flamingo makes a small satisfied noise.
+
+--- THE PAPER HALBERD ---
+  A card soldier's weapon, if one was given or taken. Two-dimensional. Weighs nothing.
+  Deals 1d10 slashing and cannot be sundered by anything except fire or water, both of
+  which destroy it utterly and instantly.
+
+--- THE BEATING HEART ---
+  If the party did not return it to the Queen in Act 3, they still have it, wrapped in
+  whatever they wrapped it in, and it is still beating, and it has not stopped once.
+  It is warm. It gets warmer the closer it is to the castle. Anyone who sleeps within
+  10 feet of it dreams of a garden that is not on fire.
+  {If they carried it all the way to Act 7 without returning it, that is a character
+  choice of enormous weight and you should give it consequences next chapter, not
+  this one.}
+
+--- THE CLOCKWORKER'S POCKET WATCH ---
+  Taken from the Rabbit in Act 5. Gold, engraved, running again.
+  Use: once per long rest, as a reaction, the bearer may take an extra turn
+  immediately after the current one. The Rabbit's name is engraved inside the case
+  along with a date, and the date has not happened yet.
+
+--- THE HAIRPIN ---
+  Cheap enamelled daisies. There were two of them. One was in the clock. One was
+  pinning the Last Note to the cloth. They are a pair.
+  A nine-year-old girl's hairpin. Worth nothing. Keep track of who is carrying them.
+
+============================================================
+== APPENDIX C - STATBLOCKS
+============================================================
+
+--- NPC: THE MAD HATTER (cursed) ---
+Wants: to be let out, and then to not have been let out
+Secret: he knows he is cursed and he is fighting it the entire fight, and losing
+Voice: courteous, apologetic, and every so often it drops an octave mid-sentence
+Opening line: "Oh thank god. Oh thank god, thank god - stand back, I'm awfully sorry
+  about this, I do mean it - "
+
+  Medium humanoid, CR 5 (1800 XP) - use VETERAN as the chassis with these changes
+  AC 15  HP 90 (12d8+36)  Speed 30 ft.
+  STR 14  DEX 16  CON 16  INT 14  WIS 10  CHA 18
+  Saves Dex +6, Cha +7   Skills Deception +7, Sleight of Hand +6, Perception +3
+  Senses passive Perception 13
+
+  A DOZEN HATS. At the start of each of his turns, roll d4. He is wearing a different
+    hat and it changes what he is:
+      1 - top hat: he gains 15 temporary hit points and taunts
+      2 - bonnet: he becomes charming; one creature must make a DC 15 Wis save or be
+          charmed until the end of its next turn and must move toward him
+      3 - helmet: his AC becomes 18 until his next turn and he cannot move
+      4 - no hat at all: he is briefly HIMSELF, does not attack, and says something
+          desperate and useful about Alice. {Use these. Four of them across the fight
+          is his entire character arc.}
+  MULTIATTACK. Three attacks with a hat brim: +6 to hit, reach 5 ft., 1d6+3 slashing.
+  TEA. (Recharge 5-6) He throws a cup. 20-foot cone of scalding tea, DC 14 Dex save,
+    4d6 fire, and on a failure the target's mouth is scalded and they cannot speak
+    until the end of their next turn.
+  MAD (reaction). When reduced to 0 hit points for the first time, he is not. He
+    stands up with 25 hit points and one hat left, and he is crying.
+
+  WHEN HE DIES: he thanks them. Properly, by name if he learned any. The hat comes off
+  and rolls, and he is an ordinary tired man in his fifties for about two seconds.
+
+--- NPC: THE CLOCKWORKER RABBIT ---
+Wants: to be on time, forever, for an appointment that was cancelled sixty years ago
+Secret: it did not hide the clock from Alice. It hid the clock from ITSELF.
+Voice: fast, clipped, endlessly counting under its breath
+Opening line: "No no no no no. You're EARLY. You're early, that's not - go back, go
+  BACK, you're early - "
+
+  Small beast (clockwork), CR 6 (2300 XP)
+  AC 17  HP 105 (14d8+42)  Speed 50 ft.
+  STR 8  DEX 20  CON 16  INT 16  WIS 18  CHA 10
+  Saves Dex +9, Wis +8   Skills Perception +8, Acrobatics +9
+  Senses truesight 30 ft., passive Perception 18
+
+  OUT OF STEP. It always acts first in a round, on its own initiative count of 30,
+    regardless of what anyone rolled.
+  MULTIATTACK. Two pin attacks: +9 to hit, 1d6+5 piercing plus 2d6 psychic as a
+    moment of the target's life is spent early.
+  LATE. (recharge 4-6) One creature must make a DC 16 Wis save. On a failure, it
+    skips its next turn entirely - it simply was not there for it.
+  REWIND. (1/day, when reduced below half hit points) The Rabbit returns to the hit
+    points and position it had at the start of the previous round. Anything the party
+    spent to get it there is spent. Nothing else is undone. {Do this once. Do it with
+    a completely straight face. Let them feel it.}
+  TIME SEAM (lair). At initiative 20, one random 10-foot square in the tower runs at
+    a different speed. Anything in it at the start of its turn: DC 14 Con save or
+    lose its action to a second that lasts a minute.
+
+  WHEN IT DIES: it does not, if the party takes the clock. It sits down and stops
+  moving and its eyes keep ticking. Killing it after that is a choice, and it is a
+  choice about the party, and you should let it be quiet at the table.
+
+--- NPC: TWISTED ALICE ---
+Wants: something new
+Secret: she is nine, and she is frightened of exactly one object, and it is a piece
+  of paper
+Voice: bright, well-mannered, delighted. A child at a birthday party.
+Opening line: "Oh. Oh, you're NEW."
+
+  Small humanoid (child), CR - {she does not have one; see below}
+  AC 10  HP - {see below}  Speed 30 ft.
+  STR 6  DEX 12  CON 10  INT 14  WIS 8  CHA 22
+
+  SHE IS NOT A FIGHT. Alice has no hit point total that matters. Damage dealt to her
+    lands, is described as landing, and is then simply not the case. Do not roll her
+    saves. Do not track her hit points. She is a hazard with a personality and the
+    encounter ends when the script says it ends, in round 3, with Doom.
+    {If your table finds this unsatisfying, that is the correct reaction and it is
+    the point. They are supposed to leave this session angry that they could not kill
+    her. That is next chapter's fuel.}
+
+  SHE DECIDES. On her turn, one thing about the room or one creature in it becomes
+    true because she has said it. No attack roll. No save. See ROUND 2 in Act 7 for
+    the four options; improvise freely, but never more than one per turn, and never
+    anything that kills outright.
+  BORING. If a creature spends its entire turn doing nothing interesting whatsoever -
+    no attacks, no spells, no clever plans, standing still - Alice cannot target it
+    on her next turn. She has forgotten it is there. {Tell the players this rule the
+    moment one of them stumbles onto it. Watch a whole table of heroes decide to be
+    boring on purpose. It is the best three minutes of the chapter.}
+  THE HOUSE. All furniture within 60 feet of her is a mimic and acts on her
+    initiative.
+
+  THE NOTICE TRACK. Six points. See Act 7 for what adds and removes. At six, she
+  looks up. Everything before six is a stealth scene; everything after six is Act 7's
+  scripted three rounds.
+
+--- MIMIC VARIANTS FOR THE DOLLHOUSE ---
+  Use MIMIC (CR 2) from the campaign catalogue, with three house rules:
+   - SILENT. They make no sound at all, ever, including when killed.
+   - PATIENT. They do not pursue. A mimic that loses its grip becomes furniture again
+     in place and waits, indefinitely, without complaint.
+   - COUNTED. Alice knows how many there are. Destroying one adds 1 Notice at the end
+     of the scene, whether or not anyone heard it. {Do not tell them this rule. Tell
+     them afterwards.}
+
+  DOLL MIMIC (the one on the shelf): as mimic but AC 14, 30 hp, and its first attack
+  against a surprised target is at advantage and deals an extra 2d6.
+
+--- THE YARD: PAPER SOLDIER ---
+  Medium construct, CR 1/4 (50 XP) - SKELETON chassis
+  AC 13  HP 13 (2d8+4)  Speed 30 ft.
+  STR 10  DEX 16  CON 14  INT 4  WIS 8  CHA 5
+  Senses passive Perception 9   Immune poison, exhaustion, frightened
+
+  PAPER HALBERD. +4 to hit, reach 10 ft., 1d10+3 slashing.
+  FLAT. Half damage from piercing and slashing. DOUBLE damage from fire.
+  EDGEWISE. As a bonus action it turns sideways, vanishes, and reappears in any
+    unoccupied space it can see within 15 feet. It does not provoke.
+  ORDERS. It attacks the nearest PETITIONER unless a player character is within 5 feet
+    of it. This is the whole encounter. Say it out loud in round one.
+
+  WHEN ONE DIES: it does not fall. It flutters, and takes a full round to land.
+
+--- THE YARD: FLAMINGO-THING ---
+  Medium monstrosity, CR 1 (200 XP) - HARPY chassis
+  AC 11  HP 38 (7d8+7)  Speed 20 ft., fly 40 ft.
+  STR 12  DEX 13  CON 12  INT 7  WIS 10  CHA 13
+  Senses passive Perception 10
+
+  MULTIATTACK. Two strikes with the bent neck: +3 to hit, 1d6+1 bludgeoning.
+  MIMED SONG. Its mouth is sewn shut. It sings anyway, silently, and it still works.
+    Every creature within 60 ft. that can SEE it: DC 11 Wis save or be charmed, move
+    toward it by the most direct route, and take no other action. Repeat save at the
+    end of each turn and on taking damage. Immune for 24 hours on a success.
+    {Because it is visual, closing your eyes beats it. Let anyone who tries that win.}
+
+--- THE YARD: THE UNFED ---
+  Medium undead, CR 3 (700 XP) - WIGHT chassis. Use exactly ONE, any party size.
+  AC 14  HP 45 (6d8+18)  Speed 30 ft.
+  STR 15  DEX 14  CON 16  INT 10  WIS 13  CHA 15
+  Saves vs. being turned +2   Senses darkvision 60 ft., passive Perception 13
+  Resist necrotic; bludgeoning/piercing/slashing from nonmagical weapons
+
+  MULTIATTACK. Two attacks, but only ever with the RIGHT hand. The left holds papers.
+  ROTTED HAND. +4 to hit, 2d6+2 necrotic, and the target's hit point maximum is
+    reduced by that amount until a long rest.
+  STILL QUEUING. It will not attack any creature that is holding a document out
+    towards it. It stops, and waits, and tries to compare them. One round, once, per
+    creature. {A player who works this out has solved the encounter. Reward it.}
+  SUNLIGHT: there is no sun in Wonderland. This never comes up. That is the joke.
+
+  {If the outside group is two characters or fewer, use a GHOUL (CR 1) instead and
+  keep STILL QUEUING.}
+
+--- THE KENNEL (only if they guessed the wardens wrong) ---
+  2 x HELL HOUND (CR 3) and 4 x DIRE WOLF (CR 1), in pitch dark.
+  Run it as TWO ROUNDS and a door, not as a fight to the death.
+  PORTCULLIS: DC 15 Athletics, two characters working together, one action each.
+  The hounds do not pursue past the portcullis. They were told not to.
+  {Nobody dies in the Kennel. Bring them out at half hit points and filthy. The cost
+  of this scene is the hour of game time and the dignity, not the corpses.}
+
+--- NPC: THE QUEEN OF HEARTS ---
+Wants: her heart back. Failing that, a fair game.
+Secret: without the heart she cannot feel anger, and anger was her only decisiveness.
+Voice: rules and clauses. Never raised. Never hurried.
+Opening line: "Names."
+
+  Medium humanoid, CR 8 (3900 XP) - and she should never be fought
+  AC 17  HP 136 (16d8+64)  Speed 30 ft.
+  STR 14  DEX 14  CON 18  INT 16  WIS 16  CHA 20
+  Saves Con +8, Wis +7, Cha +9   Skills Insight +7, Persuasion +9, Intimidation +9
+  Senses passive Perception 13
+
+  {SHE IS NOT AN ENEMY AND THIS BLOCK IS AN EMERGENCY ONLY. She attacks under exactly
+  one condition: someone touches the cavity in her chest. If that happens, do not roll
+  a fight - roll ONE round, show them what she is, and have the card soldiers throw
+  them out of the castle. Combat with the Queen is a failure state for the scene, not
+  a set piece.}
+
+  PROCEDURE. She cannot be surprised, charmed or frightened. She has no emotions left
+    to hook. Any effect relying on one simply finds nothing there.
+  OFF WITH IT. (1/turn) She names one creature she can see and one object it is
+    carrying. The object is now hers, in her hand. No save. It is a rule, not a spell.
+  FORTY CARDS. All card soldiers in the room act on her initiative and interpose
+    themselves; any attack against her from more than 5 feet away hits a card instead.
+  THE CAVITY. A creature that touches it takes 6d10 psychic and is stunned for one
+    minute as it experiences sixty years of a woman being unable to want anything.
+
+  IF SHE GETS HER HEART BACK: she sits down. She does not thank them. She puts one
+  hand flat on her chest and holds it there and asks everyone to leave the room, very
+  politely, and the door shuts, and behind it a woman who has not been able to cry in
+  sixty years finally does. Do not describe it. Just close the door.
+
+--- NPC: THE CHESHIRE ---
+Wants: to be alive again, and then to be owed a favour.
+Secret: it was losing to her long before she killed it.
+Voice: helpful sentences that turn out, later, to have been warnings.
+Opening line: "Oh, don't stop on my account. You were doing so beautifully."
+
+  Large fey (dead), CR - {it cannot be fought and will not be}
+  AC -  HP -  Speed: irrelevant; it is in the mirrors, not the room
+
+  {NO STATBLOCK ON PURPOSE. If a player attacks it, the attack passes through a mirror
+  and hits their own reflection: they take half the damage they rolled, and the cat
+  says "yes, that is generally how it goes here" and carries on talking. Do this once
+  and nobody tries it again.}
+
+  IT CANNOT LIE, AND IT NEVER VOLUNTEERS. It answers what it is asked, exactly, and
+    it will not correct a badly-worded question. This is the same rule as the Gnome,
+    with better manners, and the party should notice the resemblance.
+  IT ALWAYS PAYS. Whatever it owes, it settles, at the worst possible moment for
+    itself and the best for them. Track who pulled the pin.
+  IT IS DEAD. It cannot leave the mirrors, cannot carry anything, cannot fight for
+    them, and cannot come to Act 7. Say all four out loud when they ask, because they
+    will ask, and the refusal has to be a fact and not a dodge.
+
+--- THE GARDEN GNOME ---
+  {DO NOT STAT IT. It has no AC, no hit points, and no turn. It is eleven inches of
+  ceramic and eleven pounds of weight and it is the single most powerful thing in this
+  chapter. If a player attacks it, the attack misses. Not "it dodges" - it MISSES, and
+  the player does not know why, and neither do you, and that is correct.
+
+  Everything it does is Appendix A, rolled openly. It answers yes/no questions about
+  literal facts, always truthfully, by clicking to :) or :(. It never volunteers, never
+  elaborates, never helps in combat on purpose, and never explains itself.
+
+  It has a third face. It uses it once, in Act 7, and never again.}
+
+============================================================
+== APPENDIX D - QUICK REFERENCE
+============================================================
+
+-- THE FIVE PUZZLES AND THEIR ANSWERS, FOR FAST LOOKUP --
+
+  ACT 2 - THE TWO WARDENS (one always lies, one always tells the truth, one question)
+    Answer: ask EITHER warden "which gate would the OTHER one tell me to take?" and
+    then take the other gate. Any question that routes through both wardens works.
+    Accept any working formulation instantly, including weird ones. Fail forward: the
+    wrong gate is not fatal, it is merely much longer and costs them the Act 3 head
+    start.
+
+  ACT 3 - THE GAME OF COURT (five cards, back to front, call your own suit)
+    Answer: the back player counts the hearts he can see and calls "hearts" if the
+    count is odd, "spades" if even. Everyone forward of him tracks the parity and
+    deduces their own card. Four of five are always saved; the back player is a coin
+    flip. The Queen's card is the front one, and the front player is therefore the
+    one who is guaranteed to live, which is a fact worth pointing out afterwards.
+
+  ACT 4 - THE EIGHT TEACUPS (find the poisoned one, three yes/no questions)
+    Answer: binary search. "Is it in cups 1-4?" halves it. Then 1-2. Then 1. Three
+    questions, eight cups, always. Optional puzzle; solving it means the Hatter drinks
+    the poison and starts the fight at half hit points.
+
+  ACT 5 - THE TWO ROPES (each burns one hour, unevenly, measure 45 minutes)
+    Answer: light rope A at BOTH ends and rope B at one end simultaneously. When A is
+    gone, 30 minutes have passed; at that instant light B's other end; B's remaining
+    30 minutes of rope burns in 15. 30 + 15 = 45.
+
+  ACT 5 - THE LANTERN BRIDGE (walkers of 1/2/5/10 minutes, one lantern, two at a time,
+    someone must walk it back)
+    Answer, 17 minutes: 1 and 2 cross (2), 1 returns (1), 5 and 10 cross (10), 2
+    returns (2), 1 and 2 cross (2). Total 17.
+    The intuitive answer of always sending the fastest as courier gives 19. Both get
+    them across; 17 gets them across before the landing folds.
+
+  ACT 7 - THE NINE DOLLS (one is a heavier mimic, two weighings)
+    Answer: three groups of three. Weigh group A vs group B; balance means it is in C,
+    otherwise it is in the heavy group. Then from that group of three, weigh one vs
+    one; balance means it is the one left off. Two weighings, always.
+
+-- DC LIST FOR THE WHOLE CHAPTER --
+  Very easy 5   |  Noticing the sky is wrong, remembering a rhyme
+  Easy 10       |  Nature (mimics are dense), Arcana (the note resists reading)
+  Moderate 12-13|  Most Investigation and History in the orchard and village
+  Hard 15-16    |  Group Stealth across the nursery, escaping a mimic's grip,
+                |  the Rabbit's Late save
+  Very hard 18  |  Talking the Queen out of anything at all
+  Do not roll   |  Anything Alice decides
+
+-- INITIATIVE CHEAT SHEET FOR THE BIG THREE --
+  MAD HATTER      : roll normally. Remember the d4 hat at the START of each of his turns.
+  CLOCKWORKER     : acts on 30, always, first, every round. Lair action on 20.
+  ALICE           : acts on 15. One DECISION per turn. Never two. House acts with her.
+
+-- PACING CHECKPOINTS (a 6-9 hour session) --
+  0:00  Act 0 - the cave, the red sky
+  0:30  Act 1 - the Gnome, the orchard
+  1:15  Act 2 - the village, the road, the wardens, the split
+  2:15  Act 3 - the yard siege / the Heartless Queen, the card game
+  3:45  BREAK. Feed your players. They have earned it and Act 4 needs them fresh.
+  4:00  Act 4 - the Joker, the tea party, the Hatter
+  5:00  Act 5 - the hat, the clocktower, the ropes, the bridge, the Rabbit, the pin
+  6:30  Act 6 - the mirrors, the lore, the gifts {short, and it is the only rest}
+  7:00  Act 7 - the Dollhouse, the dolls, the note, the Look, three rounds, Doom
+  8:30  Act 8 - out, and the laugh in the tunnel
+  {If you are running long: cut the Act 4 teacups and the Act 5 bridge. Both are
+  marked optional. Never cut Act 6 - the party needs the gifts and the briefing.}
+
+-- WHAT TO TRACK ON A SCRAP OF PAPER ALL NIGHT --
+  [ ] Who sent their character details ahead {decides the Act 2 split}
+  [ ] Whether the cave mouth was sealed
+  [ ] Whether the Queen got her heart back
+  [ ] Whose name the Queen kept
+  [ ] Who pulled the pin {the Cheshire's debt}
+  [ ] Which Gnome results have been used {no repeats}
+  [ ] Unmirror charges remaining {3}
+  [ ] Notice track {6}
+  [ ] Whether the Name of a Door has been read
+
+============================================================
+== APPENDIX E - PLAYER HANDOUTS
+============================================================
+
+{Copy these out onto real paper before the session. Six index cards is enough. A
+puzzle the players can HOLD is a different puzzle from one they have to remember you
+saying, and every one of these is a puzzle they will otherwise ask you to repeat four
+times. Hand them over face down. Do not paraphrase them. Do not add anything.}
+
+------------------------------------------------------------
+HANDOUT 1 - MARGARET'S SLATE                    {Act 2, give one line at a time}
+------------------------------------------------------------
+
+   We are not permitted to be interesting.
+
+   She hears clever things. Do not be clever near her.
+
+   The Queen's castle takes people in. Some of them.
+   If your papers are in order.
+
+   Do not go to the tea house. Nobody comes back from a party.
+
+   The cat is dead. She has it on the table.
+   She keeps it dead ON PURPOSE.
+
+{Write these on an actual slate or a scrap of card and rub each one out before you
+show the next. Never let two lines exist at the same time. The erasing is the scene.}
+
+------------------------------------------------------------
+HANDOUT 2 - THE WARDENS' RULES                  {Act 2, hand over and shut up}
+------------------------------------------------------------
+
+   TWO DOORS. ONE IS THE WAY IN.
+
+   ONE OF US ALWAYS TELLS THE TRUTH.
+   ONE OF US ALWAYS LIES.
+
+   YOU MAY ASK ONE OF US ONE QUESTION.
+   IT MUST BE ANSWERABLE YES OR NO.
+
+   ONE QUESTION. NOT ONE EACH. ONE.
+
+   GUESS WRONG AND YOU GO IN THE KENNEL.
+
+{Put this card on the table and then say nothing at all for as long as it takes. Do
+not hint. Do not rescue them. The Gnome is sitting right there and one of them will
+eventually look at it, and that moment is worth the silence.}
+
+------------------------------------------------------------
+HANDOUT 3 - THE RULES OF COURT                  {Act 3, one card per player}
+------------------------------------------------------------
+
+   FIVE PLAYERS STAND IN A LINE, FACING THE THRONE.
+
+   EACH WEARS ONE CARD UPON THE BROW.
+
+   YOU SEE EVERY CARD IN FRONT OF YOU.
+   YOU SEE NOTHING BEHIND YOU.
+   YOU NEVER SEE YOUR OWN.
+
+   BEGINNING AT THE BACK, EACH OF YOU WILL NAME
+   ONE SUIT ALOUD. THAT IS YOUR GUESS AT YOUR OWN CARD.
+
+   YOU MAY NOT SPEAK OTHERWISE. NOT ONE WORD.
+   YOU MAY NOT SIGNAL. NOT ONE GESTURE.
+
+   NAME YOUR SUIT CORRECTLY AND YOU LIVE.
+
+   YOU MAY CONFER BEFORE THE CARDS ARE PLACED.
+   YOU MAY NOT CONFER AFTER.
+
+{The last two lines are the whole puzzle and players skim past them every time. Read
+those two lines out loud a second time after handing the card over, and then let the
+conferring happen. Twenty minutes of table argument here is a feature.}
+
+------------------------------------------------------------
+HANDOUT 4 - THE ROPES AND THE BRIDGE            {Act 5, both on one card}
+------------------------------------------------------------
+
+   TWO ROPES. EACH BURNS THROUGH IN EXACTLY ONE HOUR.
+   NEITHER BURNS EVENLY. HALF A ROPE IS NOT HALF AN HOUR.
+   YOU HAVE FIRE. MEASURE FORTY-FIVE MINUTES.
+
+   ------
+
+   FOUR OF YOU MUST CROSS. ONE LANTERN.
+   THE BRIDGE HOLDS TWO AT A TIME AND NO MORE.
+   THE LANTERN CANNOT BE THROWN, SLID, OR SENT ALONE.
+   WHOEVER CROSSES, CROSSES AT THE SLOWER ONE'S PACE.
+   ONE MINUTE. TWO MINUTES. FIVE MINUTES. TEN MINUTES.
+   THE LANDING FOLDS IN EIGHTEEN.
+
+{Eighteen is the number to say out loud. The intuitive solution takes nineteen. They
+will find nineteen, be pleased, be told it is not enough, and go quiet - and the two
+minutes after that are the best problem-solving of the night.}
+
+------------------------------------------------------------
+HANDOUT 5 - THE DOLL SHELF                      {Act 7, whisper it}
+------------------------------------------------------------
+
+   NINE DOLLS ON A SHELF.
+
+   EIGHT OF THEM WEIGH THE SAME.
+   ONE IS HEAVIER. THE HEAVY ONE IS AWAKE.
+
+   THERE IS A SET OF BRASS SCALES.
+
+   IT WILL BEAR TWO WEIGHINGS BEFORE
+   THE NOISE OF IT REACHES HER.
+
+{Say the last two lines rather than only writing them. Then put the card down and put
+your hands in your lap, and let them work in whispers, because they will start
+whispering on their own and you must not be the one who asked them to.}
+
+------------------------------------------------------------
+HANDOUT 6 - THE LAST NOTE                       {Act 7. THE ONLY ONE THEY KEEP}
+------------------------------------------------------------
+
+{Make this one properly. Real paper, tear the edges, fold it four times, age it with
+tea if you are that sort of DM. It is the object the entire chapter is named after and
+they are going to carry it into the next one.
+
+They may look at the FIRST LINE ONLY. Hold the rest folded under your thumb. If a
+player asks to read on, say - out loud, in your own voice, not a character's -
+"not in here." That is the whole rule and it is not negotiable.}
+
+   THE FRONT, IN A NEAT AND CHEERFUL HAND:
+
+      The last note. Do not read this where she can hear you.
+
+   {AND NOTHING ELSE. NOT TONIGHT.}
+
+------------------------------------------------------------
+END OF CHAPTER
+------------------------------------------------------------
+

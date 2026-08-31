@@ -1,0 +1,368 @@
+{
+  "books": [
+    {
+      "id": "common-primer",
+      "name": "Common Primer",
+      "type": "book",
+      "description": "A teaching text for Common, the trade tongue spoken in nearly every settlement.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Common."
+    },
+    {
+      "id": "dwarvish-primer",
+      "name": "Dwarvish Primer",
+      "type": "book",
+      "description": "A teaching text for Dwarvish, the hard, consonant-heavy speech of the mountain halls.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Dwarvish."
+    },
+    {
+      "id": "elvish-primer",
+      "name": "Elvish Primer",
+      "type": "book",
+      "description": "A teaching text for Elvish, the fluid, musical language of the elves.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Elvish."
+    },
+    {
+      "id": "giant-primer",
+      "name": "Giant Primer",
+      "type": "book",
+      "description": "A teaching text for Giant, the booming tongue of giants and ogres.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Giant."
+    },
+    {
+      "id": "gnomish-primer",
+      "name": "Gnomish Primer",
+      "type": "book",
+      "description": "A teaching text for Gnomish, a rapid, technical language full of invented words.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Gnomish."
+    },
+    {
+      "id": "goblin-primer",
+      "name": "Goblin Primer",
+      "type": "book",
+      "description": "A teaching text for Goblin, the harsh, clipped cant of goblinoids.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Goblin."
+    },
+    {
+      "id": "halfling-primer",
+      "name": "Halfling Primer",
+      "type": "book",
+      "description": "A teaching text for Halfling, the warm, homey speech of halfling communities.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Halfling."
+    },
+    {
+      "id": "orc-primer",
+      "name": "Orc Primer",
+      "type": "book",
+      "description": "A teaching text for Orc, a guttural battle-tongue built for shouting over noise.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Orc."
+    },
+    {
+      "id": "abyssal-primer",
+      "name": "Abyssal Primer",
+      "type": "book",
+      "description": "A teaching text for Abyssal, the shrieking language of demons.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Abyssal."
+    },
+    {
+      "id": "celestial-primer",
+      "name": "Celestial Primer",
+      "type": "book",
+      "description": "A teaching text for Celestial, the resonant speech of angels and upper-planar beings.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Celestial."
+    },
+    {
+      "id": "draconic-primer",
+      "name": "Draconic Primer",
+      "type": "book",
+      "description": "A teaching text for Draconic, the ancient tongue of dragons, and the root of most arcane writing.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Draconic."
+    },
+    {
+      "id": "deep-speech-primer",
+      "name": "Deep Speech Primer",
+      "type": "book",
+      "description": "A teaching text for Deep Speech, the alien language of aberrations, painful to speak aloud.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Deep Speech."
+    },
+    {
+      "id": "infernal-primer",
+      "name": "Infernal Primer",
+      "type": "book",
+      "description": "A teaching text for Infernal, the precise, contractual language of devils.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Infernal."
+    },
+    {
+      "id": "primordial-primer",
+      "name": "Primordial Primer",
+      "type": "book",
+      "description": "A teaching text for Primordial, the elemental tongue of air, earth, fire, and water.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Primordial."
+    },
+    {
+      "id": "sylvan-primer",
+      "name": "Sylvan Primer",
+      "type": "book",
+      "description": "A teaching text for Sylvan, the lilting, riddling speech of the fey.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Sylvan."
+    },
+    {
+      "id": "undercommon-primer",
+      "name": "Undercommon Primer",
+      "type": "book",
+      "description": "A teaching text for Undercommon, the trade pidgin of the Underdark.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Undercommon."
+    },
+    {
+      "id": "druidic-primer",
+      "name": "Druidic Primer",
+      "type": "book",
+      "description": "A teaching text for Druidic, the secret sign-language of druids, never taught to outsiders.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Druidic."
+    },
+    {
+      "id": "thieves-cant-primer",
+      "name": "Thieves' Cant Primer",
+      "type": "book",
+      "description": "A teaching text for Thieves' Cant, a coded dialect hidden inside ordinary conversation.",
+      "valueGold": 25,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Thieves' Cant."
+    },
+    {
+      "id": "bestiary-of-the-borderlands",
+      "name": "Bestiary of the Borderlands",
+      "type": "book",
+      "description": "A field guide to the monsters of the frontier, with margin notes from three different owners.",
+      "valueGold": 50,
+      "weight": 5.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Entries on goblinoids, undead, and the great beasts, including which ones can be reasoned with."
+    },
+    {
+      "id": "the-planar-compendium",
+      "name": "The Planar Compendium",
+      "type": "book",
+      "description": "A scholar's survey of the planes beyond the material world.",
+      "valueGold": 120,
+      "weight": 6.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Describes the upper and lower planes, the elemental chaos, and the perils of unplanned travel."
+    },
+    {
+      "id": "herbalists-companion",
+      "name": "Herbalist's Companion",
+      "type": "book",
+      "description": "A practical manual of useful plants, with pressed samples still tucked between the pages.",
+      "valueGold": 35,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Identification, harvesting seasons, and the brewing of common healing draughts."
+    },
+    {
+      "id": "annals-of-the-old-kingdom",
+      "name": "Annals of the Old Kingdom",
+      "type": "book",
+      "description": "A dry but thorough history of the realm that stood here before the current one.",
+      "valueGold": 75,
+      "weight": 8.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Royal lines, border wars, and the collapse that left the ruins now full of monsters."
+    },
+    {
+      "id": "codex-of-wards",
+      "name": "Codex of Wards",
+      "type": "book",
+      "description": "A wizard's treatise on protective magic, warded against casual reading.",
+      "valueGold": 200,
+      "weight": 4.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Theory and diagrams for abjuration, from simple alarms to standing shields."
+    },
+    {
+      "id": "the-quiet-blade",
+      "name": "The Quiet Blade",
+      "type": "book",
+      "description": "An anonymous handbook on moving unseen and striking once.",
+      "valueGold": 40,
+      "weight": 1.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Lockwork, shadow, poison etiquette, and how to leave a room you were never in."
+    },
+    {
+      "id": "hymns-of-the-dawnfather",
+      "name": "Hymns of the Dawnfather",
+      "type": "book",
+      "description": "A well-thumbed book of prayers and morning rites.",
+      "valueGold": 30,
+      "weight": 3.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Liturgy, feast days, and the rites for consecrating ground against the undead."
+    },
+    {
+      "id": "dungeoneers-survival-notes",
+      "name": "Dungeoneer's Survival Notes",
+      "type": "book",
+      "description": "Hard-won advice scrawled by someone who clearly survived to write it down.",
+      "valueGold": 45,
+      "weight": 2.0,
+      "damage": null,
+      "durability": {
+        "max": 50,
+        "current": 50
+      },
+      "overview": "Mapping underground, rationing torches, spotting trapped doors, and when to simply leave."
+    }
+  ]
+}

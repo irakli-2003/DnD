@@ -1,0 +1,318 @@
+{
+  "places": [
+    {
+      "id": "greenhollow",
+      "name": "Greenhollow",
+      "description": "A river village of four hundred souls, one tavern, and increasingly nervous militia.",
+      "type": "village",
+      "habitat": "plains",
+      "tags": [
+        "starting-location",
+        "safe",
+        "river"
+      ],
+      "attributes": {
+        "population": "412",
+        "ruler": "Lady Veyra Ashdown",
+        "faction": "independent"
+      },
+      "mapId": "greenhollow-square"
+    },
+    {
+      "id": "the-gilded-stag",
+      "name": "The Gilded Stag",
+      "description": "Greenhollow's tavern and inn. Good stew, thin walls, excellent rumours.",
+      "type": "tavern",
+      "habitat": "urban",
+      "tags": [
+        "tavern",
+        "safe",
+        "rumours",
+        "quest-hub"
+      ],
+      "attributes": {
+        "owner": "Brannock the Keeper",
+        "rooms": "6",
+        "specialty": "River trout and dark ale"
+      },
+      "mapId": "gilded-stag-ground"
+    },
+    {
+      "id": "the-gilded-stag-rooms",
+      "name": "The Gilded Stag - Guest Rooms",
+      "description": "The inn's upper floor: six rooms, a linen closet, and a window that opens onto the stable roof.",
+      "type": "inn",
+      "habitat": "urban",
+      "tags": [
+        "tavern",
+        "safe",
+        "lodging"
+      ],
+      "attributes": {
+        "owner": "Brannock the Keeper",
+        "rooms": "6"
+      },
+      "mapId": "gilded-stag-upper"
+    },
+    {
+      "id": "ironhand-smithy",
+      "name": "Ironhand Smithy",
+      "description": "Torvin's forge, hot enough to be uncomfortable from the doorway.",
+      "type": "shop",
+      "habitat": "urban",
+      "tags": [
+        "shop",
+        "weapons",
+        "armor",
+        "repairs"
+      ],
+      "attributes": {
+        "owner": "Torvin Ironhand",
+        "specialty": "Weapon and armor repair"
+      },
+      "mapId": "ironhand-smithy-map"
+    },
+    {
+      "id": "temple-of-the-dawnfather",
+      "name": "Temple of the Dawnfather",
+      "description": "A modest stone temple with a sun disc above the door and a permanently lit brazier.",
+      "type": "temple",
+      "habitat": "urban",
+      "tags": [
+        "temple",
+        "safe",
+        "healing"
+      ],
+      "attributes": {
+        "deity": "The Dawnfather",
+        "cleric": "Sister Anwen"
+      },
+      "mapId": "temple-dawnfather-map"
+    },
+    {
+      "id": "greenhollow-market",
+      "name": "Greenhollow Market",
+      "description": "Stalls fill the square on market days; on other days it is mostly chickens.",
+      "type": "market",
+      "habitat": "urban",
+      "tags": [
+        "shop",
+        "crowd",
+        "social"
+      ],
+      "attributes": {
+        "market_days": "Third and seventh",
+        "traders": "About twenty"
+      },
+      "mapId": null
+    },
+    {
+      "id": "stonekeep",
+      "name": "Stonekeep",
+      "description": "A fortified keep on the ridge above the valley, garrisoned and undermanned.",
+      "type": "fortress",
+      "habitat": "mountain",
+      "tags": [
+        "defensive",
+        "mountain",
+        "garrison"
+      ],
+      "attributes": {
+        "population": "120",
+        "faction": "wardens",
+        "commander": "Warden Elya"
+      },
+      "mapId": "stonekeep-ground-floor"
+    },
+    {
+      "id": "old-forest",
+      "name": "The Old Forest",
+      "description": "Ancient woodland east of the village. The paths move if you do not watch them.",
+      "type": "forest",
+      "habitat": "forest",
+      "tags": [
+        "wilderness",
+        "dangerous",
+        "fey"
+      ],
+      "attributes": {
+        "danger": "moderate",
+        "inhabitants": "Wolves, dryads, worse"
+      },
+      "mapId": "forest-clearing-map"
+    },
+    {
+      "id": "barrow-crypt",
+      "name": "The Barrow Crypt",
+      "description": "A pre-kingdom burial mound. Something has been digging its way out from the inside.",
+      "type": "dungeon",
+      "habitat": "hills",
+      "tags": [
+        "dungeon",
+        "undead",
+        "dangerous",
+        "loot"
+      ],
+      "attributes": {
+        "danger": "high",
+        "levels": "2",
+        "inhabitants": "Skeletons, ghouls, a wight"
+      },
+      "mapId": "barrow-crypt-map"
+    },
+    {
+      "id": "blackfen-cave",
+      "name": "Blackfen Cave",
+      "description": "A wet limestone cave system under the marsh. Home to spiders the size of dogs.",
+      "type": "cave",
+      "habitat": "swamp",
+      "tags": [
+        "dungeon",
+        "dark",
+        "dangerous"
+      ],
+      "attributes": {
+        "danger": "moderate",
+        "inhabitants": "Giant spiders, stirges"
+      },
+      "mapId": "blackfen-cave-map"
+    },
+    {
+      "id": "bandit-camp",
+      "name": "The Roadside Camp",
+      "description": "A bandit camp in a stand of pines a half mile off the trade road.",
+      "type": "camp",
+      "habitat": "forest",
+      "tags": [
+        "dangerous",
+        "humanoid",
+        "loot"
+      ],
+      "attributes": {
+        "danger": "moderate",
+        "leader": "Bandit Captain",
+        "numbers": "About twelve"
+      },
+      "mapId": "bandit-camp-map"
+    },
+    {
+      "id": "orins-tower",
+      "name": "Magister Orin's Tower",
+      "description": "A narrow four-storey tower with a very obvious magical ward on the door.",
+      "type": "tower",
+      "habitat": "urban",
+      "tags": [
+        "magic",
+        "shop",
+        "safe"
+      ],
+      "attributes": {
+        "owner": "Magister Orin",
+        "floors": "4",
+        "specialty": "Wards and identification"
+      },
+      "mapId": "orins-tower-map"
+    },
+    {
+      "id": "riverside-docks",
+      "name": "Riverside Docks",
+      "description": "Three piers, a warehouse, and a customs shed nobody staffs after dark.",
+      "type": "docks",
+      "habitat": "coast",
+      "tags": [
+        "trade",
+        "smuggling",
+        "urban"
+      ],
+      "attributes": {
+        "berths": "5",
+        "harbourmaster": "Bram the Ferryman"
+      },
+      "mapId": null
+    },
+    {
+      "id": "thornby-mill",
+      "name": "Thornby Mill",
+      "description": "The waterwheel mill upstream. The wheel has been stopped for a week now.",
+      "type": "mill",
+      "habitat": "plains",
+      "tags": [
+        "rural",
+        "quest-hook"
+      ],
+      "attributes": {
+        "owner": "Tam the Miller",
+        "status": "Wheel jammed"
+      },
+      "mapId": null
+    },
+    {
+      "id": "greyhollow-mine",
+      "name": "Greyhollow Mine",
+      "description": "An iron mine abandoned two winters ago after the deep shaft flooded.",
+      "type": "mine",
+      "habitat": "hills",
+      "tags": [
+        "dungeon",
+        "abandoned",
+        "dangerous"
+      ],
+      "attributes": {
+        "danger": "moderate",
+        "status": "Flooded below the third level"
+      },
+      "mapId": null
+    },
+    {
+      "id": "ashdown-manor",
+      "name": "Ashdown Manor",
+      "description": "Lady Veyra's house on the hill, with a wall around it and dogs inside the wall.",
+      "type": "manor",
+      "habitat": "plains",
+      "tags": [
+        "noble",
+        "social",
+        "safe"
+      ],
+      "attributes": {
+        "owner": "Lady Veyra Ashdown",
+        "guards": "8"
+      },
+      "mapId": null
+    },
+    {
+      "id": "crossroads-inn",
+      "name": "The Crossroads Inn",
+      "description": "Where the north road meets the trade road. Everyone passes through eventually.",
+      "type": "inn",
+      "habitat": "plains",
+      "tags": [
+        "travel",
+        "rumours",
+        "neutral-ground"
+      ],
+      "attributes": {
+        "owner": "Unnamed",
+        "notable": "The Hooded Man drinks here"
+      },
+      "mapId": null
+    },
+    {
+      "id": "sunken-shrine",
+      "name": "The Sunken Shrine",
+      "description": "A pre-human shrine half-submerged in the marsh, still faintly warm to the touch.",
+      "type": "shrine",
+      "habitat": "swamp",
+      "tags": [
+        "ancient",
+        "magic",
+        "mystery"
+      ],
+      "attributes": {
+        "danger": "unknown",
+        "age": "Older than the kingdom"
+      },
+      "mapId": null
+    }
+  ]
+}

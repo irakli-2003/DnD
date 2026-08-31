@@ -1,0 +1,1848 @@
+{
+  "spells": [
+    {
+      "id": "acid-splash",
+      "name": "Acid Splash",
+      "description": "A bubble of acid bursts between two adjacent creatures.",
+      "level": 0,
+      "school": "conjuration",
+      "manaCost": 0,
+      "range": 60,
+      "radius": 5,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "acid"
+      }
+    },
+    {
+      "id": "chill-touch",
+      "name": "Chill Touch",
+      "description": "A spectral hand grips the target and prevents it from healing.",
+      "level": 0,
+      "school": "necromancy",
+      "manaCost": 0,
+      "range": 120,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "life_drain",
+          "name": "Life Drain",
+          "description": "Life is torn away and fed to the caster.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 5,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "necrotic"
+      }
+    },
+    {
+      "id": "fire-bolt",
+      "name": "Fire Bolt",
+      "description": "A mote of flame streaks to the target and ignites it.",
+      "level": 0,
+      "school": "evocation",
+      "manaCost": 0,
+      "range": 120,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling to the target.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "fire"
+      }
+    },
+    {
+      "id": "frost-bolt",
+      "name": "Frost Bolt",
+      "description": "A chilling projectile of ice that numbs whatever it strikes.",
+      "level": 0,
+      "school": "evocation",
+      "manaCost": 0,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "freeze",
+          "name": "Freeze",
+          "description": "Numbing cold slows the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "cold"
+      }
+    },
+    {
+      "id": "light",
+      "name": "Light",
+      "description": "An object sheds bright light in a wide radius until dismissed.",
+      "level": 0,
+      "school": "evocation",
+      "manaCost": 0,
+      "range": 5,
+      "radius": 20,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "mage-hand",
+      "name": "Mage Hand",
+      "description": "A spectral hand appears and manipulates objects at a distance.",
+      "level": 0,
+      "school": "conjuration",
+      "manaCost": 0,
+      "range": 30,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "minor-illusion",
+      "name": "Minor Illusion",
+      "description": "Creates a small sound or image indistinguishable from the real thing.",
+      "level": 0,
+      "school": "illusion",
+      "manaCost": 0,
+      "range": 30,
+      "radius": 5,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "poison-spray",
+      "name": "Poison Spray",
+      "description": "A puff of corrosive gas billows into the target's face.",
+      "level": 0,
+      "school": "conjuration",
+      "manaCost": 0,
+      "range": 10,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "poisoned",
+          "name": "Poisoned",
+          "description": "The target is sickened.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 2,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d12",
+          "name": "d12",
+          "sides": 12
+        },
+        "typeId": "poison"
+      }
+    },
+    {
+      "id": "prestidigitation",
+      "name": "Prestidigitation",
+      "description": "A handful of harmless parlour effects: sparks, flavours, small cleanings.",
+      "level": 0,
+      "school": "transmutation",
+      "manaCost": 0,
+      "range": 10,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "ray-of-frost",
+      "name": "Ray of Frost",
+      "description": "A beam of frigid air both wounds and slows the target.",
+      "level": 0,
+      "school": "evocation",
+      "manaCost": 0,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "slowed",
+          "name": "Slowed",
+          "description": "Every movement drags.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "cold"
+      }
+    },
+    {
+      "id": "sacred-flame",
+      "name": "Sacred Flame",
+      "description": "Radiance descends on the target, ignoring any cover it hides behind.",
+      "level": 0,
+      "school": "evocation",
+      "manaCost": 0,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "radiant"
+      }
+    },
+    {
+      "id": "shocking-grasp",
+      "name": "Shocking Grasp",
+      "description": "Lightning leaps from the caster's hand and locks the target's muscles.",
+      "level": 0,
+      "school": "evocation",
+      "manaCost": 0,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "shock",
+          "name": "Shock",
+          "description": "Muscles lock under electricity.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "lightning"
+      }
+    },
+    {
+      "id": "thaumaturgy",
+      "name": "Thaumaturgy",
+      "description": "Minor wonders: a booming voice, flickering flames, trembling ground.",
+      "level": 0,
+      "school": "transmutation",
+      "manaCost": 0,
+      "range": 30,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "guidance",
+      "name": "Guidance",
+      "description": "A touch lends a willing creature a moment of preternatural competence.",
+      "level": 0,
+      "school": "divination",
+      "manaCost": 0,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "EASY",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Blessed",
+          "description": "A faint radiance steadies the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "burning-hands",
+      "name": "Burning Hands",
+      "description": "A sheet of flame fans out from the caster's spread fingers.",
+      "level": 1,
+      "school": "evocation",
+      "manaCost": 5,
+      "range": 15,
+      "radius": 15,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling to the target.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "fire"
+      }
+    },
+    {
+      "id": "charm-person",
+      "name": "Charm Person",
+      "description": "The target regards the caster as a trusted friend for the duration.",
+      "level": 1,
+      "school": "enchantment",
+      "manaCost": 5,
+      "range": 30,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "charmed",
+          "name": "Charmed",
+          "description": "The target regards the caster as a friend.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "cure-wounds",
+      "name": "Cure Wounds",
+      "description": "A touch closes wounds and restores vitality.",
+      "level": 1,
+      "school": "restoration",
+      "manaCost": 5,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "invigorated",
+          "name": "Invigorated",
+          "description": "Vitality floods back.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 8
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "detect-magic",
+      "name": "Detect Magic",
+      "description": "Reveals auras of magic within range and the school each belongs to.",
+      "level": 1,
+      "school": "divination",
+      "manaCost": 5,
+      "range": 30,
+      "radius": 30,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "EASY",
+        "preventsMovement": false
+      },
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "faerie-fire",
+      "name": "Faerie Fire",
+      "description": "Objects and creatures in the area are outlined in coloured light and cannot hide.",
+      "level": 1,
+      "school": "evocation",
+      "manaCost": 5,
+      "range": 60,
+      "radius": 20,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "EASY",
+        "preventsMovement": false
+      },
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "healing-word",
+      "name": "Healing Word",
+      "description": "A single spoken word restores a small amount of vitality at range.",
+      "level": 1,
+      "school": "restoration",
+      "manaCost": 5,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "invigorated",
+          "name": "Invigorated",
+          "description": "A little vitality returns.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 4
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "mage-armor",
+      "name": "Mage Armor",
+      "description": "An invisible field of force protects an unarmoured target.",
+      "level": 1,
+      "school": "abjuration",
+      "manaCost": 5,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Blessed",
+          "description": "A faint radiance steadies the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "magic-missile",
+      "name": "Magic Missile",
+      "description": "Three darts of force strike unerringly; they never miss.",
+      "level": 1,
+      "school": "evocation",
+      "manaCost": 5,
+      "range": 120,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": {
+        "amount": {
+          "id": "d4",
+          "name": "d4",
+          "sides": 4
+        },
+        "typeId": "force"
+      }
+    },
+    {
+      "id": "shield-spell",
+      "name": "Shield",
+      "description": "An instant barrier of force turns aside an incoming attack.",
+      "level": 1,
+      "school": "abjuration",
+      "manaCost": 5,
+      "range": 0,
+      "radius": 0,
+      "castingMethod": "thought",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Blessed",
+          "description": "A faint radiance steadies the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "sleep",
+      "name": "Sleep",
+      "description": "Creatures in the area drop into a magical slumber, weakest first.",
+      "level": 1,
+      "school": "enchantment",
+      "manaCost": 5,
+      "range": 90,
+      "radius": 20,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "unconscious",
+          "name": "Unconscious",
+          "description": "The target falls into magical sleep.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "thunderwave",
+      "name": "Thunderwave",
+      "description": "A wave of concussive force hurls everything near the caster away.",
+      "level": 1,
+      "school": "evocation",
+      "manaCost": 5,
+      "range": 15,
+      "radius": 15,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "knockback",
+          "name": "Knockback",
+          "description": "Targets are thrown back.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "thunder"
+      }
+    },
+    {
+      "id": "bless",
+      "name": "Bless",
+      "description": "Up to three allies gain a steady edge on attacks and saves.",
+      "level": 1,
+      "school": "enchantment",
+      "manaCost": 5,
+      "range": 30,
+      "radius": 30,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Blessed",
+          "description": "A faint radiance steadies the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "entangle",
+      "name": "Entangle",
+      "description": "Grasping weeds erupt from the ground and hold everything in the area.",
+      "level": 1,
+      "school": "conjuration",
+      "manaCost": 5,
+      "range": 90,
+      "radius": 20,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "entangled",
+          "name": "Entangled",
+          "description": "Vines hold the target fast.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        },
+        {
+          "id": "restrained",
+          "name": "Restrained",
+          "description": "The target is held fast.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "hunters-mark",
+      "name": "Hunter's Mark",
+      "description": "The caster marks a quarry and strikes it more precisely thereafter.",
+      "level": 1,
+      "school": "divination",
+      "manaCost": 5,
+      "range": 90,
+      "radius": 0,
+      "castingMethod": "thought",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "EASY",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "advantage_on_attack",
+          "name": "Marked",
+          "description": "Attacks against the quarry bite deeper.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "blur",
+      "name": "Blur",
+      "description": "The caster's outline wavers, making them hard to strike.",
+      "level": 2,
+      "school": "illusion",
+      "manaCost": 10,
+      "range": 0,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "blessed",
+          "name": "Blessed",
+          "description": "A faint radiance steadies the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "darkness",
+      "name": "Darkness",
+      "description": "Magical darkness fills the area; even darkvision cannot pierce it.",
+      "level": 2,
+      "school": "evocation",
+      "manaCost": 10,
+      "range": 60,
+      "radius": 15,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "blinded",
+          "name": "Blinded",
+          "description": "The target cannot see.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "hold-person",
+      "name": "Hold Person",
+      "description": "A humanoid is frozen in place, unable to move or speak.",
+      "level": 2,
+      "school": "enchantment",
+      "manaCost": 10,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "paralyzed",
+          "name": "Paralyzed",
+          "description": "The target cannot move or act.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "invisibility",
+      "name": "Invisibility",
+      "description": "The target and everything it carries fade from sight.",
+      "level": 2,
+      "school": "illusion",
+      "manaCost": 10,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "invisible",
+          "name": "Invisible",
+          "description": "The target cannot be seen.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "misty-step",
+      "name": "Misty Step",
+      "description": "The caster vanishes in silver mist and reappears a short distance away.",
+      "level": 2,
+      "school": "teleportation",
+      "manaCost": 10,
+      "range": 30,
+      "radius": 0,
+      "castingMethod": "thought",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "scorching-ray",
+      "name": "Scorching Ray",
+      "description": "Three rays of fire streak toward targets of the caster's choosing.",
+      "level": 2,
+      "school": "evocation",
+      "manaCost": 10,
+      "range": 120,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling to the target.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "fire"
+      }
+    },
+    {
+      "id": "spiritual-weapon",
+      "name": "Spiritual Weapon",
+      "description": "A floating spectral weapon attacks at the caster's command.",
+      "level": 2,
+      "school": "evocation",
+      "manaCost": 10,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "force"
+      }
+    },
+    {
+      "id": "web",
+      "name": "Web",
+      "description": "Thick strands fill the area and snare anything that enters.",
+      "level": 2,
+      "school": "conjuration",
+      "manaCost": 10,
+      "range": 60,
+      "radius": 20,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "restrained",
+          "name": "Restrained",
+          "description": "The target is held fast.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "lesser-restoration",
+      "name": "Lesser Restoration",
+      "description": "Ends one disease or condition afflicting a creature the caster touches.",
+      "level": 2,
+      "school": "restoration",
+      "manaCost": 10,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "stabilized",
+          "name": "Restored",
+          "description": "One affliction ends.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 2
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "moonbeam",
+      "name": "Moonbeam",
+      "description": "A pillar of pale light sears whatever stands in it, and can be moved each round.",
+      "level": 2,
+      "school": "evocation",
+      "manaCost": 10,
+      "range": 120,
+      "radius": 5,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d10",
+          "name": "d10",
+          "sides": 10
+        },
+        "typeId": "radiant"
+      }
+    },
+    {
+      "id": "fireball",
+      "name": "Fireball",
+      "description": "A bead of flame streaks out and detonates in a roaring sphere.",
+      "level": 3,
+      "school": "evocation",
+      "manaCost": 15,
+      "range": 150,
+      "radius": 20,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling to the target.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "fire"
+      }
+    },
+    {
+      "id": "lightning-bolt",
+      "name": "Lightning Bolt",
+      "description": "A stroke of lightning blasts out in a line from the caster.",
+      "level": 3,
+      "school": "evocation",
+      "manaCost": 15,
+      "range": 100,
+      "radius": 5,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "shock",
+          "name": "Shock",
+          "description": "Muscles lock under electricity.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "lightning"
+      }
+    },
+    {
+      "id": "counterspell",
+      "name": "Counterspell",
+      "description": "Interrupts another caster mid-incantation and unravels the spell.",
+      "level": 3,
+      "school": "abjuration",
+      "manaCost": 15,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "thought",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "dispel-magic",
+      "name": "Dispel Magic",
+      "description": "Ends ongoing magical effects on a target.",
+      "level": 3,
+      "school": "abjuration",
+      "manaCost": 15,
+      "range": 120,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "fly",
+      "name": "Fly",
+      "description": "The target gains a flying speed for the duration.",
+      "level": 3,
+      "school": "transmutation",
+      "manaCost": 15,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "hasted",
+          "name": "Hasted",
+          "description": "The target moves and acts far faster.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "revivify",
+      "name": "Revivify",
+      "description": "Returns a creature that died within the last minute to life at one hit point.",
+      "level": 3,
+      "school": "restoration",
+      "manaCost": 15,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "stabilized",
+          "name": "Revived",
+          "description": "Life returns, barely.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 1
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "haste",
+      "name": "Haste",
+      "description": "The target's speed doubles and it gains an extra action each round.",
+      "level": 3,
+      "school": "transmutation",
+      "manaCost": 15,
+      "range": 30,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "hasted",
+          "name": "Hasted",
+          "description": "The target moves and acts far faster.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "slow",
+      "name": "Slow",
+      "description": "Up to six creatures move and act at half their usual pace.",
+      "level": 3,
+      "school": "transmutation",
+      "manaCost": 15,
+      "range": 120,
+      "radius": 40,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "slowed",
+          "name": "Slowed",
+          "description": "Every movement drags.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "animate-dead",
+      "name": "Animate Dead",
+      "description": "Raises a corpse as a skeleton or zombie under the caster's command.",
+      "level": 3,
+      "school": "necromancy",
+      "manaCost": 15,
+      "range": 10,
+      "radius": 0,
+      "castingMethod": "ritual",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "vampiric-touch",
+      "name": "Vampiric Touch",
+      "description": "The caster's touch drains life and heals them for half of what it takes.",
+      "level": 3,
+      "school": "necromancy",
+      "manaCost": 15,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "MEDIUM",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "life_drain",
+          "name": "Life Drain",
+          "description": "Life is torn away and fed to the caster.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 5,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "necrotic"
+      }
+    },
+    {
+      "id": "greater-invisibility",
+      "name": "Greater Invisibility",
+      "description": "The target stays invisible even while attacking.",
+      "level": 4,
+      "school": "illusion",
+      "manaCost": 20,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "invisible",
+          "name": "Invisible",
+          "description": "The target cannot be seen.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "ice-storm",
+      "name": "Ice Storm",
+      "description": "Jagged hail hammers a wide area and leaves the ground treacherous.",
+      "level": 4,
+      "school": "evocation",
+      "manaCost": 20,
+      "range": 300,
+      "radius": 20,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "freeze",
+          "name": "Freeze",
+          "description": "Numbing cold slows the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "cold"
+      }
+    },
+    {
+      "id": "polymorph",
+      "name": "Polymorph",
+      "description": "Transforms a creature into a beast of comparable power.",
+      "level": 4,
+      "school": "transmutation",
+      "manaCost": 20,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "wall-of-fire",
+      "name": "Wall of Fire",
+      "description": "A wall of flame springs up and burns anything that crosses it.",
+      "level": 4,
+      "school": "evocation",
+      "manaCost": 20,
+      "range": 120,
+      "radius": 60,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling to the target.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "fire"
+      }
+    },
+    {
+      "id": "cone-of-cold",
+      "name": "Cone of Cold",
+      "description": "A blast of freezing air erupts from the caster's hands.",
+      "level": 5,
+      "school": "evocation",
+      "manaCost": 25,
+      "range": 60,
+      "radius": 60,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "freeze",
+          "name": "Freeze",
+          "description": "Numbing cold slows the target.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "cold"
+      }
+    },
+    {
+      "id": "hold-monster",
+      "name": "Hold Monster",
+      "description": "Freezes any creature, not merely a humanoid, in place.",
+      "level": 5,
+      "school": "enchantment",
+      "manaCost": 25,
+      "range": 90,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [
+        {
+          "id": "paralyzed",
+          "name": "Paralyzed",
+          "description": "The target cannot move or act.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "raise-dead",
+      "name": "Raise Dead",
+      "description": "Returns a creature dead up to ten days to life, weakened but whole.",
+      "level": 5,
+      "school": "restoration",
+      "manaCost": 25,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "ritual",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "stabilized",
+          "name": "Raised",
+          "description": "Life is restored.",
+          "damaging": false,
+          "healing": true,
+          "damageAmount": 0,
+          "healingAmount": 10
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "wall-of-force",
+      "name": "Wall of Force",
+      "description": "An invisible, effectively unbreakable barrier of pure force.",
+      "level": 5,
+      "school": "evocation",
+      "manaCost": 25,
+      "range": 120,
+      "radius": 60,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": false
+      },
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "chain-lightning",
+      "name": "Chain Lightning",
+      "description": "A bolt leaps from the first target to three more nearby.",
+      "level": 6,
+      "school": "evocation",
+      "manaCost": 30,
+      "range": 150,
+      "radius": 30,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "shock",
+          "name": "Shock",
+          "description": "Muscles lock under electricity.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "lightning"
+      }
+    },
+    {
+      "id": "disintegrate",
+      "name": "Disintegrate",
+      "description": "A thin green ray reduces its target to fine grey dust.",
+      "level": 6,
+      "school": "transmutation",
+      "manaCost": 30,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "force"
+      }
+    },
+    {
+      "id": "true-seeing",
+      "name": "True Seeing",
+      "description": "The target sees through illusions, invisibility, and shapechanging alike.",
+      "level": 6,
+      "school": "divination",
+      "manaCost": 30,
+      "range": 5,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "finger-of-death",
+      "name": "Finger of Death",
+      "description": "Negative energy tears through the target; the slain rise as zombies.",
+      "level": 7,
+      "school": "necromancy",
+      "manaCost": 35,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "life_drain",
+          "name": "Life Drain",
+          "description": "Life is torn away and fed to the caster.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 5,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d8",
+          "name": "d8",
+          "sides": 8
+        },
+        "typeId": "necrotic"
+      }
+    },
+    {
+      "id": "teleport",
+      "name": "Teleport",
+      "description": "Transports the caster and companions instantly to a known distant place.",
+      "level": 7,
+      "school": "teleportation",
+      "manaCost": 35,
+      "range": 10,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "dominate-monster",
+      "name": "Dominate Monster",
+      "description": "The caster takes direct control of another creature's actions.",
+      "level": 8,
+      "school": "enchantment",
+      "manaCost": 40,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "thought",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": {
+        "difficultyLevel": "HARD",
+        "preventsMovement": true
+      },
+      "effects": [
+        {
+          "id": "charmed",
+          "name": "Charmed",
+          "description": "The target regards the caster as a friend.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": null
+    },
+    {
+      "id": "sunburst",
+      "name": "Sunburst",
+      "description": "Brilliant sunlight explodes outward, searing and blinding everything caught.",
+      "level": 8,
+      "school": "evocation",
+      "manaCost": 40,
+      "range": 150,
+      "radius": 60,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "blinded",
+          "name": "Blinded",
+          "description": "The target cannot see.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "radiant"
+      }
+    },
+    {
+      "id": "meteor-swarm",
+      "name": "Meteor Swarm",
+      "description": "Four blazing spheres plummet from the sky and detonate on impact.",
+      "level": 9,
+      "school": "evocation",
+      "manaCost": 45,
+      "range": 1000,
+      "radius": 40,
+      "castingMethod": "hand-movement",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [
+        {
+          "id": "burn",
+          "name": "Burning",
+          "description": "Flames cling to the target.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 3,
+          "healingAmount": 0
+        },
+        {
+          "id": "area_damage",
+          "name": "Area Damage",
+          "description": "Harm spread across the area.",
+          "damaging": true,
+          "healing": false,
+          "damageAmount": 6,
+          "healingAmount": 0
+        },
+        {
+          "id": "prone",
+          "name": "Prone",
+          "description": "The target is knocked flat.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0
+        }
+      ],
+      "damage": {
+        "amount": {
+          "id": "d6",
+          "name": "d6",
+          "sides": 6
+        },
+        "typeId": "fire"
+      }
+    },
+    {
+      "id": "power-word-kill",
+      "name": "Power Word Kill",
+      "description": "A single word of power stops the heart of a badly wounded creature.",
+      "level": 9,
+      "school": "enchantment",
+      "manaCost": 45,
+      "range": 60,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "time-stop",
+      "name": "Time Stop",
+      "description": "The caster takes several turns in a row while the world stands still.",
+      "level": 9,
+      "school": "transmutation",
+      "manaCost": 45,
+      "range": 0,
+      "radius": 0,
+      "castingMethod": "thought",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    },
+    {
+      "id": "wish",
+      "name": "Wish",
+      "description": "The most powerful spell there is, and the most dangerous to word carelessly.",
+      "level": 9,
+      "school": "conjuration",
+      "manaCost": 45,
+      "range": 0,
+      "radius": 0,
+      "castingMethod": "speech",
+      "requiredConsumables": [],
+      "requiredTools": [],
+      "concentration": null,
+      "effects": [],
+      "damage": null
+    }
+  ]
+}

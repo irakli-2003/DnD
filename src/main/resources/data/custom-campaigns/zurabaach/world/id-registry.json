@@ -1,0 +1,1900 @@
+{
+  "entries": [
+    {
+      "id": "human",
+      "file": "world/races.json"
+    },
+    {
+      "id": "dwarf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "hill-dwarf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "mountain-dwarf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "elf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "high-elf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "wood-elf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "drow",
+      "file": "world/races.json"
+    },
+    {
+      "id": "halfling",
+      "file": "world/races.json"
+    },
+    {
+      "id": "lightfoot-halfling",
+      "file": "world/races.json"
+    },
+    {
+      "id": "stout-halfling",
+      "file": "world/races.json"
+    },
+    {
+      "id": "dragonborn",
+      "file": "world/races.json"
+    },
+    {
+      "id": "gnome",
+      "file": "world/races.json"
+    },
+    {
+      "id": "forest-gnome",
+      "file": "world/races.json"
+    },
+    {
+      "id": "rock-gnome",
+      "file": "world/races.json"
+    },
+    {
+      "id": "half-elf",
+      "file": "world/races.json"
+    },
+    {
+      "id": "half-orc",
+      "file": "world/races.json"
+    },
+    {
+      "id": "orc",
+      "file": "world/races.json"
+    },
+    {
+      "id": "tiefling",
+      "file": "world/races.json"
+    },
+    {
+      "id": "aasimar",
+      "file": "world/races.json"
+    },
+    {
+      "id": "goliath",
+      "file": "world/races.json"
+    },
+    {
+      "id": "barbarian",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "bard",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "cleric",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "druid",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "fighter",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "monk",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "paladin",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "ranger",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "rogue",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "sorcerer",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "warlock",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "wizard",
+      "file": "world/classes.json"
+    },
+    {
+      "id": "club",
+      "file": "world/items.json"
+    },
+    {
+      "id": "dagger",
+      "file": "world/items.json"
+    },
+    {
+      "id": "greatclub",
+      "file": "world/items.json"
+    },
+    {
+      "id": "handaxe",
+      "file": "world/items.json"
+    },
+    {
+      "id": "javelin",
+      "file": "world/items.json"
+    },
+    {
+      "id": "light-hammer",
+      "file": "world/items.json"
+    },
+    {
+      "id": "mace",
+      "file": "world/items.json"
+    },
+    {
+      "id": "quarterstaff",
+      "file": "world/items.json"
+    },
+    {
+      "id": "sickle",
+      "file": "world/items.json"
+    },
+    {
+      "id": "spear",
+      "file": "world/items.json"
+    },
+    {
+      "id": "light-crossbow",
+      "file": "world/items.json"
+    },
+    {
+      "id": "dart",
+      "file": "world/items.json"
+    },
+    {
+      "id": "shortbow",
+      "file": "world/items.json"
+    },
+    {
+      "id": "sling",
+      "file": "world/items.json"
+    },
+    {
+      "id": "battleaxe",
+      "file": "world/items.json"
+    },
+    {
+      "id": "flail",
+      "file": "world/items.json"
+    },
+    {
+      "id": "glaive",
+      "file": "world/items.json"
+    },
+    {
+      "id": "greataxe",
+      "file": "world/items.json"
+    },
+    {
+      "id": "greatsword",
+      "file": "world/items.json"
+    },
+    {
+      "id": "halberd",
+      "file": "world/items.json"
+    },
+    {
+      "id": "lance",
+      "file": "world/items.json"
+    },
+    {
+      "id": "longsword",
+      "file": "world/items.json"
+    },
+    {
+      "id": "maul",
+      "file": "world/items.json"
+    },
+    {
+      "id": "morningstar",
+      "file": "world/items.json"
+    },
+    {
+      "id": "pike",
+      "file": "world/items.json"
+    },
+    {
+      "id": "rapier",
+      "file": "world/items.json"
+    },
+    {
+      "id": "scimitar",
+      "file": "world/items.json"
+    },
+    {
+      "id": "shortsword",
+      "file": "world/items.json"
+    },
+    {
+      "id": "trident",
+      "file": "world/items.json"
+    },
+    {
+      "id": "war-pick",
+      "file": "world/items.json"
+    },
+    {
+      "id": "warhammer",
+      "file": "world/items.json"
+    },
+    {
+      "id": "whip",
+      "file": "world/items.json"
+    },
+    {
+      "id": "blowgun",
+      "file": "world/items.json"
+    },
+    {
+      "id": "hand-crossbow",
+      "file": "world/items.json"
+    },
+    {
+      "id": "heavy-crossbow",
+      "file": "world/items.json"
+    },
+    {
+      "id": "longbow",
+      "file": "world/items.json"
+    },
+    {
+      "id": "flametongue",
+      "file": "world/items.json"
+    },
+    {
+      "id": "frostbrand",
+      "file": "world/items.json"
+    },
+    {
+      "id": "thunderstrike-maul",
+      "file": "world/items.json"
+    },
+    {
+      "id": "vampiric-dagger",
+      "file": "world/items.json"
+    },
+    {
+      "id": "holy-avenger",
+      "file": "world/items.json"
+    },
+    {
+      "id": "padded-armor",
+      "file": "world/items.json"
+    },
+    {
+      "id": "leather-armor",
+      "file": "world/items.json"
+    },
+    {
+      "id": "studded-leather",
+      "file": "world/items.json"
+    },
+    {
+      "id": "hide-armor",
+      "file": "world/items.json"
+    },
+    {
+      "id": "chain-shirt",
+      "file": "world/items.json"
+    },
+    {
+      "id": "scale-mail",
+      "file": "world/items.json"
+    },
+    {
+      "id": "breastplate",
+      "file": "world/items.json"
+    },
+    {
+      "id": "half-plate",
+      "file": "world/items.json"
+    },
+    {
+      "id": "ring-mail",
+      "file": "world/items.json"
+    },
+    {
+      "id": "chain-mail",
+      "file": "world/items.json"
+    },
+    {
+      "id": "splint-armor",
+      "file": "world/items.json"
+    },
+    {
+      "id": "plate-armor",
+      "file": "world/items.json"
+    },
+    {
+      "id": "shield",
+      "file": "world/items.json"
+    },
+    {
+      "id": "tower-shield",
+      "file": "world/items.json"
+    },
+    {
+      "id": "mithral-chain",
+      "file": "world/items.json"
+    },
+    {
+      "id": "dragonscale-plate",
+      "file": "world/items.json"
+    },
+    {
+      "id": "elven-cloak",
+      "file": "world/items.json"
+    },
+    {
+      "id": "leather-helm",
+      "file": "world/items.json"
+    },
+    {
+      "id": "steel-helm",
+      "file": "world/items.json"
+    },
+    {
+      "id": "gauntlets",
+      "file": "world/items.json"
+    },
+    {
+      "id": "greaves",
+      "file": "world/items.json"
+    },
+    {
+      "id": "potion-of-healing",
+      "file": "world/items.json"
+    },
+    {
+      "id": "potion-of-greater-healing",
+      "file": "world/items.json"
+    },
+    {
+      "id": "antitoxin",
+      "file": "world/items.json"
+    },
+    {
+      "id": "potion-of-fire-resistance",
+      "file": "world/items.json"
+    },
+    {
+      "id": "oil-of-sharpness",
+      "file": "world/items.json"
+    },
+    {
+      "id": "potion-of-invisibility",
+      "file": "world/items.json"
+    },
+    {
+      "id": "potion-of-speed",
+      "file": "world/items.json"
+    },
+    {
+      "id": "basic-poison",
+      "file": "world/items.json"
+    },
+    {
+      "id": "alchemists-fire",
+      "file": "world/items.json"
+    },
+    {
+      "id": "holy-water",
+      "file": "world/items.json"
+    },
+    {
+      "id": "potion-of-climbing",
+      "file": "world/items.json"
+    },
+    {
+      "id": "elixir-of-health",
+      "file": "world/items.json"
+    },
+    {
+      "id": "rope-hempen",
+      "file": "world/items.json"
+    },
+    {
+      "id": "torch",
+      "file": "world/items.json"
+    },
+    {
+      "id": "lantern-hooded",
+      "file": "world/items.json"
+    },
+    {
+      "id": "rations",
+      "file": "world/items.json"
+    },
+    {
+      "id": "waterskin",
+      "file": "world/items.json"
+    },
+    {
+      "id": "bedroll",
+      "file": "world/items.json"
+    },
+    {
+      "id": "thieves-tools",
+      "file": "world/items.json"
+    },
+    {
+      "id": "healers-kit",
+      "file": "world/items.json"
+    },
+    {
+      "id": "crowbar",
+      "file": "world/items.json"
+    },
+    {
+      "id": "grappling-hook",
+      "file": "world/items.json"
+    },
+    {
+      "id": "holy-symbol",
+      "file": "world/items.json"
+    },
+    {
+      "id": "arcane-focus",
+      "file": "world/items.json"
+    },
+    {
+      "id": "component-pouch",
+      "file": "world/items.json"
+    },
+    {
+      "id": "spellbook",
+      "file": "world/items.json"
+    },
+    {
+      "id": "tinderbox",
+      "file": "world/items.json"
+    },
+    {
+      "id": "caltrops",
+      "file": "world/items.json"
+    },
+    {
+      "id": "manacles",
+      "file": "world/items.json"
+    },
+    {
+      "id": "mirror-steel",
+      "file": "world/items.json"
+    },
+    {
+      "id": "ball-bearings",
+      "file": "world/items.json"
+    },
+    {
+      "id": "climbers-kit",
+      "file": "world/items.json"
+    },
+    {
+      "id": "acid-splash",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "chill-touch",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "fire-bolt",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "frost-bolt",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "light",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "mage-hand",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "minor-illusion",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "poison-spray",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "prestidigitation",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "ray-of-frost",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "sacred-flame",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "shocking-grasp",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "thaumaturgy",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "guidance",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "burning-hands",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "charm-person",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "cure-wounds",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "detect-magic",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "faerie-fire",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "healing-word",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "mage-armor",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "magic-missile",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "shield-spell",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "sleep",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "thunderwave",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "bless",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "entangle",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "hunters-mark",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "blur",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "darkness",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "hold-person",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "invisibility",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "misty-step",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "scorching-ray",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "spiritual-weapon",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "web",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "lesser-restoration",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "moonbeam",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "fireball",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "lightning-bolt",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "counterspell",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "dispel-magic",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "fly",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "revivify",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "haste",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "slow",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "animate-dead",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "vampiric-touch",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "greater-invisibility",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "ice-storm",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "polymorph",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "wall-of-fire",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "cone-of-cold",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "hold-monster",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "raise-dead",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "wall-of-force",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "chain-lightning",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "disintegrate",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "true-seeing",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "finger-of-death",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "teleport",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "dominate-monster",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "sunburst",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "meteor-swarm",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "power-word-kill",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "time-stop",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "wish",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "greenhollow",
+      "file": "world/places.json"
+    },
+    {
+      "id": "the-gilded-stag",
+      "file": "world/places.json"
+    },
+    {
+      "id": "the-gilded-stag-rooms",
+      "file": "world/places.json"
+    },
+    {
+      "id": "ironhand-smithy",
+      "file": "world/places.json"
+    },
+    {
+      "id": "temple-of-the-dawnfather",
+      "file": "world/places.json"
+    },
+    {
+      "id": "greenhollow-market",
+      "file": "world/places.json"
+    },
+    {
+      "id": "stonekeep",
+      "file": "world/places.json"
+    },
+    {
+      "id": "old-forest",
+      "file": "world/places.json"
+    },
+    {
+      "id": "barrow-crypt",
+      "file": "world/places.json"
+    },
+    {
+      "id": "blackfen-cave",
+      "file": "world/places.json"
+    },
+    {
+      "id": "bandit-camp",
+      "file": "world/places.json"
+    },
+    {
+      "id": "orins-tower",
+      "file": "world/places.json"
+    },
+    {
+      "id": "riverside-docks",
+      "file": "world/places.json"
+    },
+    {
+      "id": "thornby-mill",
+      "file": "world/places.json"
+    },
+    {
+      "id": "greyhollow-mine",
+      "file": "world/places.json"
+    },
+    {
+      "id": "ashdown-manor",
+      "file": "world/places.json"
+    },
+    {
+      "id": "crossroads-inn",
+      "file": "world/places.json"
+    },
+    {
+      "id": "sunken-shrine",
+      "file": "world/places.json"
+    },
+    {
+      "id": "blinded",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "charmed",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "deafened",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "frightened",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "fear",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "grappled",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "incapacitated",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "invisible",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "paralyzed",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "petrified",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "poisoned",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "prone",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "restrained",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "stunned",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "unconscious",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "exhaustion",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "burn",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "heated_armor",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "freeze",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "shock",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "infection",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "bleeding",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "entangled",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "silenced",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "blessed",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "hasted",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "slowed",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "invigorated",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "regeneration",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "stabilized",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "area_damage",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "knockback",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "advantage_on_attack",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "life_drain",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "acid",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "bludgeoning",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "cold",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "fire",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "force",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "lightning",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "necrotic",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "piercing",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "poison",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "psychic",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "radiant",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "slashing",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "thunder",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "cutting",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "bio",
+      "file": "world/damage-types.json"
+    },
+    {
+      "id": "warden-elya",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "brannock-the-keeper",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "mira-swiftfoot",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "torvin-ironhand",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "sister-anwen",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "archivist-pell",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "captain-hollis",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "silas-crane",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "nessa-quickfingers",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "old-hask",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "lady-veyra",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "magister-orin",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "greta-thornby",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "bram-the-ferryman",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "sergeant-dol",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "elowen-nightbreeze",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "fenwick-mudd",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "mother-sable",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "garrick-vane",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "the-hooded-man",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "korga-splitshield",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "tam-the-miller",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "goblin",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "goblin-boss",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "hobgoblin",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "bugbear",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "kobold",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "orc-warrior",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "orc-war-chief",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "gnoll",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "bandit",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "bandit-captain",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "cultist",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "cult-fanatic",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "guard",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "veteran",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "knight",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "mage",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "priest",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "assassin",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "berserker",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "druid-npc",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "skeleton",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "zombie",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "ghoul",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "wight",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "wraith",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "specter",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "mummy",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "vampire-spawn",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "lich",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "ogre",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "hill-giant",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "frost-giant",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "troll",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "owlbear",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "harpy",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "basilisk",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "mimic",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "gelatinous-cube",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "rust-monster",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "animated-armor",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "flesh-golem",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "imp",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "succubus",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "hell-hound",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "air-elemental",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "fire-elemental",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "earth-elemental",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "water-elemental",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "dryad",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "pixie",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "mind-flayer",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "beholder",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "young-red-dragon",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "adult-white-dragon",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "ember-wyrm",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "wyvern",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "treant",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "shambling-mound",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "stirge",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "wolf",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "dire-wolf",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "brown-bear",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "cave-bear",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "boar",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-boar",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-spider",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-rat",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "swarm-of-rats",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-bat",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "panther",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "lion",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-eagle",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "crocodile",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-crocodile",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-snake",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-scorpion",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "warhorse",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "riding-horse",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "mastiff",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "mule",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "polar-bear",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-shark",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "octopus-giant",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "raven",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "giant-goat",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "common",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "dwarvish",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "elvish",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "giant",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "gnomish",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "goblin-tongue",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "halfling-tongue",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "orcish",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "abyssal",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "celestial",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "draconic",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "deep-speech",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "infernal",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "primordial",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "sylvan",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "undercommon",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "druidic",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "thieves-cant",
+      "file": "world/languages.json"
+    },
+    {
+      "id": "wolfsbane",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "nightshade",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "sunblossom",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "frostcap-mushroom",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "emberroot",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "silverleaf",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "giant-spider-venom",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "basilisk-eye",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "troll-fat",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "mandrake-root",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "gravebloom",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "kingsfoil",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "phoenix-ash",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "moonpetal",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "cave-lichen",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "dragon-scale-powder",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "harpy-feather",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "bogwater-salt",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "ironbark-shavings",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "wyvern-sting",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "mind-flayer-brine",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "ghost-mushroom",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "blood-lotus",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "purified-water",
+      "file": "world/alchemy-ingredients.json"
+    },
+    {
+      "id": "common-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "dwarvish-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "elvish-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "giant-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "gnomish-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "goblin-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "halfling-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "orc-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "abyssal-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "celestial-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "draconic-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "deep-speech-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "infernal-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "primordial-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "sylvan-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "undercommon-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "druidic-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "thieves-cant-primer",
+      "file": "world/books.json"
+    },
+    {
+      "id": "bestiary-of-the-borderlands",
+      "file": "world/books.json"
+    },
+    {
+      "id": "the-planar-compendium",
+      "file": "world/books.json"
+    },
+    {
+      "id": "herbalists-companion",
+      "file": "world/books.json"
+    },
+    {
+      "id": "annals-of-the-old-kingdom",
+      "file": "world/books.json"
+    },
+    {
+      "id": "codex-of-wards",
+      "file": "world/books.json"
+    },
+    {
+      "id": "the-quiet-blade",
+      "file": "world/books.json"
+    },
+    {
+      "id": "hymns-of-the-dawnfather",
+      "file": "world/books.json"
+    },
+    {
+      "id": "dungeoneers-survival-notes",
+      "file": "world/books.json"
+    },
+    {
+      "id": "d4",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d6",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d8",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d10",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d12",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d20",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "d100",
+      "file": "world/dice.json"
+    },
+    {
+      "id": "gilded-stag-ground",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "gilded-stag-upper",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "greenhollow-square",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "ironhand-smithy-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "temple-dawnfather-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "stonekeep-ground-floor",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "forest-clearing-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "barrow-crypt-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "blackfen-cave-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "bandit-camp-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "orins-tower-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "open-field-map",
+      "file": "world/maps.json"
+    },
+    {
+      "id": "revenant",
+      "file": "world/races.json"
+    },
+    {
+      "id": "thunderkiss",
+      "file": "world/items.json"
+    },
+    {
+      "id": "silvan-hunting-sword",
+      "file": "world/items.json"
+    },
+    {
+      "id": "rhaz-warhammer",
+      "file": "world/items.json"
+    },
+    {
+      "id": "kaavor-whip",
+      "file": "world/items.json"
+    },
+    {
+      "id": "sixfold-judgment",
+      "file": "world/items.json"
+    },
+    {
+      "id": "monokatana",
+      "file": "world/items.json"
+    },
+    {
+      "id": "gorloks-giant-axe",
+      "file": "world/items.json"
+    },
+    {
+      "id": "dwarven-heavy-plate",
+      "file": "world/items.json"
+    },
+    {
+      "id": "leaf-pendant",
+      "file": "world/items.json"
+    },
+    {
+      "id": "gravitic-anchor-node",
+      "file": "world/items.json"
+    },
+    {
+      "id": "word-lavenos",
+      "file": "world/items.json"
+    },
+    {
+      "id": "player-balthazar",
+      "file": "players/players.json"
+    },
+    {
+      "id": "player-silvan",
+      "file": "players/players.json"
+    },
+    {
+      "id": "player-vaerak",
+      "file": "players/players.json"
+    },
+    {
+      "id": "player-cucaratcha",
+      "file": "players/players.json"
+    },
+    {
+      "id": "player-lavenos",
+      "file": "players/players.json"
+    },
+    {
+      "id": "player-gorlok",
+      "file": "players/players.json"
+    },
+    {
+      "id": "player-tasha",
+      "file": "players/players.json"
+    }
+  ]
+}

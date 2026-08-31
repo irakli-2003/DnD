@@ -1,0 +1,79 @@
+{
+  "damageTypes": [
+    {
+      "id": "acid",
+      "name": "Acid",
+      "description": "Corrosive spray and digestive fluids that eat through armor and flesh alike."
+    },
+    {
+      "id": "bludgeoning",
+      "name": "Bludgeoning",
+      "description": "Blunt force from hammers, falling rocks, and heavy impacts."
+    },
+    {
+      "id": "cold",
+      "name": "Cold",
+      "description": "Ice, frost, and the killing chill of the far north."
+    },
+    {
+      "id": "fire",
+      "name": "Fire",
+      "description": "Flame and searing heat."
+    },
+    {
+      "id": "force",
+      "name": "Force",
+      "description": "Pure magical energy, resisted by almost nothing."
+    },
+    {
+      "id": "lightning",
+      "name": "Lightning",
+      "description": "Arcing electricity and storm energy."
+    },
+    {
+      "id": "necrotic",
+      "name": "Necrotic",
+      "description": "Withering energy that drains life and stops wounds from closing."
+    },
+    {
+      "id": "piercing",
+      "name": "Piercing",
+      "description": "Punctures from arrows, spears, fangs, and thrusting blades."
+    },
+    {
+      "id": "poison",
+      "name": "Poison",
+      "description": "Venom and toxins that sicken and weaken."
+    },
+    {
+      "id": "psychic",
+      "name": "Psychic",
+      "description": "Mental assault that leaves no visible wound."
+    },
+    {
+      "id": "radiant",
+      "name": "Radiant",
+      "description": "Searing holy light, especially punishing to the undead."
+    },
+    {
+      "id": "slashing",
+      "name": "Slashing",
+      "description": "Cuts from swords, axes, and claws."
+    },
+    {
+      "id": "thunder",
+      "name": "Thunder",
+      "description": "Concussive sound loud enough to rupture and hurl."
+    },
+    {
+      "id": "cutting",
+      "name": "Cutting",
+      "description": "Deep draw-cuts that keep bleeding after the blade is gone."
+    },
+    {
+      "id": "bio",
+      "name": "Biological",
+      "description": "Disease, rot, and infection carried by a creature's attack."
+    }
+  ]
+}

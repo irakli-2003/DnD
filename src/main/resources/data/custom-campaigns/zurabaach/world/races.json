@@ -1,0 +1,326 @@
+{
+  "races": [
+    {
+      "id": "human",
+      "name": "Human",
+      "description": "The most adaptable and ambitious of the common peoples, found in every corner of the world and rarely content to stay put.",
+      "abilityBonuses": {
+        "strength": 1,
+        "dexterity": 1,
+        "constitution": 1,
+        "intelligence": 1,
+        "wisdom": 1,
+        "charisma": 1
+      },
+      "speed": 30
+    },
+    {
+      "id": "dwarf",
+      "name": "Dwarf",
+      "description": "Stout, stubborn folk of stone and forge, famed for their endurance, their grudges, and their darkvision.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "hill-dwarf",
+      "name": "Hill Dwarf",
+      "description": "A dwarf of the highland clans, hardier of body and keener of sense than her deep-delving cousins.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 1,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "mountain-dwarf",
+      "name": "Mountain Dwarf",
+      "description": "A dwarf raised among the high peaks, trained to armor and axe from childhood.",
+      "abilityBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "elf",
+      "name": "Elf",
+      "description": "A graceful, long-lived people with an otherworldly poise; elves trance rather than sleep and remember centuries.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 30
+    },
+    {
+      "id": "high-elf",
+      "name": "High Elf",
+      "description": "An elf of keen mind and old magic, schooled in a cantrip almost before learning to walk.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 1,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 30
+    },
+    {
+      "id": "wood-elf",
+      "name": "Wood Elf",
+      "description": "An elf of the deep forest, swift, silent, and near invisible among the trees.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 1,
+        "charisma": 0
+      },
+      "speed": 35
+    },
+    {
+      "id": "drow",
+      "name": "Drow",
+      "description": "A dark elf of the Underdark, gifted with innate magic and cursed with sensitivity to the sun.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 1
+      },
+      "speed": 30
+    },
+    {
+      "id": "halfling",
+      "name": "Halfling",
+      "description": "Small, cheerful, and improbably lucky folk who value hearth and good food above glory.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "lightfoot-halfling",
+      "name": "Lightfoot Halfling",
+      "description": "A halfling with a talent for slipping out of sight behind anyone larger than herself.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 1
+      },
+      "speed": 25
+    },
+    {
+      "id": "stout-halfling",
+      "name": "Stout Halfling",
+      "description": "A halfling of hardy stock, resistant to poison and hard to knock down.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 1,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "dragonborn",
+      "name": "Dragonborn",
+      "description": "Proud, draconic humanoids who carry the breath weapon and resistance of their ancestors' bloodline.",
+      "abilityBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 1
+      },
+      "speed": 30
+    },
+    {
+      "id": "gnome",
+      "name": "Gnome",
+      "description": "Small, inventive, and irrepressibly curious, with a mind resistant to magical intrusion.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 2,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "forest-gnome",
+      "name": "Forest Gnome",
+      "description": "A gnome who speaks with small beasts and hides where no one thinks to look.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 1,
+        "constitution": 0,
+        "intelligence": 2,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "rock-gnome",
+      "name": "Rock Gnome",
+      "description": "A gnome tinkerer whose pockets are always full of half-built clockwork.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 1,
+        "intelligence": 2,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 25
+    },
+    {
+      "id": "half-elf",
+      "name": "Half-Elf",
+      "description": "Caught between two worlds and belonging fully to neither, half-elves make superb diplomats and wanderers.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 1,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 1,
+        "charisma": 2
+      },
+      "speed": 30
+    },
+    {
+      "id": "half-orc",
+      "name": "Half-Orc",
+      "description": "Powerfully built and quick to anger, a half-orc refuses to fall while there is still a fight to be had.",
+      "abilityBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 1,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 30
+    },
+    {
+      "id": "orc",
+      "name": "Orc",
+      "description": "A relentless warrior people, built for the charge and famous for shrugging off wounds that would fell others.",
+      "abilityBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 1,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 30
+    },
+    {
+      "id": "tiefling",
+      "name": "Tiefling",
+      "description": "Descendants of an infernal bargain, marked by horns and tail and born with fire in their blood.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 1,
+        "wisdom": 0,
+        "charisma": 2
+      },
+      "speed": 30
+    },
+    {
+      "id": "aasimar",
+      "name": "Aasimar",
+      "description": "A mortal touched by the upper planes, carrying a light that can be unleashed in moments of need.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 0,
+        "constitution": 0,
+        "intelligence": 0,
+        "wisdom": 1,
+        "charisma": 2
+      },
+      "speed": 30
+    },
+    {
+      "id": "goliath",
+      "name": "Goliath",
+      "description": "Mountain-born giants among humanoids, raised to carry crushing loads and endure brutal cold.",
+      "abilityBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 1,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 30
+    },
+    {
+      "id": "goblin",
+      "name": "Goblin",
+      "description": "Small, quick and far tougher than their size suggests. Goblin childhood is a competition and the prize is being alive at the end of it, which leaves the survivors with a very particular attitude to danger.",
+      "abilityBonuses": {
+        "strength": 0,
+        "dexterity": 2,
+        "constitution": 1,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": 0
+      },
+      "speed": 30
+    },
+    {
+      "id": "revenant",
+      "name": "Revenant",
+      "description": "One who died and did not stay dead. The body that walks back is rarely the body that fell - it comes back larger, marked, and carrying more than one voice. Revenants remember their old life only in fragments, usually as dreams.",
+      "abilityBonuses": {
+        "strength": 2,
+        "dexterity": 0,
+        "constitution": 2,
+        "intelligence": 0,
+        "wisdom": 0,
+        "charisma": -1
+      },
+      "speed": 30
+    }
+  ]
+}

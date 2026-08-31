@@ -1,0 +1,454 @@
+{
+  "languages": [
+    {
+      "id": "common",
+      "name": "Common",
+      "dictionary": {
+        "hello": "greetings",
+        "farewell": "safe travels",
+        "friend": "friend",
+        "danger": "beware"
+      },
+      "requiredMaterial": {
+        "id": "common-primer",
+        "name": "Common Primer",
+        "type": "book",
+        "description": "A teaching text for Common, the trade tongue spoken in nearly every settlement.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Common."
+      },
+      "requiredLongRests": 3
+    },
+    {
+      "id": "dwarvish",
+      "name": "Dwarvish",
+      "dictionary": {
+        "hello": "dumat",
+        "stone": "kurak",
+        "gold": "baraz",
+        "oath": "durn"
+      },
+      "requiredMaterial": {
+        "id": "dwarvish-primer",
+        "name": "Dwarvish Primer",
+        "type": "book",
+        "description": "A teaching text for Dwarvish, the hard, consonant-heavy speech of the mountain halls.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Dwarvish."
+      },
+      "requiredLongRests": 5
+    },
+    {
+      "id": "elvish",
+      "name": "Elvish",
+      "dictionary": {
+        "hello": "aelin",
+        "star": "elen",
+        "friend": "mellon",
+        "farewell": "namarie"
+      },
+      "requiredMaterial": {
+        "id": "elvish-primer",
+        "name": "Elvish Primer",
+        "type": "book",
+        "description": "A teaching text for Elvish, the fluid, musical language of the elves.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Elvish."
+      },
+      "requiredLongRests": 5
+    },
+    {
+      "id": "giant",
+      "name": "Giant",
+      "dictionary": {
+        "hello": "gorm",
+        "big": "thrak",
+        "eat": "grond",
+        "run": "skar"
+      },
+      "requiredMaterial": {
+        "id": "giant-primer",
+        "name": "Giant Primer",
+        "type": "book",
+        "description": "A teaching text for Giant, the booming tongue of giants and ogres.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Giant."
+      },
+      "requiredLongRests": 5
+    },
+    {
+      "id": "gnomish",
+      "name": "Gnomish",
+      "dictionary": {
+        "hello": "tik",
+        "gear": "vennik",
+        "clever": "brindle",
+        "boom": "kaboodle"
+      },
+      "requiredMaterial": {
+        "id": "gnomish-primer",
+        "name": "Gnomish Primer",
+        "type": "book",
+        "description": "A teaching text for Gnomish, a rapid, technical language full of invented words.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Gnomish."
+      },
+      "requiredLongRests": 5
+    },
+    {
+      "id": "goblin-tongue",
+      "name": "Goblin",
+      "dictionary": {
+        "hello": "snik",
+        "kill": "krag",
+        "run": "zib",
+        "boss": "grub"
+      },
+      "requiredMaterial": {
+        "id": "goblin-primer",
+        "name": "Goblin Primer",
+        "type": "book",
+        "description": "A teaching text for Goblin, the harsh, clipped cant of goblinoids.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Goblin."
+      },
+      "requiredLongRests": 4
+    },
+    {
+      "id": "halfling-tongue",
+      "name": "Halfling",
+      "dictionary": {
+        "hello": "well met",
+        "home": "hearth",
+        "food": "supper",
+        "friend": "kin"
+      },
+      "requiredMaterial": {
+        "id": "halfling-primer",
+        "name": "Halfling Primer",
+        "type": "book",
+        "description": "A teaching text for Halfling, the warm, homey speech of halfling communities.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Halfling."
+      },
+      "requiredLongRests": 4
+    },
+    {
+      "id": "orcish",
+      "name": "Orc",
+      "dictionary": {
+        "hello": "gruk",
+        "blood": "zog",
+        "strong": "mog",
+        "war": "krul"
+      },
+      "requiredMaterial": {
+        "id": "orc-primer",
+        "name": "Orc Primer",
+        "type": "book",
+        "description": "A teaching text for Orc, a guttural battle-tongue built for shouting over noise.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Orc."
+      },
+      "requiredLongRests": 4
+    },
+    {
+      "id": "abyssal",
+      "name": "Abyssal",
+      "dictionary": {
+        "hello": "vex",
+        "soul": "kaal",
+        "burn": "izgar",
+        "bargain": "vothra"
+      },
+      "requiredMaterial": {
+        "id": "abyssal-primer",
+        "name": "Abyssal Primer",
+        "type": "book",
+        "description": "A teaching text for Abyssal, the shrieking language of demons.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Abyssal."
+      },
+      "requiredLongRests": 8
+    },
+    {
+      "id": "celestial",
+      "name": "Celestial",
+      "dictionary": {
+        "hello": "sereth",
+        "light": "aurum",
+        "mercy": "kelan",
+        "judgment": "vaeda"
+      },
+      "requiredMaterial": {
+        "id": "celestial-primer",
+        "name": "Celestial Primer",
+        "type": "book",
+        "description": "A teaching text for Celestial, the resonant speech of angels and upper-planar beings.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Celestial."
+      },
+      "requiredLongRests": 8
+    },
+    {
+      "id": "draconic",
+      "name": "Draconic",
+      "dictionary": {
+        "hello": "wer",
+        "fire": "ixen",
+        "gold": "aurix",
+        "death": "vutha"
+      },
+      "requiredMaterial": {
+        "id": "draconic-primer",
+        "name": "Draconic Primer",
+        "type": "book",
+        "description": "A teaching text for Draconic, the ancient tongue of dragons, and the root of most arcane writing.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Draconic."
+      },
+      "requiredLongRests": 8
+    },
+    {
+      "id": "deep-speech",
+      "name": "Deep Speech",
+      "dictionary": {
+        "hello": "yl-thraa",
+        "mind": "ghol",
+        "below": "n'gaath",
+        "hunger": "uul"
+      },
+      "requiredMaterial": {
+        "id": "deep-speech-primer",
+        "name": "Deep Speech Primer",
+        "type": "book",
+        "description": "A teaching text for Deep Speech, the alien language of aberrations, painful to speak aloud.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Deep Speech."
+      },
+      "requiredLongRests": 10
+    },
+    {
+      "id": "infernal",
+      "name": "Infernal",
+      "dictionary": {
+        "hello": "salve",
+        "contract": "pactum",
+        "price": "pretium",
+        "obey": "servi"
+      },
+      "requiredMaterial": {
+        "id": "infernal-primer",
+        "name": "Infernal Primer",
+        "type": "book",
+        "description": "A teaching text for Infernal, the precise, contractual language of devils.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Infernal."
+      },
+      "requiredLongRests": 8
+    },
+    {
+      "id": "primordial",
+      "name": "Primordial",
+      "dictionary": {
+        "hello": "vash",
+        "stone": "grum",
+        "flame": "azh",
+        "tide": "melu"
+      },
+      "requiredMaterial": {
+        "id": "primordial-primer",
+        "name": "Primordial Primer",
+        "type": "book",
+        "description": "A teaching text for Primordial, the elemental tongue of air, earth, fire, and water.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Primordial."
+      },
+      "requiredLongRests": 8
+    },
+    {
+      "id": "sylvan",
+      "name": "Sylvan",
+      "dictionary": {
+        "hello": "tal",
+        "wood": "sylas",
+        "trick": "wynne",
+        "bargain": "faerol"
+      },
+      "requiredMaterial": {
+        "id": "sylvan-primer",
+        "name": "Sylvan Primer",
+        "type": "book",
+        "description": "A teaching text for Sylvan, the lilting, riddling speech of the fey.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Sylvan."
+      },
+      "requiredLongRests": 6
+    },
+    {
+      "id": "undercommon",
+      "name": "Undercommon",
+      "dictionary": {
+        "hello": "sszar",
+        "dark": "velk",
+        "trade": "nasz",
+        "spider": "lolth"
+      },
+      "requiredMaterial": {
+        "id": "undercommon-primer",
+        "name": "Undercommon Primer",
+        "type": "book",
+        "description": "A teaching text for Undercommon, the trade pidgin of the Underdark.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Undercommon."
+      },
+      "requiredLongRests": 6
+    },
+    {
+      "id": "druidic",
+      "name": "Druidic",
+      "dictionary": {
+        "hello": "greenwelcome",
+        "safe": "still water",
+        "danger": "broken branch",
+        "food": "full bough"
+      },
+      "requiredMaterial": {
+        "id": "druidic-primer",
+        "name": "Druidic Primer",
+        "type": "book",
+        "description": "A teaching text for Druidic, the secret sign-language of druids, never taught to outsiders.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Druidic."
+      },
+      "requiredLongRests": 10
+    },
+    {
+      "id": "thieves-cant",
+      "name": "Thieves' Cant",
+      "dictionary": {
+        "hello": "fair evening",
+        "guard": "lamp",
+        "loot": "silverware",
+        "run": "the weather turns"
+      },
+      "requiredMaterial": {
+        "id": "thieves-cant-primer",
+        "name": "Thieves' Cant Primer",
+        "type": "book",
+        "description": "A teaching text for Thieves' Cant, a coded dialect hidden inside ordinary conversation.",
+        "valueGold": 25,
+        "weight": 3.0,
+        "damage": null,
+        "durability": {
+          "max": 50,
+          "current": 50
+        },
+        "overview": "Vocabulary, grammar, and drill exercises. Study it across several long rests to become fluent in Thieves' Cant."
+      },
+      "requiredLongRests": 6
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "ingredients": [
+    {
+      "id": "wolfsbane",
+      "name": "Wolfsbane",
+      "description": "A bitter purple herb used in protective and lycanthrope-warding brews."
+    },
+    {
+      "id": "nightshade",
+      "name": "Nightshade",
+      "description": "Glossy black berries; the base of most sleeping draughts and half the poisons."
+    },
+    {
+      "id": "sunblossom",
+      "name": "Sunblossom",
+      "description": "A yellow flower that only opens at dawn. Central to healing potions."
+    },
+    {
+      "id": "frostcap-mushroom",
+      "name": "Frostcap Mushroom",
+      "description": "A pale fungus that stays cold to the touch even in summer."
+    },
+    {
+      "id": "emberroot",
+      "name": "Emberroot",
+      "description": "A root that smoulders when crushed, used in fire resistance tonics."
+    },
+    {
+      "id": "silverleaf",
+      "name": "Silverleaf",
+      "description": "A metallic-sheened leaf prized for antivenoms."
+    },
+    {
+      "id": "giant-spider-venom",
+      "name": "Giant Spider Venom",
+      "description": "Milked from live spiders, which is exactly as dangerous as it sounds."
+    },
+    {
+      "id": "basilisk-eye",
+      "name": "Basilisk Eye",
+      "description": "Rare and expensive; a key reagent in petrification cures."
+    },
+    {
+      "id": "troll-fat",
+      "name": "Troll Fat",
+      "description": "Rendered from a troll, it carries a faint regenerative property."
+    },
+    {
+      "id": "mandrake-root",
+      "name": "Mandrake Root",
+      "description": "Screams when pulled. Used in restoration and curse-breaking."
+    },
+    {
+      "id": "gravebloom",
+      "name": "Gravebloom",
+      "description": "A grey flower that grows only over buried remains; used in necrotic wards."
+    },
+    {
+      "id": "kingsfoil",
+      "name": "Kingsfoil",
+      "description": "An unremarkable weed to the untrained eye, and a potent healing herb to everyone else."
+    },
+    {
+      "id": "phoenix-ash",
+      "name": "Phoenix Ash",
+      "description": "Warm ash that never quite goes out. The heart of any revival brew."
+    },
+    {
+      "id": "moonpetal",
+      "name": "Moonpetal",
+      "description": "Blooms only under a full moon; used in divination and scrying draughts."
+    },
+    {
+      "id": "cave-lichen",
+      "name": "Cave Lichen",
+      "description": "A faintly glowing lichen used in light and darkvision preparations."
+    },
+    {
+      "id": "dragon-scale-powder",
+      "name": "Dragon Scale Powder",
+      "description": "Ground scale that lends elemental resistance to a mixture."
+    },
+    {
+      "id": "harpy-feather",
+      "name": "Harpy Feather",
+      "description": "Used in charm-related brews and, less legally, in love philtres."
+    },
+    {
+      "id": "bogwater-salt",
+      "name": "Bogwater Salt",
+      "description": "Crusted salt from a swamp's edge; a cheap but effective preservative."
+    },
+    {
+      "id": "ironbark-shavings",
+      "name": "Ironbark Shavings",
+      "description": "Shavings from a treant-touched oak, used in armor-hardening oils."
+    },
+    {
+      "id": "wyvern-sting",
+      "name": "Wyvern Sting",
+      "description": "The intact venom sac of a wyvern, worth a small fortune intact."
+    },
+    {
+      "id": "mind-flayer-brine",
+      "name": "Mind Flayer Brine",
+      "description": "Preserving fluid from an illithid specimen; used in psychic wards."
+    },
+    {
+      "id": "ghost-mushroom",
+      "name": "Ghost Mushroom",
+      "description": "A translucent fungus from haunted ground, used in invisibility oils."
+    },
+    {
+      "id": "blood-lotus",
+      "name": "Blood Lotus",
+      "description": "A crimson water-flower; addictive, potent, and banned in three cities."
+    },
+    {
+      "id": "purified-water",
+      "name": "Purified Water",
+      "description": "Thrice-filtered and blessed. The neutral base of nearly every recipe."
+    }
+  ]
+}
