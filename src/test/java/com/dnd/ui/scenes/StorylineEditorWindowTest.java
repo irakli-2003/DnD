@@ -48,4 +48,32 @@ public class StorylineEditorWindowTest {
         String text = "[READ ALOUD]\nA half-written passage.";
         assertEquals("A half-written passage.", StorylineEditorWindow.extractReadAloud(text));
     }
+
+    @Test
+    public void countWordsIgnoresBlankAndCollapsesWhitespace() {
+        assertEquals(0, StorylineEditorWindow.countWords(null));
+        assertEquals(0, StorylineEditorWindow.countWords("   \n  "));
+        assertEquals(3, StorylineEditorWindow.countWords("  one   two\nthree "));
+    }
+
+    @Test
+    public void speakingMinutesSwitchesFromSecondsToMinutes() {
+        assertEquals("28s", StorylineEditorWindow.speakingMinutes(60));
+        assertEquals("1m 0s", StorylineEditorWindow.speakingMinutes(130));
+        assertEquals("2m 0s", StorylineEditorWindow.speakingMinutes(260));
+    }
+
+    @Test
+    public void statsReportTotalAndReadAloudSeparately() {
+        String text = "prep notes here\n[READ ALOUD]\nYou stand before the gate.\n[/READ ALOUD]";
+        String stats = StorylineEditorWindow.describeStats(text);
+        assertTrue(stats.startsWith("8 words"));
+        assertTrue(stats.contains("read-aloud: 5 words"));
+    }
+
+    @Test
+    public void statsOmitReadAloudSectionWhenThereIsNone() {
+        assertEquals("0 words", StorylineEditorWindow.describeStats(""));
+        assertFalse(StorylineEditorWindow.describeStats("just notes").contains("read-aloud"));
+    }
 }

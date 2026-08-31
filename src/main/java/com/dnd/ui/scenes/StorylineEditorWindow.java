@@ -44,6 +44,7 @@ final class StorylineEditorWindow {
 
     private TextArea area;
     private Label statusLabel;
+    private Label statsLabel;
     private boolean dirty;
 
     StorylineEditorWindow(BaseScene owner, StorylineService service, CampaignRepositories repos, Path file) {
@@ -67,10 +68,15 @@ final class StorylineEditorWindow {
         area.setMaxHeight(Double.MAX_VALUE);
         area.setMaxWidth(Double.MAX_VALUE);
         VBox.setVgrow(area, Priority.ALWAYS);
-        area.textProperty().addListener((obs, o, n) -> markDirty(true));
+        area.textProperty().addListener((obs, o, n) -> {
+            markDirty(true);
+            updateStats(n);
+        });
 
         statusLabel = new Label();
         statusLabel.getStyleClass().add("body-label");
+        statsLabel = new Label();
+        statsLabel.getStyleClass().add("body-label");
 
         VBox layout = new VBox(0, buildToolbar(stage), area, buildStatusBar(stage));
         layout.getStyleClass().add("root");
@@ -81,6 +87,7 @@ final class StorylineEditorWindow {
         stage.setScene(scene);
         stage.setMaximized(true);
         markDirty(false);
+        updateStats(area.getText());
 
         stage.setOnCloseRequest(e -> {
             if (dirty && !confirmDiscard()) e.consume();
@@ -271,7 +278,7 @@ final class StorylineEditorWindow {
         });
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox bar = new HBox(10, statusLabel, spacer, close);
+        HBox bar = new HBox(10, statusLabel, spacer, statsLabel, close);
         bar.setAlignment(Pos.CENTER_LEFT);
         bar.setPadding(new Insets(6, 10, 8, 10));
         return bar;
@@ -396,6 +403,40 @@ final class StorylineEditorWindow {
             cursor = close + READ_ALOUD_CLOSE.length();
         }
         return sb.toString().trim();
+    }
+
+    private void updateStats(String text) {
+        statsLabel.setText(describeStats(text));
+    }
+
+    /**
+     * Summarises the file for the status bar: total prep length plus how long the
+     * read-aloud passages take to speak, which is what actually eats table time.
+     */
+    static String describeStats(String text) {
+        int total = countWords(text);
+        int spoken = countWords(extractReadAloud(text));
+        String summary = total + (total == 1 ? " word" : " words");
+        if (spoken > 0) {
+            summary += "  |  read-aloud: " + spoken + (spoken == 1 ? " word" : " words")
+                    + " (~" + speakingMinutes(spoken) + ")";
+        }
+        return summary;
+    }
+
+    static int countWords(String text) {
+        if (text == null) return 0;
+        String stripped = text.replace(READ_ALOUD_OPEN, " ").replace(READ_ALOUD_CLOSE, " ")
+                .replace(DM_NOTE_OPEN, " ").replace(DM_NOTE_CLOSE, " ");
+        if (stripped.isBlank()) return 0;
+        return stripped.trim().split("\\s+").length;
+    }
+
+    /** Roughly 130 words per minute is a comfortable pace for reading aloud at a table. */
+    static String speakingMinutes(int words) {
+        int seconds = (int) Math.round(words * 60.0 / 130.0);
+        if (seconds < 60) return seconds + "s";
+        return (seconds / 60) + "m " + (seconds % 60) + "s";
     }
 
     private void save() {
