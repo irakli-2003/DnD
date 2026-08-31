@@ -344,3 +344,87 @@
 .grid-pane {
     -fx-background-color: transparent;
 }
+
+/* ── Session timer ─────────────────────────────────────────────────────── */
+.timer-display {
+    -fx-text-fill: #e0d5c0;
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-background-color: #0f0f1e;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 1;
+    -fx-padding: 3 10 3 10;
+    -fx-min-width: 68;
+    -fx-alignment: center;
+}
+
+.timer-expired {
+    -fx-text-fill: #e01b1b;
+    -fx-border-color: #e01b1b;
+}
+
+/* ── Battle map ────────────────────────────────────────────────────────── */
+.battle-panel {
+    -fx-background-color: #14142a;
+    -fx-border-color: #c9a84c;
+    -fx-border-width: 0 2 0 0;
+}
+
+.battle-panel .scroll-pane,
+.battle-panel .scroll-pane .viewport {
+    -fx-background-color: #14142a;
+    -fx-background: #14142a;
+}
+
+.roster-row {
+    -fx-background-color: #0f0f1e;
+    -fx-border-color: #3a3a5a;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.roster-row:hover {
+    -fx-border-color: #c9a84c;
+}
+
+.roster-row-dead {
+    -fx-opacity: 0.5;
+    -fx-border-color: #e01b1b;
+}
+
+.turn-chip {
+    -fx-text-fill: #a89060;
+    -fx-background-color: #0f0f1e;
+    -fx-padding: 4 8 4 8;
+    -fx-cursor: hand;
+}
+
+.turn-chip:hover {
+    -fx-text-fill: #e0d5c0;
+}
+
+.turn-chip-active {
+    -fx-text-fill: #1a1a2e;
+    -fx-background-color: #c9a84c;
+    -fx-font-weight: bold;
+    -fx-padding: 4 8 4 8;
+    -fx-cursor: hand;
+}
+
+.bar-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.hover-row {
+    -fx-text-fill: #d0c5a8;
+    -fx-padding: 3 6 3 6;
+    -fx-cursor: hand;
+}
+
+.hover-row:hover {
+    -fx-background-color: #2a2a4a;
+    -fx-text-fill: #e8c46a;
+}

@@ -19,6 +19,7 @@ public class MapEntity implements MapObject {
     private String entityId;
     private String symbol;
     private Position position;
+    private CombatState combat;
 
     public MapEntity() {
     }
@@ -74,6 +75,14 @@ public class MapEntity implements MapObject {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
+    }
+
+    public CombatState getCombat() {
+        return combat;
+    }
+
+    public void setCombat(CombatState combat) {
+        this.combat = combat;
     }
 
     @Override

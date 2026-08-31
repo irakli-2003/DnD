@@ -1,0 +1,204 @@
+package com.dnd.model.world.map;
+
+import com.dnd.model.character.PlayerCharacter;
+import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.combat.Ability;
+import com.dnd.model.creature.Beast;
+import com.dnd.model.creature.Monster;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Reads display and combat information out of any {@link MapObject}.
+ *
+ * <p>Tokens wrap five unrelated model types that share no common supertype beyond
+ * {@code MapObject}, so anything that needs a token's name, portrait, stats or combat state
+ * would otherwise repeat the same {@code instanceof} chain. Centralising it here keeps the
+ * battle map's rendering and panels free of that noise, and means adding a new token type
+ * only requires editing this class.</p>
+ */
+public final class TokenSupport {
+
+    private static final Random RANDOM = new Random();
+
+    private TokenSupport() {
+    }
+
+    // ── Identity ────────────────────────────────────────────────────────────
+
+    public static String nameOf(MapObject token) {
+        if (token == null) return "(none)";
+        if (token instanceof PlayerToken t) return orDefault(t.getCharacter() == null ? null : t.getCharacter().getName(), "Player");
+        if (token instanceof NpcToken t) return orDefault(t.getNpc() == null ? null : t.getNpc().getName(), "NPC");
+        if (token instanceof MonsterToken t) return orDefault(t.getMonster() == null ? null : t.getMonster().getName(), "Monster");
+        if (token instanceof BeastToken t) return orDefault(t.getBeast() == null ? null : t.getBeast().getName(), "Beast");
+        if (token instanceof MapEntity t) return orDefault(t.getName(), "Entity");
+        return token.getSymbol();
+    }
+
+    /** Short human label for the token's kind, used in list rows and the detail panel. */
+    public static String kindOf(MapObject token) {
+        if (token instanceof PlayerToken) return "Player";
+        if (token instanceof NpcToken) return "NPC";
+        if (token instanceof MonsterToken) return "Monster";
+        if (token instanceof BeastToken) return "Beast";
+        if (token instanceof MapItemToken) return "Item";
+        return "Object";
+    }
+
+    /** Campaign-relative portrait path, or null when the token has no picture. */
+    public static String imagePathOf(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) return t.getCharacter().getImagePath();
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getImagePath();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getImagePath();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getImagePath();
+        return null;
+    }
+
+    /** True for tokens that represent a creature and therefore take part in combat. */
+    public static boolean isCreature(MapObject token) {
+        return token instanceof PlayerToken || token instanceof NpcToken
+            || token instanceof MonsterToken || token instanceof BeastToken;
+    }
+
+    public static CoreStats statsOf(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) return t.getCharacter().getStats();
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getStats();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getStats();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getStats();
+        return null;
+    }
+
+    public static List<Ability> abilitiesOf(MapObject token) {
+        if (token instanceof MonsterToken t && t.getMonster() != null && t.getMonster().getAbilities() != null) {
+            return t.getMonster().getAbilities();
+        }
+        if (token instanceof BeastToken t && t.getBeast() != null && t.getBeast().getAbilities() != null) {
+            return t.getBeast().getAbilities();
+        }
+        return List.of();
+    }
+
+    /** Spell ids known by this token, resolved against the campaign's spell catalog by the caller. */
+    public static List<String> spellIdsOf(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null && t.getCharacter().getSpells() != null) {
+            List<String> ids = new ArrayList<>();
+            for (PlayerCharacter.PlayerSpell spell : t.getCharacter().getSpells()) {
+                if (spell != null && spell.getSpellId() != null) ids.add(spell.getSpellId());
+            }
+            return ids;
+        }
+        return List.of();
+    }
+
+    /** Item ids carried by this token, resolved against the campaign's item catalog by the caller. */
+    public static List<String> itemIdsOf(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null && t.getCharacter().getItems() != null) {
+            List<String> ids = new ArrayList<>();
+            for (PlayerCharacter.PlayerItem item : t.getCharacter().getItems()) {
+                if (item != null && item.getItemId() != null) ids.add(item.getItemId());
+            }
+            return ids;
+        }
+        return List.of();
+    }
+
+    // ── Combat state ────────────────────────────────────────────────────────
+
+    /** Returns this token's combat state, creating and attaching a sensible default first time. */
+    public static CombatState combatOf(MapObject token) {
+        if (token == null) return new CombatState();
+        CombatState existing = readCombat(token);
+        if (existing != null) return existing;
+        CombatState fresh = defaultCombatFor(token);
+        writeCombat(token, fresh);
+        return fresh;
+    }
+
+    private static CombatState readCombat(MapObject token) {
+        if (token instanceof PlayerToken t) return t.getCombat();
+        if (token instanceof NpcToken t) return t.getCombat();
+        if (token instanceof MonsterToken t) return t.getCombat();
+        if (token instanceof BeastToken t) return t.getCombat();
+        if (token instanceof MapEntity t) return t.getCombat();
+        return null;
+    }
+
+    private static void writeCombat(MapObject token, CombatState state) {
+        if (token instanceof PlayerToken t) t.setCombat(state);
+        else if (token instanceof NpcToken t) t.setCombat(state);
+        else if (token instanceof MonsterToken t) t.setCombat(state);
+        else if (token instanceof BeastToken t) t.setCombat(state);
+        else if (token instanceof MapEntity t) t.setCombat(state);
+    }
+
+    /**
+     * Builds starting combat numbers for a token that has never been in a battle.
+     *
+     * <p>The campaign models store ability scores but no hit points or mana, so these are
+     * derived with the usual tabletop shape - a hit die per level plus the constitution
+     * modifier - purely as a starting point. Every value is editable in the battle map,
+     * which is the authoritative source once a fight is underway.</p>
+     */
+    static CombatState defaultCombatFor(MapObject token) {
+        CoreStats stats = statsOf(token);
+        int level = levelOf(token);
+        int conMod = modifier(stats == null ? 10 : stats.getConstitution());
+        int intMod = modifier(stats == null ? 10 : stats.getIntelligence());
+
+        CombatState state = new CombatState();
+        state.setMaxHitPoints(Math.max(1, level * (6 + conMod)));
+        state.setCurrentHitPoints(state.getMaxHitPoints());
+        state.setMaxMana(Math.max(0, level * Math.max(0, 2 + intMod)));
+        state.setCurrentMana(state.getMaxMana());
+        state.setInInitiative(isCreature(token));
+        return state;
+    }
+
+    /** Level, or a level-equivalent derived from challenge rating for monsters and beasts. */
+    public static int levelOf(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) return Math.max(1, t.getCharacter().getLevel());
+        if (token instanceof NpcToken t && t.getNpc() != null) return Math.max(1, t.getNpc().getLevel());
+        if (token instanceof MonsterToken t && t.getMonster() != null) return challengeLevel(t.getMonster());
+        if (token instanceof BeastToken t && t.getBeast() != null) return challengeLevel(t.getBeast());
+        return 1;
+    }
+
+    private static int challengeLevel(Monster monster) {
+        return monster.getChallengeRating() == null ? 1 : Math.max(1, monster.getChallengeRating().ordinal());
+    }
+
+    private static int challengeLevel(Beast beast) {
+        return beast.getChallengeRating() == null ? 1 : Math.max(1, beast.getChallengeRating().ordinal());
+    }
+
+    /** Standard ability-score modifier: (score - 10) / 2, rounded down. */
+    public static int modifier(int abilityScore) {
+        return Math.floorDiv(abilityScore - 10, 2);
+    }
+
+    /** Rolls d20 + dexterity modifier, the usual initiative roll. */
+    public static int rollInitiative(MapObject token) {
+        CoreStats stats = statsOf(token);
+        int dexMod = modifier(stats == null ? 10 : stats.getDexterity());
+        return RANDOM.nextInt(20) + 1 + dexMod;
+    }
+
+    private static String orDefault(String value, String fallback) {
+        return value == null || value.isBlank() ? fallback : value;
+    }
+
+    /** Description shown in the detail panel, when the underlying model has one. */
+    public static String descriptionOf(MapObject token) {
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getDescription();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getDescription();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getDescription();
+        if (token instanceof PlayerToken t && t.getCharacter() != null) {
+            PlayerCharacter pc = t.getCharacter();
+            return "Level " + pc.getLevel() + (pc.getPlayerName() == null ? "" : " - played by " + pc.getPlayerName());
+        }
+        return null;
+    }
+}

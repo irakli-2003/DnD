@@ -1,0 +1,110 @@
+package com.dnd.model.world.map;
+
+import com.dnd.model.character.PlayerCharacter;
+import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.creature.Monster;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+public class TokenSupportTest {
+
+    private PlayerToken player(String name, int level, int constitution) {
+        PlayerCharacter pc = new PlayerCharacter();
+        pc.setId("pc-1");
+        pc.setName(name);
+        pc.setLevel(level);
+        CoreStats stats = new CoreStats();
+        stats.setConstitution(constitution);
+        pc.setStats(stats);
+        return new PlayerToken(pc);
+    }
+
+    @Test
+    public void nameFallsBackWhenTheModelIsMissing() {
+        assertEquals("Aria", TokenSupport.nameOf(player("Aria", 1, 10)));
+        assertEquals("Player", TokenSupport.nameOf(new PlayerToken()));
+        assertEquals("Monster", TokenSupport.nameOf(new MonsterToken()));
+        assertEquals("(none)", TokenSupport.nameOf(null));
+    }
+
+    @Test
+    public void kindNamesEveryTokenType() {
+        assertEquals("Player", TokenSupport.kindOf(new PlayerToken()));
+        assertEquals("NPC", TokenSupport.kindOf(new NpcToken()));
+        assertEquals("Monster", TokenSupport.kindOf(new MonsterToken()));
+        assertEquals("Beast", TokenSupport.kindOf(new BeastToken()));
+        assertEquals("Object", TokenSupport.kindOf(new MapEntity()));
+    }
+
+    @Test
+    public void onlyCreatureTokensCountAsCombatants() {
+        assertTrue(TokenSupport.isCreature(new PlayerToken()));
+        assertTrue(TokenSupport.isCreature(new MonsterToken()));
+        assertFalse(TokenSupport.isCreature(new MapEntity()));
+    }
+
+    @Test
+    public void abilityModifierFollowsTheStandardFormula() {
+        assertEquals(-1, TokenSupport.modifier(8));
+        assertEquals(0, TokenSupport.modifier(10));
+        assertEquals(0, TokenSupport.modifier(11));
+        assertEquals(3, TokenSupport.modifier(16));
+        assertEquals(-3, TokenSupport.modifier(4));
+    }
+
+    @Test
+    public void combatStateIsCreatedOnceAndThenReused() {
+        PlayerToken token = player("Aria", 3, 14);
+        CombatState first = TokenSupport.combatOf(token);
+        assertNotNull(first);
+        assertSame("state must persist on the token, not be rebuilt each call",
+            first, TokenSupport.combatOf(token));
+        assertSame(first, token.getCombat());
+    }
+
+    @Test
+    public void defaultHitPointsScaleWithLevelAndConstitution() {
+        CombatState weak = TokenSupport.combatOf(player("Weak", 1, 8));
+        CombatState tough = TokenSupport.combatOf(player("Tough", 5, 18));
+        assertTrue(tough.getMaxHitPoints() > weak.getMaxHitPoints());
+        assertEquals(weak.getMaxHitPoints(), weak.getCurrentHitPoints());
+        assertTrue("even a frail level-1 character has at least one hit point",
+            weak.getMaxHitPoints() >= 1);
+    }
+
+    @Test
+    public void creaturesJoinInitiativeButObjectsDoNot() {
+        assertTrue(TokenSupport.combatOf(player("Aria", 1, 10)).isInInitiative());
+        assertFalse(TokenSupport.combatOf(new MapEntity()).isInInitiative());
+    }
+
+    @Test
+    public void levelUsesChallengeRatingForMonsters() {
+        Monster monster = new Monster();
+        monster.setId("m1");
+        monster.setName("Ogre");
+        monster.setChallengeRating(com.dnd.model.creature.ChallengeRating.CR_5);
+        assertTrue(TokenSupport.levelOf(new MonsterToken(monster)) > 1);
+        assertEquals("an unknown creature is treated as level one",
+            1, TokenSupport.levelOf(new MonsterToken()));
+    }
+
+    @Test
+    public void initiativeRollsStayWithinTheD20PlusModifierRange() {
+        PlayerToken token = player("Aria", 1, 10);
+        CoreStats stats = token.getCharacter().getStats();
+        stats.setDexterity(14);
+        for (int i = 0; i < 200; i++) {
+            int roll = TokenSupport.rollInitiative(token);
+            assertTrue("roll was " + roll, roll >= 1 + 2 && roll <= 20 + 2);
+        }
+    }
+
+    @Test
+    public void spellAndItemIdsAreEmptyForNonPlayers() {
+        assertTrue(TokenSupport.spellIdsOf(new MonsterToken()).isEmpty());
+        assertTrue(TokenSupport.itemIdsOf(new MonsterToken()).isEmpty());
+        assertTrue(TokenSupport.abilitiesOf(new PlayerToken()).isEmpty());
+    }
+}

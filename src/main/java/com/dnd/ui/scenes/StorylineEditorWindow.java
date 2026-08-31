@@ -2,8 +2,11 @@ package com.dnd.ui.scenes;
 
 import com.dnd.data.CampaignRepositories;
 import com.dnd.data.EntityInfoFormatter;
+import com.dnd.data.MapLink;
 import com.dnd.data.StorylineService;
+import com.dnd.model.world.map.GameMap;
 import com.dnd.ui.EntityCategory;
+import com.dnd.ui.components.SessionTimer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -45,6 +48,7 @@ final class StorylineEditorWindow {
     private TextArea area;
     private Label statusLabel;
     private Label statsLabel;
+    private SessionTimer timer;
     private boolean dirty;
 
     StorylineEditorWindow(BaseScene owner, StorylineService service, CampaignRepositories repos, Path file) {
@@ -77,6 +81,16 @@ final class StorylineEditorWindow {
         statusLabel.getStyleClass().add("body-label");
         statsLabel = new Label();
         statsLabel.getStyleClass().add("body-label");
+        timer = new SessionTimer();
+
+        // Double-clicking a [map:...] marker jumps straight into the battle map. A single
+        // click would fight with normal text navigation, and requiring the toolbar button
+        // would make the links feel inert.
+        area.setOnMouseClicked(e -> {
+            if (e.getClickCount() < 2) return;
+            MapLink link = MapLink.at(area.getText(), area.getCaretPosition());
+            if (link != null) openBattleMap(link);
+        });
 
         VBox layout = new VBox(0, buildToolbar(stage), area, buildStatusBar(stage));
         layout.getStyleClass().add("root");
@@ -90,7 +104,11 @@ final class StorylineEditorWindow {
         updateStats(area.getText());
 
         stage.setOnCloseRequest(e -> {
-            if (dirty && !confirmDiscard()) e.consume();
+            if (dirty && !confirmDiscard()) {
+                e.consume();
+                return;
+            }
+            timer.dispose();
         });
         stage.showAndWait();
     }
@@ -105,6 +123,9 @@ final class StorylineEditorWindow {
         bar.getChildren().addAll(
             buildInsertInfoMenu(),
             buildInsertBlockMenu(),
+            buildMapLinkMenu(),
+            toolButton("Open Map Link", "Open the battle map linked at the cursor", this::openMapLinkAtCaret),
+            new Separator(),
             toolButton("Read-Aloud", "Wrap the selected text as prose to read to the players",
                 () -> wrapSelection(READ_ALOUD_OPEN, READ_ALOUD_CLOSE)),
             toolButton("DM Note", "Wrap the selected text as a private DM-only note",
@@ -120,9 +141,62 @@ final class StorylineEditorWindow {
             toolButton("Find", "Find text in this file", this::openFind),
             new Separator(),
             toolButton("Save", "Save this file (Ctrl+S)", this::save),
-            toolButton("Save & Close", "Save and close the editor", () -> { save(); stage.close(); })
+            toolButton("Save & Close", "Save and close the editor", () -> { save(); stage.close(); }),
+            new Separator(),
+            timer
         );
         return bar;
+    }
+
+    /**
+     * "Insert Map" - drops a {@code [map:...]} marker for one of the campaign's maps at the
+     * caret. Clicking that marker (or the toolbar button) later opens the battle map, which
+     * is how a written encounter turns into a playable one.
+     */
+    private MenuButton buildMapLinkMenu() {
+        MenuButton maps = new MenuButton("Insert Map ▾");
+        maps.getStyleClass().add("dnd-button");
+        maps.setTooltip(new Tooltip("Insert a link to a battle map"));
+
+        MenuItem placeholder = new MenuItem("Loading...");
+        placeholder.setDisable(true);
+        maps.getItems().add(placeholder);
+        maps.setOnShowing(e -> {
+            if (maps.getItems().size() != 1 || maps.getItems().get(0) != placeholder) return;
+            List<MenuItem> items = new ArrayList<>();
+            for (GameMap map : repos.maps().list()) {
+                MenuItem item = new MenuItem(map.getName());
+                item.setOnAction(ev -> insertAtCaret(MapLink.marker(map.getId(), map.getName())));
+                items.add(item);
+            }
+            if (items.isEmpty()) {
+                MenuItem empty = new MenuItem("No maps in this campaign yet.");
+                empty.setDisable(true);
+                items.add(empty);
+            }
+            maps.getItems().setAll(items);
+        });
+        return maps;
+    }
+
+    /** Opens the map linked at the caret, reporting clearly when there isn't one. */
+    private void openMapLinkAtCaret() {
+        MapLink link = MapLink.at(area.getText(), area.getCaretPosition());
+        if (link == null) {
+            statusLabel.setText("Put the cursor inside a [map:...] link first, or insert one with \"Insert Map\".");
+            return;
+        }
+        openBattleMap(link);
+    }
+
+    private void openBattleMap(MapLink link) {
+        BattleMapWindow window = new BattleMapWindow(owner, owner.uiSession, link.mapId());
+        if (!window.mapExists()) {
+            statusLabel.setText("The map \"" + link.label() + "\" is no longer in this campaign.");
+            return;
+        }
+        statusLabel.setText("Opened battle map: " + link.label());
+        window.show();
     }
 
     /**
@@ -139,11 +213,16 @@ final class StorylineEditorWindow {
         EntityInfoFormatter formatter = new EntityInfoFormatter(repos);
         for (EntityCategory category : EntityInfoFormatter.insertableCategories()) {
             Menu categoryMenu = new Menu(EntityInfoFormatter.categoryLabel(category));
-            // Entries are loaded when the submenu is first shown rather than up front, so
-            // opening the toolbar doesn't read and parse every catalog in the campaign.
+            // A Menu with no items never opens its submenu, so it must be non-empty from the
+            // start. The placeholder is swapped for the real (catalog-reading) picker the
+            // first time the submenu is shown, so opening the toolbar doesn't parse every
+            // catalog in the campaign up front.
+            MenuItem placeholder = new MenuItem("Loading...");
+            placeholder.setDisable(true);
+            categoryMenu.getItems().add(placeholder);
             categoryMenu.setOnShowing(e -> {
-                if (!categoryMenu.getItems().isEmpty()) return;
-                categoryMenu.getItems().add(buildEntryPicker(formatter, category, insert));
+                if (categoryMenu.getItems().size() != 1 || categoryMenu.getItems().get(0) != placeholder) return;
+                categoryMenu.getItems().setAll(buildEntryPicker(formatter, category, insert));
             });
             insert.getItems().add(categoryMenu);
         }
@@ -358,7 +437,8 @@ final class StorylineEditorWindow {
 
     /** Opens a large-type window containing only the read-aloud passages of this file. */
     private void openPlayerView() {
-        String readAloud = extractReadAloud(area.getText());
+        // Map markers are prep plumbing; the players should hear the map's name, not its id.
+        String readAloud = MapLink.stripMarkers(extractReadAloud(area.getText()));
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Read to players - " + file.getFileName());

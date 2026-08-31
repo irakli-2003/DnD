@@ -84,4 +84,31 @@ half-circle arcs spanning their sessions, so the root folder arcs across the who
     keeping player-facing prose separate from private prep.
   - `Player View` - a large-type, read-only window showing only the read-aloud passages,
     for reading straight to the table.
+  - `Insert Map` - drops a `[map:<id>|<label>]` link for any map in the campaign. Double-click
+    a link (or put the caret in it and press `Open Map Link`) to launch the battle map.
+  - A session timer that counts up from zero or down from a set number of minutes.
   - Heading, bullets, checklist, divider, find, and `Ctrl+S` to save.
+
+Read-aloud markers and map links are stripped from the Player View, so the table only ever
+sees the prose.
+
+## Battle map
+
+The battle map is the playground where encounters are run. Open it from a `[map:...]` link in
+a session file, or from `Run Battle` in the map viewer.
+
+- **Turn order.** `Roll Initiative` rolls d20 + DEX for every creature on the map and sorts
+  them; `Next Turn` cycles forever, skipping the dead and bumping the round counter on each
+  wrap. The roster shows the current combatant highlighted with the next few queued behind it.
+- **Token detail.** Click any token to swap the left panel into its sheet - portrait, stats,
+  health and mana bars, coins, items, spells, and abilities - with `← Back` to return to the
+  roster. Click empty space or press `Esc` to deselect.
+- **Vitals.** Damage, healing, max HP/mana, coins, and initiative are all editable in place.
+  Dropping to zero hit points knocks a creature down rather than killing it; from there
+  `Failed Save` counts 3 -> 2 -> 1 on the token in red, and the third failure marks it dead
+  with a red cross. `Made Save` and healing above zero bring it back.
+- **Ranges.** Hovering a spell or ability draws its range as a disc around the token (5 ft per
+  cell) and rings every creature inside it, so you can see legal targets before committing.
+- **Map control.** Add and remove tokens, drag them between cells, toggle a cell impassable,
+  show or hide health bars, zoom, and save the map back to the campaign. A timer is available
+  here too.

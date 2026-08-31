@@ -18,6 +18,7 @@ public class NpcToken implements MapActor {
     private Npc npc;
     private Position position;
     private List<MapItemToken> inventory = new ArrayList<>();
+    private CombatState combat;
 
     public NpcToken() {
     }
@@ -49,6 +50,14 @@ public class NpcToken implements MapActor {
     @Override public List<MapItemToken> getInventory()   { return inventory; }
     public void setInventory(List<MapItemToken> inventory) {
         this.inventory = inventory != null ? inventory : new ArrayList<>();
+    }
+
+    public CombatState getCombat() {
+        return combat;
+    }
+
+    public void setCombat(CombatState combat) {
+        this.combat = combat;
     }
 
     // ── MapObject / Printable ───────────────────────────────────────────────
