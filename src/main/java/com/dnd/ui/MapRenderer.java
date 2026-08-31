@@ -244,7 +244,7 @@ public class MapRenderer {
             gc.setFill(tokenColor.deriveColor(0, 1, 0.5, 0.85));
             gc.fillOval(bx, by, size, size);
             gc.setFill(Color.WHITE);
-            gc.setFont(Font.font("Georgia", FontWeight.BOLD, size * 0.4));
+            gc.setFont(Font.font("DejaVu Serif", FontWeight.BOLD, size * 0.4));
             gc.setTextAlign(TextAlignment.CENTER);
             gc.setTextBaseline(javafx.geometry.VPos.CENTER);
             gc.fillText(abbrev(TokenSupport.nameOf(obj)), bx + size / 2, by + size / 2);
@@ -321,7 +321,7 @@ public class MapRenderer {
         gc.setFill(Color.web("#000000bb"));
         gc.fillOval(bx + size * 0.18, by + size * 0.18, size * 0.64, size * 0.64);
         gc.setFill(Color.web("#e01b1b"));
-        gc.setFont(Font.font("Georgia", FontWeight.BOLD, size * 0.5));
+        gc.setFont(Font.font("DejaVu Serif", FontWeight.BOLD, size * 0.5));
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(javafx.geometry.VPos.CENTER);
         gc.fillText(String.valueOf(remaining), bx + size / 2, by + size / 2);

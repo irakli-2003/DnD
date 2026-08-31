@@ -1160,7 +1160,7 @@ public class MapEditorScene extends BaseScene {
             gc.setFill(tokenColor.deriveColor(0,1,0.5,0.85));
             gc.fillOval(bx, by, size, size);
             gc.setFill(Color.WHITE);
-            gc.setFont(javafx.scene.text.Font.font("Georgia", javafx.scene.text.FontWeight.BOLD, size * 0.4));
+            gc.setFont(javafx.scene.text.Font.font("DejaVu Serif", javafx.scene.text.FontWeight.BOLD, size * 0.4));
             gc.setTextAlign(javafx.scene.text.TextAlignment.CENTER);
             gc.setTextBaseline(javafx.geometry.VPos.CENTER);
             gc.fillText(label, bx + size/2, by + size/2);

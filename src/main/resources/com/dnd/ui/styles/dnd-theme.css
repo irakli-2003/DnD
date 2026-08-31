@@ -1,6 +1,6 @@
 .root {
     -fx-background-color: #1a1a2e;
-    -fx-font-family: "Georgia", serif;
+    -fx-font-family: "DejaVu Serif", "Sylfaen", "Georgia", serif;
     -fx-text-fill: #e0d5c0;
     -fx-border-color: #c9a84c;
     -fx-border-width: 2px;
@@ -41,7 +41,7 @@
     -fx-text-fill: #e0d5c0;
     -fx-highlight-fill: #c9a84c;
     -fx-highlight-text-fill: #1a1a2e;
-    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-family: "DejaVu Sans Mono", "Consolas", "Courier New", monospace;
     -fx-font-size: 14px;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .player-view {
-    -fx-font-family: "Georgia", serif;
+    -fx-font-family: "DejaVu Serif", "Sylfaen", "Georgia", serif;
     -fx-font-size: 20px;
     -fx-text-fill: #f0e6cc;
 }
@@ -180,7 +180,7 @@
 
 .token-label {
     -fx-text-fill: #80ff80;
-    -fx-font-family: "Courier New", monospace;
+    -fx-font-family: "DejaVu Sans Mono", "Courier New", monospace;
     -fx-font-size: 11px;
     -fx-wrap-text: true;
 }
@@ -348,7 +348,7 @@
 /* ── Session timer ─────────────────────────────────────────────────────── */
 .timer-display {
     -fx-text-fill: #e0d5c0;
-    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-family: "DejaVu Sans Mono", "Consolas", "Courier New", monospace;
     -fx-font-size: 15px;
     -fx-font-weight: bold;
     -fx-background-color: #0f0f1e;

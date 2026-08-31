@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class GuiApp extends Application {
     @Override
     public void start(Stage primaryStage) {
+        UiFonts.load();
         CampaignStorage storage = new CampaignStorage();
         storage.ensureInitialized();
         CliSession session = new CliSession(storage, new SystemConsoleIO(new Scanner(System.in)));
