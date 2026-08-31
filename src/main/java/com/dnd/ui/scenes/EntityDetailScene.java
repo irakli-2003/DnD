@@ -4,6 +4,7 @@ import com.dnd.data.CampaignRepositories;
 import com.dnd.model.character.CharacterClass;
 import com.dnd.model.character.CharacterRace;
 import com.dnd.ui.*;
+import com.dnd.ui.components.EntityForm;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,9 +13,7 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
 
 public class EntityDetailScene extends BaseScene {
 
@@ -79,40 +78,8 @@ public class EntityDetailScene extends BaseScene {
         imageSection.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         content.getChildren().add(imageSection);
 
-        Map<String, Control> fieldEditors = new LinkedHashMap<>();
-        List<Method> editableSetters = getEditableSetters(cat);
-
-        List<CharacterClass> classOptions = cat == EntityCategory.PLAYER ? repos.classes().list() : List.of();
-        List<CharacterRace> raceOptions = cat == EntityCategory.PLAYER ? repos.races().list() : List.of();
-
-        for (Method setter : editableSetters) {
-            String fieldName = setterToFieldName(setter);
-            if (fieldName.equals("imagePath") || fieldName.equals("passwordHash") || fieldName.equals("passwordSalt")) continue;
-            String currentValue = entity != null ? getFieldValue(entity, fieldName) : "";
-
-            Label lbl = new Label(fieldName);
-            lbl.setStyle("-fx-text-fill: #a89060; -fx-font-size: 12px;");
-
-            Control editor;
-            if (fieldName.equals("classId") && !classOptions.isEmpty()) {
-                editor = idComboBox(classOptions, CharacterClass::getId, CharacterClass::getName, currentValue);
-            } else if (fieldName.equals("raceId") && !raceOptions.isEmpty()) {
-                editor = idComboBox(raceOptions, CharacterRace::getId, CharacterRace::getName, currentValue);
-            } else if (setter.getParameterTypes()[0] == boolean.class) {
-                CheckBox cb = checkBox(fieldName);
-                cb.setSelected(Boolean.parseBoolean(currentValue));
-                editor = cb;
-            } else {
-                TextField tf = textField(fieldName);
-                tf.setText(currentValue != null ? currentValue : "");
-                tf.setMaxWidth(500);
-                editor = tf;
-            }
-
-            VBox group = new VBox(4, lbl, editor);
-            content.getChildren().add(group);
-            fieldEditors.put(fieldName, editor);
-        }
+        EntityForm form = EntityForm.of(getEntityClass(cat), entity, skippedProperties(cat), catalogsFor(repos));
+        content.getChildren().add(form.getNode());
 
         Label errorLabel = body("");
         errorLabel.setStyle("-fx-text-fill: #e07070;");
@@ -122,9 +89,7 @@ public class EntityDetailScene extends BaseScene {
             Button saveBtn = btn("Save", () -> {
                 try {
                     Object target = isNew ? createNewEntity(cat) : entity;
-                    for (Map.Entry<String, Control> e : fieldEditors.entrySet()) {
-                        setFieldValue(target, e.getKey(), controlValue(e.getValue()));
-                    }
+                    form.writeTo(target);
                     setImagePath(target, newImagePath[0]);
                     // Width/height are edited here as plain fields, but only GameMap's own
                     // constructor builds a matching grid - keep grid dimensions in sync so the
@@ -218,21 +183,57 @@ public class EntityDetailScene extends BaseScene {
         return cls.getDeclaredConstructor().newInstance();
     }
 
-    private List<Method> getEditableSetters(EntityCategory cat) {
-        try {
-            Class<?> cls = getEntityClass(cat);
-            if (cls == null) return List.of();
-            List<Method> setters = new ArrayList<>();
-            for (Method m : cls.getMethods()) {
-                if (m.getName().startsWith("set") && m.getParameterCount() == 1
-                    && (m.getParameterTypes()[0] == String.class || m.getParameterTypes()[0] == int.class
-                        || m.getParameterTypes()[0] == long.class || m.getParameterTypes()[0] == double.class
-                        || m.getParameterTypes()[0] == boolean.class)) {
-                    setters.add(m);
-                }
+    /**
+     * Properties the generic form must not try to edit.
+     *
+     * <p>A map's grid, layers, drawings and groups are the Map Editor's job - rendering them as
+     * a reflective form would produce thousands of controls. Password material is never shown,
+     * and the portrait has its own uploader above the form.</p>
+     */
+    static Set<String> skippedProperties(EntityCategory cat) {
+        Set<String> skipped = new LinkedHashSet<>(Set.of("imagePath", "passwordHash", "passwordSalt"));
+        if (cat == EntityCategory.MAP) {
+            skipped.addAll(Set.of("grid", "layers", "drawings", "groups"));
+        }
+        return skipped;
+    }
+
+    /**
+     * Id options per property name, so reference fields render as name drop-downs (or tick lists
+     * for id collections) instead of asking the DM to type a raw id.
+     */
+    static Map<String, List<EntityForm.Ref>> catalogsFor(CampaignRepositories repos) {
+        Map<String, List<EntityForm.Ref>> catalogs = new LinkedHashMap<>();
+        catalogs.put("classId", refs(repos.classes().list()));
+        catalogs.put("raceId", refs(repos.races().list()));
+        catalogs.put("mapId", refs(repos.maps().list()));
+        catalogs.put("itemId", refs(repos.items().list()));
+        catalogs.put("spellId", refs(repos.spells().list()));
+        catalogs.put("typeId", refs(repos.damageTypes().list()));
+        catalogs.put("languages", refs(repos.languages().list()));
+        catalogs.put("effects", refs(repos.effects().list()));
+        catalogs.put("triggeredEffects", refs(repos.effects().list()));
+        return catalogs;
+    }
+
+    private static List<EntityForm.Ref> refs(List<?> entities) {
+        List<EntityForm.Ref> refs = new ArrayList<>();
+        for (Object entity : entities) {
+            String id = invokeString(entity, "getId");
+            if (id != null) {
+                refs.add(new EntityForm.Ref(id, invokeString(entity, "getName")));
             }
-            return setters;
-        } catch (Exception e) { return List.of(); }
+        }
+        return refs;
+    }
+
+    private static String invokeString(Object entity, String method) {
+        try {
+            Object value = entity.getClass().getMethod(method).invoke(entity);
+            return value != null ? value.toString() : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Class<?> getEntityClass(EntityCategory cat) {
@@ -257,48 +258,6 @@ public class EntityDetailScene extends BaseScene {
         };
     }
 
-    private String setterToFieldName(Method setter) {
-        String n = setter.getName().substring(3);
-        return Character.toLowerCase(n.charAt(0)) + n.substring(1);
-    }
-
-    private String getFieldValue(Object entity, String fieldName) {
-        String capitalized = Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-        try {
-            Method m = entity.getClass().getMethod("get" + capitalized);
-            Object v = m.invoke(entity);
-            return v != null ? v.toString() : "";
-        } catch (Exception ignored) {}
-        try {
-            // boolean getters conventionally use "is" rather than "get" (e.g. isDamaging()).
-            Method m = entity.getClass().getMethod("is" + capitalized);
-            Object v = m.invoke(entity);
-            return v != null ? v.toString() : "";
-        } catch (Exception e) { return ""; }
-    }
-
-    private void setFieldValue(Object entity, String fieldName, String value) {
-        try {
-            String setter = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-            try {
-                Method m = entity.getClass().getMethod(setter, String.class);
-                m.invoke(entity, value); return;
-            } catch (NoSuchMethodException ignored) {}
-            try {
-                Method m = entity.getClass().getMethod(setter, int.class);
-                if (!value.isBlank()) m.invoke(entity, Integer.parseInt(value.trim())); return;
-            } catch (NoSuchMethodException ignored) {}
-            try {
-                Method m = entity.getClass().getMethod(setter, double.class);
-                if (!value.isBlank()) m.invoke(entity, Double.parseDouble(value.trim())); return;
-            } catch (NoSuchMethodException ignored) {}
-            try {
-                Method m = entity.getClass().getMethod(setter, boolean.class);
-                m.invoke(entity, Boolean.parseBoolean(value));
-            } catch (NoSuchMethodException ignored) {}
-        } catch (Exception ignored) {}
-    }
-
     private String getImagePath(Object entity) {
         try { return (String) entity.getClass().getMethod("getImagePath").invoke(entity); }
         catch (Exception e) { return null; }
@@ -309,57 +268,4 @@ public class EntityDetailScene extends BaseScene {
         catch (Exception ignored) {}
     }
 
-    /**
-     * Builds a searchable {@link ComboBox} whose items are drawn from {@code options} but whose
-     * selection resolves to the option's id (via {@code idFn}) when saved. The display text uses
-     * {@code labelFn} (falling back to the id if the name is blank) so the user picks a
-     * human-readable name instead of typing a raw id.
-     */
-    private <T> ComboBox<T> idComboBox(List<T> options, Function<T, String> idFn, Function<T, String> labelFn, String currentId) {
-        ComboBox<T> combo = new ComboBox<>();
-        combo.getItems().addAll(options);
-        combo.setMaxWidth(500);
-        combo.setEditable(false);
-        combo.setConverter(new javafx.util.StringConverter<T>() {
-            @Override
-            public String toString(T option) {
-                if (option == null) return "";
-                String label = labelFn.apply(option);
-                String id = idFn.apply(option);
-                return (label != null && !label.isBlank()) ? label + "  [" + id + "]" : id;
-            }
-
-            @Override
-            public T fromString(String string) {
-                return combo.getItems().stream()
-                    .filter(o -> toString(o).equals(string))
-                    .findFirst().orElse(null);
-            }
-        });
-        if (currentId != null && !currentId.isBlank()) {
-            options.stream()
-                .filter(o -> currentId.equals(idFn.apply(o)))
-                .findFirst()
-                .ifPresent(combo.getSelectionModel()::select);
-        }
-        return combo;
-    }
-
-    /** Extracts the value to persist from a {@link TextField}, id-backed {@link ComboBox}, or {@link CheckBox}. */
-    private String controlValue(Control control) {
-        if (control instanceof TextField tf) {
-            return tf.getText();
-        }
-        if (control instanceof CheckBox cb) {
-            return Boolean.toString(cb.isSelected());
-        }
-        if (control instanceof ComboBox<?> combo) {
-            Object selected = combo.getSelectionModel().getSelectedItem();
-            if (selected == null) return "";
-            if (selected instanceof CharacterClass cc) return cc.getId();
-            if (selected instanceof CharacterRace cr) return cr.getId();
-            return selected.toString();
-        }
-        return "";
-    }
 }

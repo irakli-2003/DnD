@@ -54,6 +54,25 @@ Ticking **Start blank** still produces empty catalogues for every one of these f
 The dataset is original text written for this project, describing rules concepts from the
 System Reference Document (CC-BY-4.0); no SRD wording is reproduced verbatim.
 
+### Editing stat blocks
+
+The world-building screens edit the whole entity, not just its name and description. Alongside
+plain text and number fields the editor renders:
+
+- **ability scores** as a six-cell grid with the derived modifier shown next to each score;
+- **enums** (challenge rating, spell school, habitat, armour material) as drop-downs;
+- **id references** (class, race, damage type, item, spell) as name drop-downs, and id *lists*
+  (languages, triggered effects) as tick lists, so no raw id ever has to be typed;
+- **key/value blocks** (racial ability bonuses, class saving throws, place attributes,
+  language dictionaries) as editable rows;
+- **nested objects** (hit die, damage, durability, concentration) inline;
+- **lists of objects** (monster abilities, carried items, known spells) with add/remove.
+
+An id that no longer exists in its catalogue is shown as `(missing)` and preserved rather than
+silently dropped. The catalogue list also shows a one-line digest per entry - challenge rating
+and ability scores for monsters and beasts, role and level for NPCs, level/race/class for
+player characters, level and school for spells, type/weight/value for items.
+
 ### Commands
 - `dm` or `player` at the landing page.
 - `create` in campaign selection to create a new campaign.

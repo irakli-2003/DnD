@@ -1,17 +1,35 @@
 package com.dnd.ui.scenes;
 
 import com.dnd.data.CampaignRepositories;
+import com.dnd.model.character.CharacterClass;
+import com.dnd.model.character.CharacterRace;
+import com.dnd.model.character.PlayerCharacter;
+import com.dnd.model.character.stats.CoreStats;
+import com.dnd.model.creature.Beast;
+import com.dnd.model.creature.ChallengeRating;
+import com.dnd.model.creature.Monster;
+import com.dnd.model.creature.Npc;
+import com.dnd.model.item.Item;
+import com.dnd.model.magic.Spell;
 import com.dnd.ui.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EntityListScene extends BaseScene {
+
+    /** Id to display name, so player rows can show class/race names instead of raw ids. */
+    private final Map<String, String> classNames = new LinkedHashMap<>();
+    private final Map<String, String> raceNames = new LinkedHashMap<>();
 
     public EntityListScene(UiSession uiSession) { super(uiSession); }
 
@@ -35,6 +53,14 @@ public class EntityListScene extends BaseScene {
         listView.setPrefHeight(350);
 
         CampaignRepositories repos = new CampaignRepositories(uiSession.campaignRoot());
+        if (cat == EntityCategory.PLAYER) {
+            for (CharacterClass characterClass : repos.classes().list()) {
+                classNames.put(characterClass.getId(), characterClass.getName());
+            }
+            for (CharacterRace race : repos.races().list()) {
+                raceNames.put(race.getId(), race.getName());
+            }
+        }
         List<?> entities = getEntities(repos, cat);
 
         for (Object entity : entities) {
@@ -109,8 +135,83 @@ public class EntityListScene extends BaseScene {
         Label id = new Label("  [" + getEntityId(entity) + "]");
         id.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px;");
 
-        row.getChildren().addAll(thumb, name, id);
+        VBox text = new VBox(2, new HBox(0, name, id));
+        text.setAlignment(Pos.CENTER_LEFT);
+        String summary = summarize(entity);
+        if (!summary.isBlank()) {
+            Label stats = new Label(summary);
+            stats.setStyle("-fx-text-fill: #8a7a52; -fx-font-size: 11px;");
+            text.getChildren().add(stats);
+        }
+
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.getChildren().addAll(thumb, text);
         return row;
+    }
+
+    /**
+     * One-line stat digest so the list is browsable without opening each entry - the campaign
+     * data carries full stat blocks, and a list of bare names hides all of it.
+     */
+    private String summarize(Object entity) {
+        List<String> parts = new ArrayList<>();
+        if (entity instanceof Monster monster) {
+            addIfPresent(parts, monster.getType());
+            addIfPresent(parts, challengeRating(monster.getChallengeRating()));
+            addIfPresent(parts, abilityLine(monster.getStats()));
+        } else if (entity instanceof Beast beast) {
+            addIfPresent(parts, beast.getHabitat() == null ? null : beast.getHabitat().getValue());
+            addIfPresent(parts, challengeRating(beast.getChallengeRating()));
+            addIfPresent(parts, abilityLine(beast.getStats()));
+        } else if (entity instanceof Npc npc) {
+            addIfPresent(parts, npc.getRole());
+            if (npc.getLevel() > 0) parts.add("level " + npc.getLevel());
+            addIfPresent(parts, abilityLine(npc.getStats()));
+        } else if (entity instanceof PlayerCharacter player) {
+            if (player.getLevel() > 0) parts.add("level " + player.getLevel());
+            addIfPresent(parts, lookupName(player.getRaceId(), raceNames));
+            addIfPresent(parts, lookupName(player.getClassId(), classNames));
+            addIfPresent(parts, abilityLine(player.getStats()));
+        } else if (entity instanceof Spell spell) {
+            parts.add("level " + spell.getLevel());
+            addIfPresent(parts, spell.getSchool() == null ? null : spell.getSchool().getValue());
+            if (spell.getRange() > 0) parts.add((int) spell.getRange() + " ft");
+        } else if (entity instanceof Item item) {
+            addIfPresent(parts, item.getType());
+            if (item.getWeight() > 0) parts.add(item.getWeight() + " lb");
+            if (item.getValueGold() > 0) parts.add(item.getValueGold() + " gp");
+            if (item.getDamage() != null && item.getDamage().getDice() != null) {
+                parts.add(item.getDamage().getDice() + " damage");
+            }
+        }
+        return String.join("  •  ", parts);
+    }
+
+    private static void addIfPresent(List<String> parts, String value) {
+        if (value != null && !value.isBlank()) {
+            parts.add(value);
+        }
+    }
+
+    private static String challengeRating(ChallengeRating rating) {
+        return rating == null ? null : "CR " + rating.getValue();
+    }
+
+    /** Compact "STR 16 DEX 12 ..." digest of an ability block. */
+    private static String abilityLine(CoreStats stats) {
+        if (stats == null) {
+            return null;
+        }
+        return "STR " + stats.getStrength() + " DEX " + stats.getDexterity()
+            + " CON " + stats.getConstitution() + " INT " + stats.getIntelligence()
+            + " WIS " + stats.getWisdom() + " CHA " + stats.getCharisma();
+    }
+
+    private String lookupName(String id, Map<String, String> names) {
+        if (id == null || id.isBlank()) {
+            return null;
+        }
+        return names.getOrDefault(id, id);
     }
 
     private Image createColorPlaceholder(EntityCategory cat) {

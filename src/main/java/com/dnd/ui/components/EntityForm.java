@@ -1,0 +1,738 @@
+package com.dnd.ui.components;
+
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * Reflective editor for a campaign entity.
+ *
+ * <p>The DM's world-building screens used to expose only {@code String}, {@code int} and
+ * {@code boolean} properties, which meant everything that actually makes a monster a monster -
+ * its ability scores, challenge rating, abilities and languages - was invisible even though it
+ * was present in the campaign JSON. This builds an editor for the rich types too:</p>
+ *
+ * <ul>
+ *   <li>ability-score blocks ({@link com.dnd.model.character.stats.CoreStats}) as a labelled
+ *       grid that shows the derived modifier next to each score;</li>
+ *   <li>enums (challenge rating, school, habitat, armour material) as drop-downs;</li>
+ *   <li>id references (class, race, map, damage type, item, spell) as name drop-downs, and
+ *       id <em>lists</em> (languages, triggered effects) as tick lists, so the DM never types
+ *       a raw id;</li>
+ *   <li>{@code Map<String, Integer>} / {@code Map<String, String>} blocks (ability bonuses,
+ *       saving throws, place attributes, language dictionaries) as key/value rows;</li>
+ *   <li>nested objects (hit die, damage, durability, concentration) inline;</li>
+ *   <li>lists of nested objects (abilities, carried items, known spells) with add/remove.</li>
+ * </ul>
+ *
+ * <p>Only properties with <em>both</em> a getter and a setter are editable. That is deliberate:
+ * it keeps write-only setters such as {@code PlayerCharacter.setPassword} out of the form, which
+ * previously appeared as an empty text box and silently hashed the empty string over the
+ * character's real password on every save.</p>
+ */
+public final class EntityForm {
+
+    /** One selectable catalogue entry for an id-reference field. */
+    public static final class Ref {
+        private final String id;
+        private final String label;
+
+        public Ref(String id, String label) {
+            this.id = id;
+            this.label = label;
+        }
+
+        public String id() {
+            return id;
+        }
+
+        @Override
+        public String toString() {
+            return (label == null || label.isBlank()) ? id : label + "  [" + id + "]";
+        }
+    }
+
+    /** Nesting limit, so a self-referencing model can never build an infinite form. */
+    private static final int MAX_DEPTH = 3;
+    private static final List<String> LEADING = List.of("id", "name", "description");
+    private static final Set<String> LONG_TEXT = Set.of("description", "overview");
+    private static final String LABEL_STYLE = "-fx-text-fill: #a89060; -fx-font-size: 12px;";
+    private static final String HINT_STYLE = "-fx-text-fill: #6a5a3a; -fx-font-size: 11px;";
+    private static final String GROUP_STYLE =
+        "-fx-border-color: #c9a84c66; -fx-border-width: 1px; -fx-padding: 10; -fx-background-color: #ffffff08;";
+
+    private abstract static class Binding {
+        final String label;
+
+        Binding(String label) {
+            this.label = label;
+        }
+
+        abstract void write(Object target) throws Exception;
+    }
+
+    private final VBox node = new VBox(14);
+    private final List<Binding> bindings = new ArrayList<>();
+    private final Map<String, List<Ref>> catalogs;
+    private final int depth;
+
+    private EntityForm(Class<?> type, Object value, Set<String> skip,
+                       Map<String, List<Ref>> catalogs, int depth) {
+        this.catalogs = catalogs;
+        this.depth = depth;
+        for (Prop prop : properties(type, skip)) {
+            addEditor(prop, value);
+        }
+    }
+
+    /**
+     * @param type     declared entity type, used when {@code value} is {@code null} (a new entity)
+     * @param value    the entity being edited, or {@code null} to build an empty form
+     * @param skip     property names to leave out (e.g. a map's grid, edited in the Map Editor)
+     * @param catalogs id options keyed by property name, for reference fields
+     */
+    public static EntityForm of(Class<?> type, Object value, Set<String> skip,
+                                Map<String, List<Ref>> catalogs) {
+        return new EntityForm(value != null ? value.getClass() : type, value, skip, catalogs, 0);
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    /** True when the form has no editable properties at all. */
+    public boolean isEmpty() {
+        return bindings.isEmpty();
+    }
+
+    /**
+     * Pushes every edited value into {@code target}.
+     *
+     * <p>Model setters validate (ability scores are 1-30, spell levels 0-9, current durability
+     * cannot exceed max), so failures are re-thrown tagged with the field that caused them -
+     * "Save failed: strength: ..." is actionable, a bare exception is not.</p>
+     */
+    public void writeTo(Object target) {
+        for (Binding binding : bindings) {
+            try {
+                binding.write(target);
+            } catch (Exception e) {
+                throw new IllegalArgumentException(binding.label + ": " + rootMessage(e), e);
+            }
+        }
+    }
+
+    private static String rootMessage(Throwable error) {
+        Throwable cause = error instanceof InvocationTargetException && error.getCause() != null
+            ? error.getCause() : error;
+        String message = cause.getMessage();
+        return (message == null || message.isBlank()) ? cause.getClass().getSimpleName() : message;
+    }
+
+    // ── property discovery ──────────────────────────────────────────────────
+
+    private record Prop(String name, Method getter, Method setter) {
+        Class<?> type() {
+            return setter.getParameterTypes()[0];
+        }
+    }
+
+    private static List<Prop> properties(Class<?> type, Set<String> skip) {
+        Map<String, Prop> found = new LinkedHashMap<>();
+        for (Method setter : type.getMethods()) {
+            if (!setter.getName().startsWith("set") || setter.getName().length() < 4
+                || setter.getParameterCount() != 1) {
+                continue;
+            }
+            String name = decapitalize(setter.getName().substring(3));
+            if (skip.contains(name)) {
+                continue;
+            }
+            Method getter = findGetter(type, name, setter.getParameterTypes()[0]);
+            if (getter == null) {
+                continue;
+            }
+            found.putIfAbsent(name, new Prop(name, getter, setter));
+        }
+        List<Prop> props = new ArrayList<>(found.values());
+        props.sort(Comparator.comparingInt(EntityForm::orderOf).thenComparing(Prop::name));
+        return props;
+    }
+
+    private static int orderOf(Prop prop) {
+        int leading = LEADING.indexOf(prop.name());
+        if (leading >= 0) {
+            return leading;
+        }
+        Class<?> type = prop.type();
+        if (type.isEnum()) {
+            return 20;
+        }
+        if (isScalar(type)) {
+            return 10;
+        }
+        if (Map.class.isAssignableFrom(type)) {
+            return 40;
+        }
+        if (List.class.isAssignableFrom(type)) {
+            return 50;
+        }
+        return 30;
+    }
+
+    private static Method findGetter(Class<?> type, String name, Class<?> valueType) {
+        String capitalized = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        for (String prefix : List.of("get", "is")) {
+            try {
+                Method getter = type.getMethod(prefix + capitalized);
+                if (getter.getParameterCount() == 0
+                    && valueType.isAssignableFrom(wrap(getter.getReturnType()))) {
+                    return getter;
+                }
+            } catch (NoSuchMethodException ignored) {
+                // try the next prefix
+            }
+        }
+        return null;
+    }
+
+    private static Class<?> wrap(Class<?> type) {
+        if (type == int.class) return Integer.class;
+        if (type == long.class) return Long.class;
+        if (type == double.class) return Double.class;
+        if (type == boolean.class) return Boolean.class;
+        return type;
+    }
+
+    private static boolean isScalar(Class<?> type) {
+        return type == String.class || type == int.class || type == long.class
+            || type == double.class || type == boolean.class;
+    }
+
+    private static boolean isModelObject(Class<?> type) {
+        return type.getName().startsWith("com.dnd.model.") && !type.isEnum();
+    }
+
+    private static String decapitalize(String text) {
+        return Character.toLowerCase(text.charAt(0)) + text.substring(1);
+    }
+
+    /** Turns {@code challengeRating} into {@code Challenge Rating} for display. */
+    static String humanize(String propertyName) {
+        StringBuilder out = new StringBuilder();
+        for (int i = 0; i < propertyName.length(); i++) {
+            char c = propertyName.charAt(i);
+            if (i == 0) {
+                out.append(Character.toUpperCase(c));
+            } else if (Character.isUpperCase(c) && !Character.isUpperCase(propertyName.charAt(i - 1))) {
+                out.append(' ').append(c);
+            } else {
+                out.append(c);
+            }
+        }
+        return out.toString();
+    }
+
+    private static Type elementType(Method setter, int index) {
+        Type generic = setter.getGenericParameterTypes()[0];
+        if (generic instanceof ParameterizedType parameterized) {
+            Type[] args = parameterized.getActualTypeArguments();
+            if (index < args.length && args[index] instanceof Class<?> cls) {
+                return cls;
+            }
+        }
+        return Object.class;
+    }
+
+    private static Object read(Method getter, Object owner) {
+        if (owner == null) {
+            return null;
+        }
+        try {
+            return getter.invoke(owner);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static Object instantiate(Class<?> type) {
+        try {
+            var constructor = type.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // ── editors ─────────────────────────────────────────────────────────────
+
+    private void addEditor(Prop prop, Object owner) {
+        Class<?> type = prop.type();
+        Object current = read(prop.getter(), owner);
+        List<Ref> options = catalogs.get(prop.name());
+
+        if (type == String.class && options != null) {
+            addRefEditor(prop, (String) current, options);
+        } else if (isScalar(type)) {
+            addScalarEditor(prop, current);
+        } else if (type.isEnum()) {
+            addEnumEditor(prop, current);
+        } else if (com.dnd.model.character.stats.CoreStats.class.isAssignableFrom(type)) {
+            addCoreStatsEditor(prop, current);
+        } else if (Map.class.isAssignableFrom(type)) {
+            addMapEditor(prop, current);
+        } else if (List.class.isAssignableFrom(type)) {
+            addListEditor(prop, current, options);
+        } else if (isModelObject(type) && depth < MAX_DEPTH) {
+            addNestedEditor(prop, current);
+        }
+    }
+
+    private void addScalarEditor(Prop prop, Object current) {
+        Class<?> type = prop.type();
+        if (type == boolean.class) {
+            CheckBox box = new CheckBox(humanize(prop.name()));
+            box.getStyleClass().add("dnd-check-box");
+            box.setSelected(Boolean.TRUE.equals(current));
+            node.getChildren().add(box);
+            bind(prop, () -> box.isSelected());
+            return;
+        }
+
+        String text = current != null ? String.valueOf(current) : "";
+        boolean longText = type == String.class && LONG_TEXT.contains(prop.name());
+        Control editor;
+        if (longText) {
+            TextArea area = new TextArea(text);
+            area.setWrapText(true);
+            area.setPrefRowCount(3);
+            area.setMaxWidth(620);
+            editor = area;
+        } else {
+            TextField field = new TextField(text);
+            field.setMaxWidth(type == String.class ? 500 : 160);
+            field.getStyleClass().add("dnd-text-field");
+            editor = field;
+        }
+        node.getChildren().add(labelled(prop.name(), editor));
+        bind(prop, () -> parseScalar(type, editor instanceof TextArea area ? area.getText()
+            : ((TextField) editor).getText()));
+    }
+
+    private Object parseScalar(Class<?> type, String raw) {
+        String text = raw == null ? "" : raw.trim();
+        if (type == String.class) {
+            return raw == null ? "" : raw;
+        }
+        if (text.isEmpty()) {
+            return type == double.class ? 0d : type == long.class ? 0L : 0;
+        }
+        if (type == int.class) return Integer.parseInt(text);
+        if (type == long.class) return Long.parseLong(text);
+        return Double.parseDouble(text);
+    }
+
+    private void addEnumEditor(Prop prop, Object current) {
+        ComboBox<Object> combo = new ComboBox<>();
+        combo.getItems().add(null);
+        combo.getItems().addAll(Arrays.asList(prop.type().getEnumConstants()));
+        combo.setMaxWidth(320);
+        combo.setConverter(new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(Object value) {
+                return value == null ? "(none)" : enumLabel(value);
+            }
+
+            @Override
+            public Object fromString(String text) {
+                return combo.getItems().stream()
+                    .filter(item -> toString(item).equals(text))
+                    .findFirst().orElse(null);
+            }
+        });
+        combo.getSelectionModel().select(current);
+        node.getChildren().add(labelled(prop.name(), combo));
+        bind(prop, combo.getSelectionModel()::getSelectedItem);
+    }
+
+    /** Enums here carry a display value for JSON ({@code "1/4"}, {@code "evocation"}); prefer it. */
+    private static String enumLabel(Object constant) {
+        try {
+            Object value = constant.getClass().getMethod("getValue").invoke(constant);
+            if (value != null) {
+                return String.valueOf(value);
+            }
+        } catch (Exception ignored) {
+            // enums without a JSON value fall through to their constant name
+        }
+        return ((Enum<?>) constant).name().toLowerCase(Locale.ROOT).replace('_', ' ');
+    }
+
+    private void addRefEditor(Prop prop, String currentId, List<Ref> options) {
+        ComboBox<Ref> combo = new ComboBox<>();
+        combo.getItems().add(null);
+        combo.getItems().addAll(options);
+        combo.setMaxWidth(500);
+        combo.setConverter(new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(Ref ref) {
+                return ref == null ? "(none)" : ref.toString();
+            }
+
+            @Override
+            public Ref fromString(String text) {
+                return combo.getItems().stream()
+                    .filter(item -> toString(item).equals(text))
+                    .findFirst().orElse(null);
+            }
+        });
+        options.stream().filter(ref -> ref.id().equals(currentId)).findFirst()
+            .ifPresent(combo.getSelectionModel()::select);
+        if (combo.getSelectionModel().getSelectedItem() == null && currentId != null && !currentId.isBlank()) {
+            // An id that is not in the catalogue any more: keep it rather than silently dropping it.
+            Ref orphan = new Ref(currentId, "(missing)");
+            combo.getItems().add(orphan);
+            combo.getSelectionModel().select(orphan);
+        }
+        node.getChildren().add(labelled(prop.name(), combo));
+        bind(prop, () -> {
+            Ref selected = combo.getSelectionModel().getSelectedItem();
+            return selected == null ? null : selected.id();
+        });
+    }
+
+    private static final List<String> ABILITIES =
+        List.of("strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma");
+
+    private void addCoreStatsEditor(Prop prop, Object current) {
+        Object stats = current != null ? current : instantiate(prop.type());
+        GridPane grid = statGrid();
+        Map<String, TextField> fields = new LinkedHashMap<>();
+
+        for (int i = 0; i < ABILITIES.size(); i++) {
+            String ability = ABILITIES.get(i);
+            // A freshly constructed stat block holds zeros, which the model rejects on save
+            // (scores are 1-30), so unset scores start at the D&D average instead.
+            int score = intProperty(stats, ability, 10);
+            if (score < 1) {
+                score = 10;
+            }
+            TextField field = new TextField(String.valueOf(score));
+            field.getStyleClass().add("dnd-text-field");
+            field.setPrefWidth(60);
+            Label modifier = new Label(modifierText(score));
+            modifier.setStyle(HINT_STYLE);
+            field.textProperty().addListener((obs, old, text) -> modifier.setText(modifierText(parseIntOr(text, 10))));
+
+            Label caption = new Label(ability.substring(0, 3).toUpperCase(Locale.ROOT));
+            caption.setStyle(LABEL_STYLE);
+            VBox cell = new VBox(2, caption, new HBox(6, field, modifier));
+            ((HBox) cell.getChildren().get(1)).setAlignment(Pos.CENTER_LEFT);
+            grid.add(cell, i % 3, i / 3);
+            fields.put(ability, field);
+        }
+
+        node.getChildren().add(group(prop.name(), grid));
+        Object statsTarget = stats;
+        bindings.add(new Binding(humanize(prop.name())) {
+            @Override
+            void write(Object target) throws Exception {
+                if (statsTarget == null) {
+                    return;
+                }
+                for (Map.Entry<String, TextField> entry : fields.entrySet()) {
+                    String ability = entry.getKey();
+                    Method setter = statsTarget.getClass().getMethod(
+                        "set" + Character.toUpperCase(ability.charAt(0)) + ability.substring(1), int.class);
+                    try {
+                        setter.invoke(statsTarget, parseIntOr(entry.getValue().getText(), 10));
+                    } catch (InvocationTargetException e) {
+                        throw new IllegalArgumentException(ability + ": " + rootMessage(e), e);
+                    }
+                }
+                prop.setter().invoke(target, statsTarget);
+            }
+        });
+    }
+
+    private static GridPane statGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(18);
+        grid.setVgap(8);
+        return grid;
+    }
+
+    private static String modifierText(int score) {
+        int modifier = Math.floorDiv(score - 10, 2);
+        return (modifier >= 0 ? "+" : "") + modifier;
+    }
+
+    private static int parseIntOr(String text, int fallback) {
+        try {
+            return Integer.parseInt(text.trim());
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    private static int intProperty(Object owner, String name, int fallback) {
+        if (owner == null) {
+            return fallback;
+        }
+        try {
+            Object value = owner.getClass()
+                .getMethod("get" + Character.toUpperCase(name.charAt(0)) + name.substring(1)).invoke(owner);
+            return value instanceof Number number ? number.intValue() : fallback;
+        } catch (Exception e) {
+            return fallback;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addMapEditor(Prop prop, Object current) {
+        Class<?> valueType = (Class<?>) elementType(prop.setter(), 1);
+        Map<String, Object> existing = current instanceof Map<?, ?> map
+            ? new LinkedHashMap<>((Map<String, Object>) map) : new LinkedHashMap<>();
+        if (existing.isEmpty() && valueType == Integer.class) {
+            // Ability-score style blocks read far better pre-seeded with the six abilities
+            // than as an empty box the DM has to guess the keys for.
+            for (String ability : ABILITIES) {
+                existing.put(ability, 0);
+            }
+        }
+
+        VBox rows = new VBox(6);
+        List<Map.Entry<TextField, TextField>> pairs = new ArrayList<>();
+        for (Map.Entry<String, Object> entry : existing.entrySet()) {
+            pairs.add(mapRow(rows, pairs, entry.getKey(),
+                entry.getValue() == null ? "" : String.valueOf(entry.getValue())));
+        }
+
+        Button add = new Button("Add entry");
+        add.getStyleClass().add("dnd-button");
+        add.setOnAction(e -> pairs.add(mapRow(rows, pairs, "", "")));
+
+        VBox box = new VBox(8, rows, add);
+        node.getChildren().add(group(prop.name(), box));
+        bind(prop, () -> {
+            Map<String, Object> result = new LinkedHashMap<>();
+            for (Map.Entry<TextField, TextField> pair : pairs) {
+                String key = pair.getKey().getText().trim();
+                if (key.isEmpty()) {
+                    continue;
+                }
+                String raw = pair.getValue().getText().trim();
+                result.put(key, valueType == Integer.class ? parseIntOr(raw, 0) : raw);
+            }
+            return result;
+        });
+    }
+
+    private Map.Entry<TextField, TextField> mapRow(VBox rows, List<Map.Entry<TextField, TextField>> pairs,
+                                                   String key, String value) {
+        TextField keyField = new TextField(key);
+        keyField.getStyleClass().add("dnd-text-field");
+        keyField.setPrefWidth(200);
+        keyField.setPromptText("key");
+        TextField valueField = new TextField(value);
+        valueField.getStyleClass().add("dnd-text-field");
+        valueField.setPrefWidth(260);
+        valueField.setPromptText("value");
+        Button remove = new Button("✕");
+        remove.getStyleClass().add("danger-button");
+
+        HBox row = new HBox(8, keyField, valueField, remove);
+        row.setAlignment(Pos.CENTER_LEFT);
+        Map.Entry<TextField, TextField> pair = Map.entry(keyField, valueField);
+        remove.setOnAction(e -> {
+            rows.getChildren().remove(row);
+            pairs.remove(pair);
+        });
+        rows.getChildren().add(row);
+        return pair;
+    }
+
+    private void addListEditor(Prop prop, Object current, List<Ref> options) {
+        Type element = elementType(prop.setter(), 0);
+        Class<?> elementClass = element instanceof Class<?> cls ? cls : Object.class;
+        List<?> values = current instanceof List<?> list ? list : List.of();
+
+        if (elementClass == String.class) {
+            if (options != null) {
+                addRefListEditor(prop, values, options);
+            } else {
+                addTextListEditor(prop, values);
+            }
+        } else if (isModelObject(elementClass) && depth < MAX_DEPTH) {
+            addObjectListEditor(prop, values, elementClass);
+        }
+    }
+
+    private void addTextListEditor(Prop prop, List<?> values) {
+        TextField field = new TextField(String.join(", ", values.stream().map(String::valueOf).toList()));
+        field.getStyleClass().add("dnd-text-field");
+        field.setMaxWidth(560);
+        Label hint = new Label("comma separated");
+        hint.setStyle(HINT_STYLE);
+        VBox box = labelled(prop.name(), field);
+        box.getChildren().add(hint);
+        node.getChildren().add(box);
+        bind(prop, () -> Arrays.stream(field.getText().split(","))
+            .map(String::trim).filter(part -> !part.isEmpty()).toList());
+    }
+
+    /** Id lists (languages, triggered effects) as a tick list of catalogue names. */
+    private void addRefListEditor(Prop prop, List<?> values, List<Ref> options) {
+        List<String> selected = new ArrayList<>(values.stream().map(String::valueOf).toList());
+        MenuButton menu = new MenuButton();
+        menu.setMaxWidth(560);
+        menu.getStyleClass().add("dnd-button");
+
+        List<Ref> all = new ArrayList<>(options);
+        for (String id : selected) {
+            if (all.stream().noneMatch(ref -> ref.id().equals(id))) {
+                all.add(new Ref(id, "(missing)"));
+            }
+        }
+        Runnable refreshText = () -> menu.setText(selected.isEmpty() ? "(none)" : String.join(", ", selected));
+        for (Ref ref : all) {
+            CheckMenuItem item = new CheckMenuItem(ref.toString());
+            item.setSelected(selected.contains(ref.id()));
+            item.selectedProperty().addListener((obs, was, is) -> {
+                if (is) {
+                    if (!selected.contains(ref.id())) selected.add(ref.id());
+                } else {
+                    selected.remove(ref.id());
+                }
+                refreshText.run();
+            });
+            menu.getItems().add(item);
+        }
+        refreshText.run();
+
+        node.getChildren().add(labelled(prop.name(), menu));
+        bind(prop, () -> List.copyOf(selected));
+    }
+
+    private void addObjectListEditor(Prop prop, List<?> values, Class<?> elementClass) {
+        VBox rows = new VBox(10);
+        List<Map.Entry<Object, EntityForm>> entries = new ArrayList<>();
+        for (Object value : values) {
+            if (value != null) {
+                entries.add(objectRow(rows, entries, value));
+            }
+        }
+
+        Button add = new Button("Add " + humanize(elementClass.getSimpleName()).toLowerCase(Locale.ROOT));
+        add.getStyleClass().add("dnd-button");
+        add.setOnAction(e -> {
+            Object created = instantiate(elementClass);
+            if (created != null) {
+                entries.add(objectRow(rows, entries, created));
+            }
+        });
+
+        node.getChildren().add(group(prop.name() + " (" + values.size() + ")", new VBox(10, rows, add)));
+        bind(prop, () -> {
+            List<Object> result = new ArrayList<>();
+            for (Map.Entry<Object, EntityForm> entry : entries) {
+                entry.getValue().writeTo(entry.getKey());
+                result.add(entry.getKey());
+            }
+            return result;
+        });
+    }
+
+    private Map.Entry<Object, EntityForm> objectRow(VBox rows, List<Map.Entry<Object, EntityForm>> entries,
+                                                    Object value) {
+        EntityForm form = new EntityForm(value.getClass(), value, Set.of("imagePath"), catalogs, depth + 1);
+        Button remove = new Button("Remove");
+        remove.getStyleClass().add("danger-button");
+
+        VBox card = new VBox(8, form.getNode(), remove);
+        card.setStyle(GROUP_STYLE);
+        remove.setOnAction(e -> {
+            rows.getChildren().remove(card);
+            entries.removeIf(entry -> entry.getValue() == form);
+        });
+        rows.getChildren().add(card);
+        return Map.entry(value, form);
+    }
+
+    private void addNestedEditor(Prop prop, Object current) {
+        Object instance = current != null ? current : instantiate(prop.type());
+        if (instance == null) {
+            return;
+        }
+        EntityForm form = new EntityForm(instance.getClass(), instance, Set.of("imagePath"),
+            catalogs, depth + 1);
+        if (form.isEmpty()) {
+            return;
+        }
+        node.getChildren().add(group(prop.name(), form.getNode()));
+        bindings.add(new Binding(humanize(prop.name())) {
+            @Override
+            void write(Object target) throws Exception {
+                form.writeTo(instance);
+                prop.setter().invoke(target, instance);
+            }
+        });
+    }
+
+    // ── plumbing ────────────────────────────────────────────────────────────
+
+    private interface ValueSupplier {
+        Object get();
+    }
+
+    private void bind(Prop prop, ValueSupplier supplier) {
+        bindings.add(new Binding(humanize(prop.name())) {
+            @Override
+            void write(Object target) throws Exception {
+                prop.setter().invoke(target, supplier.get());
+            }
+        });
+    }
+
+    private VBox labelled(String propertyName, Node editor) {
+        Label label = new Label(humanize(propertyName));
+        label.setStyle(LABEL_STYLE);
+        return new VBox(4, label, editor);
+    }
+
+    private Node group(String propertyName, Node content) {
+        Label label = new Label(humanize(propertyName));
+        label.getStyleClass().add("section-label");
+        VBox box = new VBox(8, label, content);
+        box.setStyle(GROUP_STYLE);
+        box.setPadding(new Insets(10));
+        box.setMaxWidth(680);
+        return box;
+    }
+}
