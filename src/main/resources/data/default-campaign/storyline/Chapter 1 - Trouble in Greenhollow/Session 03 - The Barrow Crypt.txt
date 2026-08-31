@@ -1,0 +1,7 @@
+Session 03 - The Barrow Crypt
+
+[READ ALOUD]The barrow door has been pulled open from the inside.[/READ ALOUD]
+
+[DM NOTE]The wight in the central tomb is the chapter's boss. Skeletons rise in the side chambers on round two.[/DM NOTE]
+
+[map:barrow-crypt-map|The Barrow Crypt]

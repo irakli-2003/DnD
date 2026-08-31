@@ -1,0 +1,7 @@
+Session 02 - The Roadside Camp
+
+[READ ALOUD]Cart tracks leave the road here and cut into the trees. Somewhere ahead you can smell woodsmoke that nobody bothered to hide.[/READ ALOUD]
+
+[DM NOTE]Four bandits and a bandit captain. They surrender at half strength if the captain falls.[/DM NOTE]
+
+[map:bandit-camp-map|The Roadside Camp]

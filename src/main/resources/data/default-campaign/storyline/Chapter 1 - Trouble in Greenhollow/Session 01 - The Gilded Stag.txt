@@ -1,0 +1,7 @@
+Session 01 - The Gilded Stag
+
+[READ ALOUD]The common room smells of woodsmoke and barley. A dwarf behind the bar is polishing the same tankard she was polishing when you walked in, and she has not taken her eyes off you once.[/READ ALOUD]
+
+[DM NOTE]Hilda knows about the caravan raids but will only talk after the party buys a round, or passes a DC 12 Charisma (Persuasion) check.[/DM NOTE]
+
+Battle map if the evening turns ugly: [map:gilded-stag-ground|The Gilded Stag - Common Room]

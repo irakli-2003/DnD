@@ -3,11 +3,25 @@ package com.dnd.cli.storage;
 import com.dnd.data.CampaignPaths;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
+/**
+ * Seeds the files of a newly created campaign.
+ *
+ * <p>A <em>default</em> campaign is populated from the standard-rules dataset
+ * bundled on the classpath under {@code /data/srd}, so it starts with the full
+ * catalogue of races, classes, items, spells, monsters, beasts, NPCs, places,
+ * battle maps and a sample party. A <em>blank</em> campaign gets the same set of
+ * files with empty catalogues, ready for the DM to fill in.</p>
+ */
 public final class CampaignTemplate {
+    /** Classpath folder holding the bundled standard-rules catalogues. */
+    private static final String SRD_RESOURCE_ROOT = "/data/srd/";
+
     private CampaignTemplate() {
     }
 
@@ -18,533 +32,89 @@ public final class CampaignTemplate {
         Files.createDirectories(paths.playersDir());
         Files.createDirectories(paths.storylineDir());
 
-        write(paths.classesFile(), blank ? blankClassesJson() : defaultClassesJson());
-        write(paths.racesFile(), blank ? blankRacesJson() : defaultRacesJson());
-        write(paths.itemsFile(), blank ? blankItemsJson() : defaultItemsJson());
-        write(paths.spellsFile(), blank ? blankSpellsJson() : defaultSpellsJson());
-        write(paths.placesFile(), blank ? blankPlacesJson() : defaultPlacesJson());
-        write(paths.effectsFile(), blank ? blankEffectsJson() : defaultEffectsJson());
-        write(paths.damageTypesFile(), blank ? blankDamageTypesJson() : defaultDamageTypesJson());
-        write(paths.npcsFile(), blank ? blankNpcsJson() : defaultNpcsJson());
-        write(paths.monstersFile(), blank ? blankMonstersJson() : defaultMonstersJson());
-        write(paths.beastsFile(), blank ? blankBeastsJson() : defaultBeastsJson());
-        write(paths.playersFile(), blank ? blankPlayersJson() : defaultPlayersJson());
-        write(paths.languagesFile(), blank ? blankLanguagesJson() : defaultLanguagesJson());
-        write(paths.alchemyIngredientsFile(), blank ? blankAlchemyIngredientsJson() : defaultAlchemyIngredientsJson());
-        write(paths.booksFile(), blank ? blankBooksJson() : defaultBooksJson());
-        write(paths.diceFile(), blank ? blankDiceJson() : defaultDiceJson());
-        write(paths.mapsFile(), blank ? blankMapsJson() : defaultMapsJson());
-        write(paths.idRegistryFile(), blank ? blankIdRegistryJson() : defaultIdRegistryJson());
+        write(paths.classesFile(), blank ? blankClassesJson() : standard("classes.json"));
+        write(paths.racesFile(), blank ? blankRacesJson() : standard("races.json"));
+        write(paths.itemsFile(), blank ? blankItemsJson() : standard("items.json"));
+        write(paths.spellsFile(), blank ? blankSpellsJson() : standard("spells.json"));
+        write(paths.placesFile(), blank ? blankPlacesJson() : standard("places.json"));
+        write(paths.effectsFile(), blank ? blankEffectsJson() : standard("effects.json"));
+        write(paths.damageTypesFile(), blank ? blankDamageTypesJson() : standard("damage-types.json"));
+        write(paths.npcsFile(), blank ? blankNpcsJson() : standard("npcs.json"));
+        write(paths.monstersFile(), blank ? blankMonstersJson() : standard("monsters.json"));
+        write(paths.beastsFile(), blank ? blankBeastsJson() : standard("beasts.json"));
+        write(paths.playersFile(), blank ? blankPlayersJson() : standard("players.json"));
+        write(paths.languagesFile(), blank ? blankLanguagesJson() : standard("languages.json"));
+        write(paths.alchemyIngredientsFile(),
+            blank ? blankAlchemyIngredientsJson() : standard("alchemy-ingredients.json"));
+        write(paths.booksFile(), blank ? blankBooksJson() : standard("books.json"));
+        write(paths.diceFile(), blank ? blankDiceJson() : standard("dice.json"));
+        write(paths.mapsFile(), blank ? blankMapsJson() : standard("maps.json"));
+        write(paths.idRegistryFile(), blank ? blankIdRegistryJson() : standard("id-registry.json"));
+
+        if (!blank) {
+            writeStarterStoryline(paths.storylineDir());
+        }
+    }
+
+    /**
+     * Reads one catalogue of the bundled standard-rules dataset off the classpath.
+     *
+     * @throws IOException if the resource is missing, which means the build did not
+     *                     package {@code src/main/resources/data/srd} - seeding a
+     *                     campaign with a half-empty catalogue would be worse than
+     *                     failing loudly here.
+     */
+    public static String standard(String fileName) throws IOException {
+        try (InputStream stream = CampaignTemplate.class.getResourceAsStream(SRD_RESOURCE_ROOT + fileName)) {
+            if (stream == null) {
+                throw new IOException("Missing bundled standard-rules catalogue "
+                    + SRD_RESOURCE_ROOT + fileName);
+            }
+            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+        }
     }
 
     private static void write(Path file, String content) throws IOException {
         Files.write(file, content.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String defaultClassesJson() {
-        return "{\n" +
-            "  \"classes\": [\n" +
-            "    {\n" +
-            "      \"id\": \"fighter\",\n" +
-            "      \"name\": \"Fighter\",\n" +
-            "      \"description\": \"A master of martial combat.\",\n" +
-            "      \"hitDie\": {\n" +
-            "        \"id\": \"d10\",\n" +
-            "        \"name\": \"d10\",\n" +
-            "        \"sides\": 10\n" +
-            "      },\n" +
-            "      \"primaryAbilities\": [\"strength\", \"constitution\"],\n" +
-            "      \"savingThrowBonuses\": {\n" +
-            "        \"strength\": 2,\n" +
-            "        \"dexterity\": 0,\n" +
-            "        \"constitution\": 2,\n" +
-            "        \"intelligence\": 0,\n" +
-            "        \"wisdom\": 0,\n" +
-            "        \"charisma\": 0\n" +
-            "      }\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
+    /**
+     * Drops a small worked example into the storyline folder so the arc timeline
+     * has something to draw and the DM can see the note markers in context.
+     */
+    private static void writeStarterStoryline(Path storylineDir) throws IOException {
+        Path chapter = storylineDir.resolve("Chapter 1 - Trouble in Greenhollow");
+        Files.createDirectories(chapter);
 
-    public static String defaultRacesJson() {
-        return "{\n" +
-            "  \"races\": [\n" +
-            "    {\n" +
-            "      \"id\": \"human\",\n" +
-            "      \"name\": \"Human\",\n" +
-            "      \"description\": \"Adaptable and ambitious.\",\n" +
-            "      \"abilityBonuses\": {\n" +
-            "        \"strength\": 1,\n" +
-            "        \"dexterity\": 1,\n" +
-            "        \"constitution\": 1,\n" +
-            "        \"intelligence\": 1,\n" +
-            "        \"wisdom\": 1,\n" +
-            "        \"charisma\": 1\n" +
-            "      },\n" +
-            "      \"speed\": 30\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
+        write(chapter.resolve("Session 01 - The Gilded Stag.txt"),
+            "Session 01 - The Gilded Stag\n\n"
+                + "[READ ALOUD]The common room smells of woodsmoke and barley. A dwarf behind the bar "
+                + "is polishing the same tankard she was polishing when you walked in, and she has not "
+                + "taken her eyes off you once.[/READ ALOUD]\n\n"
+                + "[DM NOTE]Hilda knows about the caravan raids but will only talk after the party "
+                + "buys a round, or passes a DC 12 Charisma (Persuasion) check.[/DM NOTE]\n\n"
+                + "Battle map if the evening turns ugly: "
+                + "[map:gilded-stag-ground|The Gilded Stag - Common Room]\n");
 
-    public static String defaultItemsJson() {
-        return "{\n" +
-            "  \"items\": [\n" +
-            "    {\n" +
-            "      \"id\": \"longsword\",\n" +
-            "      \"name\": \"Longsword\",\n" +
-            "      \"type\": \"weapon\",\n" +
-            "      \"description\": \"A versatile steel blade.\",\n" +
-            "      \"valueGold\": 15,\n" +
-            "      \"weight\": 3.0,\n" +
-            "      \"damage\": {\n" +
-            "        \"dice\": \"1d8\",\n" +
-            "        \"type\": \"slashing\"\n" +
-            "      },\n" +
-            "      \"durability\": {\n" +
-            "        \"max\": 100,\n" +
-            "        \"current\": 100\n" +
-            "      }\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
+        write(chapter.resolve("Session 02 - The Roadside Camp.txt"),
+            "Session 02 - The Roadside Camp\n\n"
+                + "[READ ALOUD]Cart tracks leave the road here and cut into the trees. Somewhere ahead "
+                + "you can smell woodsmoke that nobody bothered to hide.[/READ ALOUD]\n\n"
+                + "[DM NOTE]Four bandits and a bandit captain. They surrender at half strength if the "
+                + "captain falls.[/DM NOTE]\n\n"
+                + "[map:bandit-camp-map|The Roadside Camp]\n");
 
-    public static String defaultSpellsJson() {
-        return "{\n" +
-            "  \"spells\": [\n" +
-            "    {\n" +
-            "      \"id\": \"frost_bolt\",\n" +
-            "      \"name\": \"Frost Bolt\",\n" +
-            "      \"description\": \"A chilling projectile of ice.\",\n" +
-            "      \"level\": 1,\n" +
-            "      \"school\": \"evocation\",\n" +
-            "      \"manaCost\": 5,\n" +
-            "      \"range\": 30,\n" +
-            "      \"radius\": 0,\n" +
-            "      \"castingMethod\": \"speech\",\n" +
-            "      \"requiredConsumables\": [],\n" +
-            "      \"requiredTools\": [],\n" +
-            "      \"concentration\": {\n" +
-            "        \"difficultyLevel\": \"easy\",\n" +
-            "        \"preventsMovement\": false\n" +
-            "      },\n" +
-            "      \"effects\": [\n" +
-            "        {\n" +
-            "          \"id\": \"freeze\",\n" +
-            "          \"name\": \"Freeze\",\n" +
-            "          \"description\": \"Reduces movement speed and slows reactions.\",\n" +
-            "          \"damaging\": false,\n" +
-            "          \"healing\": false,\n" +
-            "          \"damageAmount\": 0,\n" +
-            "          \"healingAmount\": 0\n" +
-            "        }\n" +
-            "      ],\n" +
-            "      \"damage\": {\n" +
-            "        \"amount\": 6,\n" +
-            "        \"typeId\": \"cold\"\n" +
-            "      }\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
+        write(chapter.resolve("Session 03 - The Barrow Crypt.txt"),
+            "Session 03 - The Barrow Crypt\n\n"
+                + "[READ ALOUD]The barrow door has been pulled open from the inside.[/READ ALOUD]\n\n"
+                + "[DM NOTE]The wight in the central tomb is the chapter's boss. Skeletons rise in the "
+                + "side chambers on round two.[/DM NOTE]\n\n"
+                + "[map:barrow-crypt-map|The Barrow Crypt]\n");
 
-    public static String defaultPlayersJson() {
-        return "{\n" +
-            "  \"players\": [\n" +
-            "    {\n" +
-            "      \"id\": \"player1\",\n" +
-            "      \"name\": \"Alyx\",\n" +
-            "      \"classId\": \"fighter\",\n" +
-            "      \"raceId\": \"human\",\n" +
-            "      \"level\": 1,\n" +
-            "      \"stats\": {\n" +
-            "        \"strength\": 15,\n" +
-            "        \"dexterity\": 12,\n" +
-            "        \"constitution\": 14,\n" +
-            "        \"intelligence\": 10,\n" +
-            "        \"wisdom\": 11,\n" +
-            "        \"charisma\": 8\n" +
-            "      },\n" +
-            "      \"items\": [\n" +
-            "        {\n" +
-            "          \"itemId\": \"longsword\",\n" +
-            "          \"condition\": {\n" +
-            "            \"durability\": 100\n" +
-            "          },\n" +
-            "          \"equipped\": true\n" +
-            "        }\n" +
-            "      ],\n" +
-            "      \"spells\": [\n" +
-            "        {\n" +
-            "          \"spellId\": \"frost_bolt\",\n" +
-            "          \"rank\": 1,\n" +
-            "          \"active\": true\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultPlacesJson() {
-        return "{\n" +
-            "  \"places\": [\n" +
-            "    {\n" +
-            "      \"id\": \"stonekeep\",\n" +
-            "      \"name\": \"Stonekeep\",\n" +
-            "      \"description\": \"A fortified keep overlooking the valley.\",\n" +
-            "      \"type\": \"fortress\",\n" +
-            "      \"habitat\": \"mountain\",\n" +
-            "      \"tags\": [\"defensive\", \"mountain\"],\n" +
-            "      \"attributes\": {\n" +
-            "        \"population\": \"120\",\n" +
-            "        \"faction\": \"wardens\"\n" +
-            "      },\n" +
-            "      \"mapId\": \"stonekeep-ground-floor\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultEffectsJson() {
-        return "{\n" +
-            "  \"effects\": [\n" +
-            "    {\n" +
-            "      \"id\": \"freeze\",\n" +
-            "      \"name\": \"Freeze\",\n" +
-            "      \"description\": \"Reduces movement speed and slows reactions.\",\n" +
-            "      \"damaging\": false,\n" +
-            "      \"healing\": false,\n" +
-            "      \"damageAmount\": 0,\n" +
-            "      \"healingAmount\": 0\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultDamageTypesJson() {
-        return "{\n" +
-            "  \"damageTypes\": [\n" +
-            "    {\n" +
-            "      \"id\": \"cold\",\n" +
-            "      \"name\": \"Cold\",\n" +
-            "      \"description\": \"Ice, frost, and freezing damage.\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultLanguagesJson() {
-        return "{\n" +
-            "  \"languages\": [\n" +
-            "    {\n" +
-            "      \"id\": \"common\",\n" +
-            "      \"name\": \"Common\",\n" +
-            "      \"dictionary\": {\n" +
-            "        \"hello\": \"greetings\",\n" +
-            "        \"farewell\": \"safe travels\"\n" +
-            "      },\n" +
-            "      \"requiredMaterial\": {\n" +
-            "        \"id\": \"common_tongue\",\n" +
-            "        \"name\": \"Common Tongue Primer\",\n" +
-            "        \"type\": \"book\",\n" +
-            "        \"description\": \"A primer for the common language.\",\n" +
-            "        \"valueGold\": 5,\n" +
-            "        \"weight\": 1.0,\n" +
-            "        \"damage\": null,\n" +
-            "        \"durability\": {\n" +
-            "          \"max\": 50,\n" +
-            "          \"current\": 50\n" +
-            "        },\n" +
-            "        \"overview\": \"Basic vocabulary and grammar.\"\n" +
-            "      },\n" +
-            "      \"requiredLongRests\": 3\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultAlchemyIngredientsJson() {
-        return "{\n" +
-            "  \"ingredients\": [\n" +
-            "    {\n" +
-            "      \"id\": \"wolfsbane\",\n" +
-            "      \"name\": \"Wolfsbane\",\n" +
-            "      \"description\": \"A bitter herb used in protective concoctions.\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultBooksJson() {
-        return "{\n" +
-            "  \"books\": [\n" +
-            "    {\n" +
-            "      \"id\": \"common_tongue\",\n" +
-            "      \"name\": \"Common Tongue Primer\",\n" +
-            "      \"type\": \"book\",\n" +
-            "      \"description\": \"A primer for the common language.\",\n" +
-            "      \"valueGold\": 5,\n" +
-            "      \"weight\": 1.0,\n" +
-            "      \"damage\": null,\n" +
-            "      \"durability\": {\n" +
-            "        \"max\": 50,\n" +
-            "        \"current\": 50\n" +
-            "      },\n" +
-            "      \"overview\": \"Basic vocabulary and grammar.\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultDiceJson() {
-        return "{\n" +
-            "  \"dice\": [\n" +
-            "    {\n" +
-            "      \"id\": \"d4\",\n" +
-            "      \"name\": \"d4\",\n" +
-            "      \"sides\": 4\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d6\",\n" +
-            "      \"name\": \"d6\",\n" +
-            "      \"sides\": 6\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d8\",\n" +
-            "      \"name\": \"d8\",\n" +
-            "      \"sides\": 8\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d10\",\n" +
-            "      \"name\": \"d10\",\n" +
-            "      \"sides\": 10\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d12\",\n" +
-            "      \"name\": \"d12\",\n" +
-            "      \"sides\": 12\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d20\",\n" +
-            "      \"name\": \"d20\",\n" +
-            "      \"sides\": 20\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultIdRegistryJson() {
-        return "{\n" +
-            "  \"entries\": [\n" +
-            "    {\n" +
-            "      \"id\": \"fighter\",\n" +
-            "      \"file\": \"world/classes.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"human\",\n" +
-            "      \"file\": \"world/races.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"longsword\",\n" +
-            "      \"file\": \"world/items.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"frost_bolt\",\n" +
-            "      \"file\": \"world/spells.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"stonekeep\",\n" +
-            "      \"file\": \"world/places.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"freeze\",\n" +
-            "      \"file\": \"world/effects.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"cold\",\n" +
-            "      \"file\": \"world/damage-types.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"warden_elya\",\n" +
-            "      \"file\": \"world/npcs.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"ember_wyrm\",\n" +
-            "      \"file\": \"world/monsters.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"dire_wolf\",\n" +
-            "      \"file\": \"world/beasts.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"common\",\n" +
-            "      \"file\": \"world/languages.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"wolfsbane\",\n" +
-            "      \"file\": \"world/alchemy-ingredients.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"common_tongue\",\n" +
-            "      \"file\": \"world/books.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d4\",\n" +
-            "      \"file\": \"world/dice.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d6\",\n" +
-            "      \"file\": \"world/dice.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d8\",\n" +
-            "      \"file\": \"world/dice.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d10\",\n" +
-            "      \"file\": \"world/dice.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d12\",\n" +
-            "      \"file\": \"world/dice.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"d20\",\n" +
-            "      \"file\": \"world/dice.json\"\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"id\": \"stonekeep-ground-floor\",\n" +
-            "      \"file\": \"world/maps.json\"\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultMapsJson() {
-        return "{\n" +
-            "  \"maps\": [\n" +
-            "    {\n" +
-            "      \"id\": \"stonekeep-ground-floor\",\n" +
-            "      \"name\": \"Stonekeep - Ground Floor\",\n" +
-            "      \"width\": 12,\n" +
-            "      \"height\": 8,\n" +
-            "      \"grid\": [\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":true,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}],\n" +
-            "        [{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]},{\"passable\":false,\"occupants\":[]}]\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String blankMapsJson() {
-        return "{\n  \"maps\": []\n}\n";
-    }
-
-    public static String defaultNpcsJson() {
-        return "{\n" +
-            "  \"npcs\": [\n" +
-            "    {\n" +
-            "      \"id\": \"warden_elya\",\n" +
-            "      \"name\": \"Warden Elya\",\n" +
-            "      \"description\": \"Leader of Stonekeep.\",\n" +
-            "      \"role\": \"commander\",\n" +
-            "      \"level\": 5,\n" +
-            "      \"stats\": {\n" +
-            "        \"strength\": 14,\n" +
-            "        \"dexterity\": 12,\n" +
-            "        \"constitution\": 13,\n" +
-            "        \"intelligence\": 12,\n" +
-            "        \"wisdom\": 10,\n" +
-            "        \"charisma\": 15\n" +
-            "      },\n" +
-            "      \"traits\": [\"brave\", \"strategist\"],\n" +
-            "      \"languages\": [\"common\"]\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultMonstersJson() {
-        return "{\n" +
-            "  \"monsters\": [\n" +
-            "    {\n" +
-            "      \"id\": \"ember_wyrm\",\n" +
-            "      \"name\": \"Ember Wyrm\",\n" +
-            "      \"description\": \"A serpent that breathes embers.\",\n" +
-            "      \"type\": \"dragon\",\n" +
-            "      \"challengeRating\": \"4\",\n" +
-            "      \"stats\": {\n" +
-            "        \"strength\": 16,\n" +
-            "        \"dexterity\": 14,\n" +
-            "        \"constitution\": 15,\n" +
-            "        \"intelligence\": 6,\n" +
-            "        \"wisdom\": 10,\n" +
-            "        \"charisma\": 8\n" +
-            "      },\n" +
-            "      \"abilities\": [\n" +
-            "        {\n" +
-            "          \"id\": \"ember_breath\",\n" +
-            "          \"name\": \"Ember Breath\",\n" +
-            "          \"description\": \"Exhales a cone of scorching embers.\",\n" +
-            "          \"effects\": [\"burn\", \"area_damage\"],\n" +
-            "          \"range\": 15.0,\n" +
-            "          \"recharge\": 3\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"id\": \"wing_buffet\",\n" +
-            "          \"name\": \"Wing Buffet\",\n" +
-            "          \"description\": \"Strikes nearby foes with a winged gust.\",\n" +
-            "          \"effects\": [\"knockback\"],\n" +
-            "          \"range\": 5.0,\n" +
-            "          \"recharge\": 1\n" +
-            "        }\n" +
-            "      ],\n" +
-            "      \"languages\": [\"common\"]\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
-    }
-
-    public static String defaultBeastsJson() {
-        return "{\n" +
-            "  \"beasts\": [\n" +
-            "    {\n" +
-            "      \"id\": \"dire_wolf\",\n" +
-            "      \"name\": \"Dire Wolf\",\n" +
-            "      \"description\": \"A large and aggressive wolf.\",\n" +
-            "      \"habitat\": \"forest\",\n" +
-            "      \"challengeRating\": \"1\",\n" +
-            "      \"stats\": {\n" +
-            "        \"strength\": 14,\n" +
-            "        \"dexterity\": 15,\n" +
-            "        \"constitution\": 13,\n" +
-            "        \"intelligence\": 3,\n" +
-            "        \"wisdom\": 12,\n" +
-            "        \"charisma\": 6\n" +
-            "      },\n" +
-            "      \"abilities\": [\n" +
-            "        {\n" +
-            "          \"id\": \"pack_tactics\",\n" +
-            "          \"name\": \"Pack Tactics\",\n" +
-            "          \"description\": \"Gains advantage on attacks when allies are nearby.\",\n" +
-            "          \"effects\": [\"advantage_on_attack\"],\n" +
-            "          \"range\": 0.0,\n" +
-            "          \"recharge\": 0\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  ]\n" +
-            "}\n";
+        Files.write(chapter.resolve(".storyline-order"), List.of(
+            "Session 01 - The Gilded Stag.txt",
+            "Session 02 - The Roadside Camp.txt",
+            "Session 03 - The Barrow Crypt.txt"), StandardCharsets.UTF_8);
     }
 
     public static String blankClassesJson() {
@@ -605,6 +175,10 @@ public final class CampaignTemplate {
 
     public static String blankDiceJson() {
         return "{\n  \"dice\": []\n}\n";
+    }
+
+    public static String blankMapsJson() {
+        return "{\n  \"maps\": []\n}\n";
     }
 
     public static String blankIdRegistryJson() {

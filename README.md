@@ -13,6 +13,46 @@ java -jar target\dnd-campaign-manager-1.0.0.jar
 ### Campaign storage
 - `src/main/resources/data/default-campaign/` holds the template campaign (read-only in CLI).
 - `src/main/resources/data/custom-campaigns/` stores one folder per custom campaign.
+- `src/main/resources/data/srd/` holds the standard-rules dataset that new campaigns are
+  seeded from (see below).
+
+### Standard rules dataset
+Creating a campaign without ticking **Start blank** seeds it from the bundled standard-rules
+catalogues in `src/main/resources/data/srd/`, so you can start playing with conventional
+D&D-style content instead of an empty world:
+
+| Catalogue | Entries | Contents |
+| --- | --- | --- |
+| `races.json` | 21 | The core ancestries plus their common subraces |
+| `classes.json` | 12 | Hit die, primary abilities and saving-throw bonuses per class |
+| `items.json` | 94 | 41 weapons (incl. 5 magic weapons), 21 armours and shields, 12 potions and oils, 20 pieces of adventuring gear |
+| `spells.json` | 67 | Cantrips through 9th level, with school, casting method, range and mana cost |
+| `monsters.json` | 59 | CR 0 to CR 24, from goblins to an ancient red dragon |
+| `beasts.json` | 26 | Animals and mounts by habitat |
+| `npcs.json` | 22 | Ready-to-use townsfolk, patrons and villains |
+| `places.json` | 18 | Settlements, dungeons and landmarks, most linked to a battle map |
+| `maps.json` | 12 | Grid battle maps (see below) |
+| `effects.json` | 34 | Conditions and ongoing effects, including the six the damage engine looks up by id |
+| `damage-types.json` | 15 | Physical and elemental damage types |
+| `languages.json` | 18 | Each with its primer book and study time |
+| `books.json` | 26 | 18 language primers plus 8 pieces of in-world lore |
+| `alchemy-ingredients.json` | 24 | Reagents for brewing |
+| `dice.json` | 7 | d4 through d100 |
+| `players.json` | 6 | A pregenerated level 3 party, already equipped |
+
+Bundled battle maps: the Gilded Stag tavern (common room and guest rooms), Greenhollow's
+village square, the Ironhand smithy, the temple of the Dawnfather, Stonekeep's ground floor,
+a standing-stone forest clearing, the Barrow Crypt, Blackfen Cave, a roadside bandit camp,
+Magister Orin's tower, and a blank open-ground map for improvised fights. Impassable cells
+(walls, furniture, deep water) render as black in the map editor.
+
+A default campaign also gets a starter `storyline/` chapter with three session files that
+demonstrate the `[READ ALOUD]` / `[DM NOTE]` markers and map links.
+
+Ticking **Start blank** still produces empty catalogues for every one of these files.
+
+The dataset is original text written for this project, describing rules concepts from the
+System Reference Document (CC-BY-4.0); no SRD wording is reproduced verbatim.
 
 ### Commands
 - `dm` or `player` at the landing page.
