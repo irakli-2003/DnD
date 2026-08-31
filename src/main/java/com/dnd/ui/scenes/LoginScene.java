@@ -1,9 +1,12 @@
 package com.dnd.ui.scenes;
 
 import com.dnd.auth.AuthService;
+import com.dnd.auth.EmailService;
+import com.dnd.auth.SmtpConfig;
 import com.dnd.ui.SceneType;
 import com.dnd.ui.UiSession;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -40,9 +43,34 @@ public class LoginScene extends BaseScene {
                 }
             }),
             btn("Create an account", () -> uiSession.getRouter().goTo(SceneType.REGISTER)),
-            btn("Forgot password?", () -> uiSession.getRouter().goTo(SceneType.FORGOT_PASSWORD))
+            btn("Forgot password?", () -> uiSession.getRouter().goTo(SceneType.FORGOT_PASSWORD)),
+            btn("Test email settings", this::testEmailSettings)
         );
 
         return wrapInScene(root);
+    }
+
+    /**
+     * Sends a test message to the configured from-address and reports the exact outcome,
+     * so SMTP problems can be diagnosed without going through a whole registration.
+     */
+    private void testEmailSettings() {
+        EmailService emailService = new EmailService();
+        Alert alert;
+        try {
+            emailService.testConnection();
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Email works");
+            alert.setHeaderText(null);
+            alert.setContentText("A test email was sent successfully. Check your inbox.");
+        } catch (Exception e) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Email settings problem");
+            alert.setHeaderText("Could not send a test email");
+            alert.setContentText(e.getMessage() + "\n\nSettings file: " + SmtpConfig.configPath().toAbsolutePath());
+        }
+        alert.getDialogPane().setPrefWidth(600);
+        styleDialog(alert);
+        alert.showAndWait();
     }
 }

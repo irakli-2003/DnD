@@ -38,13 +38,7 @@ public class ForgotPasswordScene extends BaseScene {
                 }
                 uiSession.setPendingAuthEmail(email);
                 if (!result.emailSent()) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Email not configured");
-                    alert.setHeaderText("Reset code (SMTP is not set up yet)");
-                    alert.setContentText("Your reset code is: " + result.code()
-                        + "\n\nTo send real emails, fill in data/auth/smtp-config.json.");
-                    styleDialog(alert);
-                    alert.showAndWait();
+                    showCodeFallbackDialog("reset code", result.code(), result.emailError());
                 }
                 uiSession.getRouter().goTo(SceneType.RESET_PASSWORD);
             }),

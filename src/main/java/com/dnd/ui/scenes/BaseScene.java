@@ -151,4 +151,21 @@ public abstract class BaseScene {
         bar.setPadding(new Insets(12, 20, 0, 20));
         return bar;
     }
+
+    /**
+     * Shows a one-time verification/reset code on screen, explaining exactly why it
+     * couldn't be emailed. Without the concrete reason the two common setup failures
+     * (a Gmail account missing an App Password, and a network blocking outbound SMTP)
+     * are indistinguishable to the user.
+     */
+    protected void showCodeFallbackDialog(String codeLabel, String code, String emailError) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+        alert.setTitle("Email could not be sent");
+        alert.setHeaderText("Your " + codeLabel + " is: " + code);
+        alert.setContentText("The code above is valid - use it to continue.\n\nIt wasn't emailed because:\n"
+            + (emailError == null || emailError.isBlank() ? "SMTP is not configured yet." : emailError));
+        alert.getDialogPane().setPrefWidth(560);
+        styleDialog(alert);
+        alert.showAndWait();
+    }
 }

@@ -17,6 +17,14 @@ import java.util.stream.Stream;
  */
 public class StorylineService {
 
+    /**
+     * Per-folder file recording the DM's manual ordering of that folder's children,
+     * one name per line. Kept as a hidden sibling file so ordering survives restarts
+     * without needing a database, and so the arc timeline and the file tree can share
+     * one source of truth for sequence.
+     */
+    static final String ORDER_FILE = ".storyline-order";
+
     private final Path root;
 
     public StorylineService(Path campaignRoot) {
@@ -37,18 +45,99 @@ public class StorylineService {
         }
     }
 
-    /** Lists the direct children of {@code folder}, folders first, then files, both alphabetically. */
+    /**
+     * Lists the direct children of {@code folder} in the DM's manual order (see
+     * {@link #ORDER_FILE}). Children with no recorded position - newly created or
+     * externally added ones - are appended after the ordered ones, folders first,
+     * then files, both alphabetically.
+     */
     public List<Path> listChildren(Path folder) {
         if (folder == null || !Files.isDirectory(folder)) return List.of();
         try (Stream<Path> stream = Files.list(folder)) {
-            List<Path> children = new ArrayList<>(stream.toList());
+            List<Path> children = new ArrayList<>(stream
+                .filter(p -> !p.getFileName().toString().equals(ORDER_FILE))
+                .toList());
+            List<String> order = readOrder(folder);
             children.sort(Comparator
-                .comparing((Path p) -> Files.isDirectory(p) ? 0 : 1)
+                .comparingInt((Path p) -> {
+                    int idx = order.indexOf(p.getFileName().toString());
+                    return idx >= 0 ? idx : Integer.MAX_VALUE;
+                })
+                .thenComparing(p -> Files.isDirectory(p) ? 0 : 1)
                 .thenComparing(p -> p.getFileName().toString(), String.CASE_INSENSITIVE_ORDER));
             return children;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    /** Reads the recorded child ordering for {@code folder}; empty when none has been set. */
+    public List<String> readOrder(Path folder) {
+        Path orderFile = folder.resolve(ORDER_FILE);
+        if (!Files.isRegularFile(orderFile)) return List.of();
+        try {
+            List<String> lines = new ArrayList<>();
+            for (String line : Files.readAllLines(orderFile, StandardCharsets.UTF_8)) {
+                String trimmed = line.trim();
+                if (!trimmed.isEmpty()) lines.add(trimmed);
+            }
+            return lines;
+        } catch (IOException e) {
+            return List.of();
+        }
+    }
+
+    /** Records {@code names} as the manual ordering of {@code folder}'s children. */
+    public void writeOrder(Path folder, List<String> names) {
+        if (folder == null || !Files.isDirectory(folder)) return;
+        try {
+            Files.write(folder.resolve(ORDER_FILE), names, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Moves {@code child} to index {@code newIndex} among its siblings, persisting the
+     * result so both the file tree and the arc timeline reflect the new sequence.
+     */
+    public void reorder(Path child, int newIndex) {
+        if (child == null) return;
+        Path parent = child.getParent();
+        if (parent == null || !Files.isDirectory(parent)) return;
+        List<String> names = new ArrayList<>();
+        for (Path sibling : listChildren(parent)) {
+            names.add(sibling.getFileName().toString());
+        }
+        String moving = child.getFileName().toString();
+        int currentIndex = names.indexOf(moving);
+        if (currentIndex < 0) return;
+        names.remove(currentIndex);
+        int clamped = Math.max(0, Math.min(newIndex, names.size()));
+        names.add(clamped, moving);
+        writeOrder(parent, names);
+    }
+
+    /** Shifts {@code child} one position earlier among its siblings. */
+    public void moveUp(Path child) {
+        int idx = indexOf(child);
+        if (idx > 0) reorder(child, idx - 1);
+    }
+
+    /** Shifts {@code child} one position later among its siblings. */
+    public void moveDown(Path child) {
+        int idx = indexOf(child);
+        if (idx >= 0) reorder(child, idx + 1);
+    }
+
+    /** @return {@code child}'s position among its siblings, or -1 if it has no parent folder. */
+    public int indexOf(Path child) {
+        if (child == null || child.getParent() == null) return -1;
+        List<Path> siblings = listChildren(child.getParent());
+        for (int i = 0; i < siblings.size(); i++) {
+            if (siblings.get(i).getFileName().equals(child.getFileName())) return i;
+        }
+        return -1;
     }
 
     /** Creates a new empty subfolder named {@code name} under {@code parent}. */
@@ -80,6 +169,9 @@ public class StorylineService {
         String safe = name.trim();
         if (safe.indexOf('/') >= 0 || safe.indexOf('\\') >= 0) {
             throw new IllegalArgumentException("Name cannot contain path separators.");
+        }
+        if (safe.equals(ORDER_FILE)) {
+            throw new IllegalArgumentException("That name is reserved.");
         }
         Path effectiveParent = (parent == null) ? root : parent;
         if (!Files.isDirectory(effectiveParent)) {

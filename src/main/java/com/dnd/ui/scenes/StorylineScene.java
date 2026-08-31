@@ -7,8 +7,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -59,13 +57,7 @@ public class StorylineScene extends BaseScene {
 
         tree = new TreeView<>();
         tree.setShowRoot(true);
-        tree.setCellFactory(tv -> new TreeCell<Path>() {
-            @Override
-            protected void updateItem(Path item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? null : displayName(item));
-            }
-        });
+        tree.setCellFactory(tv -> new StorylineTreeCell());
         tree.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 Path selected = selectedPath();
@@ -79,25 +71,150 @@ public class StorylineScene extends BaseScene {
         Button newFolderBtn = btn("New Folder", this::onNewFolder);
         Button newFileBtn = btn("New File", this::onNewFile);
         Button moveBtn = btn("Move to Folder", this::onMove);
+        Button upBtn = btn("↑", () -> onNudge(true));
+        Button downBtn = btn("↓", () -> onNudge(false));
+        upBtn.setTooltip(new Tooltip("Move the selected item up among its siblings"));
+        downBtn.setTooltip(new Tooltip("Move the selected item down among its siblings"));
         Button deleteBtn = dangerBtn("Delete", this::onDelete);
         newFolderBtn.setDisable(true);
         newFileBtn.setDisable(true);
         moveBtn.setDisable(true);
         deleteBtn.setDisable(true);
+        upBtn.setDisable(true);
+        downBtn.setDisable(true);
 
         tree.getSelectionModel().selectedItemProperty().addListener((obs, oldV, newV) -> {
             boolean hasSelection = newV != null;
+            boolean isRoot = hasSelection && newV.getValue().equals(service.getRoot());
             newFolderBtn.setDisable(!hasSelection);
             newFileBtn.setDisable(!hasSelection);
-            moveBtn.setDisable(!hasSelection || (hasSelection && newV.getValue().equals(service.getRoot())));
-            deleteBtn.setDisable(!hasSelection || (hasSelection && newV.getValue().equals(service.getRoot())));
+            moveBtn.setDisable(!hasSelection || isRoot);
+            deleteBtn.setDisable(!hasSelection || isRoot);
+            upBtn.setDisable(!hasSelection || isRoot);
+            downBtn.setDisable(!hasSelection || isRoot);
         });
 
-        FlowPane actions = new FlowPane(6, 6, newFolderBtn, newFileBtn, moveBtn, deleteBtn);
+        FlowPane actions = new FlowPane(6, 6, newFolderBtn, newFileBtn, moveBtn, upBtn, downBtn, deleteBtn);
 
-        pane.getChildren().addAll(tree, actions);
+        Label hint = body("Drag an item onto another to reorder it, or onto a folder to move it in.");
+        hint.setStyle("-fx-font-size: 11px;");
+
+        pane.getChildren().addAll(tree, hint, actions);
         refreshTree();
         return pane;
+    }
+
+    /** Moves the selected item one slot up ({@code up}) or down among its siblings. */
+    private void onNudge(boolean up) {
+        Path selected = selectedPath();
+        if (selected == null || selected.equals(service.getRoot())) return;
+        if (up) service.moveUp(selected);
+        else service.moveDown(selected);
+        refreshAll();
+        selectPath(selected);
+    }
+
+    /** Restores the tree selection to {@code target} after a rebuild. */
+    private void selectPath(Path target) {
+        if (target == null || tree.getRoot() == null) return;
+        selectPathIn(tree.getRoot(), target);
+    }
+
+    private boolean selectPathIn(TreeItem<Path> item, Path target) {
+        if (target.equals(item.getValue())) {
+            tree.getSelectionModel().select(item);
+            return true;
+        }
+        for (TreeItem<Path> child : item.getChildren()) {
+            if (selectPathIn(child, target)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Tree cell with drag-and-drop: dropping an item onto a folder moves it into that
+     * folder, and dropping it onto a sibling reorders it to that sibling's position.
+     * Both outcomes are persisted, so the arc timeline on the right always matches the
+     * sequence shown here.
+     */
+    private final class StorylineTreeCell extends TreeCell<Path> {
+        private static final javafx.scene.input.DataFormat PATH_FORMAT =
+            new javafx.scene.input.DataFormat("application/x-dnd-storyline-path");
+
+        StorylineTreeCell() {
+            setOnDragDetected(e -> {
+                Path item = getItem();
+                if (item == null || item.equals(service.getRoot())) return;
+                javafx.scene.input.Dragboard db = startDragAndDrop(javafx.scene.input.TransferMode.MOVE);
+                javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+                content.put(PATH_FORMAT, item.toAbsolutePath().toString());
+                db.setContent(content);
+                e.consume();
+            });
+
+            setOnDragOver(e -> {
+                if (e.getGestureSource() != this && e.getDragboard().hasContent(PATH_FORMAT) && getItem() != null) {
+                    e.acceptTransferModes(javafx.scene.input.TransferMode.MOVE);
+                }
+                e.consume();
+            });
+
+            setOnDragEntered(e -> {
+                if (e.getGestureSource() != this && e.getDragboard().hasContent(PATH_FORMAT)) {
+                    setStyle("-fx-background-color: #2d3a52;");
+                }
+            });
+            setOnDragExited(e -> setStyle(""));
+
+            setOnDragDropped(e -> {
+                javafx.scene.input.Dragboard db = e.getDragboard();
+                Path target = getItem();
+                if (!db.hasContent(PATH_FORMAT) || target == null) {
+                    e.setDropCompleted(false);
+                    e.consume();
+                    return;
+                }
+                Path source = java.nio.file.Paths.get((String) db.getContent(PATH_FORMAT));
+                e.setDropCompleted(handleDrop(source, target));
+                e.consume();
+            });
+        }
+
+        @Override
+        protected void updateItem(Path item, boolean empty) {
+            super.updateItem(item, empty);
+            setText(empty || item == null ? null : displayName(item));
+            if (empty || item == null) setStyle("");
+        }
+    }
+
+    /**
+     * @return whether the drop changed anything. Dropping onto a folder moves the item
+     *         inside it; dropping onto a file reorders the item to that file's slot.
+     */
+    private boolean handleDrop(Path source, Path target) {
+        if (source.equals(target) || source.equals(service.getRoot())) return false;
+        try {
+            if (service.isFolder(target) && !target.equals(source.getParent())) {
+                service.move(source, target);
+            } else {
+                Path targetParent = service.isFolder(target) ? target : target.getParent();
+                if (targetParent == null) return false;
+                Path moved = source;
+                if (!targetParent.equals(source.getParent())) {
+                    moved = service.move(source, targetParent);
+                }
+                int targetIndex = service.indexOf(target);
+                if (targetIndex >= 0) service.reorder(moved, targetIndex);
+                source = moved;
+            }
+            refreshAll();
+            selectPath(source);
+            return true;
+        } catch (IllegalArgumentException e) {
+            showError(e.getMessage());
+            return false;
+        }
     }
 
     private ScrollPane buildArcPane() {
@@ -243,30 +360,12 @@ public class StorylineScene extends BaseScene {
     }
 
     private void openEditor(Path file) {
-        Stage dialogStage = new Stage();
-        dialogStage.initModality(Modality.APPLICATION_MODAL);
-        dialogStage.setTitle(file.getFileName().toString());
+        new StorylineEditorWindow(this, service, repos(), file).show();
+        refreshAll();
+    }
 
-        TextArea area = new TextArea(service.readText(file));
-        area.setWrapText(true);
-        area.setPrefSize(520, 420);
-
-        Button save = new Button("Save");
-        save.setOnAction(e -> {
-            service.writeText(file, area.getText());
-            dialogStage.close();
-        });
-        Button cancel = new Button("Cancel");
-        cancel.setOnAction(e -> dialogStage.close());
-
-        HBox buttons = new HBox(10, save, cancel);
-        buttons.setPadding(new Insets(8, 0, 0, 0));
-        VBox layout = new VBox(8, area, buttons);
-        layout.setPadding(new Insets(12));
-        layout.getStyleClass().add("dialog-root");
-
-        dialogStage.setScene(themedScene(layout, 560, 480));
-        dialogStage.showAndWait();
+    private com.dnd.data.CampaignRepositories repos() {
+        return new com.dnd.data.CampaignRepositories(uiSession.campaignRoot());
     }
 
     private void showError(String message) {

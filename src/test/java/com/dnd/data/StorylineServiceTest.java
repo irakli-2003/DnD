@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -138,5 +139,95 @@ public class StorylineServiceTest {
         service.createFile(destination, "session.txt");
 
         service.move(source, destination);
+    }
+
+    @Test
+    public void childrenDefaultToFoldersFirstThenAlphabetical() throws IOException {
+        StorylineService service = newService();
+        service.createFile(service.getRoot(), "b-session.txt");
+        service.createFile(service.getRoot(), "a-session.txt");
+        service.createFolder(service.getRoot(), "z-arc");
+
+        assertEquals(List.of("z-arc", "a-session.txt", "b-session.txt"), names(service, service.getRoot()));
+    }
+
+    @Test
+    public void reorderMovesChildToRequestedIndexAndPersists() throws IOException {
+        StorylineService service = newService();
+        Path first = service.createFile(service.getRoot(), "a.txt");
+        service.createFile(service.getRoot(), "b.txt");
+        service.createFile(service.getRoot(), "c.txt");
+
+        service.reorder(first, 2);
+        assertEquals(List.of("b.txt", "c.txt", "a.txt"), names(service, service.getRoot()));
+
+        // A fresh service instance must see the same order: it is stored on disk, not in memory.
+        StorylineService reopened = new StorylineService(service.getRoot().getParent());
+        assertEquals(List.of("b.txt", "c.txt", "a.txt"), names(reopened, reopened.getRoot()));
+    }
+
+    @Test
+    public void moveUpAndMoveDownShiftBySinglePosition() throws IOException {
+        StorylineService service = newService();
+        service.createFile(service.getRoot(), "a.txt");
+        Path middle = service.createFile(service.getRoot(), "b.txt");
+        service.createFile(service.getRoot(), "c.txt");
+
+        service.moveUp(middle);
+        assertEquals(List.of("b.txt", "a.txt", "c.txt"), names(service, service.getRoot()));
+
+        service.moveDown(middle);
+        assertEquals(List.of("a.txt", "b.txt", "c.txt"), names(service, service.getRoot()));
+    }
+
+    @Test
+    public void moveUpAtTopAndMoveDownAtBottomAreNoOps() throws IOException {
+        StorylineService service = newService();
+        Path first = service.createFile(service.getRoot(), "a.txt");
+        Path last = service.createFile(service.getRoot(), "b.txt");
+
+        service.moveUp(first);
+        service.moveDown(last);
+
+        assertEquals(List.of("a.txt", "b.txt"), names(service, service.getRoot()));
+    }
+
+    @Test
+    public void newItemsAppearAfterExplicitlyOrderedOnes() throws IOException {
+        StorylineService service = newService();
+        Path a = service.createFile(service.getRoot(), "a.txt");
+        service.createFile(service.getRoot(), "b.txt");
+        service.reorder(a, 1);
+        assertEquals(List.of("b.txt", "a.txt"), names(service, service.getRoot()));
+
+        service.createFile(service.getRoot(), "c.txt");
+        assertEquals(List.of("b.txt", "a.txt", "c.txt"), names(service, service.getRoot()));
+    }
+
+    @Test
+    public void orderFileIsNotListedAsAChild() throws IOException {
+        StorylineService service = newService();
+        Path a = service.createFile(service.getRoot(), "a.txt");
+        service.createFile(service.getRoot(), "b.txt");
+        service.reorder(a, 1);
+
+        assertFalse(names(service, service.getRoot()).contains(StorylineService.ORDER_FILE));
+    }
+
+    @Test
+    public void indexOfReportsPositionAmongSiblings() throws IOException {
+        StorylineService service = newService();
+        service.createFile(service.getRoot(), "a.txt");
+        Path b = service.createFile(service.getRoot(), "b.txt");
+
+        assertEquals(1, service.indexOf(b));
+    }
+
+    private List<String> names(StorylineService service, Path folder) {
+        List<String> out = new ArrayList<>();
+        for (Path child : service.listChildren(folder)) {
+            out.add(child.getFileName().toString());
+        }
+        return out;
     }
 }

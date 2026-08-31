@@ -22,6 +22,8 @@ public class AuthService {
 
     private final UserStore store;
     private final EmailService emailService;
+    /** Why the most recent email send failed, surfaced to the UI via {@link CodeResult#emailError()}. */
+    private String lastEmailError;
 
     public AuthService() {
         this(new UserStore(), new EmailService());
@@ -37,9 +39,9 @@ public class AuthService {
     }
 
     /** Result of an operation that needs to convey a one-time code to the user. */
-    public record CodeResult(boolean success, String message, String code, boolean emailSent) {
+    public record CodeResult(boolean success, String message, String code, boolean emailSent, String emailError) {
         public static CodeResult failure(String message) {
-            return new CodeResult(false, message, null, false);
+            return new CodeResult(false, message, null, false, null);
         }
     }
 
@@ -78,7 +80,7 @@ public class AuthService {
             "Verify your DnD Campaign Manager account",
             "Welcome, " + username + "!\n\nYour verification code is: " + code
                 + "\n\nIt expires in " + CODE_VALIDITY_MINUTES + " minutes.");
-        return new CodeResult(true, "Account created. Enter the verification code to continue.", code, sent);
+        return new CodeResult(true, "Account created. Enter the verification code to continue.", code, sent, lastEmailError);
     }
 
     public CodeResult resendVerification(String email) {
@@ -92,7 +94,7 @@ public class AuthService {
         store.save(user);
         boolean sent = tryEmail(email, "Your new verification code",
             "Your verification code is: " + code + "\n\nIt expires in " + CODE_VALIDITY_MINUTES + " minutes.");
-        return new CodeResult(true, "A new code was generated.", code, sent);
+        return new CodeResult(true, "A new code was generated.", code, sent, lastEmailError);
     }
 
     public SimpleResult verifyEmail(String email, String code) {
@@ -136,7 +138,7 @@ public class AuthService {
         store.save(user);
         boolean sent = tryEmail(email, "Reset your DnD Campaign Manager password",
             "Your password reset code is: " + code + "\n\nIt expires in " + CODE_VALIDITY_MINUTES + " minutes.");
-        return new CodeResult(true, "Enter the reset code and your new password.", code, sent);
+        return new CodeResult(true, "Enter the reset code and your new password.", code, sent, lastEmailError);
     }
 
     public SimpleResult resetPassword(String email, String code, String newPassword, String confirmPassword) {
@@ -167,10 +169,13 @@ public class AuthService {
     private boolean tryEmail(String to, String subject, String body) {
         try {
             emailService.send(to, subject, body);
+            lastEmailError = null;
             return true;
         } catch (Exception e) {
-            // SMTP not configured (or a transient failure) - the caller falls back to showing
-            // the code on-screen so the flow stays usable without real email credentials.
+            // Record why it failed so the UI can tell the user the actual reason (bad App
+            // Password, blocked port, ...) instead of a generic "email isn't set up" message,
+            // then fall back to showing the code on-screen so the flow still completes.
+            lastEmailError = e.getMessage();
             return false;
         }
     }

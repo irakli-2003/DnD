@@ -55,12 +55,14 @@ public class VerifyEmailScene extends BaseScene {
                     error.setText(result.message());
                     return;
                 }
+                if (!result.emailSent()) {
+                    showCodeFallbackDialog("new verification code", result.code(), result.emailError());
+                    return;
+                }
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle(result.emailSent() ? "Code sent" : "Email not configured");
-                alert.setHeaderText(result.emailSent() ? null : "SMTP is not set up yet");
-                alert.setContentText(result.emailSent()
-                    ? "A new code was emailed to you."
-                    : "Your new verification code is: " + result.code());
+                alert.setTitle("Code sent");
+                alert.setHeaderText(null);
+                alert.setContentText("A new code was emailed to you.");
                 styleDialog(alert);
                 alert.showAndWait();
             }),

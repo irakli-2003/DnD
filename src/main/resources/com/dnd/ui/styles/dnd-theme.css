@@ -29,6 +29,32 @@
     -fx-wrap-text: true;
 }
 
+.editor-toolbar {
+    -fx-background-color: #16213e;
+    -fx-border-color: transparent transparent #c9a84c transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.storyline-editor {
+    -fx-control-inner-background: #14141f;
+    -fx-background-color: #14141f;
+    -fx-text-fill: #e0d5c0;
+    -fx-highlight-fill: #c9a84c;
+    -fx-highlight-text-fill: #1a1a2e;
+    -fx-font-family: "Consolas", "Courier New", monospace;
+    -fx-font-size: 14px;
+}
+
+.storyline-editor .content {
+    -fx-background-color: #14141f;
+}
+
+.player-view {
+    -fx-font-family: "Georgia", serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: #f0e6cc;
+}
+
 .section-label {
     -fx-text-fill: #c9a84c;
     -fx-font-size: 16px;
