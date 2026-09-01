@@ -2,6 +2,7 @@ package com.dnd.model.combat;
 
 import com.dnd.model.world.map.CombatState;
 import com.dnd.model.world.map.MapObject;
+import com.dnd.model.world.map.PlayerToken;
 import com.dnd.model.world.map.TokenSupport;
 
 import java.util.ArrayList;
@@ -72,6 +73,29 @@ public class InitiativeTracker {
     }
 
     /**
+     * Rolls initiative for everything the DM is running, leaving player tokens alone.
+     *
+     * <p>Players roll their own dice at the table and the DM types the results in, so
+     * overwriting them with computer rolls would throw away the numbers the table just
+     * rolled. The order is rebuilt afterwards so the typed and rolled values interleave
+     * correctly.</p>
+     *
+     * @return how many non-player combatants were rolled for
+     */
+    public int rollNonPlayers() {
+        int rolled = 0;
+        for (MapObject token : roster) {
+            if (token instanceof PlayerToken) continue;
+            TokenSupport.combatOf(token).setInitiative(TokenSupport.rollInitiative(token));
+            rolled++;
+        }
+        setCombatants(new ArrayList<>(roster));
+        round = 1;
+        current = firstLiving();
+        return rolled;
+    }
+
+    /**
      * Advances to the next living combatant, wrapping around and incrementing the round
      * counter. Returns null only when nothing is left alive.
      */
@@ -83,7 +107,11 @@ public class InitiativeTracker {
             int index = (start + step) % roster.size();
             if (index <= start) round++;
             MapObject candidate = roster.get(index);
-            if (alive(candidate)) return current = candidate;
+            if (alive(candidate)) {
+                // A fresh turn means a fresh movement allowance.
+                TokenSupport.combatOf(candidate).resetMovement();
+                return current = candidate;
+            }
         }
         return current = null;
     }

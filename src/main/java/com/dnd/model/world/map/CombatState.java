@@ -18,6 +18,12 @@ public class CombatState {
     /** A creature gets three failed death saves before it dies, per the usual tabletop rule. */
     public static final int MAX_DEATH_SAVES = 3;
 
+    /** Feet of walking movement per round assumed for a creature nobody has configured. */
+    public static final int DEFAULT_WALK_SPEED = 30;
+
+    /** One square of the battle grid is five feet, the usual tabletop scale. */
+    public static final int FEET_PER_SQUARE = 5;
+
     private int maxHitPoints;
     private int currentHitPoints;
     private int maxMana;
@@ -32,6 +38,25 @@ public class CombatState {
     private String notes;
     /** False for tokens that are scenery or loot rather than participants in turn order. */
     private boolean inInitiative = true;
+
+    /**
+     * Movement rates in feet per round. Walking defaults to 30, the speed of most
+     * playable races; a zero climb or swim speed means the creature has no special
+     * mode for that terrain and crosses it at the difficult-terrain rate.
+     */
+    private int walkSpeed = DEFAULT_WALK_SPEED;
+    private int climbSpeed;
+    private int swimSpeed;
+    /**
+     * Set once the speeds have been filled in from the creature's race or stat block, so a
+     * later hand-edit by the DM is never silently overwritten by re-seeding.
+     */
+    private boolean speedSeeded;
+    /**
+     * Squares of movement already spent this round. Reset when the turn advances, so
+     * it is genuinely per-turn rather than a running total for the whole battle.
+     */
+    private int movementUsed;
 
     public CombatState() {
     }
@@ -215,6 +240,71 @@ public class CombatState {
 
     public void setInInitiative(boolean inInitiative) {
         this.inInitiative = inInitiative;
+    }
+
+    // ── Movement ────────────────────────────────────────────────────────────
+
+    public int getWalkSpeed() {
+        return walkSpeed;
+    }
+
+    public boolean isSpeedSeeded() {
+        return speedSeeded;
+    }
+
+    public void setSpeedSeeded(boolean speedSeeded) {
+        this.speedSeeded = speedSeeded;
+    }
+
+    public void setWalkSpeed(int walkSpeed) {
+        this.walkSpeed = Math.max(0, walkSpeed);
+    }
+
+    public int getClimbSpeed() {
+        return climbSpeed;
+    }
+
+    public void setClimbSpeed(int climbSpeed) {
+        this.climbSpeed = Math.max(0, climbSpeed);
+    }
+
+    public int getSwimSpeed() {
+        return swimSpeed;
+    }
+
+    public void setSwimSpeed(int swimSpeed) {
+        this.swimSpeed = Math.max(0, swimSpeed);
+    }
+
+    public int getMovementUsed() {
+        return movementUsed;
+    }
+
+    public void setMovementUsed(int movementUsed) {
+        this.movementUsed = Math.max(0, movementUsed);
+    }
+
+    public boolean hasClimbSpeed() {
+        return climbSpeed > 0;
+    }
+
+    public boolean hasSwimSpeed() {
+        return swimSpeed > 0;
+    }
+
+    /** Total squares this creature may cover in one turn, walking. */
+    public int movementSquares() {
+        return walkSpeed / FEET_PER_SQUARE;
+    }
+
+    /** Squares still available this turn after what has already been spent. */
+    public int movementRemaining() {
+        return Math.max(0, movementSquares() - movementUsed);
+    }
+
+    /** Called when the turn passes to this creature, giving it a fresh movement allowance. */
+    public void resetMovement() {
+        movementUsed = 0;
     }
 
     /** Fraction of max hit points remaining, in 0..1, for drawing health bars. */

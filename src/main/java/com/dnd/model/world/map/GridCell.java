@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class GridCell {
     private boolean passable = true;
+    private TerrainType terrain = TerrainType.NORMAL;
     private Effect effect;
     private List<MapObject> occupants = new ArrayList<>();
 
@@ -29,6 +30,15 @@ public class GridCell {
 
     public void setPassable(boolean passable) {
         this.passable = passable;
+    }
+
+    public TerrainType getTerrain() {
+        return terrain;
+    }
+
+    /** Null-tolerant so maps saved before terrain existed still load as normal ground. */
+    public void setTerrain(TerrainType terrain) {
+        this.terrain = terrain != null ? terrain : TerrainType.NORMAL;
     }
 
     public Effect getEffect() {
@@ -85,7 +95,12 @@ public class GridCell {
         if (effect != null) {
             return "*";
         }
-        return ".";
+        switch (terrain) {
+            case WATER: return "~";
+            case CLIMB: return "^";
+            case DIFFICULT: return ":";
+            default: return ".";
+        }
     }
 }
 

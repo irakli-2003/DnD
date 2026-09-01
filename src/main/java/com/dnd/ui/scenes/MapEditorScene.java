@@ -29,7 +29,7 @@ public class MapEditorScene extends BaseScene {
     private static final double HANDLE = 8.0;
 
     /** Active canvas interaction mode, selected via the "Draw Tools" toggle buttons. */
-    private enum Tool { SELECT, PEN, LINE, RECT, OVAL, ERASER, PASSABLE }
+    private enum Tool { SELECT, PEN, LINE, RECT, OVAL, ERASER, PASSABLE, TERRAIN }
 
     /** Lightweight display node for the "Map Objects" tree; key is a type-prefixed reference
      *  ("layer:<id>", "drawing:<id>", "group:<id>") resolved against the GameMap's lists. */
@@ -58,6 +58,8 @@ public class MapEditorScene extends BaseScene {
 
     // Drawing tool state
     private Tool currentTool = Tool.SELECT;
+    /** Terrain painted by the TERRAIN tool; NORMAL erases back to ordinary ground. */
+    private TerrainType brushTerrain = TerrainType.DIFFICULT;
     private Color drawColor = Color.web("#c9a84c");
     private boolean drawFilled = false;
     private double drawLineWidth = 2.0;
@@ -491,6 +493,7 @@ public class MapEditorScene extends BaseScene {
         ToggleButton ovalBtn = toolToggle("Oval", toolGroup);
         ToggleButton eraserBtn = toolToggle("Eraser", toolGroup);
         ToggleButton passableBtn = toolToggle("Passable Toggle", toolGroup);
+        ToggleButton terrainBtn = toolToggle("Terrain", toolGroup);
         selectBtn.setSelected(true);
 
         toolGroup.selectedToggleProperty().addListener((obs, old, sel) -> {
@@ -502,12 +505,24 @@ public class MapEditorScene extends BaseScene {
             else if (sel == ovalBtn) currentTool = Tool.OVAL;
             else if (sel == eraserBtn) currentTool = Tool.ERASER;
             else if (sel == passableBtn) currentTool = Tool.PASSABLE;
+            else if (sel == terrainBtn) currentTool = Tool.TERRAIN;
             penPoints.clear();
             shapeDrawing = false;
             renderCanvas();
         });
 
-        FlowPane toolRow = new FlowPane(4, 4, selectBtn, penBtn, lineBtn, rectBtn, ovalBtn, eraserBtn, passableBtn);
+        FlowPane toolRow = new FlowPane(4, 4, selectBtn, penBtn, lineBtn, rectBtn, ovalBtn, eraserBtn,
+            passableBtn, terrainBtn);
+
+        ChoiceBox<TerrainType> terrainBox = new ChoiceBox<>();
+        terrainBox.getItems().setAll(TerrainType.values());
+        terrainBox.setValue(brushTerrain);
+        terrainBox.setMaxWidth(Double.MAX_VALUE);
+        terrainBox.valueProperty().addListener((obs, old, val) -> {
+            if (val != null) brushTerrain = val;
+        });
+        HBox terrainRow = new HBox(6, body("Terrain brush:"), terrainBox);
+        terrainRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         ColorPicker colorPicker = new ColorPicker(drawColor);
         colorPicker.setMaxWidth(Double.MAX_VALUE);
@@ -524,10 +539,12 @@ public class MapEditorScene extends BaseScene {
         widthRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Label hint = body("Pen/Line/Rect/Oval draw on the map. Eraser removes the shape under your click. "
-            + "Passable Toggle flips a cell's passable/impassable state on click (impassable cells render solid black).");
+            + "Passable Toggle flips a cell's passable/impassable state on click (impassable cells render solid black). "
+            + "Terrain paints the selected ground type; water and climbing cost extra movement unless a "
+            + "creature has a swim or climb speed, and difficult ground always costs double.");
         hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
 
-        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, hint);
+        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, terrainRow, hint);
         return box;
     }
 
@@ -711,6 +728,7 @@ public class MapEditorScene extends BaseScene {
                 }
                 case ERASER -> eraseAt(mx, my);
                 case PASSABLE -> togglePassableAt(mx, my);
+                case TERRAIN -> paintTerrainAt(mx, my);
                 case SELECT -> {
                     double[] b = boundsOfKeyPx(selectedKey);
                     if (b != null) {
@@ -741,6 +759,7 @@ public class MapEditorScene extends BaseScene {
         canvas.setOnMouseDragged(e -> {
             switch (currentTool) {
                 case PEN -> { penPoints.add(new double[]{e.getX(), e.getY()}); renderCanvas(); }
+                case TERRAIN -> paintTerrainAt(e.getX(), e.getY());
                 case LINE, RECT, OVAL -> { shapeCurX = e.getX(); shapeCurY = e.getY(); renderCanvas(); }
                 case SELECT -> {
                     if (resizeActive) {
@@ -829,6 +848,17 @@ public class MapEditorScene extends BaseScene {
         if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
         GridCell cell = map.getCell(cx, cy);
         cell.setPassable(!cell.isPassable());
+        renderCanvas();
+    }
+
+    /** Stamps the current terrain brush onto one cell; dragging repeats this per cell entered. */
+    private void paintTerrainAt(double px, double py) {
+        int cx = (int) (px / CELL_SIZE);
+        int cy = (int) (py / CELL_SIZE);
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        GridCell cell = map.getCell(cx, cy);
+        if (cell.getTerrain() == brushTerrain) return;
+        cell.setTerrain(brushTerrain);
         renderCanvas();
     }
 
@@ -1016,6 +1046,22 @@ public class MapEditorScene extends BaseScene {
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         renderObjectsUnified(gc);
+
+        // Terrain tints sit above the artwork but below walls, so painted ground stays visible
+        // without hiding the impassable cells the DM needs to spot first.
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                GridCell cell = map.getCell(x, y);
+                if (cell == null || cell.getTerrain() == null || cell.getTerrain() == TerrainType.NORMAL) continue;
+                gc.setFill(Color.web(switch (cell.getTerrain()) {
+                    case WATER -> "#2a6fb055";
+                    case CLIMB -> "#8a5a2b55";
+                    case DIFFICULT -> "#6b5f2a55";
+                    default -> "#00000000";
+                }));
+                gc.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            }
+        }
 
         // Impassable cells render as solid black so the editor makes them visually obvious.
         gc.setFill(Color.BLACK);

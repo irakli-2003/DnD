@@ -52,6 +52,11 @@ public class MapRenderer {
         /** Area-of-effect radius in cells drawn at the range edge, or 0 for none. */
         public double rangeRadiusCells;
         public boolean showHealthBars = true;
+        /**
+         * Movement costs for the selected creature, as produced by
+         * {@code MovementCalculator.reachableFrom}, or null when no range is being shown.
+         */
+        public int[][] reachable;
     }
 
     public void render(Canvas canvas, GameMap map, Decorations decorations) {
@@ -61,9 +66,11 @@ public class MapRenderer {
         if (map == null) return;
 
         drawLayers(gc, map);
+        drawTerrain(gc, map);
         drawGrid(gc, map);
         drawImpassable(gc, map);
         drawDrawings(gc, map);
+        if (decorations != null && decorations.reachable != null) drawReachable(gc, map, decorations);
         if (decorations != null && decorations.rangeOrigin != null) drawRange(gc, decorations);
         drawTokens(gc, map, decorations);
     }
@@ -116,6 +123,49 @@ public class MapRenderer {
                 if (!map.getCell(x, y).isPassable()) {
                     gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
                 }
+            }
+        }
+    }
+
+    /**
+     * Tints squares by terrain so the DM can see at a glance where the ground is slow,
+     * wet or vertical. Drawn under the grid lines and kept translucent so any background
+     * image or colour layer still reads through.
+     */
+    private void drawTerrain(GraphicsContext gc, GameMap map) {
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                TerrainType terrain = map.getCell(x, y).getTerrain();
+                if (terrain == null || terrain == TerrainType.NORMAL) continue;
+                gc.setFill(Color.web(terrainColor(terrain)));
+                gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+            }
+        }
+    }
+
+    private String terrainColor(TerrainType terrain) {
+        switch (terrain) {
+            case WATER: return "#2a6fb055";
+            case CLIMB: return "#8a5a2b55";
+            case DIFFICULT: return "#6b5f2a55";
+            default: return "#00000000";
+        }
+    }
+
+    /**
+     * Shades every square the selected creature can still reach this turn, so the DM can
+     * see its remaining movement rather than counting squares by hand.
+     */
+    private void drawReachable(GraphicsContext gc, GameMap map, Decorations decorations) {
+        int[][] costs = decorations.reachable;
+        gc.setFill(Color.web("#4fc3f733"));
+        gc.setStroke(Color.web("#4fc3f788"));
+        gc.setLineWidth(1);
+        for (int y = 0; y < map.getHeight() && y < costs.length; y++) {
+            for (int x = 0; x < map.getWidth() && x < costs[y].length; x++) {
+                if (costs[y][x] <= 0) continue;
+                gc.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                gc.strokeRect(x * cellSize + 0.5, y * cellSize + 0.5, cellSize - 1, cellSize - 1);
             }
         }
     }

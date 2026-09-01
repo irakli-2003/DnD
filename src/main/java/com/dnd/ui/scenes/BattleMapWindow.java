@@ -66,6 +66,14 @@ public class BattleMapWindow {
 
     private MapObject dragging;
     private boolean dirty;
+    /** When on, clicking any square flips it between floor and wall instead of selecting. */
+    private boolean wallPaintMode;
+    /** Non-null while the DM is painting a terrain type onto squares. */
+    private TerrainType paintTerrain;
+    private Button wallButton;
+    /** Where the token being dragged started, so its movement cost can be measured. */
+    private int dragOriginX = -1;
+    private int dragOriginY = -1;
 
     public BattleMapWindow(BaseScene owner, UiSession uiSession, String mapId) {
         this.owner = owner;
@@ -80,6 +88,33 @@ public class BattleMapWindow {
         return map != null;
     }
 
+    /**
+     * Fills in each player's walking speed from their race the first time they appear on a
+     * battle map. Races are the only models in the campaign that carry a speed, so NPCs,
+     * monsters and beasts keep the default and are adjusted by hand in the detail panel.
+     */
+    private void seedSpeeds() {
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                for (MapObject token : map.getCell(x, y).getOccupants()) {
+                    seedSpeed(token);
+                }
+            }
+        }
+    }
+
+    private void seedSpeed(MapObject token) {
+        CombatState state = TokenSupport.combatOf(token);
+        if (state.isSpeedSeeded()) return;
+        state.setSpeedSeeded(true);
+        dirty = true;
+        if (!(token instanceof PlayerToken player) || player.getCharacter() == null) return;
+        String raceId = player.getCharacter().getRaceId();
+        if (raceId == null || raceId.isBlank()) return;
+        var race = repos.races().getById(raceId);
+        if (race != null && race.getSpeed() > 0) state.setWalkSpeed(race.getSpeed());
+    }
+
     public void show() {
         if (map == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "That map no longer exists in this campaign.");
@@ -88,6 +123,7 @@ public class BattleMapWindow {
             return;
         }
         map.ensureGridSize();
+        seedSpeeds();
         rebuildInitiative();
 
         Stage stage = new Stage();
@@ -119,7 +155,16 @@ public class BattleMapWindow {
         Scene scene = owner.themedScene(root, 1200, 800);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
+                if (wallPaintMode) {
+                    setWallPaintMode(false);
+                    return;
+                }
+                if (paintTerrain != null) {
+                    stopTerrainPainting();
+                    return;
+                }
                 decorations.selected = null;
+                decorations.reachable = null;
                 showRoster();
                 render();
             }
@@ -145,12 +190,22 @@ public class BattleMapWindow {
 
         timer = new SessionTimer();
 
+        wallButton = new Button("Walls: off");
+        wallButton.getStyleClass().add("dnd-button");
+        wallButton.setTooltip(new Tooltip(
+            "Turn on, then click any square to make it a wall or a floor again. No token needs to be selected."));
+        wallButton.setOnAction(e -> setWallPaintMode(!wallPaintMode));
+
         bar.getChildren().addAll(
-            tool("Roll Initiative", "Roll d20 + dexterity for every combatant and restart the order", () -> {
-                initiative.rollAll();
+            tool("Roll NPCs", "Roll initiative for every creature the DM runs, leaving player rolls alone", () -> {
+                int rolled = initiative.rollNonPlayers();
                 refreshAll();
-                status("Rolled initiative for " + initiative.order().size() + " combatants.");
+                status(rolled == 0
+                    ? "No non-player combatants to roll for."
+                    : "Rolled initiative for " + rolled + " non-player combatant" + (rolled == 1 ? "" : "s") + ".");
             }),
+            tool("Enter Initiative...", "Type the initiative each combatant rolled at the table",
+                this::openInitiativeEntryDialog),
             tool("Next Turn ▸", "Advance to the next living combatant", () -> {
                 MapObject next = initiative.next();
                 refreshAll();
@@ -161,8 +216,9 @@ public class BattleMapWindow {
             tool("Add Token...", "Place another creature on the map", this::openAddTokenDialog),
             tool("Remove Selected", "Take the selected token off the map", this::removeSelected),
             new Separator(),
-            tool("Toggle Wall", "Make the selected token's square impassable, or passable again",
-                this::toggleWallUnderSelection),
+            wallButton,
+            tool("Terrain...", "Paint difficult, water or climbable ground onto the map",
+                this::openTerrainPaintDialog),
             tool("Health Bars", "Show or hide health and mana bars on tokens", () -> {
                 decorations.showHealthBars = !decorations.showHealthBars;
                 render();
@@ -213,23 +269,48 @@ public class BattleMapWindow {
 
     private void wireCanvas() {
         canvas.setOnMousePressed(e -> {
+            int cx = (int) (e.getX() / renderer.getCellSize());
+            int cy = (int) (e.getY() / renderer.getCellSize());
+
+            if (wallPaintMode) {
+                toggleWallAt(cx, cy);
+                return;
+            }
+            if (paintTerrain != null) {
+                paintTerrainAt(cx, cy);
+                return;
+            }
+
             MapObject hit = tokenAt(e.getX(), e.getY());
             dragging = hit;
             decorations.selected = hit;
             decorations.rangeOrigin = null;
+            if (hit != null && hit.getPosition() != null) {
+                dragOriginX = hit.getPosition().getX();
+                dragOriginY = hit.getPosition().getY();
+                dragReachable = TokenSupport.isCreature(hit)
+                    ? MovementCalculator.reachableFrom(map, hit, TokenSupport.combatOf(hit).movementRemaining())
+                    : null;
+            } else {
+                clearDragOrigin();
+            }
+            updateReachable(hit);
             if (hit == null) showRoster();
             else showDetail(hit);
             render();
         });
 
         canvas.setOnMouseDragged(e -> {
-            if (dragging == null) return;
+            if (dragging == null || wallPaintMode) return;
             int cx = (int) (e.getX() / renderer.getCellSize());
             int cy = (int) (e.getY() / renderer.getCellSize());
             moveToken(dragging, cx, cy);
         });
 
-        canvas.setOnMouseReleased(e -> dragging = null);
+        canvas.setOnMouseReleased(e -> {
+            if (dragging != null) commitMovementCost(dragging);
+            dragging = null;
+        });
     }
 
     private MapObject tokenAt(double px, double py) {
@@ -245,14 +326,72 @@ public class BattleMapWindow {
         if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
         Position current = token.getPosition();
         if (current != null && current.getX() == cx && current.getY() == cy) return;
+
+        // Creatures are held to their speed; scenery and loot are furniture the DM drags freely.
+        if (TokenSupport.isCreature(token) && dragReachable != null
+                && dragReachable[cy][cx] == MovementCalculator.UNREACHABLE) {
+            status(TokenSupport.nameOf(token) + " can't reach that square this turn ("
+                + TokenSupport.combatOf(token).movementRemaining() + " squares left).");
+            return;
+        }
+
         try {
             map.moveObject(token, cx, cy);
             dirty = true;
+            // Mid-drag the overlay keeps showing the range measured from where the move
+            // began, since the cost of this move isn't charged until the token is dropped.
+            if (dragOriginX < 0) updateReachable(token);
             render();
         } catch (IllegalArgumentException | IllegalStateException ex) {
             // Walking into a wall is a normal thing to try, so it reports rather than throws.
             status("Can't move there: " + ex.getMessage());
         }
+    }
+
+    /**
+     * Reachable costs measured from where this drag began rather than from where the token
+     * currently sits, so dragging it around the map doesn't hand it extra movement. Taken
+     * once when the drag starts and then held, because the token's own position changes as
+     * it is dragged and would otherwise shift the origin under us.
+     */
+    private int[][] dragReachable;
+
+    /** Charges the token for the ground it actually covered once the drag finishes. */
+    private void commitMovementCost(MapObject token) {
+        if (!TokenSupport.isCreature(token) || dragOriginX < 0 || dragReachable == null) {
+            clearDragOrigin();
+            return;
+        }
+        Position end = token.getPosition();
+        if (end == null || (end.getX() == dragOriginX && end.getY() == dragOriginY)) {
+            clearDragOrigin();
+            return;
+        }
+        CombatState state = TokenSupport.combatOf(token);
+        int spent = dragReachable[end.getY()][end.getX()];
+        if (spent > 0) {
+            state.setMovementUsed(state.getMovementUsed() + spent);
+            status(TokenSupport.nameOf(token) + " moved " + spent + " square" + (spent == 1 ? "" : "s")
+                + " - " + state.movementRemaining() + " left this turn.");
+        }
+        clearDragOrigin();
+        updateReachable(token);
+        render();
+    }
+
+    private void clearDragOrigin() {
+        dragOriginX = dragOriginY = -1;
+        dragReachable = null;
+    }
+
+    /** Recomputes the highlighted movement range for the selected creature. */
+    private void updateReachable(MapObject token) {
+        if (token == null || !TokenSupport.isCreature(token) || token.getPosition() == null) {
+            decorations.reachable = null;
+            return;
+        }
+        decorations.reachable = MovementCalculator.reachableFrom(
+            map, token, TokenSupport.combatOf(token).movementRemaining());
     }
 
     private void removeSelected() {
@@ -276,17 +415,154 @@ public class BattleMapWindow {
         status("Removed " + TokenSupport.nameOf(token) + ".");
     }
 
-    private void toggleWallUnderSelection() {
-        MapObject token = decorations.selected;
-        if (token == null || token.getPosition() == null) {
-            status("Select a token to toggle the wall under it.");
+    /**
+     * Turns wall painting on or off.
+     *
+     * <p>Painting takes over the click handler, so the current selection is cleared on the
+     * way in: leaving a token selected while every click edits the floor under it was the
+     * confusing part of the old behaviour.</p>
+     */
+    private void setWallPaintMode(boolean on) {
+        wallPaintMode = on;
+        wallButton.setText(on ? "Walls: ON" : "Walls: off");
+        if (on) {
+            decorations.selected = null;
+            decorations.reachable = null;
+            showRoster();
+            status("Wall painting on - click any square to toggle it. Click the button again or press Esc to stop.");
+        } else {
+            status("Wall painting off.");
+        }
+        render();
+    }
+
+    private void toggleWallAt(int cx, int cy) {
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        GridCell cell = map.getCell(cx, cy);
+        if (cell.isPassable() && !cell.getOccupants().isEmpty()) {
+            status("Can't wall off a square with something standing on it.");
             return;
         }
-        GridCell cell = map.getCell(token.getPosition().getX(), token.getPosition().getY());
         cell.setPassable(!cell.isPassable());
         dirty = true;
         render();
-        status(cell.isPassable() ? "Square is passable." : "Square is now a wall.");
+        status("(" + cx + ", " + cy + ") is now " + (cell.isPassable() ? "floor." : "a wall."));
+    }
+
+    // ── Terrain painting ────────────────────────────────────────────────────
+
+    /**
+     * Asks which terrain to paint and then leaves the window in painting mode, so a whole
+     * river or scree slope can be laid down in one pass instead of one dialog per square.
+     */
+    private void openTerrainPaintDialog() {
+        if (paintTerrain != null) {
+            stopTerrainPainting();
+            return;
+        }
+        ChoiceDialog<TerrainType> dialog = new ChoiceDialog<>(TerrainType.NORMAL, TerrainType.values());
+        dialog.setTitle("Paint Terrain");
+        dialog.setHeaderText(null);
+        dialog.setContentText("Terrain to paint:");
+        owner.styleDialog(dialog);
+        dialog.showAndWait().ifPresent(choice -> {
+            paintTerrain = choice;
+            setWallPaintMode(false);
+            decorations.selected = null;
+            decorations.reachable = null;
+            showRoster();
+            render();
+            status("Painting " + choice.getLabel().toLowerCase() + " ground - click squares. Esc to stop."
+                + (choice == TerrainType.NORMAL ? "" : " " + terrainHint(choice)));
+        });
+    }
+
+    private String terrainHint(TerrainType terrain) {
+        if (terrain == TerrainType.WATER) return "Creatures without a swim speed cross it at half pace.";
+        if (terrain == TerrainType.CLIMB) return "Creatures without a climb speed cross it at half pace.";
+        if (terrain == TerrainType.DIFFICULT) return "Costs double movement to enter.";
+        return "";
+    }
+
+    private void paintTerrainAt(int cx, int cy) {
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        map.getCell(cx, cy).setTerrain(paintTerrain);
+        dirty = true;
+        render();
+    }
+
+    private void stopTerrainPainting() {
+        paintTerrain = null;
+        status("Terrain painting off.");
+        render();
+    }
+
+    // ── Initiative entry ────────────────────────────────────────────────────
+
+    /**
+     * Lets the DM type the initiative each combatant rolled at the table.
+     *
+     * <p>Every combatant is listed, players and monsters alike, because the DM is the one
+     * holding the keyboard and often reads out numbers for the whole table at once.</p>
+     */
+    private void openInitiativeEntryDialog() {
+        rebuildInitiative();
+        List<MapObject> combatants = initiative.order();
+        if (combatants.isEmpty()) {
+            status("No combatants on the map yet.");
+            return;
+        }
+
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Enter Initiative");
+        dialog.setHeaderText(null);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(12);
+        grid.setVgap(6);
+        grid.setPadding(new Insets(16));
+
+        List<Spinner<Integer>> spinners = new ArrayList<>();
+        int row = 0;
+        grid.addRow(row++, owner.body("Combatant"), owner.body("Initiative"));
+        for (MapObject token : combatants) {
+            Spinner<Integer> spinner = new Spinner<>(-20, 99, TokenSupport.combatOf(token).getInitiative());
+            spinner.setEditable(true);
+            spinner.setPrefWidth(90);
+            spinners.add(spinner);
+            grid.addRow(row++,
+                owner.body(TokenSupport.nameOf(token) + "  (" + TokenSupport.kindOf(token) + ")"),
+                spinner);
+        }
+
+        ScrollPane scroll = new ScrollPane(grid);
+        scroll.setFitToWidth(true);
+        scroll.setPrefViewportHeight(Math.min(420, 40 + combatants.size() * 34));
+        dialog.getDialogPane().setContent(scroll);
+        owner.styleDialog(dialog);
+
+        if (dialog.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+
+        for (int i = 0; i < combatants.size(); i++) {
+            // Committing the editor's text by hand: a Spinner the DM typed into but never
+            // pressed Enter on still holds the old value in its own property otherwise.
+            Spinner<Integer> spinner = spinners.get(i);
+            commitSpinner(spinner);
+            TokenSupport.combatOf(combatants.get(i)).setInitiative(spinner.getValue());
+        }
+        dirty = true;
+        refreshAll();
+        status("Initiative updated for " + combatants.size() + " combatant"
+            + (combatants.size() == 1 ? "" : "s") + ".");
+    }
+
+    private void commitSpinner(Spinner<Integer> spinner) {
+        try {
+            spinner.getValueFactory().setValue(Integer.parseInt(spinner.getEditor().getText().trim()));
+        } catch (NumberFormatException | NullPointerException ignored) {
+            // Editor text that isn't a number just leaves the spinner's committed value alone.
+        }
     }
 
     // ── Roster panel ────────────────────────────────────────────────────────
@@ -480,6 +756,9 @@ public class BattleMapWindow {
         panel.getChildren().add(buildVitalsEditor(token, state));
         panel.getChildren().add(buildDeathSaveControls(token, state));
 
+        panel.getChildren().addAll(new Separator(), owner.sectionLabel("Movement"));
+        panel.getChildren().add(buildMovementEditor(token, state));
+
         panel.getChildren().addAll(new Separator(), owner.sectionLabel("Purse & Stats"));
         panel.getChildren().add(buildPurseEditor(state));
         panel.getChildren().add(buildStatsGrid(token));
@@ -619,6 +898,63 @@ public class BattleMapWindow {
         grid.addRow(0, owner.body("Coins:"), gold);
         grid.addRow(1, owner.body("Initiative:"), init);
         return grid;
+    }
+
+    /**
+     * Speeds in feet, plus how much of this turn's movement is already spent.
+     *
+     * <p>A climb or swim speed of zero means the creature has no special mode for that
+     * ground and crosses it at the difficult-terrain rate, which is the tabletop default
+     * rather than a restriction.</p>
+     */
+    private Node buildMovementEditor(MapObject token, CombatState state) {
+        Spinner<Integer> walk = speedSpinner(state.getWalkSpeed(), n -> {
+            state.setWalkSpeed(n);
+            afterMovementChange(token);
+        });
+        Spinner<Integer> climb = speedSpinner(state.getClimbSpeed(), n -> {
+            state.setClimbSpeed(n);
+            afterMovementChange(token);
+        });
+        Spinner<Integer> swim = speedSpinner(state.getSwimSpeed(), n -> {
+            state.setSwimSpeed(n);
+            afterMovementChange(token);
+        });
+
+        Label remaining = new Label(state.movementRemaining() + " of " + state.movementSquares() + " squares left");
+        remaining.getStyleClass().add("body-label");
+
+        Button reset = new Button("Reset Move");
+        reset.getStyleClass().add("dnd-button");
+        reset.setTooltip(new Tooltip("Give this creature its full movement back for the current turn"));
+        reset.setOnAction(e -> {
+            state.resetMovement();
+            afterMovementChange(token);
+            showDetail(token);
+        });
+
+        GridPane grid = new GridPane();
+        grid.setHgap(6);
+        grid.setVgap(6);
+        grid.addRow(0, owner.body("Walk (ft):"), walk);
+        grid.addRow(1, owner.body("Climb (ft):"), climb);
+        grid.addRow(2, owner.body("Swim (ft):"), swim);
+        grid.addRow(3, remaining, reset);
+        return grid;
+    }
+
+    private Spinner<Integer> speedSpinner(int value, java.util.function.IntConsumer onChange) {
+        Spinner<Integer> spinner = new Spinner<>(0, 300, value, 5);
+        spinner.setPrefWidth(90);
+        spinner.setEditable(true);
+        spinner.valueProperty().addListener((obs, o, n) -> onChange.accept(n));
+        return spinner;
+    }
+
+    private void afterMovementChange(MapObject token) {
+        dirty = true;
+        if (decorations.selected == token) updateReachable(token);
+        render();
     }
 
     private Node buildStatsGrid(MapObject token) {
@@ -830,6 +1166,7 @@ public class BattleMapWindow {
         // sitting at initiative zero until the DM notices.
         CombatState state = TokenSupport.combatOf(token);
         state.setInitiative(TokenSupport.rollInitiative(token));
+        seedSpeed(token);
         dirty = true;
         refreshAll();
         showRoster();
