@@ -11,6 +11,11 @@ public class MapLayer {
     private double width = 10;
     private double height = 10;
     private int zOrder = 0;
+    /**
+     * How solid this layer is, from 0 (invisible) to 1 (fully opaque). Lets a DM stack a
+     * faded overlay - fog, lighting, a sketched-in upper floor - over the map below it.
+     */
+    private double opacity = 1.0;
 
     public MapLayer() {}
     public MapLayer(String id, String label, String imagePath,
@@ -38,4 +43,8 @@ public class MapLayer {
     public void setHeight(double height) { this.height = height; }
     public int getZOrder() { return zOrder; }
     public void setZOrder(int zOrder) { this.zOrder = zOrder; }
+    public double getOpacity() { return opacity; }
+
+    /** Clamped to 0..1 so a bad value in hand-edited JSON cannot make a layer undrawable. */
+    public void setOpacity(double opacity) { this.opacity = Math.max(0, Math.min(1, opacity)); }
 }

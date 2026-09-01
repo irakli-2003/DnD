@@ -25,6 +25,12 @@ public class Drawing {
     private List<Double> points = new ArrayList<>();
     /** Stacking order shared with {@link MapLayer}/{@link MapObjectGroup}; higher draws on top. */
     private int zOrder = 0;
+    /**
+     * How solid this drawing is, from 0 (invisible) to 1 (fully opaque). Annotations are
+     * often meant to sit over the map without hiding it - a shaded room, a marked area of
+     * effect - which only works if they can be faded.
+     */
+    private double opacity = 1.0;
 
     public Drawing() {
     }
@@ -58,4 +64,9 @@ public class Drawing {
 
     public int getZOrder() { return zOrder; }
     public void setZOrder(int zOrder) { this.zOrder = zOrder; }
+
+    public double getOpacity() { return opacity; }
+
+    /** Clamped to 0..1 so a bad value in hand-edited JSON cannot make a drawing undrawable. */
+    public void setOpacity(double opacity) { this.opacity = Math.max(0, Math.min(1, opacity)); }
 }

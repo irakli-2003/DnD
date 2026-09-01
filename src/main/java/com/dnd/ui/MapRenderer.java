@@ -86,6 +86,8 @@ public class MapRenderer {
             double lx = layer.getX() * cellSize, ly = layer.getY() * cellSize;
             double lw = layer.getWidth() * cellSize, lh = layer.getHeight() * cellSize;
             boolean drewImage = false;
+            gc.save();
+            gc.setGlobalAlpha(layer.getOpacity());
             if (layer.getImagePath() != null && campaignRoot != null) {
                 Image img = ImageStore.load(campaignRoot, layer.getImagePath());
                 if (img != null) {
@@ -102,6 +104,7 @@ public class MapRenderer {
                     // aborting the whole render.
                 }
             }
+            gc.restore();
         }
     }
 
@@ -193,6 +196,8 @@ public class MapRenderer {
         gc.setStroke(color);
         gc.setFill(color);
         gc.setLineWidth(d.getLineWidth());
+        gc.save();
+        gc.setGlobalAlpha(d.getOpacity());
         switch (d.getType()) {
             case FREEHAND -> {
                 for (int i = 1; i < pts.size(); i++) {
@@ -214,6 +219,7 @@ public class MapRenderer {
                 else gc.strokeOval(box[0], box[1], box[2], box[3]);
             }
         }
+        gc.restore();
     }
 
     private double[] box(List<double[]> pts) {

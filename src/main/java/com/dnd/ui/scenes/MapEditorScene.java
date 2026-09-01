@@ -52,7 +52,7 @@ public class MapEditorScene extends BaseScene {
     private boolean dragging = false;
     private double dragLastX, dragLastY;
 
-    // Resize state (layers only), anchored on the fixed opposite corner.
+    // Resize state, anchored on the fixed opposite corner. Applies to layers, drawings and groups.
     private boolean resizeActive = false;
     private double anchorX, anchorY;
 
@@ -63,6 +63,9 @@ public class MapEditorScene extends BaseScene {
     private Color drawColor = Color.web("#c9a84c");
     private boolean drawFilled = false;
     private double drawLineWidth = 2.0;
+    /** Opacity given to newly drawn shapes; also the slider's resting value with nothing selected. */
+    private double drawOpacity = 1.0;
+    private javafx.scene.control.Slider opacitySlider;
     private final List<double[]> penPoints = new ArrayList<>();
     private boolean shapeDrawing = false;
     private double shapeStartX, shapeStartY, shapeCurX, shapeCurY;
@@ -142,6 +145,7 @@ public class MapEditorScene extends BaseScene {
         if (selectedKey == null && (objectsTree == null || objectsTree.getSelectionModel().getSelectedItems().isEmpty())) return;
         selectedKey = null;
         if (objectsTree != null) objectsTree.getSelectionModel().clearSelection();
+        syncOpacitySlider();
         renderCanvas();
     }
 
@@ -201,6 +205,7 @@ public class MapEditorScene extends BaseScene {
             deleteBtn.setDisable(sel.isEmpty());
             groupBtn.setDisable(sel.size() < 2);
             ungroupBtn.setDisable(!(selectedKey != null && selectedKey.startsWith("group:")));
+            syncOpacitySlider();
             renderCanvas();
         });
 
@@ -538,14 +543,80 @@ public class MapEditorScene extends BaseScene {
         HBox widthRow = new HBox(6, body("Line width:"), widthSpinner);
         widthRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
+        // New shapes take the opacity currently set here, and moving it with something
+        // selected fades that object instead - one control covering both cases.
+        opacitySlider = new Slider(0, 1, drawOpacity);
+        opacitySlider.setMaxWidth(Double.MAX_VALUE);
+        opacitySlider.setShowTickMarks(true);
+        opacitySlider.setMajorTickUnit(0.25);
+        Label opacityValue = body("100%");
+        opacitySlider.valueProperty().addListener((obs, old, val) -> {
+            double v = val.doubleValue();
+            opacityValue.setText(Math.round(v * 100) + "%");
+            if (selectedKey != null) applyOpacityToSelection(v);
+            else drawOpacity = v;
+        });
+        HBox opacityRow = new HBox(6, body("Opacity:"), opacitySlider, opacityValue);
+        opacityRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        HBox.setHgrow(opacitySlider, javafx.scene.layout.Priority.ALWAYS);
+
         Label hint = body("Pen/Line/Rect/Oval draw on the map. Eraser removes the shape under your click. "
             + "Passable Toggle flips a cell's passable/impassable state on click (impassable cells render solid black). "
             + "Terrain paints the selected ground type; water and climbing cost extra movement unless a "
-            + "creature has a swim or climb speed, and difficult ground always costs double.");
+            + "creature has a swim or climb speed, and difficult ground always costs double. "
+            + "With Select/Move, drag a corner handle to resize anything - image layers, shapes and groups alike.");
         hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
 
-        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, terrainRow, hint);
+        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, opacityRow, terrainRow, hint);
         return box;
+    }
+
+    /** Fades whatever is selected, recursing into groups so a whole group dims together. */
+    private void applyOpacityToSelection(double value) {
+        applyOpacity(selectedKey, value);
+        renderCanvas();
+    }
+
+    private void applyOpacity(String key, double value) {
+        if (key == null) return;
+        if (key.startsWith("layer:")) {
+            MapLayer l = findLayer(key.substring(6));
+            if (l != null) l.setOpacity(value);
+        } else if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            if (d != null) d.setOpacity(value);
+        } else if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g != null) for (String member : g.getMemberKeys()) applyOpacity(member, value);
+        }
+    }
+
+    /** Reads the selected object's opacity back into the slider when the selection changes. */
+    private void syncOpacitySlider() {
+        if (opacitySlider == null) return;
+        Double current = opacityOf(selectedKey);
+        opacitySlider.setValue(current != null ? current : drawOpacity);
+    }
+
+    private Double opacityOf(String key) {
+        if (key == null) return null;
+        if (key.startsWith("layer:")) {
+            MapLayer l = findLayer(key.substring(6));
+            return l == null ? null : l.getOpacity();
+        }
+        if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            return d == null ? null : d.getOpacity();
+        }
+        if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g == null) return null;
+            for (String member : g.getMemberKeys()) {
+                Double found = opacityOf(member);
+                if (found != null) return found;
+            }
+        }
+        return null;
     }
 
     private ToggleButton toolToggle(String label, ToggleGroup group) {
@@ -732,18 +803,9 @@ public class MapEditorScene extends BaseScene {
                 case SELECT -> {
                     double[] b = boundsOfKeyPx(selectedKey);
                     if (b != null) {
-                        MapLayer sl = selectedLayer();
-                        int corner = sl != null ? hitCorner(mx, my, b[0], b[1], b[2], b[3]) : 0;
+                        int corner = hitCorner(mx, my, b[0], b[1], b[2], b[3]);
                         if (corner != 0) {
-                            resizeActive = true;
-                            double origX = sl.getX(), origY = sl.getY();
-                            double origW = sl.getWidth(), origH = sl.getHeight();
-                            switch (corner) {
-                                case 1 -> { anchorX = origX + origW; anchorY = origY + origH; }
-                                case 2 -> { anchorX = origX; anchorY = origY + origH; }
-                                case 3 -> { anchorX = origX; anchorY = origY; }
-                                case 4 -> { anchorX = origX + origW; anchorY = origY; }
-                            }
+                            beginResize(corner, b);
                         } else if (mx >= b[0] && mx <= b[2] && my >= b[1] && my <= b[3]) {
                             dragging = true;
                             dragLastX = mx; dragLastY = my;
@@ -763,16 +825,7 @@ public class MapEditorScene extends BaseScene {
                 case LINE, RECT, OVAL -> { shapeCurX = e.getX(); shapeCurY = e.getY(); renderCanvas(); }
                 case SELECT -> {
                     if (resizeActive) {
-                        double mxCells = e.getX() / CELL_SIZE, myCells = e.getY() / CELL_SIZE;
-                        double newW = Math.max(1, Math.abs(mxCells - anchorX));
-                        double newH = Math.max(1, Math.abs(myCells - anchorY));
-                        double newX = Math.max(0, mxCells < anchorX ? anchorX - newW : anchorX);
-                        double newY = Math.max(0, myCells < anchorY ? anchorY - newH : anchorY);
-                        MapLayer l = selectedLayer();
-                        if (l != null) {
-                            l.setX(newX); l.setY(newY);
-                            l.setWidth(newW); l.setHeight(newH);
-                        }
+                        resizeTo(e.getX() / CELL_SIZE, e.getY() / CELL_SIZE);
                         renderCanvas();
                     } else if (dragging && selectedKey != null) {
                         double dx = (e.getX() - dragLastX) / CELL_SIZE;
@@ -807,6 +860,9 @@ public class MapEditorScene extends BaseScene {
                     }
                     dragging = false;
                     resizeActive = false;
+                    resizeOriginBox = null;
+                    resizeLayerBoxes.clear();
+                    resizeDrawingPoints.clear();
                     if (!wasActive) {
                         // Not a move/resize: treat as a click-to-place for the selected token.
                         placeSelectedTokenAt(e.getX(), e.getY());
@@ -836,6 +892,96 @@ public class MapEditorScene extends BaseScene {
         if (near(mx, my, x1, y1)) return 3;
         if (near(mx, my, x0, y1)) return 4;
         return 0;
+    }
+
+    // ── Resizing ────────────────────────────────────────────────────────────
+
+    /** The selection's geometry at the moment a resize started, in grid cells. */
+    private double[] resizeOriginBox;
+    /** Original layer boxes and drawing point lists, keyed by object key. */
+    private final java.util.Map<String, double[]> resizeLayerBoxes = new java.util.HashMap<>();
+    private final java.util.Map<String, List<Double>> resizeDrawingPoints = new java.util.HashMap<>();
+
+    /**
+     * Starts a resize from the grabbed corner.
+     *
+     * <p>The geometry is snapshotted first and every drag scales that snapshot rather than
+     * the live object. Scaling the live object would compound rounding on every mouse move,
+     * so a shape would visibly drift and distort while the DM was still dragging.</p>
+     */
+    private void beginResize(int corner, double[] boundsPx) {
+        resizeActive = true;
+        double x0 = boundsPx[0] / CELL_SIZE, y0 = boundsPx[1] / CELL_SIZE;
+        double x1 = boundsPx[2] / CELL_SIZE, y1 = boundsPx[3] / CELL_SIZE;
+        resizeOriginBox = new double[]{x0, y0, x1, y1};
+        switch (corner) {
+            case 1 -> { anchorX = x1; anchorY = y1; }
+            case 2 -> { anchorX = x0; anchorY = y1; }
+            case 3 -> { anchorX = x0; anchorY = y0; }
+            case 4 -> { anchorX = x1; anchorY = y0; }
+        }
+        resizeLayerBoxes.clear();
+        resizeDrawingPoints.clear();
+        snapshotGeometry(selectedKey);
+    }
+
+    private void snapshotGeometry(String key) {
+        if (key == null) return;
+        if (key.startsWith("layer:")) {
+            MapLayer l = findLayer(key.substring(6));
+            if (l != null) resizeLayerBoxes.put(key, new double[]{l.getX(), l.getY(), l.getWidth(), l.getHeight()});
+        } else if (key.startsWith("drawing:")) {
+            Drawing d = findDrawing(key.substring(8));
+            if (d != null) resizeDrawingPoints.put(key, new ArrayList<>(d.getPoints()));
+        } else if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g != null) for (String member : g.getMemberKeys()) snapshotGeometry(member);
+        }
+    }
+
+    /**
+     * Resizes the selection so the grabbed corner follows the pointer while the opposite
+     * corner stays put. Drawings scale point by point, which is what lets a freehand sketch
+     * or a marked-out area be stretched rather than only image layers.
+     */
+    private void resizeTo(double mxCells, double myCells) {
+        if (resizeOriginBox == null) return;
+        double origW = Math.max(0.01, resizeOriginBox[2] - resizeOriginBox[0]);
+        double origH = Math.max(0.01, resizeOriginBox[3] - resizeOriginBox[1]);
+        double newW = Math.max(0.5, Math.abs(mxCells - anchorX));
+        double newH = Math.max(0.5, Math.abs(myCells - anchorY));
+        double newX = Math.max(0, mxCells < anchorX ? anchorX - newW : anchorX);
+        double newY = Math.max(0, myCells < anchorY ? anchorY - newH : anchorY);
+        applyResize(selectedKey, resizeOriginBox[0], resizeOriginBox[1], newX, newY, newW / origW, newH / origH);
+    }
+
+    private void applyResize(String key, double origX, double origY,
+                             double newX, double newY, double scaleX, double scaleY) {
+        if (key == null) return;
+        if (key.startsWith("layer:")) {
+            double[] box = resizeLayerBoxes.get(key);
+            MapLayer l = findLayer(key.substring(6));
+            if (l == null || box == null) return;
+            l.setX(Math.max(0, newX + (box[0] - origX) * scaleX));
+            l.setY(Math.max(0, newY + (box[1] - origY) * scaleY));
+            l.setWidth(Math.max(0.5, box[2] * scaleX));
+            l.setHeight(Math.max(0.5, box[3] * scaleY));
+        } else if (key.startsWith("drawing:")) {
+            List<Double> original = resizeDrawingPoints.get(key);
+            Drawing d = findDrawing(key.substring(8));
+            if (d == null || original == null) return;
+            List<Double> scaled = new ArrayList<>(original.size());
+            for (int i = 0; i + 1 < original.size(); i += 2) {
+                scaled.add(Math.max(0, newX + (original.get(i) - origX) * scaleX));
+                scaled.add(Math.max(0, newY + (original.get(i + 1) - origY) * scaleY));
+            }
+            d.setPoints(scaled);
+        } else if (key.startsWith("group:")) {
+            MapObjectGroup g = findGroup(key.substring(6));
+            if (g != null) {
+                for (String member : g.getMemberKeys()) applyResize(member, origX, origY, newX, newY, scaleX, scaleY);
+            }
+        }
     }
 
     private boolean near(double mx, double my, double px, double py) {
@@ -901,6 +1047,7 @@ public class MapEditorScene extends BaseScene {
         Drawing d = new Drawing("drawing_" + System.currentTimeMillis() + "_" + (drawIdCounter++),
             type, toHex(sanitizeColor(drawColor)), drawLineWidth, drawFilled, gridPoints);
         d.setZOrder(nextZOrder());
+        d.setOpacity(drawOpacity);
         map.getDrawings().add(d);
     }
 
@@ -1021,6 +1168,8 @@ public class MapEditorScene extends BaseScene {
         double lx = layer.getX() * CELL_SIZE, ly = layer.getY() * CELL_SIZE;
         double lw = layer.getWidth() * CELL_SIZE, lh = layer.getHeight() * CELL_SIZE;
         boolean drewImage = false;
+        gc.save();
+        gc.setGlobalAlpha(layer.getOpacity());
         if (layer.getImagePath() != null && uiSession.campaignRoot() != null) {
             Image img = ImageStore.load(uiSession.campaignRoot(), layer.getImagePath());
             if (img != null) {
@@ -1036,6 +1185,7 @@ public class MapEditorScene extends BaseScene {
             }
             gc.fillRect(lx, ly, lw, lh);
         }
+        gc.restore();
     }
 
     private void renderCanvas() {
@@ -1104,7 +1254,7 @@ public class MapEditorScene extends BaseScene {
             }
         }
 
-        // Selection highlight (dashed box), with corner resize-handles for a selected layer.
+        // Selection highlight (dashed box), with corner resize-handles on whatever is selected.
         double[] selBounds = boundsOfKeyPx(selectedKey);
         if (selBounds != null) {
             gc.setStroke(Color.web("#c9a84c"));
@@ -1112,15 +1262,13 @@ public class MapEditorScene extends BaseScene {
             gc.setLineDashes(6, 4);
             gc.strokeRect(selBounds[0], selBounds[1], selBounds[2] - selBounds[0], selBounds[3] - selBounds[1]);
             gc.setLineDashes();
-            if (selectedKey.startsWith("layer:")) {
-                gc.setFill(Color.web("#c9a84c"));
-                double hs = 10;
-                double[][] corners = {
-                    {selBounds[0], selBounds[1]}, {selBounds[2], selBounds[1]},
-                    {selBounds[2], selBounds[3]}, {selBounds[0], selBounds[3]}
-                };
-                for (double[] c : corners) gc.fillRect(c[0] - hs / 2, c[1] - hs / 2, hs, hs);
-            }
+            gc.setFill(Color.web("#c9a84c"));
+            double hs = 10;
+            double[][] corners = {
+                {selBounds[0], selBounds[1]}, {selBounds[2], selBounds[1]},
+                {selBounds[2], selBounds[3]}, {selBounds[0], selBounds[3]}
+            };
+            for (double[] c : corners) gc.fillRect(c[0] - hs / 2, c[1] - hs / 2, hs, hs);
         }
     }
 
@@ -1132,7 +1280,10 @@ public class MapEditorScene extends BaseScene {
         }
         Color c;
         try { c = Color.web(d.getColor()); } catch (Exception ex) { c = Color.web("#c9a84c"); }
+        gc.save();
+        gc.setGlobalAlpha(d.getOpacity());
         paintShape(gc, d.getType(), pixelPts, c, d.getLineWidth(), d.isFilled());
+        gc.restore();
     }
 
     private void paintShape(GraphicsContext gc, Drawing.Type type, List<double[]> pts, Color color, double lineWidth, boolean filled) {
