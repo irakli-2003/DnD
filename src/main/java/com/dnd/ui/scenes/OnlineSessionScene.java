@@ -1,18 +1,13 @@
 package com.dnd.ui.scenes;
 
-import com.dnd.data.CampaignRepositories;
-import com.dnd.data.JsonMappers;
+import com.dnd.data.SessionSnapshot;
 import com.dnd.security.FirebaseSessionSync;
 import com.dnd.ui.SceneType;
 import com.dnd.ui.UiSession;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class OnlineSessionScene extends BaseScene {
 
@@ -115,19 +110,13 @@ public class OnlineSessionScene extends BaseScene {
     }
 
     private String buildSnapshot() {
+        // The whole campaign travels, not just a summary: a player who joins is dropped
+        // straight into it, so anything their character sheet references has to be there.
+        var context = uiSession.getSession().getCampaignContext();
         try {
-            ObjectMapper mapper = JsonMappers.create();
-            CampaignRepositories repos = new CampaignRepositories(
-                uiSession.getSession().getCampaignContext().getPath());
-            Map<String, Object> snapshot = new LinkedHashMap<>();
-            snapshot.put("campaign", uiSession.getSession().getCampaignContext().getName());
-            snapshot.put("players", repos.players().list());
-            snapshot.put("maps", repos.maps().list());
-            snapshot.put("npcs", repos.npcs().list());
-            snapshot.put("monsters", repos.monsters().list());
-            return mapper.writeValueAsString(snapshot);
-        } catch (Exception e) {
-            return "{\"campaign\":\"" + uiSession.getSession().getCampaignContext().getName() + "\"}";
+            return SessionSnapshot.capture(context.getPath(), context.getName());
+        } catch (RuntimeException e) {
+            return "{\"campaign\":\"" + context.getName() + "\"}";
         }
     }
 }

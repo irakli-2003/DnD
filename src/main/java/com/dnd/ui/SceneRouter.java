@@ -50,7 +50,6 @@ public class SceneRouter {
             case CREATE_CAMPAIGN: return new CreateCampaignScene(uiSession).build();
             case DM_MENU: return new DmMenuScene(uiSession).build();
             case DM_ONLINE_SESSION: return new OnlineSessionScene(uiSession).build();
-            case PLAYER_CAMPAIGN_SELECTION: return new PlayerCampaignSelectionScene(uiSession).build();
             case PLAYER_CHARACTER_SELECTION: return new PlayerCharacterSelectionScene(uiSession).build();
             case PLAYER_HOME: return new PlayerHomeScene(uiSession).build();
             case PLAYER_ONLINE_SESSION: return new PlayerOnlineSessionScene(uiSession).build();

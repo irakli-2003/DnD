@@ -156,6 +156,25 @@ public class PlayerCharacter implements Printable {
     public String getPlayerName() { return playerName; }
     public void setPlayerName(String playerName) { this.playerName = playerName; }
 
+    /**
+     * Account username the DM has assigned this character to. When a player joins a hosted
+     * session, this is what picks their character out of the roster automatically, so they
+     * never see anyone else's sheet or the campaign list.
+     */
+    private String ownerUsername;
+    public String getOwnerUsername() { return ownerUsername; }
+    public void setOwnerUsername(String ownerUsername) { this.ownerUsername = ownerUsername; }
+
+    /** Free-text background or appearance notes; players may rewrite this themselves. */
+    private String description;
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+    /** True when {@code username} is the account this character belongs to, ignoring case. */
+    public boolean isOwnedBy(String username) {
+        return ownerUsername != null && username != null && ownerUsername.equalsIgnoreCase(username.trim());
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;

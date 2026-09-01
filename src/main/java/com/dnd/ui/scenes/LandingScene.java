@@ -21,7 +21,8 @@ public class LandingScene extends BaseScene {
                 : "Choose your role to begin"),
             spacer(),
             btn("Dungeon Master", () -> { uiSession.setDm(true); uiSession.getRouter().goTo(SceneType.CAMPAIGN_SELECTION); }),
-            btn("Player", () -> { uiSession.setDm(false); uiSession.getRouter().goTo(SceneType.PLAYER_CAMPAIGN_SELECTION); }),
+            // Players don't pick a campaign: the DM hosts one and their token grants entry to it.
+            btn("Player", () -> { uiSession.setDm(false); uiSession.getRouter().goTo(SceneType.PLAYER_ONLINE_SESSION); }),
             spacer(),
             btn("Log Out", () -> { uiSession.setCurrentUser(null); uiSession.getRouter().goTo(SceneType.LOGIN); })
         );

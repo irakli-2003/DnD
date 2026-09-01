@@ -20,3 +20,8 @@
 # User accounts + SMTP credentials (local, never committed)
 /data/auth/
 
+# A player's cache of a session their DM is hosting; rebuilt on every join.
+/data/joined-sessions/
+# A player's own portraits, names and descriptions for their characters.
+/data/player-profiles/
+

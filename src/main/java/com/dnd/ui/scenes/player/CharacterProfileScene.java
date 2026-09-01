@@ -1,6 +1,7 @@
 package com.dnd.ui.scenes.player;
 
 import com.dnd.data.CampaignRepositories;
+import com.dnd.data.PlayerProfileStore;
 import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.character.stats.CoreStats;
 import com.dnd.ui.*;
@@ -24,6 +25,9 @@ public class CharacterProfileScene extends BaseScene {
     public Scene build() {
         CampaignRepositories repos = new CampaignRepositories(uiSession.campaignRoot());
         PlayerCharacter pc = repos.players().getById(uiSession.getSession().getActivePlayerCharacterId());
+        PlayerProfileStore profiles = new PlayerProfileStore(
+            uiSession.isLoggedIn() ? uiSession.getCurrentUser().getUsername() : null);
+        if (pc != null) profiles.applyTo(pc);
 
         VBox root = new VBox(0);
         root.getStyleClass().add("root");
@@ -53,7 +57,9 @@ public class CharacterProfileScene extends BaseScene {
         portrait.setStyle("-fx-border-color: #c9a84c; -fx-border-width: 2px;");
 
         if (uiSession.campaignRoot() != null) {
-            Image img = ImageStore.load(uiSession.campaignRoot(), pc.getImagePath());
+            Image img = profiles.hasOwnPortrait(pc.getId())
+                ? ImageStore.load(profiles.imagesRoot(), pc.getImagePath())
+                : ImageStore.load(uiSession.campaignRoot(), pc.getImagePath());
             if (img != null) portrait.setImage(img);
         }
 
@@ -62,17 +68,19 @@ public class CharacterProfileScene extends BaseScene {
             fc.setTitle("Select Portrait");
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png","*.jpg","*.jpeg","*.webp"));
             File chosen = fc.showOpenDialog(null);
-            if (chosen != null && uiSession.campaignRoot() != null) {
-                try {
-                    String rel = ImageStore.copyImage(uiSession.campaignRoot(), "characters", pc.getId(), chosen);
-                    pc.setImagePath(rel);
-                    repos.players().save(pc);
-                    portrait.setImage(ImageStore.load(uiSession.campaignRoot(), rel));
-                } catch (Exception ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR, "Upload failed: " + ex.getMessage());
-                    styleDialog(alert);
-                    alert.showAndWait();
-                }
+            if (chosen == null) return;
+            try {
+                // Portraits live with the player, not in the campaign: a joined session is a
+                // cache the DM overwrites, and the DM's own copy isn't ours to edit.
+                String rel = profiles.storePortrait(pc.getId(), chosen.toPath());
+                PlayerProfileStore.Profile profile = profiles.get(pc.getId());
+                profile.setImagePath(rel);
+                profiles.save(pc.getId(), profile);
+                portrait.setImage(ImageStore.load(profiles.imagesRoot(), rel));
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Upload failed: " + ex.getMessage());
+                styleDialog(alert);
+                alert.showAndWait();
             }
         });
 
@@ -84,6 +92,8 @@ public class CharacterProfileScene extends BaseScene {
         HBox topSection = new HBox(30, portraitBox, statsBox);
         topSection.setAlignment(Pos.TOP_LEFT);
         content.getChildren().add(topSection);
+
+        content.getChildren().add(buildAppearanceEditor(pc, profiles));
 
         content.getChildren().add(sectionLabel("Inventory"));
         if (pc.getItems() != null && !pc.getItems().isEmpty()) {
@@ -120,6 +130,42 @@ public class CharacterProfileScene extends BaseScene {
         root.getChildren().add(scroll);
         VBox.setVgrow(scroll, Priority.ALWAYS);
         return wrapInScene(root);
+    }
+
+    /**
+     * The only part of the sheet a player may rewrite. Everything here is flavour that
+     * shapes the story rather than the mechanics, so it is saved to the player's own
+     * storage and never pushed back to the DM's campaign.
+     */
+    private VBox buildAppearanceEditor(PlayerCharacter pc, PlayerProfileStore profiles) {
+        TextField nameField = textField("Character name");
+        nameField.setText(pc.getName() != null ? pc.getName() : "");
+        nameField.setMaxWidth(380);
+
+        TextArea descArea = new TextArea(pc.getDescription() != null ? pc.getDescription() : "");
+        descArea.setPromptText("Appearance, background, how you carry yourself...");
+        descArea.setWrapText(true);
+        descArea.setPrefRowCount(5);
+        descArea.setMaxWidth(600);
+        descArea.getStyleClass().add("dnd-text-field");
+
+        Label saved = body("");
+        saved.setStyle("-fx-text-fill: #80ff80;");
+
+        Button saveBtn = btn("Save Appearance", () -> {
+            PlayerProfileStore.Profile profile = profiles.get(pc.getId());
+            profile.setName(nameField.getText().trim());
+            profile.setDescription(descArea.getText().trim());
+            profiles.save(pc.getId(), profile);
+            saved.setText("Saved to this machine.");
+        });
+
+        VBox box = new VBox(8,
+            sectionLabel("Appearance & Story"),
+            body("Yours to change. Stats, level, items and spells are set by your DM."),
+            nameField, descArea, saveBtn, saved);
+        box.setPadding(new Insets(12, 0, 0, 0));
+        return box;
     }
 
     private VBox buildStatsBox(PlayerCharacter pc, CampaignRepositories repos) {

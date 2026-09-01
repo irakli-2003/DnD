@@ -19,7 +19,7 @@ public class PlayerCharacterSelectionScene extends BaseScene {
     public Scene build() {
         VBox root = new VBox(0);
         root.getStyleClass().add("root");
-        root.getChildren().add(backBar(SceneType.PLAYER_CAMPAIGN_SELECTION));
+        root.getChildren().add(backBar(SceneType.PLAYER_ONLINE_SESSION));
 
         VBox content = new VBox(16);
         content.setPadding(new Insets(30, 60, 40, 60));
@@ -29,7 +29,13 @@ public class PlayerCharacterSelectionScene extends BaseScene {
 
         CampaignRepositories repos = new CampaignRepositories(
             uiSession.getSession().getCampaignContext().getPath());
-        List<PlayerCharacter> players = repos.players().list();
+
+        // Only characters the DM hasn't already handed to someone else are offered, so this
+        // fallback can't be used to walk into another player's sheet.
+        String username = uiSession.isLoggedIn() ? uiSession.getCurrentUser().getUsername() : null;
+        List<PlayerCharacter> players = repos.players().list().stream()
+            .filter(pc -> pc.getOwnerUsername() == null || pc.getOwnerUsername().isBlank() || pc.isOwnedBy(username))
+            .toList();
 
         ListView<String> list = new ListView<>();
         list.getStyleClass().add("dnd-list-view");
@@ -59,6 +65,9 @@ public class PlayerCharacterSelectionScene extends BaseScene {
         content.getChildren().addAll(
             title("Choose Your Character"),
             subtitle("Campaign: " + uiSession.getSession().getCampaignContext().getName()),
+            body(players.isEmpty()
+                ? "No characters are available to you in this session. Ask your DM to assign one to your account."
+                : "Your DM hasn't assigned a character to your account yet, so pick the one you're playing."),
             list, passHint, passField, error, selectBtn
         );
         root.getChildren().add(content);

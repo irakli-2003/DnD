@@ -237,6 +237,11 @@ public final class FirebaseSessionSync {
         return latestSnapshot.get();
     }
 
+    /** Node name this session lives under, used to name the player's local cache of it. */
+    public String getSessionId() {
+        return sessionId;
+    }
+
     /** Blocks until the SSE stream closes or the thread is interrupted. */
     private void connectAndStream(Consumer<String> onUpdate) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()

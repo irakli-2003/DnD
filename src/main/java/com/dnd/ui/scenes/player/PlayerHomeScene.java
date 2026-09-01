@@ -1,6 +1,7 @@
 package com.dnd.ui.scenes.player;
 
 import com.dnd.data.CampaignRepositories;
+import com.dnd.data.PlayerProfileStore;
 import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.character.stats.CoreStats;
 import com.dnd.ui.SceneType;
@@ -20,10 +21,15 @@ public class PlayerHomeScene extends BaseScene {
         CampaignRepositories repos = new CampaignRepositories(
             uiSession.getSession().getCampaignContext().getPath());
         PlayerCharacter pc = repos.players().getById(uiSession.getSession().getActivePlayerCharacterId());
+        // The DM's sheet is the mechanical truth; the player's own name, portrait and
+        // description are laid over it from local storage.
+        if (pc != null && uiSession.isLoggedIn()) {
+            new PlayerProfileStore(uiSession.getCurrentUser().getUsername()).applyTo(pc);
+        }
 
         VBox root = new VBox(0);
         root.getStyleClass().add("root");
-        root.getChildren().add(backBar(SceneType.PLAYER_CHARACTER_SELECTION));
+        root.getChildren().add(backBar(SceneType.PLAYER_ONLINE_SESSION));
 
         VBox content = new VBox(20);
         content.setPadding(new Insets(20, 60, 40, 60));
