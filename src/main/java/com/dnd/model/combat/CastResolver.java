@@ -1,0 +1,389 @@
+package com.dnd.model.combat;
+
+import com.dnd.model.character.PlayerCharacter;
+import com.dnd.model.item.Item;
+import com.dnd.model.magic.Spell;
+import com.dnd.model.world.map.ActiveEffect;
+import com.dnd.model.world.map.CombatState;
+import com.dnd.model.world.map.MapObject;
+import com.dnd.model.world.map.PlayerToken;
+import com.dnd.model.world.map.TokenSupport;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Function;
+
+/**
+ * Turns "cast this spell at that square" into actual changes on the board.
+ *
+ * <p>Spells and abilities are described by two unrelated model classes with different
+ * shapes - a spell embeds its {@link Effect}s and costs mana, an ability refers to effects
+ * by id and costs nothing - so this first flattens either one into a {@link Castable} and
+ * then resolves that. The rest of the app therefore only has to know about one casting
+ * path, and the resolution rules live in one place that can be exercised without a UI.</p>
+ *
+ * <p>Nothing here knows about the grid. The caller works out who is in range and who is
+ * caught in the blast; this class decides whether the cast is legal, charges for it, and
+ * applies the consequences.</p>
+ */
+public final class CastResolver {
+
+    private CastResolver() {
+    }
+
+    /**
+     * A spell or an ability reduced to the handful of facts casting actually needs.
+     */
+    public static final class Castable {
+        private final String id;
+        private final String name;
+        private final String description;
+        private final boolean spell;
+        private final int manaCost;
+        private final double rangeFeet;
+        private final double radiusFeet;
+        private final int cooldownRounds;
+        private final List<Effect> effects;
+        private final Damage damage;
+        private final List<Item> consumables;
+
+        private Castable(String id, String name, String description, boolean spell, int manaCost,
+                         double rangeFeet, double radiusFeet, int cooldownRounds,
+                         List<Effect> effects, Damage damage, List<Item> consumables) {
+            this.id = id;
+            this.name = name;
+            this.description = description;
+            this.spell = spell;
+            this.manaCost = manaCost;
+            this.rangeFeet = rangeFeet;
+            this.radiusFeet = radiusFeet;
+            this.cooldownRounds = cooldownRounds;
+            this.effects = effects == null ? List.of() : effects;
+            this.damage = damage;
+            this.consumables = consumables == null ? List.of() : consumables;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name == null || name.isBlank() ? id : name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public boolean isSpell() {
+            return spell;
+        }
+
+        public int getManaCost() {
+            return manaCost;
+        }
+
+        public double getRangeFeet() {
+            return rangeFeet;
+        }
+
+        public double getRadiusFeet() {
+            return radiusFeet;
+        }
+
+        public int getCooldownRounds() {
+            return cooldownRounds;
+        }
+
+        public List<Effect> getEffects() {
+            return effects;
+        }
+
+        public Damage getDamage() {
+            return damage;
+        }
+
+        public List<Item> getConsumables() {
+            return consumables;
+        }
+
+        /** True when this is aimed at a patch of ground and catches everyone standing in it. */
+        public boolean isArea() {
+            return radiusFeet > 0;
+        }
+    }
+
+    /** Flattens a spell into a castable. */
+    public static Castable of(Spell spell) {
+        if (spell == null) return null;
+        return new Castable(spell.getId(), spell.getName(), spell.getDescription(), true,
+            spell.getManaCost(), spell.getRange(), spell.getRadius(), spell.getCooldownRounds(),
+            spell.getEffects(), spell.getDamage(), spell.getRequiredConsumables());
+    }
+
+    /**
+     * Flattens an ability into a castable, resolving its effect ids through the campaign's
+     * effect catalog. Ids that no longer resolve are simply skipped so a deleted effect
+     * cannot break an otherwise usable ability mid-fight.
+     */
+    public static Castable of(Ability ability, Function<String, Effect> effectLookup) {
+        if (ability == null) return null;
+        List<Effect> resolved = new ArrayList<>();
+        if (ability.getEffects() != null && effectLookup != null) {
+            for (String effectId : ability.getEffects()) {
+                Effect effect = effectId == null ? null : effectLookup.apply(effectId);
+                if (effect != null) resolved.add(effect);
+            }
+        }
+        return new Castable(ability.getId(), ability.getName(), ability.getDescription(), false,
+            0, ability.getRange(), ability.getRadius(), ability.getRecharge(),
+            resolved, null, List.of());
+    }
+
+    /** What happened when a cast was attempted. */
+    public static final class Outcome {
+        private final boolean success;
+        private final String message;
+        private final List<String> log;
+
+        private Outcome(boolean success, String message, List<String> log) {
+            this.success = success;
+            this.message = message;
+            this.log = log == null ? List.of() : log;
+        }
+
+        static Outcome refused(String reason) {
+            return new Outcome(false, reason, List.of());
+        }
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        /** One-line summary suitable for a status bar. */
+        public String getMessage() {
+            return message;
+        }
+
+        /** Blow-by-blow detail of what each target suffered. */
+        public List<String> getLog() {
+            return log;
+        }
+    }
+
+    /**
+     * Checks whether the caster could use this right now, ignoring targets and range.
+     *
+     * @return null when it is castable, otherwise the reason it is not
+     */
+    public static String blockedReason(MapObject caster, Castable action) {
+        if (caster == null || action == null) return "Nothing selected.";
+        CombatState state = TokenSupport.combatOf(caster);
+        if (state.isDead()) return TokenSupport.nameOf(caster) + " is dead.";
+        int cooldown = state.cooldownFor(action.getId());
+        if (cooldown > 0) {
+            return action.getName() + " recharges in " + cooldown + (cooldown == 1 ? " round." : " rounds.");
+        }
+        if (action.getManaCost() > state.getCurrentMana()) {
+            return "Not enough mana - needs " + action.getManaCost()
+                + ", has " + state.getCurrentMana() + ".";
+        }
+        String missing = missingConsumable(caster, action);
+        if (missing != null) return "Missing " + missing + ".";
+        return null;
+    }
+
+    /**
+     * Resolves a cast against an already-chosen set of targets.
+     *
+     * @param caster        who is casting
+     * @param action        the flattened spell or ability
+     * @param targets       every creature caught by it; empty is allowed for a cast at empty ground
+     * @param distanceFeet  how far the aim point is from the caster, for the range check
+     */
+    public static Outcome cast(MapObject caster, Castable action, List<MapObject> targets, double distanceFeet) {
+        String blocked = blockedReason(caster, action);
+        if (blocked != null) return Outcome.refused(blocked);
+
+        double range = action.getRangeFeet();
+        // A range of zero means touch or self, which still has to be adjacent, not anywhere.
+        double allowed = range > 0 ? range : 5;
+        if (distanceFeet > allowed + 0.001) {
+            return Outcome.refused(action.getName() + " reaches " + (int) allowed
+                + " ft but the target is " + (int) Math.round(distanceFeet) + " ft away.");
+        }
+
+        CombatState casterState = TokenSupport.combatOf(caster);
+        List<String> log = new ArrayList<>();
+
+        if (action.getManaCost() > 0) {
+            casterState.setCurrentMana(casterState.getCurrentMana() - action.getManaCost());
+            log.add(TokenSupport.nameOf(caster) + " spends " + action.getManaCost() + " mana.");
+        }
+        for (String consumed : consume(caster, action)) {
+            log.add(TokenSupport.nameOf(caster) + " uses up " + consumed + ".");
+        }
+
+        List<MapObject> hit = targets == null ? List.of() : targets;
+        for (MapObject target : hit) {
+            if (target == null) continue;
+            log.addAll(applyTo(caster, target, action));
+        }
+
+        if (action.getCooldownRounds() > 0) {
+            casterState.startCooldown(action.getId(), action.getCooldownRounds());
+        }
+
+        String summary = TokenSupport.nameOf(caster) + " casts " + action.getName()
+            + (hit.isEmpty() ? " at empty ground." : " on " + describeTargets(hit) + ".");
+        return new Outcome(true, summary, log);
+    }
+
+    /** Applies one castable's damage, healing and lasting effects to a single target. */
+    private static List<String> applyTo(MapObject caster, MapObject target, Castable action) {
+        List<String> log = new ArrayList<>();
+        CombatState state = TokenSupport.combatOf(target);
+        String targetName = TokenSupport.nameOf(target);
+        String sourceName = TokenSupport.nameOf(caster) + "'s " + action.getName();
+
+        int directDamage = damageValue(action.getDamage());
+        if (directDamage > 0) {
+            state.applyDamage(directDamage);
+            log.add(targetName + " takes " + directDamage + " damage.");
+        }
+
+        for (Effect effect : action.getEffects()) {
+            if (effect == null) continue;
+            if (effect.isLasting()) {
+                ActiveEffect active = new ActiveEffect(
+                    effect.getId(),
+                    effect.getName() == null || effect.getName().isBlank() ? action.getName() : effect.getName(),
+                    effect.getDurationRounds(),
+                    effect.isDamaging() ? effect.getDamageAmount() : 0,
+                    effect.isHealing() ? effect.getHealingAmount() : 0,
+                    sourceName);
+                active.setDescription(effect.getDescription());
+                state.addEffect(active);
+                log.add(targetName + " is affected by " + active.getName()
+                    + " for " + effect.getDurationRounds()
+                    + (effect.getDurationRounds() == 1 ? " round." : " rounds."));
+                continue;
+            }
+            // Instant effects land once, right now, and leave nothing behind.
+            if (effect.isDamaging() && effect.getDamageAmount() > 0) {
+                state.applyDamage(effect.getDamageAmount());
+                log.add(targetName + " takes " + effect.getDamageAmount() + " from " + displayName(effect, action) + ".");
+            }
+            if (effect.isHealing() && effect.getHealingAmount() > 0) {
+                state.heal(effect.getHealingAmount());
+                log.add(targetName + " recovers " + effect.getHealingAmount() + " from " + displayName(effect, action) + ".");
+            }
+        }
+
+        if (state.getCurrentHitPoints() <= 0 && !state.isDead()) {
+            log.add(targetName + " falls.");
+        }
+        return log;
+    }
+
+    private static String displayName(Effect effect, Castable action) {
+        return effect.getName() == null || effect.getName().isBlank() ? action.getName() : effect.getName();
+    }
+
+    /**
+     * Rolls a spell's damage dice.
+     *
+     * <p>Damage carries a single {@link com.dnd.model.world.Dice}, so this rolls it once
+     * rather than inventing a die count the model does not record.</p>
+     */
+    private static int damageValue(Damage damage) {
+        if (damage == null || damage.getAmount() == null) return 0;
+        int sides = damage.getAmount().getSides();
+        if (sides <= 0) return 0;
+        return 1 + (int) (Math.random() * sides);
+    }
+
+    // ── Consumables ─────────────────────────────────────────────────────────
+
+    /**
+     * Name of the first required consumable the caster does not have, or null when the
+     * component pouch is in order. Only player characters carry an inventory the app can
+     * check, so anyone else is assumed to have what they need.
+     */
+    private static String missingConsumable(MapObject caster, Castable action) {
+        if (action.getConsumables().isEmpty()) return null;
+        PlayerCharacter character = characterOf(caster);
+        if (character == null || character.getItems() == null) return null;
+        List<String> carried = new ArrayList<>();
+        for (PlayerCharacter.PlayerItem item : character.getItems()) {
+            if (item != null && item.getItemId() != null) carried.add(normalize(item.getItemId()));
+        }
+        for (Item required : action.getConsumables()) {
+            if (required == null) continue;
+            String key = requiredKey(required);
+            if (key == null) continue;
+            if (!carried.remove(key)) {
+                return required.getName() == null ? required.getId() : required.getName();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Removes one of each required consumable from the caster's pack.
+     *
+     * @return the names of what was used up, for the log
+     */
+    private static List<String> consume(MapObject caster, Castable action) {
+        List<String> used = new ArrayList<>();
+        if (action.getConsumables().isEmpty()) return used;
+        PlayerCharacter character = characterOf(caster);
+        if (character == null || character.getItems() == null) return used;
+        for (Item required : action.getConsumables()) {
+            if (required == null) continue;
+            String key = requiredKey(required);
+            if (key == null) continue;
+            Iterator<PlayerCharacter.PlayerItem> iterator = character.getItems().iterator();
+            while (iterator.hasNext()) {
+                PlayerCharacter.PlayerItem carried = iterator.next();
+                if (carried != null && key.equals(normalize(carried.getItemId()))) {
+                    iterator.remove();
+                    used.add(required.getName() == null ? required.getId() : required.getName());
+                    break;
+                }
+            }
+        }
+        return used;
+    }
+
+    /**
+     * Spells store required consumables as whole {@link Item} objects while characters carry
+     * item <em>ids</em>, so the two are matched on id where the spell has one and on name
+     * otherwise - hand-written spell components often only name what they need.
+     */
+    private static String requiredKey(Item item) {
+        if (item.getId() != null && !item.getId().isBlank()) return normalize(item.getId());
+        if (item.getName() != null && !item.getName().isBlank()) return normalize(item.getName());
+        return null;
+    }
+
+    private static String normalize(String value) {
+        return value == null ? null : value.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private static PlayerCharacter characterOf(MapObject token) {
+        return token instanceof PlayerToken player ? player.getCharacter() : null;
+    }
+
+    private static String describeTargets(List<MapObject> targets) {
+        if (targets.size() == 1) return TokenSupport.nameOf(targets.get(0));
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < targets.size(); i++) {
+            if (i > 0) builder.append(i == targets.size() - 1 ? " and " : ", ");
+            builder.append(TokenSupport.nameOf(targets.get(i)));
+        }
+        return builder.toString();
+    }
+}

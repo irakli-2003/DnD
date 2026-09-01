@@ -1,7 +1,10 @@
 package com.dnd.model.world.map;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The mutable, per-token state of a battle: hit points, mana, money, initiative and
@@ -305,6 +308,111 @@ public class CombatState {
     /** Called when the turn passes to this creature, giving it a fresh movement allowance. */
     public void resetMovement() {
         movementUsed = 0;
+    }
+
+    // ── Effects and cooldowns ───────────────────────────────────────────────
+
+    /**
+     * Effects currently running on this creature. Kept on the combat state rather than on
+     * the catalog entry so two orcs hit by the same spell can burn out independently.
+     */
+    private List<ActiveEffect> activeEffects = new ArrayList<>();
+
+    /**
+     * Rounds left before each spell or ability can be used again, keyed by its id. Entries
+     * are removed once they reach zero, so an empty map means everything is ready.
+     */
+    private Map<String, Integer> cooldowns = new LinkedHashMap<>();
+
+    public List<ActiveEffect> getActiveEffects() {
+        if (activeEffects == null) activeEffects = new ArrayList<>();
+        return activeEffects;
+    }
+
+    public void setActiveEffects(List<ActiveEffect> activeEffects) {
+        this.activeEffects = activeEffects != null ? activeEffects : new ArrayList<>();
+    }
+
+    public Map<String, Integer> getCooldowns() {
+        if (cooldowns == null) cooldowns = new LinkedHashMap<>();
+        return cooldowns;
+    }
+
+    public void setCooldowns(Map<String, Integer> cooldowns) {
+        this.cooldowns = cooldowns != null ? cooldowns : new LinkedHashMap<>();
+    }
+
+    /**
+     * Adds an effect, refreshing the duration instead of stacking a second copy when the
+     * same effect is already running - being frozen twice makes it last longer, not tick
+     * twice as hard.
+     */
+    public void addEffect(ActiveEffect effect) {
+        if (effect == null || effect.isExpired()) return;
+        for (ActiveEffect existing : getActiveEffects()) {
+            if (existing.getEffectId() != null && existing.getEffectId().equals(effect.getEffectId())) {
+                existing.setRemainingRounds(Math.max(existing.getRemainingRounds(), effect.getRemainingRounds()));
+                return;
+            }
+        }
+        getActiveEffects().add(effect);
+    }
+
+    /** Rounds left on a spell or ability, or zero when it is ready to use. */
+    public int cooldownFor(String actionId) {
+        Integer left = getCooldowns().get(actionId);
+        return left == null ? 0 : Math.max(0, left);
+    }
+
+    public boolean isOnCooldown(String actionId) {
+        return cooldownFor(actionId) > 0;
+    }
+
+    /** Puts a spell or ability out of action for {@code rounds}; zero rounds is a no-op. */
+    public void startCooldown(String actionId, int rounds) {
+        if (actionId == null || rounds <= 0) return;
+        getCooldowns().put(actionId, rounds);
+    }
+
+    /** Counts every cooldown down by one round, dropping the ones that have recovered. */
+    public void tickCooldowns() {
+        Iterator<Map.Entry<String, Integer>> iterator = getCooldowns().entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            int left = entry.getValue() == null ? 0 : entry.getValue() - 1;
+            if (left <= 0) {
+                iterator.remove();
+            } else {
+                entry.setValue(left);
+            }
+        }
+    }
+
+    /**
+     * Runs one round of every active effect: applies its per-round damage or healing, then
+     * counts it down and drops the ones that have worn off.
+     *
+     * @return a human-readable line per effect that did something, for the DM's log
+     */
+    public List<String> tickEffects(String bearerName) {
+        List<String> log = new ArrayList<>();
+        Iterator<ActiveEffect> iterator = getActiveEffects().iterator();
+        while (iterator.hasNext()) {
+            ActiveEffect effect = iterator.next();
+            if (effect.getDamagePerRound() > 0) {
+                applyDamage(effect.getDamagePerRound());
+                log.add(bearerName + " takes " + effect.getDamagePerRound() + " from " + effect.getName() + ".");
+            }
+            if (effect.getHealingPerRound() > 0) {
+                heal(effect.getHealingPerRound());
+                log.add(bearerName + " recovers " + effect.getHealingPerRound() + " from " + effect.getName() + ".");
+            }
+            if (effect.tick()) {
+                iterator.remove();
+                log.add(effect.getName() + " wears off " + bearerName + ".");
+            }
+        }
+        return log;
     }
 
     /** Fraction of max hit points remaining, in 0..1, for drawing health bars. */

@@ -108,12 +108,37 @@ public class InitiativeTracker {
             if (index <= start) round++;
             MapObject candidate = roster.get(index);
             if (alive(candidate)) {
-                // A fresh turn means a fresh movement allowance.
-                TokenSupport.combatOf(candidate).resetMovement();
+                beginTurn(candidate);
                 return current = candidate;
             }
         }
         return current = null;
+    }
+
+    /**
+     * Everything that happens the moment a creature's turn comes round: movement is
+     * refreshed, lingering effects tick and possibly wear off, and recharging spells and
+     * abilities come one round closer to being usable.
+     *
+     * <p>Effects and cooldowns are counted per the bearer's own turn rather than per round
+     * of the battle, which is what the table expects - "frost for 3 turns" means the frozen
+     * creature suffers three of <em>its</em> turns, no matter where it sits in the order.</p>
+     */
+    private void beginTurn(MapObject token) {
+        CombatState state = TokenSupport.combatOf(token);
+        state.resetMovement();
+        lastTurnLog = state.tickEffects(TokenSupport.nameOf(token));
+        state.tickCooldowns();
+    }
+
+    private List<String> lastTurnLog = new ArrayList<>();
+
+    /**
+     * What the effects running on the current combatant did as its turn began - damage
+     * taken, healing received, effects that wore off. Empty when nothing happened.
+     */
+    public List<String> lastTurnLog() {
+        return List.copyOf(lastTurnLog);
     }
 
     /**

@@ -71,6 +71,20 @@ public class Ability implements Printable {
         this.recharge = recharge;
     }
 
+    /**
+     * Blast radius in feet. Zero - the default, and what every ability written before this
+     * existed has - means the ability strikes a single creature rather than an area.
+     */
+    private double radius;
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = Math.max(0, radius);
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;

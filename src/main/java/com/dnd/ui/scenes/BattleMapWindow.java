@@ -2,6 +2,7 @@ package com.dnd.ui.scenes;
 
 import com.dnd.data.CampaignRepositories;
 import com.dnd.model.combat.Ability;
+import com.dnd.model.combat.CastResolver;
 import com.dnd.model.combat.InitiativeTracker;
 import com.dnd.model.item.Item;
 import com.dnd.model.magic.Spell;
@@ -74,6 +75,11 @@ public class BattleMapWindow {
     /** Where the token being dragged started, so its movement cost can be measured. */
     private int dragOriginX = -1;
     private int dragOriginY = -1;
+
+    /** The spell or ability the DM has picked up and is about to aim, if any. */
+    private CastResolver.Castable armedCast;
+    /** Who is casting {@link #armedCast}. */
+    private MapObject armedCaster;
 
     public BattleMapWindow(BaseScene owner, UiSession uiSession, String mapId) {
         this.owner = owner;
@@ -163,6 +169,10 @@ public class BattleMapWindow {
                     stopTerrainPainting();
                     return;
                 }
+                if (armedCast != null) {
+                    cancelCast();
+                    return;
+                }
                 decorations.selected = null;
                 decorations.reachable = null;
                 showRoster();
@@ -208,8 +218,15 @@ public class BattleMapWindow {
                 this::openInitiativeEntryDialog),
             tool("Next Turn ▸", "Advance to the next living combatant", () -> {
                 MapObject next = initiative.next();
+                dirty = true;
                 refreshAll();
-                status(next == null ? "Nothing left standing." : "Now acting: " + TokenSupport.nameOf(next));
+                if (next == null) {
+                    status("Nothing left standing.");
+                } else {
+                    List<String> ticked = initiative.lastTurnLog();
+                    logLines("Now acting: " + TokenSupport.nameOf(next)
+                        + (ticked.isEmpty() ? "" : "  ·  " + ticked.get(0)), ticked);
+                }
             }),
             roundLabel,
             new Separator(),
@@ -278,6 +295,10 @@ public class BattleMapWindow {
             }
             if (paintTerrain != null) {
                 paintTerrainAt(cx, cy);
+                return;
+            }
+            if (armedCast != null) {
+                resolveCastAt(cx, cy);
                 return;
             }
 
@@ -756,6 +777,11 @@ public class BattleMapWindow {
         panel.getChildren().add(buildVitalsEditor(token, state));
         panel.getChildren().add(buildDeathSaveControls(token, state));
 
+        if (!state.getActiveEffects().isEmpty()) {
+            panel.getChildren().addAll(new Separator(), owner.sectionLabel("Active Effects"));
+            panel.getChildren().add(buildActiveEffectList(state));
+        }
+
         panel.getChildren().addAll(new Separator(), owner.sectionLabel("Movement"));
         panel.getChildren().add(buildMovementEditor(token, state));
 
@@ -980,38 +1006,188 @@ public class BattleMapWindow {
     }
 
     /**
-     * Spells and abilities preview their reach on hover rather than on click, so the DM can
-     * sweep the list and see each option's coverage without committing to anything.
+     * Spells and abilities preview their reach on hover so the DM can sweep the list and see
+     * each option's coverage without committing, and arm themselves on click so the next
+     * click on the map actually casts.
      */
     private Node buildSpellList(MapObject token, List<Spell> spells) {
         VBox box = new VBox(2);
+        CombatState state = TokenSupport.combatOf(token);
         for (Spell spell : spells) {
-            Label row = new Label(spell.getName() + "  ·  lvl " + spell.getLevel()
+            String label = spell.getName() + "  ·  lvl " + spell.getLevel()
                 + (spell.getManaCost() > 0 ? "  ·  " + spell.getManaCost() + " mana" : "")
-                + (spell.getRange() > 0 ? "  ·  " + spell.getRange() + " ft" : ""));
-            row.getStyleClass().add("hover-row");
-            row.setMaxWidth(Double.MAX_VALUE);
-            row.setWrapText(true);
-            if (spell.getDescription() != null) row.setTooltip(new Tooltip(spell.getDescription()));
-            row.setOnMouseEntered(e -> previewRange(token, spell.getRange() / FEET_PER_CELL,
-                spell.getRadius() / FEET_PER_CELL));
-            row.setOnMouseExited(e -> clearRange());
-            box.getChildren().add(row);
+                + (spell.getRange() > 0 ? "  ·  " + spell.getRange() + " ft" : "")
+                + (spell.getRadius() > 0 ? "  ·  " + spell.getRadius() + " ft blast" : "");
+            box.getChildren().add(castRow(token, state, CastResolver.of(spell), label, spell.getDescription()));
         }
         return box;
     }
 
     private Node buildAbilityList(MapObject token, List<Ability> abilities) {
         VBox box = new VBox(2);
+        CombatState state = TokenSupport.combatOf(token);
         for (Ability ability : abilities) {
-            Label row = new Label(ability.getName()
-                + (ability.getRange() > 0 ? "  ·  " + (int) ability.getRange() + " ft" : ""));
-            row.getStyleClass().add("hover-row");
-            row.setMaxWidth(Double.MAX_VALUE);
+            String label = ability.getName()
+                + (ability.getRange() > 0 ? "  ·  " + (int) ability.getRange() + " ft" : "")
+                + (ability.getRadius() > 0 ? "  ·  " + (int) ability.getRadius() + " ft blast" : "");
+            CastResolver.Castable castable = CastResolver.of(ability, id -> repos.effects().getById(id));
+            box.getChildren().add(castRow(token, state, castable, label, ability.getDescription()));
+        }
+        return box;
+    }
+
+    /**
+     * One clickable spell or ability row: hover previews its reach, click arms it, and a
+     * recharging entry says how long is left instead of pretending to be usable.
+     */
+    private Node castRow(MapObject token, CombatState state, CastResolver.Castable action,
+                         String label, String description) {
+        int cooldown = action == null ? 0 : state.cooldownFor(action.getId());
+        Label row = new Label(label + (cooldown > 0 ? "  ·  recharging: " + cooldown + "" : ""));
+        row.getStyleClass().add(cooldown > 0 ? "muted-label" : "hover-row");
+        row.setMaxWidth(Double.MAX_VALUE);
+        row.setWrapText(true);
+        if (action == null) return row;
+
+        boolean armed = armedCast != null && armedCaster == token
+            && action.getId() != null && action.getId().equals(armedCast.getId());
+        if (armed) row.getStyleClass().add("selected-row");
+
+        String blocked = CastResolver.blockedReason(token, action);
+        String tip = description == null || description.isBlank() ? "" : description + "\n\n";
+        row.setTooltip(new Tooltip(tip + (blocked != null ? blocked : "Click to aim, then click a target.")));
+
+        row.setOnMouseEntered(e -> previewRange(token, action.getRangeFeet() / FEET_PER_CELL,
+            action.getRadiusFeet() / FEET_PER_CELL));
+        row.setOnMouseExited(e -> {
+            // Keep the reach on screen while the DM is aiming; it is the aiming guide.
+            if (armedCast == null) clearRange();
+        });
+        row.setOnMouseClicked(e -> armCast(token, action));
+        return row;
+    }
+
+    // ── Casting ─────────────────────────────────────────────────────────────
+
+    /**
+     * Picks up a spell or ability so the next click on the map casts it, provided the caster
+     * can actually afford it right now.
+     */
+    private void armCast(MapObject caster, CastResolver.Castable action) {
+        String blocked = CastResolver.blockedReason(caster, action);
+        if (blocked != null) {
+            status(blocked);
+            return;
+        }
+        armedCaster = caster;
+        armedCast = action;
+        previewRange(caster, action.getRangeFeet() / FEET_PER_CELL, action.getRadiusFeet() / FEET_PER_CELL);
+        status("Aiming " + action.getName() + " - click "
+            + (action.isArea() ? "the centre of the blast" : "a target")
+            + ", or press Esc to cancel.");
+        showDetail(caster);
+    }
+
+    private void cancelCast() {
+        armedCast = null;
+        armedCaster = null;
+        clearRange();
+        status("Cast cancelled.");
+        if (detailToken != null) showDetail(detailToken);
+    }
+
+    /**
+     * Resolves the armed cast against the square the DM clicked: the single creature
+     * standing there for a targeted spell, or everything inside the blast for an area one.
+     */
+    private void resolveCastAt(int cx, int cy) {
+        MapObject caster = armedCaster;
+        CastResolver.Castable action = armedCast;
+        if (caster == null || action == null) return;
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) {
+            status("That is off the map.");
+            return;
+        }
+
+        List<MapObject> targets = new ArrayList<>();
+        if (action.isArea()) {
+            targets.addAll(creaturesWithin(cx, cy, action.getRadiusFeet() / FEET_PER_CELL));
+            if (targets.isEmpty()) status("Nothing is caught in the blast.");
+        } else {
+            MapObject target = tokenAtCell(cx, cy);
+            if (target == null || !TokenSupport.isCreature(target)) {
+                status(action.getName() + " needs a creature to target.");
+                return;
+            }
+            targets.add(target);
+        }
+
+        double distanceFeet = distanceCells(caster, cx, cy) * FEET_PER_CELL;
+        CastResolver.Outcome outcome = CastResolver.cast(caster, action, targets, distanceFeet);
+        if (!outcome.isSuccess()) {
+            status(outcome.getMessage());
+            return;
+        }
+
+        armedCast = null;
+        armedCaster = null;
+        clearRange();
+        dirty = true;
+        refreshAll();
+        showDetail(caster);
+        logLines(outcome.getMessage(), outcome.getLog());
+    }
+
+    /** Every creature standing within {@code radiusCells} of the aim point, blast centre included. */
+    private List<MapObject> creaturesWithin(int cx, int cy, double radiusCells) {
+        List<MapObject> found = new ArrayList<>();
+        int reach = (int) Math.floor(radiusCells);
+        for (int y = Math.max(0, cy - reach); y <= Math.min(map.getHeight() - 1, cy + reach); y++) {
+            for (int x = Math.max(0, cx - reach); x <= Math.min(map.getWidth() - 1, cx + reach); x++) {
+                if (Math.hypot(x - cx, y - cy) > radiusCells + 0.001) continue;
+                for (MapObject occupant : map.getCell(x, y).getOccupants()) {
+                    if (TokenSupport.isCreature(occupant) && !found.contains(occupant)) found.add(occupant);
+                }
+            }
+        }
+        return found;
+    }
+
+    /** Chebyshev distance in squares, matching how movement treats diagonals. */
+    private double distanceCells(MapObject from, int cx, int cy) {
+        Position at = from.getPosition();
+        if (at == null) return 0;
+        return Math.max(Math.abs(at.getX() - cx), Math.abs(at.getY() - cy));
+    }
+
+    private MapObject tokenAtCell(int cx, int cy) {
+        List<MapObject> occupants = map.getCell(cx, cy).getOccupants();
+        return occupants.isEmpty() ? null : occupants.get(occupants.size() - 1);
+    }
+
+    /** Puts a summary in the status bar and the detail behind a tooltip on it. */
+    private void logLines(String summary, List<String> detail) {
+        status(summary);
+        if (statusLabel != null && !detail.isEmpty()) {
+            statusLabel.setTooltip(new Tooltip(String.join("\n", detail)));
+        }
+    }
+
+    /**
+     * The effects currently running on a creature, each with the rounds it has left, so the
+     * DM can see at a glance what is still burning, freezing or blessing.
+     */
+    private Node buildActiveEffectList(CombatState state) {
+        VBox box = new VBox(2);
+        for (ActiveEffect effect : state.getActiveEffects()) {
+            Label row = new Label("• " + effect.label()
+                + (effect.getDamagePerRound() > 0 ? "  ·  " + effect.getDamagePerRound() + "/round" : "")
+                + (effect.getHealingPerRound() > 0 ? "  ·  heals " + effect.getHealingPerRound() + "/round" : ""));
+            row.getStyleClass().add("body-label");
             row.setWrapText(true);
-            if (ability.getDescription() != null) row.setTooltip(new Tooltip(ability.getDescription()));
-            row.setOnMouseEntered(e -> previewRange(token, ability.getRange() / FEET_PER_CELL, 0));
-            row.setOnMouseExited(e -> clearRange());
+            String tip = effect.getDescription() == null || effect.getDescription().isBlank()
+                ? effect.getSource() : effect.getDescription() + "\n\nFrom " + effect.getSource();
+            if (tip != null) row.setTooltip(new Tooltip(tip));
             box.getChildren().add(row);
         }
         return box;

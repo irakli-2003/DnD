@@ -428,3 +428,19 @@
     -fx-background-color: #2a2a4a;
     -fx-text-fill: #e8c46a;
 }
+
+/* A spell or ability that is recharging: still readable, but clearly not available. */
+.muted-label {
+    -fx-text-fill: #6f6a5c;
+    -fx-font-size: 13px;
+    -fx-padding: 3 6 3 6;
+    -fx-wrap-text: true;
+}
+
+/* The spell or ability the DM has picked up and is currently aiming. */
+.selected-row {
+    -fx-background-color: #4a3a12;
+    -fx-text-fill: #ffd97a;
+    -fx-border-color: #e8c46a;
+    -fx-border-width: 0 0 0 3;
+}

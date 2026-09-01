@@ -172,6 +172,25 @@ public class Spell implements Printable {
         this.damage = damage;
     }
 
+    /**
+     * Rounds before this spell can be cast again. Zero means it is always available, which
+     * keeps every spell written before cooldowns existed behaving exactly as it did.
+     */
+    private int cooldownRounds;
+
+    public int getCooldownRounds() {
+        return cooldownRounds;
+    }
+
+    public void setCooldownRounds(int cooldownRounds) {
+        this.cooldownRounds = Math.max(0, cooldownRounds);
+    }
+
+    /** True when this spell is thrown at a patch of ground rather than at one creature. */
+    public boolean isAreaSpell() {
+        return radius > 0;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

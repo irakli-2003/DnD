@@ -80,6 +80,26 @@ public class Effect implements Printable {
         this.healingAmount = healingAmount;
     }
 
+    /**
+     * How many rounds this effect lingers once applied. Zero means it resolves immediately
+     * and leaves nothing behind; anything higher makes the damage and healing amounts
+     * per-round figures that tick until the effect wears off.
+     */
+    private int durationRounds;
+
+    public int getDurationRounds() {
+        return durationRounds;
+    }
+
+    public void setDurationRounds(int durationRounds) {
+        this.durationRounds = Math.max(0, durationRounds);
+    }
+
+    /** True when this effect lasts beyond the moment it is applied. */
+    public boolean isLasting() {
+        return durationRounds > 0;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

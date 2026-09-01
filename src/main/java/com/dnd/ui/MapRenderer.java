@@ -334,6 +334,28 @@ public class MapRenderer {
         }
         if (state.isDead()) drawDeathCross(gc, bx, by, size);
         else if (state.isDowned()) drawDeathSaveCount(gc, bx, by, size, state.remainingDeathSaves());
+        if (!state.getActiveEffects().isEmpty()) drawEffectPips(gc, cx, cy, state);
+    }
+
+    /**
+     * A row of small violet pips along the top of the square, one per lingering effect.
+     *
+     * <p>Effects are the easiest thing in a fight to forget about, and the DM should not
+     * have to click each token to remember who is still burning or frozen. The count is
+     * capped so a heavily-afflicted creature does not overflow its square; the detail panel
+     * remains the place to read what the effects actually are.</p>
+     */
+    private void drawEffectPips(GraphicsContext gc, int cx, int cy, CombatState state) {
+        int count = Math.min(state.getActiveEffects().size(), 5);
+        double pip = Math.max(4, cellSize * 0.11);
+        double y = cy * cellSize + 3;
+        for (int i = 0; i < count; i++) {
+            double x = cx * cellSize + 4 + i * (pip + 2);
+            gc.setFill(Color.web("#000000aa"));
+            gc.fillOval(x - 1, y - 1, pip + 2, pip + 2);
+            gc.setFill(Color.web("#b07de8"));
+            gc.fillOval(x, y, pip, pip);
+        }
     }
 
     private void drawHealthBar(GraphicsContext gc, int cx, int cy, CombatState state) {
