@@ -9,6 +9,7 @@ import com.dnd.data.CampaignRepositories;
 import com.dnd.model.character.CharacterRace;
 import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.combat.Damage;
+import com.dnd.model.combat.DiceRoll;
 import com.dnd.model.combat.Effect;
 import com.dnd.model.magic.Spell;
 import com.dnd.model.world.Dice;
@@ -290,10 +291,15 @@ public class PlayerMapPage implements Page {
         console.println(displayName(pc) + " casts " + spell.getName() + " at (" + tx + ", " + ty + ")!");
 
         Damage damage = spell.getDamage();
-        if (damage != null && damage.getAmount() != null) {
-            Dice dice = damage.getAmount();
-            int sides = dice.getSides();
-            int rolled = sides > 0 ? 1 + RANDOM.nextInt(sides) : 0;
+        if (damage != null && damage.hasDice()) {
+            int rolled = 0;
+            for (DiceRoll roll : damage.getDice()) {
+                Dice dice = repos.dice().getById(roll.getDiceId());
+                int sides = dice != null ? dice.getSides() : 0;
+                for (int i = 0; i < roll.getCount(); i++) {
+                    rolled += sides > 0 ? 1 + RANDOM.nextInt(sides) : 0;
+                }
+            }
             String damageType = damage.getTypeId() != null ? damage.getTypeId() : "damage";
             console.println("Deals " + rolled + " " + damageType + " damage.");
         }

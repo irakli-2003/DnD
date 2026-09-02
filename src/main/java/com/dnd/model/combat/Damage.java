@@ -4,28 +4,38 @@ import com.dnd.model.interfaces.Printable;
 import com.dnd.model.item.armors.Armor;
 import com.dnd.model.item.armors.ArmorMaterial;
 import com.dnd.model.world.Dice;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
+/**
+ * How much a spell hurts, described as the dice the DM should physically roll rather than a
+ * flat number - e.g. "2d6 fire" instead of "7 fire". {@link CastResolver} asks the DM for the
+ * actual rolled total when this is cast rather than simulating the roll itself, keeping the
+ * dice-rolling part of the game at the table where the fun is.
+ */
 public class Damage implements Printable {
-    private Dice amount;
+    private List<DiceRoll> dice = new ArrayList<>();
     private String typeId;
 
     public Damage() {
     }
 
-    public Damage(Dice amount) {
-        this.amount = amount;
-    }
-
-    public Damage(Dice amount, String typeId) {
-        this.amount = amount;
+    public Damage(List<DiceRoll> dice, String typeId) {
+        this.dice = dice == null ? new ArrayList<>() : new ArrayList<>(dice);
         this.typeId = typeId;
     }
 
-    public DamageResolution resolveAgainst(Armor armor, int attackRoll) {
+    /** Convenience for a single die (e.g. one d6) - equivalent to a one-entry dice list. */
+    public Damage(Dice singleDie, String typeId) {
+        this.dice = singleDie == null ? new ArrayList<>() : new ArrayList<>(List.of(new DiceRoll(singleDie.getId(), 1)));
+        this.typeId = typeId;
+    }
+
+    public DamageResolution resolveAgainst(Armor armor, int attackRoll, int rolledAmount) {
         ArmorMaterial material = armor == null ? ArmorMaterial.NONE : armor.getMaterial();
         String normalizedType = typeId == null ? "" : typeId.trim().toLowerCase(Locale.ROOT);
 
@@ -157,18 +167,34 @@ public class Damage implements Printable {
                 break;
         }
 
-        int baseAmount = getAmountValue();
+        int baseAmount = rolledAmount;
         int damageToTarget = (int) Math.round(baseAmount * targetMultiplier);
         int damageToArmor = (int) Math.round(baseAmount * armorMultiplier);
         return new DamageResolution(damageToTarget, damageToArmor, triggeredEffects);
     }
 
-    public Dice getAmount() {
-        return amount;
+    public List<DiceRoll> getDice() {
+        return dice;
     }
 
-    public void setAmount(Dice amount) {
-        this.amount = amount;
+    public void setDice(List<DiceRoll> dice) {
+        this.dice = dice == null ? new ArrayList<>() : dice;
+    }
+
+    public boolean hasDice() {
+        return !dice.isEmpty();
+    }
+
+    /**
+     * Reads the pre-rework shape ({@code "amount": {"id": "d6", ...}}, a single die with no
+     * count) so campaigns written before dice became a list keep loading. The next save of
+     * whatever entity owns this migrates it to the {@code dice} list permanently - there is no
+     * corresponding getter, so this never appears as a second, confusing field in the DM's form.
+     */
+    public void setAmount(JsonNode legacyAmount) {
+        if (legacyAmount != null && legacyAmount.isObject() && legacyAmount.hasNonNull("id")) {
+            dice = new ArrayList<>(List.of(new DiceRoll(legacyAmount.get("id").asText(), 1)));
+        }
     }
 
     public String getTypeId() {
@@ -179,13 +205,22 @@ public class Damage implements Printable {
         this.typeId = typeId;
     }
 
-    @Override
-    public String toString() {
-        return (amount != null ? amount.toString() : "0") + " " + (typeId != null ? typeId : "damage");
+    /** e.g. "2d6 + 1d4", resolving each entry's die label through the campaign's dice catalogue. */
+    public String formula(java.util.function.Function<String, Dice> diceLookup) {
+        if (dice.isEmpty()) return "";
+        return dice.stream()
+            .map(roll -> {
+                Dice die = diceLookup == null || roll.getDiceId() == null ? null : diceLookup.apply(roll.getDiceId());
+                String label = die != null ? die.toString() : roll.getDiceId();
+                return roll.getCount() + (label == null ? "" : label);
+            })
+            .collect(Collectors.joining(" + "));
     }
 
-    private int getAmountValue() {
-        return amount == null ? 0 : amount.getSides();
+    @Override
+    public String toString() {
+        String rolled = dice.isEmpty() ? "0" : dice.stream().map(DiceRoll::toString).collect(Collectors.joining(" + "));
+        return rolled + " " + (typeId != null ? typeId : "damage");
     }
 
     public static class DamageResolution {

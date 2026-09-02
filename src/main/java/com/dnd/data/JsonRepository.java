@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -45,7 +46,31 @@ public class JsonRepository<T, W> {
 
     public List<T> list() {
         W wrapper = readWrapper();
-        return new ArrayList<>(listGetter.apply(wrapper));
+        List<T> items = new ArrayList<>(listGetter.apply(wrapper));
+        items.sort(Comparator.comparing(JsonRepository::displayLabel, String.CASE_INSENSITIVE_ORDER));
+        return items;
+    }
+
+    /**
+     * Every catalogue entity's natural sort key: its display name where available, its
+     * {@code toString()} otherwise. Sorting every read here - the single choke point every
+     * list, dropdown and card row in the app reads through - means the whole app is always
+     * alphabetical without each screen having to remember to sort it itself.
+     */
+    private static String displayLabel(Object entity) {
+        if (entity == null) {
+            return "";
+        }
+        try {
+            Object name = entity.getClass().getMethod("getName").invoke(entity);
+            if (name != null && !name.toString().isBlank()) {
+                return name.toString();
+            }
+        } catch (ReflectiveOperationException ignored) {
+            // no getName() (or it returned nothing usable) - fall back to toString() below.
+        }
+        String text = entity.toString();
+        return text == null ? "" : text;
     }
 
     public T getById(String id) {

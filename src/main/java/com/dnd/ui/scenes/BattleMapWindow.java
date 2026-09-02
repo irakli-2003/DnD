@@ -1195,8 +1195,18 @@ public class BattleMapWindow {
             targets.add(target);
         }
 
+        int rolledDamage = 0;
+        if (CastResolver.needsDamageRoll(action)) {
+            Integer entered = promptRolledDamage(action);
+            if (entered == null) {
+                status("Cast cancelled.");
+                return;
+            }
+            rolledDamage = entered;
+        }
+
         double distanceFeet = distanceCells(caster, cx, cy) * FEET_PER_CELL;
-        CastResolver.Outcome outcome = CastResolver.cast(caster, action, targets, distanceFeet);
+        CastResolver.Outcome outcome = CastResolver.cast(caster, action, targets, distanceFeet, rolledDamage);
         if (!outcome.isSuccess()) {
             status(outcome.getMessage());
             return;
@@ -1209,6 +1219,31 @@ public class BattleMapWindow {
         refreshAll();
         showDetail(caster);
         logLines(outcome.getMessage(), outcome.getLog());
+    }
+
+    /**
+     * Asks the DM for the damage they actually rolled on the table for this cast (one total,
+     * applied to every target caught by it - the same physical roll a real Fireball gets).
+     * Returns null if the DM cancels, which aborts the cast entirely.
+     */
+    private Integer promptRolledDamage(CastResolver.Castable action) {
+        String formula = action.getDamage().formula(id -> repos.dice().getById(id));
+        javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog();
+        dialog.setTitle("Rolled damage");
+        dialog.setHeaderText(action.getName() + (formula.isBlank() ? "" : " (" + formula + ")"));
+        dialog.setContentText("Enter the damage rolled:");
+        while (true) {
+            var result = dialog.showAndWait();
+            if (result.isEmpty()) return null;
+            try {
+                int value = Integer.parseInt(result.get().trim());
+                if (value < 0) throw new NumberFormatException();
+                return value;
+            } catch (NumberFormatException ex) {
+                dialog.setContentText("Enter a whole number 0 or greater:");
+                dialog.getEditor().clear();
+            }
+        }
     }
 
     /** Every creature standing within {@code radiusCells} of the aim point, blast centre included. */

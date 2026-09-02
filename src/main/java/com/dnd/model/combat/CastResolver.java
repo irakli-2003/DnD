@@ -202,8 +202,11 @@ public final class CastResolver {
      * @param action        the flattened spell or ability
      * @param targets       every creature caught by it; empty is allowed for a cast at empty ground
      * @param distanceFeet  how far the aim point is from the caster, for the range check
+     * @param rolledDamage  the DM's own roll of {@code action.getDamage()}'s dice, entered by
+     *                      hand rather than simulated; ignored when the action deals no damage
      */
-    public static Outcome cast(MapObject caster, Castable action, List<MapObject> targets, double distanceFeet) {
+    public static Outcome cast(MapObject caster, Castable action, List<MapObject> targets, double distanceFeet,
+                               int rolledDamage) {
         String blocked = blockedReason(caster, action);
         if (blocked != null) return Outcome.refused(blocked);
 
@@ -229,7 +232,7 @@ public final class CastResolver {
         List<MapObject> hit = targets == null ? List.of() : targets;
         for (MapObject target : hit) {
             if (target == null) continue;
-            log.addAll(applyTo(caster, target, action));
+            log.addAll(applyTo(caster, target, action, rolledDamage));
         }
 
         if (action.getCooldownRounds() > 0) {
@@ -241,14 +244,19 @@ public final class CastResolver {
         return new Outcome(true, summary, log);
     }
 
+    /** True when the DM needs to be asked for a rolled damage total before this can be cast. */
+    public static boolean needsDamageRoll(Castable action) {
+        return action != null && action.getDamage() != null && action.getDamage().hasDice();
+    }
+
     /** Applies one castable's damage, healing and lasting effects to a single target. */
-    private static List<String> applyTo(MapObject caster, MapObject target, Castable action) {
+    private static List<String> applyTo(MapObject caster, MapObject target, Castable action, int rolledDamage) {
         List<String> log = new ArrayList<>();
         CombatState state = TokenSupport.combatOf(target);
         String targetName = TokenSupport.nameOf(target);
         String sourceName = TokenSupport.nameOf(caster) + "'s " + action.getName();
 
-        int directDamage = damageValue(action.getDamage());
+        int directDamage = action.getDamage() != null && action.getDamage().hasDice() ? Math.max(0, rolledDamage) : 0;
         if (directDamage > 0) {
             state.applyDamage(directDamage);
             log.add(targetName + " takes " + directDamage + " damage.");
@@ -290,19 +298,6 @@ public final class CastResolver {
 
     private static String displayName(Effect effect, Castable action) {
         return effect.getName() == null || effect.getName().isBlank() ? action.getName() : effect.getName();
-    }
-
-    /**
-     * Rolls a spell's damage dice.
-     *
-     * <p>Damage carries a single {@link com.dnd.model.world.Dice}, so this rolls it once
-     * rather than inventing a die count the model does not record.</p>
-     */
-    private static int damageValue(Damage damage) {
-        if (damage == null || damage.getAmount() == null) return 0;
-        int sides = damage.getAmount().getSides();
-        if (sides <= 0) return 0;
-        return 1 + (int) (Math.random() * sides);
     }
 
     // ── Consumables ─────────────────────────────────────────────────────────

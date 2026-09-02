@@ -4,11 +4,13 @@ import com.dnd.cli.core.CampaignContext;
 import com.dnd.data.CampaignRepositories;
 import com.dnd.data.IdHandler;
 import com.dnd.model.character.PlayerCharacter;
+import com.dnd.model.combat.DiceRoll;
 import com.dnd.model.creature.Monster;
 import com.dnd.model.creature.Npc;
 import com.dnd.model.item.Weapon;
 import com.dnd.model.item.alchemy.AlchemyItem;
 import com.dnd.model.item.armors.Armor;
+import com.dnd.model.magic.Spell;
 import com.dnd.model.world.Language;
 import com.dnd.model.world.Place;
 import com.dnd.model.world.map.GameMap;
@@ -59,8 +61,7 @@ public class StandardRulesDatasetTest {
         assertTrue("items", repos.items().list().size() >= 90);
         assertTrue("spells", repos.spells().list().size() >= 60);
         assertTrue("monsters", repos.monsters().list().size() >= 50);
-        assertTrue("beasts", repos.beasts().list().size() >= 20);
-        assertTrue("npcs", repos.npcs().list().size() >= 20);
+        assertTrue("beasts", repos.beasts().list().size() >= 20);        assertTrue("npcs", repos.npcs().list().size() >= 20);
         assertTrue("places", repos.places().list().size() >= 15);
         assertTrue("effects", repos.effects().list().size() >= 30);
         assertTrue("damage types", repos.damageTypes().list().size() >= 13);
@@ -85,6 +86,32 @@ public class StandardRulesDatasetTest {
         assertNotNull("weapon damage", longsword.getWeaponDamage());
         assertNotNull("weapon damage type", repos.damageTypes()
             .getById(longsword.getWeaponDamage().getTypeId()));
+    }
+
+    @Test
+    public void spellDamageMigratesFromLegacyAmountShapeToDiceList() throws IOException {
+        CampaignRepositories repos = seedCampaign();
+
+        Spell fireball = repos.spells().getById("fireball");
+        assertNotNull("fireball", fireball);
+        assertNotNull("fireball damage", fireball.getDamage());
+        assertTrue("fireball damage should carry at least one die", fireball.getDamage().hasDice());
+        DiceRoll roll = fireball.getDamage().getDice().get(0);
+        assertNotNull("rolled die should reference a real catalogue die", repos.dice().getById(roll.getDiceId()));
+        assertEquals(1, roll.getCount());
+    }
+
+    @Test
+    public void everyCatalogListIsSortedAlphabetically() throws IOException {
+        CampaignRepositories repos = seedCampaign();
+
+        List<String> spellNames = repos.spells().list().stream().map(Object::toString).collect(Collectors.toList());
+        List<String> sorted = spellNames.stream().sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
+        assertEquals("spells should be alphabetically sorted", sorted, spellNames);
+
+        List<String> itemNames = repos.items().list().stream().map(Object::toString).collect(Collectors.toList());
+        List<String> sortedItems = itemNames.stream().sorted(String.CASE_INSENSITIVE_ORDER).collect(Collectors.toList());
+        assertEquals("items should be alphabetically sorted", sortedItems, itemNames);
     }
 
     @Test

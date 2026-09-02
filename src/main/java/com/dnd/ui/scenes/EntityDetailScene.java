@@ -214,6 +214,7 @@ public class EntityDetailScene extends BaseScene {
         catalogs.put("itemId", refs(repos.items().list()));
         catalogs.put("spellId", refs(repos.spells().list()));
         catalogs.put("typeId", refs(repos.damageTypes().list()));
+        catalogs.put("diceId", refs(repos.dice().list()));
         catalogs.put("languages", refs(repos.languages().list()));
         catalogs.put("effects", refs(repos.effects().list()));
         catalogs.put("triggeredEffects", refs(repos.effects().list()));
