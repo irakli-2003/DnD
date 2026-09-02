@@ -134,6 +134,33 @@ public class EntityFormTest {
         });
     }
 
+    /**
+     * Regression test for the bug where every {@code int}/{@code long}/{@code double} scalar
+     * property with a primitive-typed setter (Level, XP, HP, gold, weight, ...) silently failed
+     * to render at all: {@code findGetter} compared the setter's primitive parameter type
+     * against the getter's boxed return type, and {@code int.class.isAssignableFrom(Integer.class)}
+     * is always false, so no editor was ever built for these fields - only object/enum/String
+     * properties (and the hand-written CoreStats block) ever showed up in the form.
+     */
+    @Test
+    public void primitiveNumericPropertiesAreEditableOnAnExistingEntity() throws Exception {
+        onFxThread(() -> {
+            PlayerCharacter existing = new PlayerCharacter();
+            existing.setId("p1");
+            existing.setName("Existing");
+            existing.setLevel(7);
+            existing.setXp(150);
+
+            EntityForm form = EntityForm.of(PlayerCharacter.class, existing,
+                Set.of("imagePath", "passwordHash", "passwordSalt"), Map.of());
+
+            PlayerCharacter target = new PlayerCharacter();
+            form.writeTo(target);
+            assertEquals("Level must round-trip through the rendered form", 7, target.getLevel());
+            assertEquals("XP must round-trip through the rendered form", 150, target.getXp());
+        });
+    }
+
     @Test
     public void writeOnlyPasswordSetterIsNotEditable() throws Exception {
         PlayerCharacter player = new PlayerCharacter();

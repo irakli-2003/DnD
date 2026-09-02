@@ -211,7 +211,7 @@ public final class EntityForm {
             try {
                 Method getter = type.getMethod(prefix + capitalized);
                 if (getter.getParameterCount() == 0
-                    && valueType.isAssignableFrom(wrap(getter.getReturnType()))) {
+                    && wrap(valueType).isAssignableFrom(wrap(getter.getReturnType()))) {
                     return getter;
                 }
             } catch (NoSuchMethodException ignored) {
@@ -697,6 +697,14 @@ public final class EntityForm {
     }
 
     private void addNestedEditor(Prop prop, Object current) {
+        // A null nested object (e.g. a spell with no damage) still needs a fresh instance to
+        // build editable controls for, so the DM *can* fill one in from scratch - but if they
+        // leave every field at its untouched default, writeTo below will hit the same setter
+        // validation that protects a real save (Dice sides must be positive, etc.). Rather than
+        // forcing an invalid or unwanted object into existence, that failure means "nothing was
+        // actually filled in" and the property is left null, exactly like the blank-field SKIP
+        // used for scalar properties above.
+        boolean wasNull = current == null;
         Object instance = current != null ? current : instantiate(prop.type());
         if (instance == null) {
             return;
@@ -710,7 +718,15 @@ public final class EntityForm {
         bindings.add(new Binding(humanize(prop.name())) {
             @Override
             void write(Object target) throws Exception {
-                form.writeTo(instance);
+                if (wasNull) {
+                    try {
+                        form.writeTo(instance);
+                    } catch (Exception unfilled) {
+                        return;
+                    }
+                } else {
+                    form.writeTo(instance);
+                }
                 prop.setter().invoke(target, instance);
             }
         });

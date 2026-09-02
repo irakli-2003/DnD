@@ -27,7 +27,11 @@ public class EntityDetailScene extends BaseScene {
 
         VBox root = new VBox(0);
         root.getStyleClass().add("root");
-        root.getChildren().add(backBar(SceneType.ENTITY_LIST));
+        // Players are opened straight from the DM Menu's own card row (never via the generic
+        // Entity List), so Back must return there too - otherwise it lands on the redundant
+        // bare player list, which is otherwise unreachable and thus indistinguishable from a bug.
+        SceneType backTarget = cat == EntityCategory.PLAYER ? SceneType.DM_MENU : SceneType.ENTITY_LIST;
+        root.getChildren().add(backBar(backTarget));
 
         ScrollPane scroll = new ScrollPane();
         scroll.setFitToWidth(true);
@@ -98,7 +102,7 @@ public class EntityDetailScene extends BaseScene {
                         gm.ensureGridSize();
                     }
                     saveEntity(repos, cat, target);
-                    uiSession.getRouter().goTo(SceneType.ENTITY_LIST);
+                    uiSession.getRouter().goTo(backTarget);
                 } catch (Exception ex) {
                     errorLabel.setText("Save failed: " + ex.getMessage());
                 }
