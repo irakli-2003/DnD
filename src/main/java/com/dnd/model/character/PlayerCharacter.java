@@ -14,7 +14,10 @@ public class PlayerCharacter implements Printable {
     private String name;
     private String classId;
     private String raceId;
-    private int level;
+    // Starts at the minimum valid level so a freshly-instantiated character (e.g. one built
+    // by the reflective entity form before the DM fills in every field) is never left in an
+    // invalid state that would fail validation again on the next load.
+    private int level = MIN_LEVEL;
     private CoreStats stats;
     private List<PlayerItem> items;
     private List<PlayerSpell> spells;

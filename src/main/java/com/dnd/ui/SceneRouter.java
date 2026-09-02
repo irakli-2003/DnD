@@ -34,8 +34,31 @@ public class SceneRouter {
         if (type == SceneType.DM_MENU) {
             autoPush();
         }
-        Scene scene = buildScene(type);
+        // buildScene() can throw (e.g. a data file failed to load) - if that happens with no
+        // try/catch here, the exception escapes into the JavaFX event queue uncaught, the stage
+        // keeps its current scene, and the button that triggered navigation looks like it did
+        // nothing at all. Surfacing the failure instead keeps the user on a working screen with
+        // an actionable message rather than looking stuck.
+        Scene scene;
+        try {
+            scene = buildScene(type);
+        } catch (Exception e) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.ERROR,
+                "Couldn't open " + type + ": " + rootMessage(e), javafx.scene.control.ButtonType.OK);
+            alert.showAndWait();
+            return;
+        }
         stage.setScene(scene);
+    }
+
+    private static String rootMessage(Throwable error) {
+        Throwable cause = error;
+        while (cause.getCause() != null && cause.getMessage() == null) {
+            cause = cause.getCause();
+        }
+        String message = cause.getMessage();
+        return (message == null || message.isBlank()) ? cause.getClass().getSimpleName() : message;
     }
 
     private Scene buildScene(SceneType type) {

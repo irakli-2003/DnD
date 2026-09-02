@@ -341,8 +341,19 @@ public final class EntityForm {
             editor = field;
         }
         node.getChildren().add(labelled(prop.name(), editor));
-        bind(prop, () -> parseScalar(type, editor instanceof TextArea area ? area.getText()
-            : ((TextField) editor).getText()));
+        boolean numeric = type == int.class || type == long.class || type == double.class;
+        bind(prop, () -> {
+            String raw = editor instanceof TextArea area ? area.getText() : ((TextField) editor).getText();
+            // A blank numeric field left untouched (most commonly on a brand-new entity)
+            // must not coerce the setter to 0 - many setters validate a minimum (e.g. Level
+            // must be >= 1), and forcing 0 both fails the save with a confusing error and,
+            // if it slipped through, would leave an unloadable record on disk. Skipping the
+            // write instead leaves the field at whatever sane default the model already has.
+            if (numeric && (raw == null || raw.trim().isEmpty())) {
+                return SKIP;
+            }
+            return parseScalar(type, raw);
+        });
     }
 
     private Object parseScalar(Class<?> type, String raw) {
@@ -711,11 +722,16 @@ public final class EntityForm {
         Object get();
     }
 
+    /** Sentinel returned by a {@link ValueSupplier} to mean "leave the target's field alone". */
+    private static final Object SKIP = new Object();
+
     private void bind(Prop prop, ValueSupplier supplier) {
         bindings.add(new Binding(humanize(prop.name())) {
             @Override
             void write(Object target) throws Exception {
-                prop.setter().invoke(target, supplier.get());
+                Object value = supplier.get();
+                if (value == SKIP) return;
+                prop.setter().invoke(target, value);
             }
         });
     }

@@ -40,6 +40,14 @@ final class StorylineEditorWindow {
     static final String DM_NOTE_OPEN = "[DM NOTE]";
     static final String DM_NOTE_CLOSE = "[/DM NOTE]";
 
+    /**
+     * Remembers each file's last scroll offset (keyed by its absolute path, hashed since
+     * {@link java.util.prefs.Preferences} keys are capped at 80 characters) so reopening a
+     * long session file doesn't dump the DM back at the top every time.
+     */
+    private static final java.util.prefs.Preferences SCROLL_PREFS =
+        java.util.prefs.Preferences.userNodeForPackage(StorylineEditorWindow.class).node("storyline-scroll");
+
     private final BaseScene owner;
     private final StorylineService service;
     private final CampaignRepositories repos;
@@ -92,6 +100,16 @@ final class StorylineEditorWindow {
             if (link != null) openBattleMap(link);
         });
 
+        // The skin (and with it the internal ScrollPane) isn't created until the TextArea is
+        // part of a showing scene, so setScrollTop before that point is silently ignored.
+        // Restoring on the next pulse after the skin appears is the reliable way to do it.
+        area.skinProperty().addListener((obs, oldSkin, newSkin) -> {
+            if (newSkin != null) {
+                double savedTop = SCROLL_PREFS.getDouble(scrollKey(), 0);
+                javafx.application.Platform.runLater(() -> area.setScrollTop(savedTop));
+            }
+        });
+
         VBox layout = new VBox(0, buildToolbar(stage), area, buildStatusBar(stage));
         layout.getStyleClass().add("root");
         VBox.setVgrow(area, Priority.ALWAYS);
@@ -108,9 +126,15 @@ final class StorylineEditorWindow {
                 e.consume();
                 return;
             }
+            SCROLL_PREFS.putDouble(scrollKey(), area.getScrollTop());
             timer.dispose();
         });
         stage.showAndWait();
+    }
+
+    /** Stable per-file key for {@link #SCROLL_PREFS}, short enough to satisfy its 80-char cap. */
+    private String scrollKey() {
+        return Integer.toHexString(file.toAbsolutePath().normalize().toString().hashCode());
     }
 
     // ---------------------------------------------------------------- toolbar
