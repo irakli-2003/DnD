@@ -18,6 +18,7 @@ public class PlayerCharacter implements Printable {
     // by the reflective entity form before the DM fills in every field) is never left in an
     // invalid state that would fail validation again on the next load.
     private int level = MIN_LEVEL;
+    private int xp;
     private CoreStats stats;
     private List<PlayerItem> items;
     private List<PlayerSpell> spells;
@@ -86,6 +87,22 @@ public class PlayerCharacter implements Printable {
             throw new IllegalArgumentException("Level must be between " + MIN_LEVEL + " and " + MAX_LEVEL + " but was " + level);
         }
         this.level = level;
+    }
+
+    public int getXp() {
+        return xp;
+    }
+
+    public void setXp(int xp) {
+        if (xp < 0) {
+            throw new IllegalArgumentException("XP cannot be negative but was " + xp);
+        }
+        this.xp = xp;
+    }
+
+    /** Adds (or, with a negative amount, removes) experience without letting it go below zero. */
+    public void addXp(int amount) {
+        setXp(Math.max(0, this.xp + amount));
     }
 
     public CoreStats getStats() {

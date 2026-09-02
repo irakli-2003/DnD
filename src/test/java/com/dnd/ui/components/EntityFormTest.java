@@ -117,6 +117,23 @@ public class EntityFormTest {
         });
     }
 
+    /**
+     * Regression test for the bug where a new character saved with a blank Level field wrote
+     * an in-range-violating 0 straight to disk (bypassing setLevel's validation, since a blank
+     * field used to be coerced to the literal int 0 instead of being left alone), which then
+     * made the whole players.json unreadable the next time anything tried to load it.
+     */
+    @Test
+    public void newPlayerFormLeavesBlankLevelAtItsValidDefault() throws Exception {
+        onFxThread(() -> {
+            EntityForm form = EntityForm.of(PlayerCharacter.class, null, Set.of("imagePath", "passwordHash", "passwordSalt"), Map.of());
+            PlayerCharacter created = new PlayerCharacter();
+            form.writeTo(created);
+            assertEquals("a blank Level field must not coerce the model to an invalid 0",
+                PlayerCharacter.MIN_LEVEL, created.getLevel());
+        });
+    }
+
     @Test
     public void writeOnlyPasswordSetterIsNotEditable() throws Exception {
         PlayerCharacter player = new PlayerCharacter();

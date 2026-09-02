@@ -789,6 +789,11 @@ public class BattleMapWindow {
         panel.getChildren().add(buildPurseEditor(state));
         panel.getChildren().add(buildStatsGrid(token));
 
+        if (TokenSupport.hasSettableLevel(token) || TokenSupport.xpOf(token) >= 0) {
+            panel.getChildren().addAll(new Separator(), owner.sectionLabel("Level & XP"));
+            panel.getChildren().add(buildLevelXpEditor(token));
+        }
+
         List<Spell> spells = resolveSpells(token);
         if (!spells.isEmpty()) {
             panel.getChildren().addAll(new Separator(), owner.sectionLabel("Spells"));
@@ -1003,6 +1008,74 @@ public class BattleMapWindow {
         Label cell = new Label(label + " " + value + " (" + (modifier >= 0 ? "+" : "") + modifier + ")");
         cell.getStyleClass().add("body-label");
         grid.add(cell, index % 3, index / 3);
+    }
+
+    /**
+     * Level and XP live on the character/NPC record itself, not on the map's per-encounter
+     * {@link com.dnd.model.world.map.CombatState} - so unlike HP/mana/gold, changes here are
+     * written straight back to the campaign roster (players.json/npcs.json) via {@link #repos},
+     * in addition to the map's own copy, so they stick campaign-wide and not just in this fight.
+     */
+    private Node buildLevelXpEditor(MapObject token) {
+        GridPane grid = new GridPane();
+        grid.setHgap(6);
+        grid.setVgap(6);
+        int row = 0;
+
+        if (TokenSupport.hasSettableLevel(token)) {
+            Spinner<Integer> level = new Spinner<>(1, 30, TokenSupport.levelOf(token));
+            level.setPrefWidth(80);
+            level.setEditable(true);
+            level.valueProperty().addListener((obs, o, n) -> {
+                TokenSupport.setLevelOf(token, n);
+                saveTokenToRoster(token);
+                dirty = true;
+                showDetail(token);
+                render();
+            });
+            grid.addRow(row++, owner.body("Level:"), level);
+        }
+
+        int xp = TokenSupport.xpOf(token);
+        if (xp >= 0) {
+            Spinner<Integer> xpSpinner = new Spinner<>(0, 9_999_999, xp);
+            xpSpinner.setPrefWidth(110);
+            xpSpinner.setEditable(true);
+            xpSpinner.valueProperty().addListener((obs, o, n) -> {
+                TokenSupport.addXpOf(token, n - o);
+                saveTokenToRoster(token);
+                dirty = true;
+            });
+
+            Spinner<Integer> award = new Spinner<>(1, 999999, 100, 50);
+            award.setPrefWidth(100);
+            award.setEditable(true);
+            Button addXpBtn = new Button("Award XP");
+            addXpBtn.getStyleClass().add("dnd-button");
+            addXpBtn.setOnAction(e -> {
+                TokenSupport.addXpOf(token, award.getValue());
+                saveTokenToRoster(token);
+                dirty = true;
+                showDetail(token);
+            });
+
+            grid.addRow(row++, owner.body("XP:"), xpSpinner);
+            grid.addRow(row, award, addXpBtn);
+        }
+        return grid;
+    }
+
+    /**
+     * Persists the token's underlying model straight to its campaign repository so a level-up
+     * or XP award made mid-fight is visible everywhere else (the DM's entity list, the player's
+     * own profile) rather than being trapped in this map's saved snapshot until the map reloads.
+     */
+    private void saveTokenToRoster(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) {
+            repos.players().save(t.getCharacter());
+        } else if (token instanceof NpcToken t && t.getNpc() != null) {
+            repos.npcs().save(t.getNpc());
+        }
     }
 
     /**

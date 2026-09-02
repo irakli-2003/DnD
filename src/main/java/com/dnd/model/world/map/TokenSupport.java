@@ -166,6 +166,30 @@ public final class TokenSupport {
         return 1;
     }
 
+    /** True for tokens whose level is a real, settable field (players and NPCs) rather than
+     *  a challenge-rating stand-in (monsters and beasts). */
+    public static boolean hasSettableLevel(MapObject token) {
+        return (token instanceof PlayerToken pt && pt.getCharacter() != null)
+            || (token instanceof NpcToken nt && nt.getNpc() != null);
+    }
+
+    /** Writes a new level onto the underlying model. Only valid when {@link #hasSettableLevel} is true. */
+    public static void setLevelOf(MapObject token, int level) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) t.getCharacter().setLevel(level);
+        else if (token instanceof NpcToken t && t.getNpc() != null) t.getNpc().setLevel(level);
+    }
+
+    /** Current XP, or -1 when this token doesn't track experience (only player characters do). */
+    public static int xpOf(MapObject token) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) return t.getCharacter().getXp();
+        return -1;
+    }
+
+    /** Adds (or removes, with a negative amount) experience. No-op for tokens that don't track it. */
+    public static void addXpOf(MapObject token, int amount) {
+        if (token instanceof PlayerToken t && t.getCharacter() != null) t.getCharacter().addXp(amount);
+    }
+
     private static int challengeLevel(Monster monster) {
         return monster.getChallengeRating() == null ? 1 : Math.max(1, monster.getChallengeRating().ordinal());
     }

@@ -32,5 +32,35 @@ public class PlayerCharacterTest {
         assertThrows(IllegalArgumentException.class,
             () -> new PlayerCharacter("id", "name", "class", "race", 99, null, null, null));
     }
+
+    @Test
+    public void newCharacterStartsAtTheMinimumValidLevel() {
+        assertEquals("a brand-new character must never sit at an invalid level",
+            PlayerCharacter.MIN_LEVEL, new PlayerCharacter().getLevel());
+    }
+
+    @Test
+    public void xpDefaultsToZeroAndAccumulates() {
+        PlayerCharacter character = new PlayerCharacter();
+        assertEquals(0, character.getXp());
+        character.addXp(150);
+        assertEquals(150, character.getXp());
+        character.addXp(50);
+        assertEquals(200, character.getXp());
+    }
+
+    @Test
+    public void xpNeverGoesNegative() {
+        PlayerCharacter character = new PlayerCharacter();
+        character.addXp(100);
+        character.addXp(-1000);
+        assertEquals(0, character.getXp());
+    }
+
+    @Test
+    public void rejectsNegativeXpSetDirectly() {
+        PlayerCharacter character = new PlayerCharacter();
+        assertThrows(IllegalArgumentException.class, () -> character.setXp(-1));
+    }
 }
 

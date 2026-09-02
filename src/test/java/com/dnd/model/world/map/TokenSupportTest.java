@@ -107,4 +107,36 @@ public class TokenSupportTest {
         assertTrue(TokenSupport.itemIdsOf(new MonsterToken()).isEmpty());
         assertTrue(TokenSupport.abilitiesOf(new PlayerToken()).isEmpty());
     }
+
+    @Test
+    public void levelIsSettableOnPlayersAndNpcsButNotMonstersOrBeasts() {
+        PlayerToken player = player("Aria", 3, 10);
+        assertTrue(TokenSupport.hasSettableLevel(player));
+        TokenSupport.setLevelOf(player, 7);
+        assertEquals(7, TokenSupport.levelOf(player));
+
+        com.dnd.model.creature.Npc npc = new com.dnd.model.creature.Npc();
+        npc.setId("npc-1");
+        npc.setLevel(2);
+        NpcToken npcToken = new NpcToken(npc);
+        assertTrue(TokenSupport.hasSettableLevel(npcToken));
+        TokenSupport.setLevelOf(npcToken, 9);
+        assertEquals(9, TokenSupport.levelOf(npcToken));
+
+        Monster monster = new Monster();
+        monster.setId("m1");
+        assertFalse(TokenSupport.hasSettableLevel(new MonsterToken(monster)));
+    }
+
+    @Test
+    public void xpTracksOnlyOnPlayerCharacters() {
+        PlayerToken player = player("Aria", 1, 10);
+        assertEquals(0, TokenSupport.xpOf(player));
+        TokenSupport.addXpOf(player, 150);
+        assertEquals(150, TokenSupport.xpOf(player));
+        TokenSupport.addXpOf(player, -400);
+        assertEquals("XP must not go negative", 0, TokenSupport.xpOf(player));
+
+        assertEquals("monsters don't track XP", -1, TokenSupport.xpOf(new MonsterToken()));
+    }
 }

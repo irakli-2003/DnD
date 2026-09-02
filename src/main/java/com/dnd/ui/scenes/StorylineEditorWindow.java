@@ -164,6 +164,9 @@ final class StorylineEditorWindow {
                 this::openPlayerView),
             toolButton("Find", "Find text in this file", this::openFind),
             new Separator(),
+            toolButton("Award XP", "Give a player character experience without leaving this file",
+                this::openAwardXp),
+            new Separator(),
             toolButton("Save", "Save this file (Ctrl+S)", this::save),
             toolButton("Save & Close", "Save and close the editor", () -> { save(); stage.close(); }),
             new Separator(),
@@ -437,6 +440,41 @@ final class StorylineEditorWindow {
     }
 
     // ---------------------------------------------------------------- actions
+
+    /**
+     * Lets the DM hand out XP right from the session notes - e.g. right after writing "the
+     * party defeats the ogre" - instead of having to leave the file, open the entity list, and
+     * find the character there.
+     */
+    private void openAwardXp() {
+        List<com.dnd.model.character.PlayerCharacter> players = repos.players().list();
+        if (players.isEmpty()) {
+            statusLabel.setText("No player characters in this campaign yet.");
+            return;
+        }
+        ChoiceDialog<com.dnd.model.character.PlayerCharacter> pick = new ChoiceDialog<>(players.get(0), players);
+        pick.setTitle("Award XP");
+        pick.setHeaderText(null);
+        pick.setContentText("Character:");
+        owner.styleDialog(pick);
+        pick.showAndWait().ifPresent(pc -> {
+            TextInputDialog amountDialog = new TextInputDialog("100");
+            amountDialog.setTitle("Award XP");
+            amountDialog.setHeaderText(null);
+            amountDialog.setContentText("XP to add to " + pc.getName() + " (current: " + pc.getXp() + "):");
+            owner.styleDialog(amountDialog);
+            amountDialog.showAndWait().ifPresent(raw -> {
+                try {
+                    int amount = Integer.parseInt(raw.trim());
+                    pc.addXp(amount);
+                    repos.players().save(pc);
+                    statusLabel.setText(pc.getName() + " now has " + pc.getXp() + " XP.");
+                } catch (NumberFormatException ex) {
+                    statusLabel.setText("\"" + raw + "\" isn't a whole number.");
+                }
+            });
+        });
+    }
 
     private void openFind() {
         TextInputDialog dialog = new TextInputDialog();
