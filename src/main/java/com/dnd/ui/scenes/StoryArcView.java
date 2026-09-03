@@ -8,6 +8,7 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.geometry.VPos;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ import java.util.List;
 final class StoryArcView {
 
     private static final double SLOT_WIDTH = 130;
-    private static final double BAR_HEIGHT = 26;
+    private static final double MIN_BAR_HEIGHT = 26;
+    private static final double LABEL_PADDING = 8;
     private static final double TOP_PADDING = 34;
     private static final double BOTTOM_PADDING = 20;
     private static final Color[] PALETTE = {
@@ -41,8 +43,22 @@ final class StoryArcView {
 
         double contentWidth = Math.max(SLOT_WIDTH, sessions.size() * SLOT_WIDTH);
         double maxRadius = contentWidth / 2.0;
+
+        // Session file names can wrap onto multiple lines; measure every label up front so the
+        // bar (and the whole row) is tall enough that no name ever spills outside its rectangle.
+        List<Text> labels = new ArrayList<>();
+        double barHeight = MIN_BAR_HEIGHT;
+        for (Path session : sessions) {
+            Text label = new Text(stripExtension(session.getFileName().toString()));
+            label.setStyle("-fx-font-size: 10px;");
+            label.setWrappingWidth(SLOT_WIDTH - 10);
+            label.setTextOrigin(VPos.TOP);
+            labels.add(label);
+            barHeight = Math.max(barHeight, label.getLayoutBounds().getHeight() + LABEL_PADDING * 2);
+        }
+
         double baselineY = maxRadius + TOP_PADDING;
-        double paneHeight = baselineY + BAR_HEIGHT + BOTTOM_PADDING;
+        double paneHeight = baselineY + barHeight + BOTTOM_PADDING;
 
         Pane pane = new Pane();
         pane.setPrefSize(contentWidth, paneHeight);
@@ -60,18 +76,16 @@ final class StoryArcView {
 
         for (int i = 0; i < sessions.size(); i++) {
             double x = i * SLOT_WIDTH;
-            Rectangle bar = new Rectangle(x + 1, baselineY, SLOT_WIDTH - 2, BAR_HEIGHT);
+            Rectangle bar = new Rectangle(x + 1, baselineY, SLOT_WIDTH - 2, barHeight);
             bar.setArcWidth(6);
             bar.setArcHeight(6);
             bar.setFill(PALETTE[i % PALETTE.length]);
             pane.getChildren().add(bar);
 
-            Text label = new Text(stripExtension(sessions.get(i).getFileName().toString()));
+            Text label = labels.get(i);
             label.setFill(Color.WHITE);
-            label.setStyle("-fx-font-size: 10px;");
             label.setX(x + 5);
-            label.setY(baselineY + BAR_HEIGHT / 2.0 + 4);
-            label.setWrappingWidth(SLOT_WIDTH - 10);
+            label.setY(baselineY + LABEL_PADDING);
             pane.getChildren().add(label);
         }
 

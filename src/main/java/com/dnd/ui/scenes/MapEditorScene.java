@@ -52,6 +52,11 @@ public class MapEditorScene extends BaseScene {
     private boolean dragging = false;
     private double dragLastX, dragLastY;
 
+    // Token drag state: a placed creature token picked up by pressing on it, following the
+    // cursor (snapped to the grid) until it is released on another valid, empty box.
+    private MapObject draggingToken;
+    private int dragHoverCx = -1, dragHoverCy = -1;
+
     // Resize state, anchored on the fixed opposite corner. Applies to layers, drawings and groups.
     private boolean resizeActive = false;
     private double anchorX, anchorY;
@@ -801,6 +806,15 @@ public class MapEditorScene extends BaseScene {
                 case PASSABLE -> togglePassableAt(mx, my);
                 case TERRAIN -> paintTerrainAt(mx, my);
                 case SELECT -> {
+                    int tcx = (int) (mx / CELL_SIZE);
+                    int tcy = (int) (my / CELL_SIZE);
+                    MapObject tokenHere = tokenAtCell(tcx, tcy);
+                    if (tokenHere != null) {
+                        draggingToken = tokenHere;
+                        dragHoverCx = tcx;
+                        dragHoverCy = tcy;
+                        break;
+                    }
                     double[] b = boundsOfKeyPx(selectedKey);
                     if (b != null) {
                         int corner = hitCorner(mx, my, b[0], b[1], b[2], b[3]);
@@ -824,7 +838,11 @@ public class MapEditorScene extends BaseScene {
                 case TERRAIN -> paintTerrainAt(e.getX(), e.getY());
                 case LINE, RECT, OVAL -> { shapeCurX = e.getX(); shapeCurY = e.getY(); renderCanvas(); }
                 case SELECT -> {
-                    if (resizeActive) {
+                    if (draggingToken != null) {
+                        dragHoverCx = (int) (e.getX() / CELL_SIZE);
+                        dragHoverCy = (int) (e.getY() / CELL_SIZE);
+                        renderCanvas();
+                    } else if (resizeActive) {
                         resizeTo(e.getX() / CELL_SIZE, e.getY() / CELL_SIZE);
                         renderCanvas();
                     } else if (dragging && selectedKey != null) {
@@ -850,6 +868,11 @@ public class MapEditorScene extends BaseScene {
                 case RECT -> { commitShapeIfDrawing(Drawing.Type.RECTANGLE); refreshObjectsTree(); renderCanvas(); }
                 case OVAL -> { commitShapeIfDrawing(Drawing.Type.OVAL); refreshObjectsTree(); renderCanvas(); }
                 case SELECT -> {
+                    if (draggingToken != null) {
+                        finishTokenDrag((int) (e.getX() / CELL_SIZE), (int) (e.getY() / CELL_SIZE));
+                        renderCanvas();
+                        break;
+                    }
                     boolean wasActive = dragging || resizeActive;
                     MapLayer l = selectedLayer();
                     if (l != null) {
@@ -1089,6 +1112,34 @@ public class MapEditorScene extends BaseScene {
         return idx >= 0 ? entry.substring(0, idx) : entry;
     }
 
+    /** The first creature token (player/NPC/monster/beast) occupying a grid cell, if any. */
+    private MapObject tokenAtCell(int cx, int cy) {
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return null;
+        for (MapObject obj : map.getCell(cx, cy).getOccupants()) {
+            if (TokenSupport.isCreature(obj)) return obj;
+        }
+        return null;
+    }
+
+    /** Drops the token picked up in {@link #draggingToken} onto the released-on box, if it is
+     *  actually free; otherwise it stays exactly where it was, since it was never removed from
+     *  its original box while being dragged. */
+    private void finishTokenDrag(int cx, int cy) {
+        MapObject token = draggingToken;
+        draggingToken = null;
+        dragHoverCx = -1;
+        dragHoverCy = -1;
+        if (token == null) return;
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        GridCell target = map.getCell(cx, cy);
+        boolean occupiedByOther = target.getOccupants().stream()
+            .anyMatch(o -> o != token && TokenSupport.isCreature(o));
+        if (!target.isPassable() || occupiedByOther) {
+            return;
+        }
+        map.moveObject(token, cx, cy);
+    }
+
     private void placeSelectedTokenAt(double px, double py) {
         if (tokenEntityListView == null) return;
         String sel = tokenEntityListView.getSelectionModel().getSelectedItem();
@@ -1248,10 +1299,24 @@ public class MapEditorScene extends BaseScene {
                 GridCell cell = map.getCell(x, y);
                 int slot = 0;
                 for (MapObject obj : cell.getOccupants()) {
+                    if (obj == draggingToken) { slot++; continue; }
                     drawToken(gc, obj, x, y, slot);
                     slot++;
                 }
             }
+        }
+
+        // A token mid-drag renders at the box under the cursor instead of its original box, with
+        // a highlight ring showing whether that box would actually accept it if released now.
+        if (draggingToken != null && dragHoverCx >= 0 && dragHoverCy >= 0
+                && dragHoverCx < map.getWidth() && dragHoverCy < map.getHeight()) {
+            GridCell hoverCell = map.getCell(dragHoverCx, dragHoverCy);
+            boolean valid = hoverCell.isPassable()
+                && hoverCell.getOccupants().stream().noneMatch(o -> o != draggingToken && TokenSupport.isCreature(o));
+            gc.setStroke(valid ? Color.web("#4caf50") : Color.web("#e53935"));
+            gc.setLineWidth(2);
+            gc.strokeRect(dragHoverCx * CELL_SIZE + 1, dragHoverCy * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+            drawToken(gc, draggingToken, dragHoverCx, dragHoverCy, 0);
         }
 
         // Selection highlight (dashed box), with corner resize-handles on whatever is selected.

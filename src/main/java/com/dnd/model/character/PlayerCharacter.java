@@ -2,8 +2,10 @@ package com.dnd.model.character;
 
 import com.dnd.model.character.stats.CoreStats;
 import com.dnd.model.interfaces.Printable;
+import com.dnd.model.world.map.ActiveEffect;
 import com.dnd.security.PasswordHasher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerCharacter implements Printable {
@@ -193,6 +195,86 @@ public class PlayerCharacter implements Printable {
     /** True when {@code username} is the account this character belongs to, ignoring case. */
     public boolean isOwnedBy(String username) {
         return ownerUsername != null && username != null && ownerUsername.equalsIgnoreCase(username.trim());
+    }
+
+    // ── Out-of-combat vitals ────────────────────────────────────────────────
+    // These are the character's baseline, at-rest hit points/mana/effects, kept on the
+    // persistent sheet so a DM can track them (heal between sessions, apply a lingering
+    // curse, hand out potions, ...) from the storyline editor without needing a battle map
+    // open. A freshly placed token on the battle map seeds its own (separately tracked,
+    // in-combat) CombatState from these values - see TokenSupport.defaultCombatFor.
+
+    private int maxHitPoints;
+    private int currentHitPoints;
+    private int maxMana;
+    private int currentMana;
+    private List<ActiveEffect> activeEffects = new ArrayList<>();
+
+    public int getMaxHitPoints() {
+        return maxHitPoints;
+    }
+
+    public void setMaxHitPoints(int maxHitPoints) {
+        this.maxHitPoints = Math.max(0, maxHitPoints);
+        if (currentHitPoints > this.maxHitPoints) currentHitPoints = this.maxHitPoints;
+    }
+
+    public int getCurrentHitPoints() {
+        return currentHitPoints;
+    }
+
+    public void setCurrentHitPoints(int currentHitPoints) {
+        if (currentHitPoints < 0) this.currentHitPoints = 0;
+        else if (maxHitPoints > 0 && currentHitPoints > maxHitPoints) this.currentHitPoints = maxHitPoints;
+        else this.currentHitPoints = currentHitPoints;
+    }
+
+    /** Adds (or, with a negative amount, removes) hit points, clamped to [0, max]. */
+    public void applyDamage(int amount) {
+        setCurrentHitPoints(currentHitPoints - Math.max(0, amount));
+    }
+
+    /** Restores hit points, clamped to the current max. */
+    public void heal(int amount) {
+        setCurrentHitPoints(currentHitPoints + Math.max(0, amount));
+    }
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = Math.max(0, maxMana);
+        if (currentMana > this.maxMana) currentMana = this.maxMana;
+    }
+
+    public int getCurrentMana() {
+        return currentMana;
+    }
+
+    public void setCurrentMana(int currentMana) {
+        if (currentMana < 0) this.currentMana = 0;
+        else if (maxMana > 0 && currentMana > maxMana) this.currentMana = maxMana;
+        else this.currentMana = currentMana;
+    }
+
+    public List<ActiveEffect> getActiveEffects() {
+        return activeEffects;
+    }
+
+    public void setActiveEffects(List<ActiveEffect> activeEffects) {
+        this.activeEffects = activeEffects != null ? activeEffects : new ArrayList<>();
+    }
+
+    /** Applies a new lingering effect (e.g. "Frost, 3 rounds"). */
+    public void addEffect(ActiveEffect effect) {
+        if (activeEffects == null) activeEffects = new ArrayList<>();
+        activeEffects.add(effect);
+    }
+
+    /** Removes an effect once the DM decides it has worn off. */
+    public void clearEffect(ActiveEffect effect) {
+        if (activeEffects != null) activeEffects.remove(effect);
     }
 
     @Override
