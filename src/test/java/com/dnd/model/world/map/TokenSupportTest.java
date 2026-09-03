@@ -139,4 +139,32 @@ public class TokenSupportTest {
 
         assertEquals("monsters don't track XP", -1, TokenSupport.xpOf(new MonsterToken()));
     }
+
+    /**
+     * A DM who set a character's vitals from the storyline editor (see
+     * StorylineEditorWindow's "Manage Player" panel) before ever placing them on a map
+     * should see a freshly placed token start from those numbers, not the generic
+     * level-based estimate.
+     */
+    @Test
+    public void placingATokenSeedsCombatStateFromPresetCharacterVitals() {
+        PlayerToken token = player("Aria", 1, 10);
+        token.getCharacter().setMaxHitPoints(40);
+        token.getCharacter().setCurrentHitPoints(25);
+        token.getCharacter().setMaxMana(12);
+        token.getCharacter().setCurrentMana(9);
+
+        CombatState state = TokenSupport.combatOf(token);
+        assertEquals(40, state.getMaxHitPoints());
+        assertEquals(25, state.getCurrentHitPoints());
+        assertEquals(12, state.getMaxMana());
+        assertEquals(9, state.getCurrentMana());
+    }
+
+    @Test
+    public void placingATokenWithoutPresetVitalsFallsBackToTheLevelEstimate() {
+        CombatState state = TokenSupport.combatOf(player("Weak", 1, 8));
+        assertTrue("must fall back to the generic estimate when the sheet has no vitals set",
+            state.getMaxHitPoints() > 0);
+    }
 }

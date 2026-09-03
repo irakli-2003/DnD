@@ -149,10 +149,21 @@ public final class TokenSupport {
         int intMod = modifier(stats == null ? 10 : stats.getIntelligence());
 
         CombatState state = new CombatState();
-        state.setMaxHitPoints(Math.max(1, level * (6 + conMod)));
-        state.setCurrentHitPoints(state.getMaxHitPoints());
-        state.setMaxMana(Math.max(0, level * Math.max(0, 2 + intMod)));
-        state.setCurrentMana(state.getMaxMana());
+        if (token instanceof PlayerToken t && t.getCharacter() != null && t.getCharacter().getMaxHitPoints() > 0) {
+            // The DM has already set this character's vitals from the storyline editor (or a
+            // previous session) - a freshly placed token should start from that, not overwrite
+            // it with the generic level-based estimate.
+            PlayerCharacter pc = t.getCharacter();
+            state.setMaxHitPoints(pc.getMaxHitPoints());
+            state.setCurrentHitPoints(pc.getCurrentHitPoints() > 0 ? pc.getCurrentHitPoints() : pc.getMaxHitPoints());
+            state.setMaxMana(pc.getMaxMana());
+            state.setCurrentMana(pc.getCurrentMana());
+        } else {
+            state.setMaxHitPoints(Math.max(1, level * (6 + conMod)));
+            state.setCurrentHitPoints(state.getMaxHitPoints());
+            state.setMaxMana(Math.max(0, level * Math.max(0, 2 + intMod)));
+            state.setCurrentMana(state.getMaxMana());
+        }
         state.setInInitiative(isCreature(token));
         return state;
     }

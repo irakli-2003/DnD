@@ -62,5 +62,49 @@ public class PlayerCharacterTest {
         PlayerCharacter character = new PlayerCharacter();
         assertThrows(IllegalArgumentException.class, () -> character.setXp(-1));
     }
+
+    @Test
+    public void hitPointsClampToZeroAndMax() {
+        PlayerCharacter character = new PlayerCharacter();
+        character.setMaxHitPoints(30);
+        character.setCurrentHitPoints(30);
+        character.applyDamage(50);
+        assertEquals("damage cannot drop hit points below zero", 0, character.getCurrentHitPoints());
+        character.heal(1000);
+        assertEquals("healing cannot exceed the current max", 30, character.getCurrentHitPoints());
+    }
+
+    @Test
+    public void loweringMaxHitPointsPullsCurrentDown() {
+        PlayerCharacter character = new PlayerCharacter();
+        character.setMaxHitPoints(30);
+        character.setCurrentHitPoints(30);
+        character.setMaxHitPoints(10);
+        assertEquals("current hit points must never exceed a newly lowered max",
+            10, character.getCurrentHitPoints());
+    }
+
+    @Test
+    public void manaClampsToZeroAndMax() {
+        PlayerCharacter character = new PlayerCharacter();
+        character.setMaxMana(20);
+        character.setCurrentMana(-5);
+        assertEquals(0, character.getCurrentMana());
+        character.setCurrentMana(999);
+        assertEquals(20, character.getCurrentMana());
+    }
+
+    @Test
+    public void activeEffectsCanBeAddedAndCleared() {
+        PlayerCharacter character = new PlayerCharacter();
+        assertEquals(0, character.getActiveEffects().size());
+        com.dnd.model.world.map.ActiveEffect frost =
+            new com.dnd.model.world.map.ActiveEffect("frost", "Frost", 3, 2, 0, "DM");
+        character.addEffect(frost);
+        assertEquals(1, character.getActiveEffects().size());
+        character.clearEffect(frost);
+        assertEquals("clearing an effect must remove it once it's worn off",
+            0, character.getActiveEffects().size());
+    }
 }
 

@@ -220,6 +220,66 @@ public class EntityFormTest {
         assertNotNull("monsters must still carry their stat block", reloaded.getStats());
     }
 
+    /**
+     * Regression test for the spell damage editor: it must offer an "Add dice roll" button with
+     * a dropdown of catalogue dice, not the pre-rework raw id/name/sides fields for a single
+     * {@code Dice}.
+     */
+    @Test
+    public void newSpellDamageUsesDiceListNotRawIdNameSides() throws Exception {
+        Map<String, List<EntityForm.Ref>> catalogs = Map.of(
+            "diceId", List.of(new EntityForm.Ref("d6", "d6")),
+            "typeId", List.of(new EntityForm.Ref("fire", "Fire")));
+
+        onFxThread(() -> {
+            EntityForm form = EntityForm.of(com.dnd.model.magic.Spell.class, null, Set.of("imagePath"), catalogs);
+
+            javafx.scene.control.Button addDiceButton = findButton(form.getNode(), "Add dice roll");
+            assertNotNull("spell damage must offer an 'Add dice roll' button instead of raw id/name/sides fields",
+                addDiceButton);
+            addDiceButton.fire();
+
+            javafx.scene.control.ComboBox<EntityForm.Ref> diceCombo = findComboBoxWithOption(form.getNode(), "d6");
+            assertNotNull("the new dice row must offer a dropdown of catalogue dice", diceCombo);
+            EntityForm.Ref d6 = diceCombo.getItems().stream()
+                .filter(r -> r != null && "d6".equals(r.id())).findFirst().orElse(null);
+            assertNotNull("catalogue dice must be selectable", d6);
+            diceCombo.getSelectionModel().select(d6);
+
+            com.dnd.model.magic.Spell saved = new com.dnd.model.magic.Spell();
+            form.writeTo(saved);
+            assertNotNull("adding a dice roll must produce a Damage", saved.getDamage());
+            assertEquals(1, saved.getDamage().getDice().size());
+            assertEquals("d6", saved.getDamage().getDice().get(0).getDiceId());
+        });
+    }
+
+    private static javafx.scene.control.Button findButton(javafx.scene.Node root, String text) {
+        if (root instanceof javafx.scene.control.Button b && text.equals(b.getText())) return b;
+        if (root instanceof javafx.scene.Parent p) {
+            for (javafx.scene.Node child : p.getChildrenUnmodifiable()) {
+                javafx.scene.control.Button found = findButton(child, text);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static javafx.scene.control.ComboBox<EntityForm.Ref> findComboBoxWithOption(javafx.scene.Node root, String optionId) {
+        if (root instanceof javafx.scene.control.ComboBox<?> box
+            && box.getItems().stream().anyMatch(item -> item instanceof EntityForm.Ref ref && optionId.equals(ref.id()))) {
+            return (javafx.scene.control.ComboBox<EntityForm.Ref>) box;
+        }
+        if (root instanceof javafx.scene.Parent p) {
+            for (javafx.scene.Node child : p.getChildrenUnmodifiable()) {
+                javafx.scene.control.ComboBox<EntityForm.Ref> found = findComboBoxWithOption(child, optionId);
+                if (found != null) return found;
+            }
+        }
+        return null;
+    }
+
     private static List<EntityForm.Ref> refs(List<?> entities) throws Exception {
         List<EntityForm.Ref> refs = new ArrayList<>();
         for (Object entity : entities) {

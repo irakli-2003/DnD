@@ -81,6 +81,11 @@ public class BattleMapWindow {
     /** Who is casting {@link #armedCast}. */
     private MapObject armedCaster;
 
+    /** Type ("Player"/"NPC"/"Monster"/"Beast") of the token queued up to be placed by clicking the map. */
+    private String armedTokenType;
+    /** Catalogue id of the token queued up to be placed by clicking the map. */
+    private String armedTokenId;
+
     public BattleMapWindow(BaseScene owner, UiSession uiSession, String mapId) {
         this.owner = owner;
         this.uiSession = uiSession;
@@ -171,6 +176,10 @@ public class BattleMapWindow {
                 }
                 if (armedCast != null) {
                     cancelCast();
+                    return;
+                }
+                if (armedTokenType != null) {
+                    cancelTokenPlacement();
                     return;
                 }
                 decorations.selected = null;
@@ -299,6 +308,10 @@ public class BattleMapWindow {
             }
             if (armedCast != null) {
                 resolveCastAt(cx, cy);
+                return;
+            }
+            if (armedTokenType != null) {
+                placeArmedTokenAt(cx, cy);
                 return;
             }
 
@@ -1369,7 +1382,7 @@ public class BattleMapWindow {
     private void openAddTokenDialog() {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Add Token");
-        dialog.setHeaderText("Place a creature on the battle map");
+        dialog.setHeaderText("Choose a creature, then click an empty box on the map to place it");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         owner.styleDialog(dialog);
 
@@ -1394,17 +1407,11 @@ public class BattleMapWindow {
         typeBox.setOnAction(e -> refresh.run());
         refresh.run();
 
-        Spinner<Integer> xSpinner = new Spinner<>(0, map.getWidth() - 1, 0);
-        Spinner<Integer> ySpinner = new Spinner<>(0, map.getHeight() - 1, 0);
-        xSpinner.setEditable(true);
-        ySpinner.setEditable(true);
-
         GridPane grid = new GridPane();
         grid.setHgap(8);
         grid.setVgap(8);
         grid.addRow(0, new Label("Type:"), typeBox);
         grid.addRow(1, new Label("Entry:"), entries);
-        grid.addRow(2, new Label("X:"), xSpinner, new Label("Y:"), ySpinner);
         dialog.getDialogPane().setContent(grid);
 
         if (dialog.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
@@ -1413,10 +1420,43 @@ public class BattleMapWindow {
             status("No entry chosen, nothing was added.");
             return;
         }
-        addToken(typeBox.getValue(), selected.split("\\|")[0].trim(), xSpinner.getValue(), ySpinner.getValue());
+        armTokenPlacement(typeBox.getValue(), selected.split("\\|")[0].trim());
+    }
+
+    /** Picks up a catalogue entry so the next click on an empty, passable box places it there. */
+    private void armTokenPlacement(String type, String id) {
+        armedTokenType = type;
+        armedTokenId = id;
+        status("Click an empty box on the map to place it, or press Esc to cancel.");
+    }
+
+    private void cancelTokenPlacement() {
+        armedTokenType = null;
+        armedTokenId = null;
+        status("Placement cancelled.");
+    }
+
+    /** Resolves a queued-up token placement against the clicked box, if it is actually free. */
+    private void placeArmedTokenAt(int cx, int cy) {
+        String type = armedTokenType;
+        String id = armedTokenId;
+        if (type == null || id == null) return;
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) {
+            status("That is off the map.");
+            return;
+        }
+        GridCell cell = map.getCell(cx, cy);
+        if (!cell.isPassable() || cell.getOccupants().stream().anyMatch(TokenSupport::isCreature)) {
+            status("That box isn't free - pick another one, or press Esc to cancel.");
+            return;
+        }
+        armedTokenType = null;
+        armedTokenId = null;
+        addToken(type, id, cx, cy);
     }
 
     private void addToken(String type, String id, int x, int y) {
+
         MapObject token = switch (type) {
             case "Player" -> {
                 var pc = repos.players().getById(id);
