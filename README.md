@@ -10,6 +10,12 @@ mvn package
 java -jar target\dnd-campaign-manager-1.0.0.jar
 ```
 
+To launch the JavaFX UI directly from Maven:
+
+```powershell
+mvn javafx:run
+```
+
 ### Campaign storage
 - `src/main/resources/data/default-campaign/` holds the template campaign (read-only in CLI).
 - `src/main/resources/data/custom-campaigns/` stores one folder per custom campaign.
