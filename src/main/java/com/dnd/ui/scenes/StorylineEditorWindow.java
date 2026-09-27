@@ -126,10 +126,21 @@ final class StorylineEditorWindow {
                 e.consume();
                 return;
             }
-            SCROLL_PREFS.putDouble(scrollKey(), area.getScrollTop());
-            timer.dispose();
+            persistScrollAndDisposeTimer();
         });
         stage.showAndWait();
+    }
+
+    /**
+     * Persists the current scroll position and releases the session timer. {@code Stage.close()}
+     * (used by the "Close" and "Save &amp; Close" buttons) does not fire
+     * {@code WINDOW_CLOSE_REQUEST}, so it never reached the {@code setOnCloseRequest} handler
+     * below - scrolling was only ever remembered when the window was closed via the OS's own
+     * close button. Every path that closes this window now calls this shared method instead.
+     */
+    private void persistScrollAndDisposeTimer() {
+        SCROLL_PREFS.putDouble(scrollKey(), area.getScrollTop());
+        timer.dispose();
     }
 
     /** Stable per-file key for {@link #SCROLL_PREFS}, short enough to satisfy its 80-char cap. */
@@ -170,7 +181,8 @@ final class StorylineEditorWindow {
                 this::openManagePlayer),
             new Separator(),
             toolButton("Save", "Save this file (Ctrl+S)", this::save),
-            toolButton("Save & Close", "Save and close the editor", () -> { save(); stage.close(); }),
+            toolButton("Save & Close", "Save and close the editor",
+                () -> { save(); persistScrollAndDisposeTimer(); stage.close(); }),
             new Separator(),
             timer
         );
@@ -382,7 +394,10 @@ final class StorylineEditorWindow {
         Button close = new Button("Close");
         close.getStyleClass().add("dnd-button");
         close.setOnAction(e -> {
-            if (!dirty || confirmDiscard()) stage.close();
+            if (!dirty || confirmDiscard()) {
+                persistScrollAndDisposeTimer();
+                stage.close();
+            }
         });
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
