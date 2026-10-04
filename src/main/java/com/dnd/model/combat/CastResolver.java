@@ -374,7 +374,8 @@ public final class CastResolver {
         if (character == null || character.getItems() == null) return null;
         List<String> carried = new ArrayList<>();
         for (PlayerCharacter.PlayerItem item : character.getItems()) {
-            if (item != null && item.getItemId() != null) carried.add(normalize(item.getItemId()));
+            if (item == null || item.getItemId() == null) continue;
+            for (int i = 0; i < item.getQuantity(); i++) carried.add(normalize(item.getItemId()));
         }
         for (Item required : action.getConsumables()) {
             if (required == null) continue;
@@ -405,7 +406,8 @@ public final class CastResolver {
             while (iterator.hasNext()) {
                 PlayerCharacter.PlayerItem carried = iterator.next();
                 if (carried != null && key.equals(normalize(carried.getItemId()))) {
-                    iterator.remove();
+                    if (carried.getQuantity() > 1) carried.setQuantity(carried.getQuantity() - 1);
+                    else iterator.remove();
                     used.add(required.getName() == null ? required.getId() : required.getName());
                     break;
                 }

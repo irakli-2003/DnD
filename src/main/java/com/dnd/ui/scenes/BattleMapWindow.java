@@ -842,7 +842,7 @@ public class BattleMapWindow {
         List<Item> items = resolveItems(token);
         if (!items.isEmpty()) {
             panel.getChildren().addAll(new Separator(), owner.sectionLabel("Items"));
-            panel.getChildren().add(buildItemList(items));
+            panel.getChildren().add(buildItemList(token, items));
         }
 
         detailScroll = new ScrollPane(panel);
@@ -1336,10 +1336,19 @@ public class BattleMapWindow {
         return box;
     }
 
-    private Node buildItemList(List<Item> items) {
+    private Node buildItemList(MapObject token, List<Item> items) {
         VBox box = new VBox(2);
+        java.util.Map<String, Integer> counts = new java.util.HashMap<>();
+        if (token instanceof PlayerToken pt && pt.getCharacter() != null && pt.getCharacter().getItems() != null) {
+            for (var carried : pt.getCharacter().getItems()) {
+                if (carried != null && carried.getItemId() != null) counts.merge(carried.getItemId(), carried.getQuantity(), Integer::sum);
+            }
+        }
+        java.util.Set<String> shown = new java.util.HashSet<>();
         for (Item item : items) {
-            Label row = new Label("• " + item.getName());
+            if (!shown.add(item.getId())) continue;
+            int n = counts.getOrDefault(item.getId(), 1);
+            Label row = new Label("• " + item.getName() + (n > 1 ? "  ×" + n : ""));
             row.getStyleClass().add("body-label");
             row.setWrapText(true);
             box.getChildren().add(row);

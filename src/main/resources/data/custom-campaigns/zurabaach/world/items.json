@@ -2166,7 +2166,7 @@
       "id": "sixfold-judgment",
       "name": "The Sixfold Judgment",
       "type": "weapon",
-      "description": "A six-shot revolver of black steel and silver, faint violet runes along the barrel, and no visible way to load it. It is bound to the Gravitic Anchor Node implanted along Kael's spine, which condenses gravitational energy into six arcane rounds, one for each chamber. Choose one effect per shot: Gravity Round (force instead of piercing), Crushing Shot (Strength save or prone), Singularity Round (1/short rest, pulls creatures within 3 m to the target), Anchor Round (1/long rest, Strength save or speed 0). It never holds more than six rounds; during a long rest the Node restores spent shots by drawing ambient magic. No gunsmith or wizard has reproduced its ammunition.",
+      "description": "A six-shot revolver of black steel and silver, faint violet runes along the barrel. It is bound to the Gravitic Anchor Node implanted along Kael's spine, which charges each loaded Sixfold Cartridge with condensed gravity. Every shot burns 1 chamber of charge (1 mana, regained on rests) AND 1 Sixfold Cartridge from the pack. Cartridges are never restored by resting: they must be looted, bought or crafted. Choose one effect per shot: Gravity Round (force instead of piercing), Crushing Shot (Strength save or prone), Singularity Round (1/short rest, pulls creatures within 3 m to the target), Anchor Round (1/long rest, Strength save or speed 0).",
       "valueGold": 2500,
       "weight": 3.0,
       "damage": {
@@ -2474,6 +2474,20 @@
         "current": 100
       },
       "overview": "A blank coin. Flip it (action) and roll 1d6: 1-2 heal 2d6 HP, 3-4 take 2d6 force damage, 5-6 teleport up to 9 m to a random unoccupied spot you can see. Once per long rest."
+    },
+    {
+      "id": "sixfold-cartridge",
+      "name": "Sixfold Cartridge",
+      "type": "gear",
+      "description": "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold": 2,
+      "weight": 0.05,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "overview": "Ammunition for Sixfold Judgment. Found or crafted only."
     }
   ]
 }

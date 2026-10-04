@@ -573,8 +573,14 @@ final class StorylineEditorWindow {
                     items = new ArrayList<>();
                     pc.setItems(items);
                 }
-                items.add(new com.dnd.model.character.PlayerCharacter.PlayerItem(
-                    item.getId(), new com.dnd.model.character.PlayerCharacter.ItemCondition(100), false));
+                com.dnd.model.character.PlayerCharacter.PlayerItem stack = items.stream()
+                    .filter(i -> i != null && item.getId().equals(i.getItemId())).findFirst().orElse(null);
+                if (stack != null) {
+                    stack.setQuantity(stack.getQuantity() + 1);
+                } else {
+                    items.add(new com.dnd.model.character.PlayerCharacter.PlayerItem(
+                        item.getId(), new com.dnd.model.character.PlayerCharacter.ItemCondition(100), false));
+                }
                 persist.run();
                 refreshItemsBox(itemsBox, pc, persist);
             });
@@ -649,7 +655,25 @@ final class StorylineEditorWindow {
         }
         for (com.dnd.model.character.PlayerCharacter.PlayerItem item : new ArrayList<>(items)) {
             com.dnd.model.item.Item catalogItem = repos.items().getById(item.getItemId());
-            Label label = owner.body(catalogItem != null ? catalogItem.getName() : item.getItemId());
+            Label label = owner.body((catalogItem != null ? catalogItem.getName() : item.getItemId())
+                + (item.getQuantity() > 1 ? "  ×" + item.getQuantity() : ""));
+            Button less = new Button("−");
+            less.getStyleClass().add("dnd-button");
+            less.setTooltip(new javafx.scene.control.Tooltip("Use up / lose one"));
+            less.setOnAction(e -> {
+                if (item.getQuantity() > 1) item.setQuantity(item.getQuantity() - 1);
+                else items.remove(item);
+                persist.run();
+                refreshItemsBox(itemsBox, pc, persist);
+            });
+            Button more = new Button("+");
+            more.getStyleClass().add("dnd-button");
+            more.setTooltip(new javafx.scene.control.Tooltip("Found or crafted one more"));
+            more.setOnAction(e -> {
+                item.setQuantity(item.getQuantity() + 1);
+                persist.run();
+                refreshItemsBox(itemsBox, pc, persist);
+            });
             Button remove = new Button("Remove");
             remove.getStyleClass().add("danger-button");
             remove.setOnAction(e -> {
@@ -657,7 +681,7 @@ final class StorylineEditorWindow {
                 persist.run();
                 refreshItemsBox(itemsBox, pc, persist);
             });
-            HBox row = new HBox(8, label, remove);
+            HBox row = new HBox(8, label, less, more, remove);
             row.setAlignment(Pos.CENTER_LEFT);
             itemsBox.getChildren().add(row);
         }

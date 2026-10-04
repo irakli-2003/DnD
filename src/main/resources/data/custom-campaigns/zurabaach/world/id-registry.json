@@ -385,6 +385,10 @@
       "file": "world/items.json"
     },
     {
+      "id": "sixfold-cartridge",
+      "file": "world/items.json"
+    },
+    {
       "id": "potion-of-greater-healing",
       "file": "world/items.json"
     },

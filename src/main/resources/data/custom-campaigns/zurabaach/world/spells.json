@@ -2133,14 +2133,26 @@
   }, {
     "id" : "gravity-round",
     "name" : "Gravity Round",
-    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; 6 chambers, refilled only by a long rest). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. A normal shot that deals force damage instead of piercing.",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. A normal shot that deals force damage instead of piercing.",
     "level" : 0,
     "school" : "transmutation",
     "manaCost" : 1,
     "range" : 90,
     "radius" : 0,
     "castingMethod" : "hand-movement",
-    "requiredConsumables" : [ ],
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
     "requiredTools" : [ ],
     "concentration" : null,
     "effects" : [ ],
@@ -2156,14 +2168,26 @@
   }, {
     "id" : "crushing-shot",
     "name" : "Crushing Shot",
-    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; 6 chambers, refilled only by a long rest). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. The bullet erupts with gravitational force: the target makes a DC 13 Strength save or is knocked prone (remove Prone if it saves).",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. The bullet erupts with gravitational force: the target makes a DC 13 Strength save or is knocked prone (remove Prone if it saves).",
     "level" : 0,
     "school" : "transmutation",
     "manaCost" : 1,
     "range" : 90,
     "radius" : 0,
     "castingMethod" : "hand-movement",
-    "requiredConsumables" : [ ],
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
     "requiredTools" : [ ],
     "concentration" : null,
     "effects" : [ {
@@ -2189,14 +2213,26 @@
   }, {
     "id" : "singularity-round",
     "name" : "Singularity Round",
-    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; 6 chambers, refilled only by a long rest). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. 1 per short rest. On impact a tiny gravity well forms, pulling every creature within 3 m (10 ft) toward the target before collapsing; everything caught in the well takes the rolled force damage. The cooldown (100 rounds) only stops a second use in the same fight - it comes back after a short rest.",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. 1 per short rest. On impact a tiny gravity well forms, pulling every creature within 3 m (10 ft) toward the target before collapsing; everything caught in the well takes the rolled force damage. The cooldown (100 rounds) only stops a second use in the same fight - it comes back after a short rest.",
     "level" : 0,
     "school" : "transmutation",
     "manaCost" : 1,
     "range" : 90,
     "radius" : 10,
     "castingMethod" : "hand-movement",
-    "requiredConsumables" : [ ],
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
     "requiredTools" : [ ],
     "concentration" : null,
     "effects" : [ {
@@ -2222,14 +2258,26 @@
   }, {
     "id" : "anchor-round",
     "name" : "Anchor Round",
-    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; 6 chambers, refilled only by a long rest). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. 1 per long rest. The target's gravity dramatically increases: on a failed DC 13 Strength save its speed drops to 0 until the start of El Cucaracha's next turn (remove Anchored if it saves). The cooldown (100 rounds) only stops a second use in the same fight - it comes back after a long rest.",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. 1 per long rest. The target's gravity dramatically increases: on a failed DC 13 Strength save its speed drops to 0 until the start of El Cucaracha's next turn (remove Anchored if it saves). The cooldown (100 rounds) only stops a second use in the same fight - it comes back after a long rest.",
     "level" : 0,
     "school" : "transmutation",
     "manaCost" : 1,
     "range" : 90,
     "radius" : 0,
     "castingMethod" : "hand-movement",
-    "requiredConsumables" : [ ],
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
     "requiredTools" : [ ],
     "concentration" : null,
     "effects" : [ {

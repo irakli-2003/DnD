@@ -134,6 +134,40 @@ public class RulesTest {
         assertEquals(28, TokenSupport.combatOf(token).getCurrentHitPoints());
     }
 
+    // ── Ammunition ──────────────────────────────────────────────────────────
+
+    @Test
+    public void revolverShotSpendsManaAndOneCartridgeFromTheStack() {
+        PlayerCharacter pc = sheet();
+        PlayerCharacter.PlayerItem ammo = new PlayerCharacter.PlayerItem(
+            "sixfold-cartridge", new PlayerCharacter.ItemCondition(100), false);
+        ammo.setQuantity(2);
+        pc.getItems().add(ammo);
+        PlayerToken token = new PlayerToken(pc);
+        TokenSupport.refreshFromSheet(token, pc);
+        CombatState state = TokenSupport.combatOf(token);
+        state.setCastingResource(CastingResource.MANA);
+        state.setMaxMana(6);
+        state.setCurrentMana(6);
+
+        com.dnd.model.item.books.Book cartridge = new com.dnd.model.item.books.Book();
+        cartridge.setId("sixfold-cartridge");
+        cartridge.setName("Sixfold Cartridge");
+        Spell shot = spell("gravity-round", 0, 1);
+        shot.setRequiredConsumables(new ArrayList<>(List.of(cartridge)));
+
+        assertTrue(CastResolver.cast(token, CastResolver.of(shot), List.of(), 5, 0).isSuccess());
+        assertEquals(5, state.getCurrentMana());
+        assertEquals(1, ammo.getQuantity());
+        assertTrue(CastResolver.cast(token, CastResolver.of(shot), List.of(), 5, 0).isSuccess());
+        assertTrue(pc.getItems().stream().noneMatch(i -> "sixfold-cartridge".equals(i.getItemId())));
+        assertNotNull("no bullets left", CastResolver.blockedReason(token, CastResolver.of(shot)));
+
+        Progression.longRest(state);
+        assertEquals(6, state.getCurrentMana());
+        assertNotNull("rest restores mana but not bullets", CastResolver.blockedReason(token, CastResolver.of(shot)));
+    }
+
     // ── Sheet sync ──────────────────────────────────────────────────────────
 
     private static PlayerCharacter sheet() {

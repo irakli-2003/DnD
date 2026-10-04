@@ -357,9 +357,20 @@ public class PlayerCharacter implements Printable {
             this.equipped = equipped;
         }
 
+        /** How many are carried in this stack (bullets, arrows, potions...). Never below 1. */
+        private int quantity = 1;
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = Math.max(1, quantity);
+        }
+
         @Override
         public String toString() {
-            return itemId + (equipped ? " (equipped)" : "");
+            return itemId + (quantity > 1 ? " ×" + quantity : "") + (equipped ? " (equipped)" : "");
         }
     }
 

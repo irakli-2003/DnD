@@ -364,6 +364,13 @@
         "durability" : 100
       },
       "equipped" : false
+    }, {
+      "itemId" : "sixfold-cartridge",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : false,
+      "quantity" : 12
     } ],
     "spells" : [ {
       "spellId" : "gravity-round",
