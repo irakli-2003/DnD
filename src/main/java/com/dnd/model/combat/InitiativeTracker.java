@@ -163,6 +163,12 @@ public class InitiativeTracker {
         if (current == token) current = firstLiving();
     }
 
+    /** Jumps back to a recorded turn without ticking effects (used by time rewind). */
+    public void restore(MapObject actor, int round) {
+        this.current = actor;
+        this.round = Math.max(1, round);
+    }
+
     private MapObject firstLiving() {
         for (MapObject token : roster) {
             if (alive(token)) return token;

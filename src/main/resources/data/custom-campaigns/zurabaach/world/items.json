@@ -2114,7 +2114,7 @@
       "id": "rhaz-warhammer",
       "name": "Rhaz, the Horn Hammer",
       "type": "weapon",
-      "description": "A war hammer cut from the horn of a rhinoceros Vaerak found dying and did not let die. One end is blunt, the other is a point. Raaz's spirit still lends weight to the swing, and the swing still costs blood.",
+      "description": "A war hammer cut from the horn of Raaz, the rhinoceros Vaerak found dying and did not let die. One end (the horn's base) is blunt, the other (the tip) is a point. Raaz's spirit lives in it - and in the charging-rhino tattoo on Vaerak's right hand. Partial summon: Raaz Horn Strike / Uppercut (10 HP per hit). Full summon: Summon Raaz.",
       "valueGold": 1200,
       "weight": 9.0,
       "damage": {
@@ -2140,7 +2140,7 @@
       "id": "kaavor-whip",
       "name": "Kaavor, the Sinew Lash",
       "type": "weapon",
-      "description": "A braided whip of lynx sinew with claws and eye-teeth woven into its length. It opens unarmoured flesh and keeps it open. It will not cut steel and Vaerak knows it.",
+      "description": "A tough whip braided from Kaavor's talons, with the falcon's claws woven into its length. Kaavor's spirit lives in it - and in the diving-falcon tattoo on Vaerak's left hand. It opens unarmoured flesh and keeps it bleeding, but it will not cut metal. Partial summon: Kaavor Talon Lash (5 HP per hit). Full summon: Summon Kaavor.",
       "valueGold": 1200,
       "weight": 3.0,
       "damage": {
@@ -2166,7 +2166,7 @@
       "id": "sixfold-judgment",
       "name": "The Sixfold Judgment",
       "type": "weapon",
-      "description": "A six-shot revolver of black steel and silver, faint violet runes along the barrel, and no visible way to load it. It is bound to the Gravitic Anchor Node, which condenses gravity into six rounds and refills them over a long rest. No gunsmith has reproduced it.",
+      "description": "A six-shot revolver of black steel and silver, faint violet runes along the barrel. It is bound to the Gravitic Anchor Node implanted along Kael's spine, which charges each loaded Sixfold Cartridge with condensed gravity. Every shot burns 1 chamber of charge (1 mana, regained on rests) AND 1 Sixfold Cartridge from the pack. Cartridges are never restored by resting: they must be looted, bought or crafted. Choose one effect per shot: Gravity Round (force instead of piercing), Crushing Shot (Strength save or prone), Singularity Round (1/short rest, pulls creatures within 3 m to the target), Anchor Round (1/long rest, Strength save or speed 0).",
       "valueGold": 2500,
       "weight": 3.0,
       "damage": {
@@ -2273,7 +2273,7 @@
       "id": "gravitic-anchor-node",
       "name": "Gravitic Anchor Node",
       "type": "gear",
-      "description": "A spine of arcane cores running along Kael's back. It was a military combat implant in a world that no longer exists. It now lets him bend his own gravity, feeds the Sixfold Judgment, and feels to him like technology and magic are two words for the same thing.",
+      "description": "A spine of arcane cores running along Kael's back. It was a military combat implant in a world that no longer exists. It now lets him bend his own gravity, feeds the Sixfold Judgment, and feels to him like technology and magic are two words for the same thing. Grants Gravitic Shift and stores the Sixfold Judgment's six rounds (tracked as mana).",
       "valueGold": 3000,
       "weight": 0.0,
       "damage": null,
@@ -2281,7 +2281,7 @@
         "max": 100,
         "current": 100
       },
-      "overview": "A spine of arcane cores running along Kael's back. It was a military combat implant in a world that no longer exists. It now lets him bend his own gravity, feeds the Sixfold Judgment, and feels to him like technology and magic are two words for the same thing."
+      "overview": "A spine of arcane cores running along Kael's back. It was a military combat implant in a world that no longer exists. It now lets him bend his own gravity, feeds the Sixfold Judgment, and feels to him like technology and magic are two words for the same thing. Grants Gravitic Shift and stores the Sixfold Judgment's six rounds (tracked as mana)."
     },
     {
       "id": "word-lavenos",
@@ -2296,6 +2296,198 @@
         "current": 100
       },
       "overview": "A page torn from a book of a dead language, bearing one word: lavenos - suppleness, freedom, and an old exalted form of address whose original subject nobody remembers. A young noblewoman read it aloud once and made it his name."
+    },
+    {
+      "id": "ladies-blade",
+      "name": "Ladies' Blade",
+      "type": "weapon",
+      "description": "A slender rapier with a lady's ribbon on the hilt. No bonus to hit, 1d6 piercing. On a hit look at the damage die: even → damage is doubled, odd → damage is halved (rounded up).",
+      "valueGold": 350,
+      "weight": 2.0,
+      "damage": {
+        "dice": "1d6",
+        "type": "piercing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "dice": [
+          {
+            "diceId": "d6",
+            "count": 1
+          }
+        ],
+        "typeId": "piercing"
+      },
+      "effects": []
+    },
+    {
+      "id": "forgotten-blade",
+      "name": "Forgotten Blade",
+      "type": "weapon",
+      "description": "An old blade nobody remembers forging, still keen. +3 to hit, 1d8 slashing. With the Ladies' Blade in the other hand: Dual Blade Strike (+5 to hit, 1d8 + 1d6).",
+      "valueGold": 500,
+      "weight": 3.0,
+      "damage": {
+        "dice": "1d8",
+        "type": "slashing"
+      },
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "dualWield": true,
+      "weaponDamage": {
+        "dice": [
+          {
+            "diceId": "d8",
+            "count": 1
+          }
+        ],
+        "typeId": "slashing"
+      },
+      "effects": []
+    },
+    {
+      "id": "explorers-pack",
+      "name": "Explorer's Pack",
+      "type": "gear",
+      "description": "Backpack, bedroll, mess kit, tinderbox, 10 torches, 10 days of rations, waterskin and 15 m of hempen rope.",
+      "valueGold": 10,
+      "weight": 27.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Backpack, bedroll, mess kit, tinderbox, 10 torches, 10 days of rations, waterskin and 15 m of hempen rope."
+    },
+    {
+      "id": "simple-clothes",
+      "name": "Simple Clothes",
+      "type": "gear",
+      "description": "Plain, sturdy travelling clothes.",
+      "valueGold": 1,
+      "weight": 1.5,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "Plain, sturdy travelling clothes."
+    },
+    {
+      "id": "visage-glasses",
+      "name": "Visage (glasses)",
+      "type": "gear",
+      "description": "A pair of elegant glasses called Visage. While worn: advantage on one Investigation or Perception check per short rest to spot a detail on a face or a page.",
+      "valueGold": 50,
+      "weight": 0.1,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A pair of elegant glasses called Visage. While worn: advantage on one Investigation or Perception check per short rest to spot a detail on a face or a page."
+    },
+    {
+      "id": "philter-of-love",
+      "name": "Philter of Love",
+      "type": "alchemy",
+      "description": "A rose-pink philter. The next creature the drinker sees within 10 minutes charms them for 1 hour (DC 13 Wisdom save negates). Single use.",
+      "valueGold": 90,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [],
+      "effects": [
+        {
+          "id": "charmed",
+          "name": "Lovestruck",
+          "description": "Charmed by the first creature seen after drinking.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0,
+          "durationRounds": 10,
+          "lasting": true
+        }
+      ]
+    },
+    {
+      "id": "dust-powder",
+      "name": "Dust Powder",
+      "type": "gear",
+      "description": "A pouch of fine blinding dust. Thrown at a creature within 1.5 m: DC 12 Constitution save or blinded until the end of its next turn. 3 uses.",
+      "valueGold": 15,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A pouch of fine blinding dust. Thrown at a creature within 1.5 m: DC 12 Constitution save or blinded until the end of its next turn. 3 uses."
+    },
+    {
+      "id": "advantage-wisdom",
+      "name": "Advantage: Wisdom",
+      "type": "alchemy",
+      "description": "A clear, cold draught that steadies the mind: advantage on the next Wisdom check or Wisdom saving throw made within 1 hour. Single use.",
+      "valueGold": 50,
+      "weight": 0.5,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "requiredMaterials": [],
+      "effects": [
+        {
+          "id": "advantage_on_attack",
+          "name": "Clear Mind",
+          "description": "Advantage on the next Wisdom check or save.",
+          "damaging": false,
+          "healing": false,
+          "damageAmount": 0,
+          "healingAmount": 0,
+          "durationRounds": 10,
+          "lasting": true
+        }
+      ]
+    },
+    {
+      "id": "null-monet",
+      "name": "Null Monet",
+      "type": "gear",
+      "description": "A blank coin. Flip it (action) and roll 1d6: 1-2 heal 2d6 HP, 3-4 take 2d6 force damage, 5-6 teleport up to 9 m to a random unoccupied spot you can see. Once per long rest.",
+      "valueGold": 0,
+      "weight": 0.0,
+      "damage": null,
+      "durability": {
+        "max": 100,
+        "current": 100
+      },
+      "overview": "A blank coin. Flip it (action) and roll 1d6: 1-2 heal 2d6 HP, 3-4 take 2d6 force damage, 5-6 teleport up to 9 m to a random unoccupied spot you can see. Once per long rest."
+    },
+    {
+      "id": "sixfold-cartridge",
+      "name": "Sixfold Cartridge",
+      "type": "gear",
+      "description": "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold": 2,
+      "weight": 0.05,
+      "damage": null,
+      "durability": {
+        "max": 1,
+        "current": 1
+      },
+      "overview": "Ammunition for Sixfold Judgment. Found or crafted only."
     }
   ]
 }

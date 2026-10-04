@@ -20,7 +20,199 @@
         "intelligence": 0,
         "wisdom": 0,
         "charisma": 0
-      }
+      },
+      "spellcasting": "NONE",
+      "subclasses": [
+        "Path of the Berserker",
+        "Path of the Totem Warrior",
+        "Path of the Zealot"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Rage",
+          "description": "Enter a fury as a bonus action: advantage on Strength checks and saves, bonus melee damage and resistance to bludgeoning, piercing and slashing damage."
+        },
+        {
+          "level": 1,
+          "name": "Unarmored Defense",
+          "description": "Without armor, your AC equals 10 plus your Dexterity and Constitution modifiers; a shield still applies."
+        },
+        {
+          "level": 2,
+          "name": "Danger Sense",
+          "description": "You have advantage on Dexterity saves against effects you can see, such as traps and spells, while not blinded, deafened or incapacitated."
+        },
+        {
+          "level": 2,
+          "name": "Reckless Attack",
+          "description": "Gain advantage on Strength melee attacks this turn, but attacks against you have advantage until your next turn."
+        },
+        {
+          "level": 3,
+          "name": "Divine Fury",
+          "description": "The first creature you hit each turn while raging takes extra necrotic or radiant damage.",
+          "subclass": "Path of the Zealot"
+        },
+        {
+          "level": 3,
+          "name": "Frenzy",
+          "description": "While raging you may make one melee attack as a bonus action each turn, at the cost of a level of exhaustion when the rage ends.",
+          "subclass": "Path of the Berserker"
+        },
+        {
+          "level": 3,
+          "name": "Primal Path",
+          "description": "Choose the path that shapes the source and style of your rage."
+        },
+        {
+          "level": 3,
+          "name": "Spirit Seeker",
+          "description": "You can cast beast sense and speak with animals as rituals.",
+          "subclass": "Path of the Totem Warrior"
+        },
+        {
+          "level": 3,
+          "name": "Totem Spirit",
+          "description": "Bond with a bear, eagle or wolf spirit to gain a defensive or tactical benefit while raging.",
+          "subclass": "Path of the Totem Warrior"
+        },
+        {
+          "level": 3,
+          "name": "Warrior of the Gods",
+          "description": "Spells that bring you back from death need no material components.",
+          "subclass": "Path of the Zealot"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Extra Attack",
+          "description": "Attack twice instead of once whenever you take the Attack action."
+        },
+        {
+          "level": 5,
+          "name": "Fast Movement",
+          "description": "Your speed rises by 10 feet while you are not wearing heavy armor."
+        },
+        {
+          "level": 6,
+          "name": "Aspect of the Beast",
+          "description": "Your chosen totem animal grants a lasting physical gift such as carrying capacity, keen sight or tracking skill.",
+          "subclass": "Path of the Totem Warrior"
+        },
+        {
+          "level": 6,
+          "name": "Fanatical Focus",
+          "description": "Once per rage you can reroll a failed saving throw and must use the new roll.",
+          "subclass": "Path of the Zealot"
+        },
+        {
+          "level": 6,
+          "name": "Mindless Rage",
+          "description": "You cannot be charmed or frightened while raging, and such effects are paused during your rage.",
+          "subclass": "Path of the Berserker"
+        },
+        {
+          "level": 7,
+          "name": "Feral Instinct",
+          "description": "You gain advantage on initiative and can act normally on a surprised turn if you rage first."
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 9,
+          "name": "Brutal Critical (1 die)",
+          "description": "Roll one additional weapon damage die when you score a critical hit with a melee attack."
+        },
+        {
+          "level": 10,
+          "name": "Intimidating Presence",
+          "description": "Use your action to frighten a creature you can see within 30 feet unless it passes a Wisdom save.",
+          "subclass": "Path of the Berserker"
+        },
+        {
+          "level": 10,
+          "name": "Spirit Walker",
+          "description": "You can cast commune with nature as a ritual to receive guidance from a totem spirit.",
+          "subclass": "Path of the Totem Warrior"
+        },
+        {
+          "level": 10,
+          "name": "Zealous Presence",
+          "description": "As a bonus action, up to ten allies gain advantage on attacks and saves until your next turn, once per long rest.",
+          "subclass": "Path of the Zealot"
+        },
+        {
+          "level": 11,
+          "name": "Relentless Rage",
+          "description": "When raging and dropped to 0 hit points, a Constitution save (DC rising with each use) leaves you at 1 hit point instead."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 13,
+          "name": "Brutal Critical (2 dice)",
+          "description": "Your melee critical hits now add two extra weapon damage dice."
+        },
+        {
+          "level": 14,
+          "name": "Rage Beyond Death",
+          "description": "While raging, dropping to 0 hit points does not knock you out or kill you until the rage ends.",
+          "subclass": "Path of the Zealot"
+        },
+        {
+          "level": 14,
+          "name": "Retaliation",
+          "description": "When a creature within 5 feet damages you, you can use your reaction to strike back with a melee attack.",
+          "subclass": "Path of the Berserker"
+        },
+        {
+          "level": 14,
+          "name": "Totemic Attunement",
+          "description": "Your totem grants a powerful new aura or ability while you rage.",
+          "subclass": "Path of the Totem Warrior"
+        },
+        {
+          "level": 15,
+          "name": "Persistent Rage",
+          "description": "Your rage only ends early if you fall unconscious or choose to stop it."
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Brutal Critical (3 dice)",
+          "description": "Your melee critical hits now add three extra weapon damage dice."
+        },
+        {
+          "level": 18,
+          "name": "Indomitable Might",
+          "description": "If a Strength check totals less than your Strength score, use the score as the result."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Primal Champion",
+          "description": "Your Strength and Constitution scores each grow by 4, up to a new maximum of 24."
+        }
+      ]
     },
     {
       "id": "bard",
@@ -42,7 +234,207 @@
         "intelligence": 0,
         "wisdom": 0,
         "charisma": 2
-      }
+      },
+      "spellcasting": "FULL",
+      "subclasses": [
+        "College of Glamour",
+        "College of Lore",
+        "College of Valor"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Bardic Inspiration (d6)",
+          "description": "As a bonus action, give an ally a d6 to add to one attack roll, ability check or save within the next 10 minutes."
+        },
+        {
+          "level": 1,
+          "name": "Spellcasting",
+          "description": "Cast bard spells using Charisma, drawing on music and words as your arcane focus."
+        },
+        {
+          "level": 2,
+          "name": "Jack of All Trades",
+          "description": "Add half your proficiency bonus to any ability check that does not already use it."
+        },
+        {
+          "level": 2,
+          "name": "Song of Rest (d6)",
+          "description": "Allies who spend Hit Dice during a short rest while hearing you regain an extra d6 hit points."
+        },
+        {
+          "level": 3,
+          "name": "Bard College",
+          "description": "Join a college of bards that shapes your talents and training."
+        },
+        {
+          "level": 3,
+          "name": "Bonus Proficiencies",
+          "description": "Gain proficiency in three skills of your choice.",
+          "subclass": "College of Lore"
+        },
+        {
+          "level": 3,
+          "name": "Bonus Proficiencies",
+          "description": "Gain proficiency with medium armor, shields and martial weapons.",
+          "subclass": "College of Valor"
+        },
+        {
+          "level": 3,
+          "name": "Combat Inspiration",
+          "description": "Allies can spend your inspiration die on weapon damage or to raise their AC against one attack.",
+          "subclass": "College of Valor"
+        },
+        {
+          "level": 3,
+          "name": "Cutting Words",
+          "description": "Spend a Bardic Inspiration die as a reaction to subtract it from a creature's attack roll, ability check or damage roll.",
+          "subclass": "College of Lore"
+        },
+        {
+          "level": 3,
+          "name": "Enthralling Performance",
+          "description": "After performing for at least a minute, charm a few listeners who fail a Wisdom save for an hour.",
+          "subclass": "College of Glamour"
+        },
+        {
+          "level": 3,
+          "name": "Expertise",
+          "description": "Double your proficiency bonus for two skills you are proficient in."
+        },
+        {
+          "level": 3,
+          "name": "Mantle of Inspiration",
+          "description": "Spend a Bardic Inspiration use to grant nearby allies temporary hit points and a free reaction move.",
+          "subclass": "College of Glamour"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Bardic Inspiration (d8)",
+          "description": "Your inspiration die becomes a d8."
+        },
+        {
+          "level": 5,
+          "name": "Font of Inspiration",
+          "description": "You regain all uses of Bardic Inspiration on a short or long rest."
+        },
+        {
+          "level": 6,
+          "name": "Additional Magical Secrets",
+          "description": "Learn two spells from any class's spell list early.",
+          "subclass": "College of Lore"
+        },
+        {
+          "level": 6,
+          "name": "Countercharm",
+          "description": "Perform as an action so nearby allies have advantage on saves against being charmed or frightened."
+        },
+        {
+          "level": 6,
+          "name": "Extra Attack",
+          "description": "Attack twice instead of once whenever you take the Attack action.",
+          "subclass": "College of Valor"
+        },
+        {
+          "level": 6,
+          "name": "Mantle of Majesty",
+          "description": "Take on an awe-inspiring fey appearance and cast command as a bonus action each turn for a minute.",
+          "subclass": "College of Glamour"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 9,
+          "name": "Song of Rest (d8)",
+          "description": "Your Song of Rest bonus healing becomes a d8."
+        },
+        {
+          "level": 10,
+          "name": "Bardic Inspiration (d10)",
+          "description": "Your inspiration die becomes a d10."
+        },
+        {
+          "level": 10,
+          "name": "Expertise (additional)",
+          "description": "Choose two more proficient skills to gain double proficiency."
+        },
+        {
+          "level": 10,
+          "name": "Magical Secrets",
+          "description": "Learn two spells from any class's list; they count as bard spells for you."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 13,
+          "name": "Song of Rest (d10)",
+          "description": "Your Song of Rest bonus healing becomes a d10."
+        },
+        {
+          "level": 14,
+          "name": "Battle Magic",
+          "description": "After casting a bard spell with your action, you can make one weapon attack as a bonus action.",
+          "subclass": "College of Valor"
+        },
+        {
+          "level": 14,
+          "name": "Magical Secrets (additional)",
+          "description": "Learn two more spells from any class's spell list."
+        },
+        {
+          "level": 14,
+          "name": "Peerless Skill",
+          "description": "Spend a Bardic Inspiration die to boost one of your own ability checks.",
+          "subclass": "College of Lore"
+        },
+        {
+          "level": 14,
+          "name": "Unbreakable Majesty",
+          "description": "Assume a majestic presence that forces attackers to save or pick a new target.",
+          "subclass": "College of Glamour"
+        },
+        {
+          "level": 15,
+          "name": "Bardic Inspiration (d12)",
+          "description": "Your inspiration die becomes a d12."
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Song of Rest (d12)",
+          "description": "Your Song of Rest bonus healing becomes a d12."
+        },
+        {
+          "level": 18,
+          "name": "Magical Secrets (final)",
+          "description": "Learn another two spells from any class's spell list."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Superior Inspiration",
+          "description": "If you roll initiative with no Bardic Inspiration uses left, you regain one."
+        }
+      ]
     },
     {
       "id": "cleric",
@@ -64,7 +456,250 @@
         "intelligence": 0,
         "wisdom": 2,
         "charisma": 2
-      }
+      },
+      "spellcasting": "FULL",
+      "subclasses": [
+        "Life Domain",
+        "Light Domain",
+        "Tempest Domain",
+        "War Domain"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Bonus Cantrip",
+          "description": "Learn the light cantrip if you do not already know it.",
+          "subclass": "Light Domain"
+        },
+        {
+          "level": 1,
+          "name": "Bonus Proficiencies",
+          "description": "Gain proficiency with martial weapons and heavy armor.",
+          "subclass": "Tempest Domain"
+        },
+        {
+          "level": 1,
+          "name": "Bonus Proficiencies",
+          "description": "Gain proficiency with martial weapons and heavy armor.",
+          "subclass": "War Domain"
+        },
+        {
+          "level": 1,
+          "name": "Bonus Proficiency",
+          "description": "Gain proficiency with heavy armor.",
+          "subclass": "Life Domain"
+        },
+        {
+          "level": 1,
+          "name": "Disciple of Life",
+          "description": "Healing spells of 1st level or higher restore extra hit points equal to 2 plus the spell's level.",
+          "subclass": "Life Domain"
+        },
+        {
+          "level": 1,
+          "name": "Divine Domain",
+          "description": "Choose a domain of your deity, granting domain spells and extra features."
+        },
+        {
+          "level": 1,
+          "name": "Spellcasting",
+          "description": "Prepare and cast cleric spells using Wisdom, channeling your deity's power through a holy symbol."
+        },
+        {
+          "level": 1,
+          "name": "War Priest",
+          "description": "After taking the Attack action, make one extra weapon attack as a bonus action a few times per long rest.",
+          "subclass": "War Domain"
+        },
+        {
+          "level": 1,
+          "name": "Warding Flare",
+          "description": "As a reaction, impose disadvantage on an attack against you by flashing divine light at the attacker.",
+          "subclass": "Light Domain"
+        },
+        {
+          "level": 1,
+          "name": "Wrath of the Storm",
+          "description": "As a reaction, deal lightning or thunder damage to a nearby creature that hits you.",
+          "subclass": "Tempest Domain"
+        },
+        {
+          "level": 2,
+          "name": "Channel Divinity (1/rest)",
+          "description": "Channel divine energy once per short or long rest to fuel special effects."
+        },
+        {
+          "level": 2,
+          "name": "Channel Divinity: Destructive Wrath",
+          "description": "Maximize the damage of a lightning or thunder roll instead of rolling it.",
+          "subclass": "Tempest Domain"
+        },
+        {
+          "level": 2,
+          "name": "Channel Divinity: Guided Strike",
+          "description": "Add +10 to one of your attack rolls after seeing the roll.",
+          "subclass": "War Domain"
+        },
+        {
+          "level": 2,
+          "name": "Channel Divinity: Preserve Life",
+          "description": "Distribute a pool of healing equal to five times your cleric level among nearby wounded creatures.",
+          "subclass": "Life Domain"
+        },
+        {
+          "level": 2,
+          "name": "Channel Divinity: Radiance of the Dawn",
+          "description": "Dispel magical darkness and blast nearby hostile creatures with radiant damage.",
+          "subclass": "Light Domain"
+        },
+        {
+          "level": 2,
+          "name": "Channel Divinity: Turn Undead",
+          "description": "Present your holy symbol to make nearby undead flee unless they pass a Wisdom save."
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Destroy Undead (CR 1/2)",
+          "description": "Undead of challenge rating 1/2 or lower that fail against your Turn Undead are destroyed outright."
+        },
+        {
+          "level": 6,
+          "name": "Blessed Healer",
+          "description": "When you heal someone else with a spell, you also regain hit points.",
+          "subclass": "Life Domain"
+        },
+        {
+          "level": 6,
+          "name": "Channel Divinity (2/rest)",
+          "description": "You can channel divinity twice between rests."
+        },
+        {
+          "level": 6,
+          "name": "Channel Divinity: War God's Blessing",
+          "description": "Use your reaction to give an ally within 30 feet +10 on an attack roll.",
+          "subclass": "War Domain"
+        },
+        {
+          "level": 6,
+          "name": "Improved Flare",
+          "description": "You can use Warding Flare to protect allies as well as yourself.",
+          "subclass": "Light Domain"
+        },
+        {
+          "level": 6,
+          "name": "Thunderbolt Strike",
+          "description": "Your lightning damage can push Large or smaller creatures 10 feet away.",
+          "subclass": "Tempest Domain"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 8,
+          "name": "Destroy Undead (CR 1)",
+          "description": "Turn Undead now destroys undead of challenge rating 1 or lower."
+        },
+        {
+          "level": 8,
+          "name": "Divine Strike",
+          "description": "Once per turn, your weapon hits deal an extra 1d8 radiant damage, rising to 2d8 at 14th level.",
+          "subclass": "Life Domain"
+        },
+        {
+          "level": 8,
+          "name": "Divine Strike",
+          "description": "Once per turn, your weapon hits deal an extra 1d8 thunder damage, rising to 2d8 at 14th level.",
+          "subclass": "Tempest Domain"
+        },
+        {
+          "level": 8,
+          "name": "Divine Strike",
+          "description": "Once per turn, your weapon hits deal an extra 1d8 damage of the weapon's type, rising to 2d8 at 14th level.",
+          "subclass": "War Domain"
+        },
+        {
+          "level": 8,
+          "name": "Potent Spellcasting",
+          "description": "Add your Wisdom modifier to the damage of your cleric cantrips.",
+          "subclass": "Light Domain"
+        },
+        {
+          "level": 10,
+          "name": "Divine Intervention",
+          "description": "Call on your deity for aid; if a percentile roll is at or below your cleric level, the god intervenes."
+        },
+        {
+          "level": 11,
+          "name": "Destroy Undead (CR 2)",
+          "description": "Turn Undead now destroys undead of challenge rating 2 or lower."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 14,
+          "name": "Destroy Undead (CR 3)",
+          "description": "Turn Undead now destroys undead of challenge rating 3 or lower."
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Avatar of Battle",
+          "description": "You resist bludgeoning, piercing and slashing damage from nonmagical weapons.",
+          "subclass": "War Domain"
+        },
+        {
+          "level": 17,
+          "name": "Corona of Light",
+          "description": "Emit sunlight for a minute that gives enemies disadvantage on saves against fire and radiant spells.",
+          "subclass": "Light Domain"
+        },
+        {
+          "level": 17,
+          "name": "Destroy Undead (CR 4)",
+          "description": "Turn Undead now destroys undead of challenge rating 4 or lower."
+        },
+        {
+          "level": 17,
+          "name": "Stormborn",
+          "description": "You gain a flying speed equal to your walking speed whenever you are outdoors and not underground.",
+          "subclass": "Tempest Domain"
+        },
+        {
+          "level": 17,
+          "name": "Supreme Healing",
+          "description": "Your healing spells use the maximum value of their dice instead of rolling.",
+          "subclass": "Life Domain"
+        },
+        {
+          "level": 18,
+          "name": "Channel Divinity (3/rest)",
+          "description": "You can channel divinity three times between rests."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Divine Intervention Improvement",
+          "description": "Your calls for divine intervention succeed automatically."
+        }
+      ]
     },
     {
       "id": "druid",
@@ -86,7 +721,187 @@
         "intelligence": 2,
         "wisdom": 2,
         "charisma": 0
-      }
+      },
+      "spellcasting": "FULL",
+      "subclasses": [
+        "Circle of Spores",
+        "Circle of the Land",
+        "Circle of the Moon"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Druidic",
+          "description": "You know the secret druid language and can leave hidden messages in it."
+        },
+        {
+          "level": 1,
+          "name": "Spellcasting",
+          "description": "Prepare and cast druid spells using Wisdom, drawing on the power of nature."
+        },
+        {
+          "level": 2,
+          "name": "Bonus Cantrip",
+          "description": "Learn one additional druid cantrip.",
+          "subclass": "Circle of the Land"
+        },
+        {
+          "level": 2,
+          "name": "Circle Forms",
+          "description": "Wild Shape into tougher beasts, up to CR 1 now and higher as you level.",
+          "subclass": "Circle of the Moon"
+        },
+        {
+          "level": 2,
+          "name": "Circle Spells",
+          "description": "Gain the chill touch cantrip and decay-themed spells that are always prepared.",
+          "subclass": "Circle of Spores"
+        },
+        {
+          "level": 2,
+          "name": "Combat Wild Shape",
+          "description": "Wild Shape as a bonus action and burn spell slots to heal while transformed.",
+          "subclass": "Circle of the Moon"
+        },
+        {
+          "level": 2,
+          "name": "Druid Circle",
+          "description": "Choose a circle of druids that defines your bond with nature."
+        },
+        {
+          "level": 2,
+          "name": "Halo of Spores",
+          "description": "As a reaction, deal necrotic damage to a creature that moves near you or starts its turn close by.",
+          "subclass": "Circle of Spores"
+        },
+        {
+          "level": 2,
+          "name": "Natural Recovery",
+          "description": "Once per day during a short rest, recover some expended spell slots.",
+          "subclass": "Circle of the Land"
+        },
+        {
+          "level": 2,
+          "name": "Symbiotic Entity",
+          "description": "Spend Wild Shape to gain temporary hit points and boost your spores and melee attacks with necrotic damage.",
+          "subclass": "Circle of Spores"
+        },
+        {
+          "level": 2,
+          "name": "Wild Shape",
+          "description": "Magically turn into a beast you have seen, twice per short rest, starting with CR 1/4 forms without flying or swimming."
+        },
+        {
+          "level": 3,
+          "name": "Circle Spells",
+          "description": "Your bond with a chosen terrain grants you extra always-prepared spells as you level.",
+          "subclass": "Circle of the Land"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 4,
+          "name": "Wild Shape Improvement (CR 1/2)",
+          "description": "You can transform into beasts up to CR 1/2, including ones that swim."
+        },
+        {
+          "level": 6,
+          "name": "Fungal Infestation",
+          "description": "When a small creature dies near you, animate it as a temporary zombie servant.",
+          "subclass": "Circle of Spores"
+        },
+        {
+          "level": 6,
+          "name": "Land's Stride",
+          "description": "Nonmagical difficult terrain and plants do not slow or harm you, and you resist magical plant effects.",
+          "subclass": "Circle of the Land"
+        },
+        {
+          "level": 6,
+          "name": "Primal Strike",
+          "description": "Your attacks in beast form count as magical for overcoming resistance.",
+          "subclass": "Circle of the Moon"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 8,
+          "name": "Wild Shape Improvement (CR 1)",
+          "description": "You can transform into beasts up to CR 1, including ones that fly."
+        },
+        {
+          "level": 10,
+          "name": "Elemental Wild Shape",
+          "description": "Spend two uses of Wild Shape to become an air, earth, fire or water elemental.",
+          "subclass": "Circle of the Moon"
+        },
+        {
+          "level": 10,
+          "name": "Nature's Ward",
+          "description": "You cannot be charmed or frightened by elementals or fey and are immune to poison and disease.",
+          "subclass": "Circle of the Land"
+        },
+        {
+          "level": 10,
+          "name": "Spreading Spores",
+          "description": "Hurl your spores into a cube that damages creatures moving through it.",
+          "subclass": "Circle of Spores"
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 14,
+          "name": "Fungal Body",
+          "description": "You cannot be blinded, deafened, frightened or poisoned, and critical hits against you become normal hits.",
+          "subclass": "Circle of Spores"
+        },
+        {
+          "level": 14,
+          "name": "Nature's Sanctuary",
+          "description": "Beasts and plants must pass a Wisdom save before they can attack you.",
+          "subclass": "Circle of the Land"
+        },
+        {
+          "level": 14,
+          "name": "Thousand Forms",
+          "description": "You can cast alter self at will.",
+          "subclass": "Circle of the Moon"
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 18,
+          "name": "Beast Spells",
+          "description": "You can cast many druid spells while in a beast form."
+        },
+        {
+          "level": 18,
+          "name": "Timeless Body",
+          "description": "Primal magic makes you age only one year for every ten that pass."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Archdruid",
+          "description": "You can use Wild Shape without limit and ignore many spell components."
+        }
+      ]
     },
     {
       "id": "fighter",
@@ -108,7 +923,207 @@
         "intelligence": 0,
         "wisdom": 0,
         "charisma": 0
-      }
+      },
+      "spellcasting": "NONE",
+      "subclasses": [
+        "Battle Master",
+        "Champion",
+        "Eldritch Knight"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Fighting Style",
+          "description": "Adopt a combat specialty such as Archery, Defense, Dueling or Great Weapon Fighting."
+        },
+        {
+          "level": 1,
+          "name": "Second Wind",
+          "description": "As a bonus action, regain 1d10 plus your fighter level in hit points once per short rest."
+        },
+        {
+          "level": 2,
+          "name": "Action Surge (one use)",
+          "description": "Take one additional action on your turn once per short rest."
+        },
+        {
+          "level": 3,
+          "name": "Combat Superiority",
+          "description": "Learn maneuvers fueled by superiority dice (d8) that add tactical effects to your attacks.",
+          "subclass": "Battle Master"
+        },
+        {
+          "level": 3,
+          "name": "Improved Critical",
+          "description": "Your weapon attacks score a critical hit on a roll of 19 or 20.",
+          "subclass": "Champion"
+        },
+        {
+          "level": 3,
+          "name": "Martial Archetype",
+          "description": "Choose the archetype that defines your fighting techniques."
+        },
+        {
+          "level": 3,
+          "name": "Spellcasting",
+          "description": "Learn a small set of wizard spells, mostly abjuration and evocation, cast with Intelligence.",
+          "subclass": "Eldritch Knight"
+        },
+        {
+          "level": 3,
+          "name": "Student of War",
+          "description": "Gain proficiency with one type of artisan's tools.",
+          "subclass": "Battle Master"
+        },
+        {
+          "level": 3,
+          "name": "Weapon Bond",
+          "description": "Bond with up to two weapons so they cannot be disarmed and can be summoned to your hand.",
+          "subclass": "Eldritch Knight"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Extra Attack",
+          "description": "Attack twice instead of once whenever you take the Attack action."
+        },
+        {
+          "level": 6,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 7,
+          "name": "Know Your Enemy",
+          "description": "Study a creature for a minute to learn how it compares to you in key capabilities.",
+          "subclass": "Battle Master"
+        },
+        {
+          "level": 7,
+          "name": "Remarkable Athlete",
+          "description": "Add half your proficiency bonus to untrained Strength, Dexterity and Constitution checks and leap farther.",
+          "subclass": "Champion"
+        },
+        {
+          "level": 7,
+          "name": "War Magic",
+          "description": "After casting a cantrip with your action, make one weapon attack as a bonus action.",
+          "subclass": "Eldritch Knight"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 9,
+          "name": "Indomitable (one use)",
+          "description": "Reroll a failed saving throw once per long rest."
+        },
+        {
+          "level": 10,
+          "name": "Additional Fighting Style",
+          "description": "Pick a second Fighting Style option.",
+          "subclass": "Champion"
+        },
+        {
+          "level": 10,
+          "name": "Eldritch Strike",
+          "description": "A creature you hit with a weapon has disadvantage on its next save against your spells.",
+          "subclass": "Eldritch Knight"
+        },
+        {
+          "level": 10,
+          "name": "Improved Combat Superiority (d10)",
+          "description": "Your superiority dice become d10s.",
+          "subclass": "Battle Master"
+        },
+        {
+          "level": 11,
+          "name": "Extra Attack (2)",
+          "description": "You now attack three times with the Attack action."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 13,
+          "name": "Indomitable (two uses)",
+          "description": "You can use Indomitable twice per long rest."
+        },
+        {
+          "level": 14,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 15,
+          "name": "Arcane Charge",
+          "description": "When you Action Surge, you can also teleport up to 30 feet.",
+          "subclass": "Eldritch Knight"
+        },
+        {
+          "level": 15,
+          "name": "Relentless",
+          "description": "If you roll initiative with no superiority dice left, you regain one.",
+          "subclass": "Battle Master"
+        },
+        {
+          "level": 15,
+          "name": "Superior Critical",
+          "description": "Your weapon attacks score a critical hit on a roll of 18 to 20.",
+          "subclass": "Champion"
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Action Surge (two uses)",
+          "description": "You can use Action Surge twice between rests, but only once per turn."
+        },
+        {
+          "level": 17,
+          "name": "Indomitable (three uses)",
+          "description": "You can use Indomitable three times per long rest."
+        },
+        {
+          "level": 18,
+          "name": "Improved Combat Superiority (d12)",
+          "description": "Your superiority dice become d12s.",
+          "subclass": "Battle Master"
+        },
+        {
+          "level": 18,
+          "name": "Improved War Magic",
+          "description": "After casting any spell with your action, make one weapon attack as a bonus action.",
+          "subclass": "Eldritch Knight"
+        },
+        {
+          "level": 18,
+          "name": "Survivor",
+          "description": "At the start of each turn, regain a few hit points if you are at or below half health but above 0.",
+          "subclass": "Champion"
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Extra Attack (3)",
+          "description": "You now attack four times with the Attack action."
+        }
+      ]
     },
     {
       "id": "monk",
@@ -130,7 +1145,207 @@
         "intelligence": 0,
         "wisdom": 0,
         "charisma": 0
-      }
+      },
+      "spellcasting": "NONE",
+      "subclasses": [
+        "Way of Shadow",
+        "Way of the Four Elements",
+        "Way of the Open Hand"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Martial Arts",
+          "description": "Use Dexterity for unarmed and monk weapon attacks, roll a martial arts die for damage and punch as a bonus action."
+        },
+        {
+          "level": 1,
+          "name": "Unarmored Defense",
+          "description": "Without armor or a shield, your AC equals 10 plus your Dexterity and Wisdom modifiers."
+        },
+        {
+          "level": 2,
+          "name": "Ki",
+          "description": "Spend ki points on Flurry of Blows, Patient Defense and Step of the Wind, regaining them on a rest."
+        },
+        {
+          "level": 2,
+          "name": "Unarmored Movement",
+          "description": "Your speed increases while you wear no armor or shield, growing as you level."
+        },
+        {
+          "level": 3,
+          "name": "Deflect Missiles",
+          "description": "Use your reaction to reduce damage from a ranged weapon attack and possibly throw the missile back."
+        },
+        {
+          "level": 3,
+          "name": "Disciple of the Elements",
+          "description": "Learn elemental disciplines that spend ki to produce elemental spell effects.",
+          "subclass": "Way of the Four Elements"
+        },
+        {
+          "level": 3,
+          "name": "Monastic Tradition",
+          "description": "Commit to a monastic tradition that shapes your ki techniques."
+        },
+        {
+          "level": 3,
+          "name": "Open Hand Technique",
+          "description": "Flurry of Blows hits can knock a target prone, push it away or deny it reactions.",
+          "subclass": "Way of the Open Hand"
+        },
+        {
+          "level": 3,
+          "name": "Shadow Arts",
+          "description": "Spend ki to cast darkness, darkvision, pass without trace or silence, and learn minor illusion.",
+          "subclass": "Way of Shadow"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 4,
+          "name": "Slow Fall",
+          "description": "Use your reaction to greatly reduce falling damage."
+        },
+        {
+          "level": 5,
+          "name": "Extra Attack",
+          "description": "Attack twice instead of once whenever you take the Attack action."
+        },
+        {
+          "level": 5,
+          "name": "Stunning Strike",
+          "description": "Spend 1 ki after a melee hit to try to stun the target until the end of your next turn."
+        },
+        {
+          "level": 6,
+          "name": "Elemental Discipline (second)",
+          "description": "Learn an additional elemental discipline.",
+          "subclass": "Way of the Four Elements"
+        },
+        {
+          "level": 6,
+          "name": "Ki-Empowered Strikes",
+          "description": "Your unarmed strikes count as magical."
+        },
+        {
+          "level": 6,
+          "name": "Shadow Step",
+          "description": "Teleport between areas of dim light or darkness and gain advantage on your next melee attack.",
+          "subclass": "Way of Shadow"
+        },
+        {
+          "level": 6,
+          "name": "Wholeness of Body",
+          "description": "Use your action to regain hit points equal to three times your monk level once per long rest.",
+          "subclass": "Way of the Open Hand"
+        },
+        {
+          "level": 7,
+          "name": "Evasion",
+          "description": "Take no damage on a successful Dexterity save for half damage, and only half on a failure."
+        },
+        {
+          "level": 7,
+          "name": "Stillness of Mind",
+          "description": "Use your action to end a charm or fear effect on yourself."
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 9,
+          "name": "Unarmored Movement Improvement",
+          "description": "You can move along vertical surfaces and across liquids during your turn."
+        },
+        {
+          "level": 10,
+          "name": "Purity of Body",
+          "description": "You are immune to disease and poison."
+        },
+        {
+          "level": 11,
+          "name": "Cloak of Shadows",
+          "description": "Become invisible while standing in dim light or darkness.",
+          "subclass": "Way of Shadow"
+        },
+        {
+          "level": 11,
+          "name": "Elemental Discipline (third)",
+          "description": "Learn another elemental discipline.",
+          "subclass": "Way of the Four Elements"
+        },
+        {
+          "level": 11,
+          "name": "Tranquility",
+          "description": "After a long rest you are protected by a sanctuary effect until you attack or it ends.",
+          "subclass": "Way of the Open Hand"
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 13,
+          "name": "Tongue of the Sun and Moon",
+          "description": "You understand all spoken languages and anyone who knows a language understands you."
+        },
+        {
+          "level": 14,
+          "name": "Diamond Soul",
+          "description": "Gain proficiency in all saving throws and spend ki to reroll a failed save."
+        },
+        {
+          "level": 15,
+          "name": "Timeless Body",
+          "description": "You no longer suffer the frailty of old age and need no food or water."
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Elemental Discipline (fourth)",
+          "description": "Learn a fourth elemental discipline.",
+          "subclass": "Way of the Four Elements"
+        },
+        {
+          "level": 17,
+          "name": "Opportunist",
+          "description": "Use your reaction to attack a nearby creature that was just hit by someone else.",
+          "subclass": "Way of Shadow"
+        },
+        {
+          "level": 17,
+          "name": "Quivering Palm",
+          "description": "Plant lethal vibrations with an unarmed strike that you can later trigger to drop or heavily damage the target.",
+          "subclass": "Way of the Open Hand"
+        },
+        {
+          "level": 18,
+          "name": "Empty Body",
+          "description": "Spend ki to turn invisible and resistant to most damage, or to cast astral projection."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Perfect Self",
+          "description": "If you roll initiative with no ki remaining, you regain 4 ki points."
+        }
+      ]
     },
     {
       "id": "paladin",
@@ -152,7 +1367,195 @@
         "intelligence": 0,
         "wisdom": 2,
         "charisma": 2
-      }
+      },
+      "spellcasting": "HALF",
+      "subclasses": [
+        "Oath of Devotion",
+        "Oath of Vengeance",
+        "Oath of the Ancients"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Divine Sense",
+          "description": "Sense the location of celestials, fiends and undead nearby a few times per long rest."
+        },
+        {
+          "level": 1,
+          "name": "Lay on Hands",
+          "description": "Heal from a pool of five hit points per paladin level, or spend 5 to cure a disease or poison."
+        },
+        {
+          "level": 2,
+          "name": "Divine Smite",
+          "description": "Expend a spell slot after a melee hit to deal extra radiant damage, more against undead and fiends."
+        },
+        {
+          "level": 2,
+          "name": "Fighting Style",
+          "description": "Adopt a combat specialty such as Defense, Dueling or Protection."
+        },
+        {
+          "level": 2,
+          "name": "Spellcasting",
+          "description": "Prepare and cast paladin spells using Charisma."
+        },
+        {
+          "level": 3,
+          "name": "Channel Divinity: Abjure Enemy",
+          "description": "Frighten a creature and stop it from moving unless it passes a Wisdom save.",
+          "subclass": "Oath of Vengeance"
+        },
+        {
+          "level": 3,
+          "name": "Channel Divinity: Nature's Wrath",
+          "description": "Spectral vines restrain a creature that fails a Strength or Dexterity save.",
+          "subclass": "Oath of the Ancients"
+        },
+        {
+          "level": 3,
+          "name": "Channel Divinity: Sacred Weapon",
+          "description": "Imbue a weapon to add your Charisma modifier to its attack rolls and make it shed light.",
+          "subclass": "Oath of Devotion"
+        },
+        {
+          "level": 3,
+          "name": "Channel Divinity: Turn the Faithless",
+          "description": "Force nearby fey and fiends to flee unless they pass a Wisdom save.",
+          "subclass": "Oath of the Ancients"
+        },
+        {
+          "level": 3,
+          "name": "Channel Divinity: Turn the Unholy",
+          "description": "Force nearby fiends and undead to flee unless they pass a Wisdom save.",
+          "subclass": "Oath of Devotion"
+        },
+        {
+          "level": 3,
+          "name": "Channel Divinity: Vow of Enmity",
+          "description": "Gain advantage on attack rolls against one creature for a minute.",
+          "subclass": "Oath of Vengeance"
+        },
+        {
+          "level": 3,
+          "name": "Divine Health",
+          "description": "You are immune to disease."
+        },
+        {
+          "level": 3,
+          "name": "Sacred Oath",
+          "description": "Swear an oath that grants oath spells and Channel Divinity options."
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Extra Attack",
+          "description": "Attack twice instead of once whenever you take the Attack action."
+        },
+        {
+          "level": 6,
+          "name": "Aura of Protection",
+          "description": "You and nearby allies add your Charisma modifier to saving throws while you are conscious."
+        },
+        {
+          "level": 7,
+          "name": "Aura of Devotion",
+          "description": "You and nearby allies cannot be charmed while you are conscious.",
+          "subclass": "Oath of Devotion"
+        },
+        {
+          "level": 7,
+          "name": "Aura of Warding",
+          "description": "You and nearby allies resist damage from spells.",
+          "subclass": "Oath of the Ancients"
+        },
+        {
+          "level": 7,
+          "name": "Relentless Avenger",
+          "description": "After hitting with an opportunity attack, move up to half your speed without provoking.",
+          "subclass": "Oath of Vengeance"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 10,
+          "name": "Aura of Courage",
+          "description": "You and nearby allies cannot be frightened while you are conscious."
+        },
+        {
+          "level": 11,
+          "name": "Improved Divine Smite",
+          "description": "Every melee weapon hit deals an extra 1d8 radiant damage."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 14,
+          "name": "Cleansing Touch",
+          "description": "End one spell on yourself or a willing creature you touch a few times per long rest."
+        },
+        {
+          "level": 15,
+          "name": "Purity of Spirit",
+          "description": "You are always under the effect of protection from evil and good.",
+          "subclass": "Oath of Devotion"
+        },
+        {
+          "level": 15,
+          "name": "Soul of Vengeance",
+          "description": "When the target of your Vow of Enmity attacks, you can make a melee attack against it as a reaction.",
+          "subclass": "Oath of Vengeance"
+        },
+        {
+          "level": 15,
+          "name": "Undying Sentinel",
+          "description": "Once per long rest, drop to 1 hit point instead of 0, and stop showing the effects of age.",
+          "subclass": "Oath of the Ancients"
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 18,
+          "name": "Aura Improvements",
+          "description": "The range of your auras grows to 30 feet."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Avenging Angel",
+          "description": "Sprout wings for flight and project a frightening aura for an hour.",
+          "subclass": "Oath of Vengeance"
+        },
+        {
+          "level": 20,
+          "name": "Elder Champion",
+          "description": "Transform into a force of nature that regenerates, casts quickly and hinders enemy saves.",
+          "subclass": "Oath of the Ancients"
+        },
+        {
+          "level": 20,
+          "name": "Holy Nimbus",
+          "description": "Radiate bright sunlight that damages nearby enemies and grants advantage on saves against fiend and undead spells.",
+          "subclass": "Oath of Devotion"
+        }
+      ]
     },
     {
       "id": "ranger",
@@ -174,7 +1577,204 @@
         "intelligence": 0,
         "wisdom": 0,
         "charisma": 0
-      }
+      },
+      "spellcasting": "HALF",
+      "subclasses": [
+        "Beast Master",
+        "Gloom Stalker",
+        "Hunter"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Favored Enemy",
+          "description": "Choose a creature type you have studied, gaining advantage on tracking and recalling lore about it."
+        },
+        {
+          "level": 1,
+          "name": "Natural Explorer",
+          "description": "Become an expert in a favored terrain, traveling and foraging there with ease."
+        },
+        {
+          "level": 2,
+          "name": "Fighting Style",
+          "description": "Adopt a combat specialty such as Archery, Defense, Dueling or Two-Weapon Fighting."
+        },
+        {
+          "level": 2,
+          "name": "Spellcasting",
+          "description": "Learn and cast ranger spells using Wisdom."
+        },
+        {
+          "level": 3,
+          "name": "Dread Ambusher",
+          "description": "Gain bonus initiative and a faster, harder-hitting first turn of combat.",
+          "subclass": "Gloom Stalker"
+        },
+        {
+          "level": 3,
+          "name": "Gloom Stalker Magic",
+          "description": "Learn extra shadowy spells such as disguise self that are always known.",
+          "subclass": "Gloom Stalker"
+        },
+        {
+          "level": 3,
+          "name": "Hunter's Prey",
+          "description": "Choose Colossus Slayer, Giant Killer or Horde Breaker to specialize in a type of quarry.",
+          "subclass": "Hunter"
+        },
+        {
+          "level": 3,
+          "name": "Primeval Awareness",
+          "description": "Spend a spell slot to sense certain creature types in the surrounding miles."
+        },
+        {
+          "level": 3,
+          "name": "Ranger Archetype",
+          "description": "Choose the archetype that defines your approach to the wilds."
+        },
+        {
+          "level": 3,
+          "name": "Ranger's Companion",
+          "description": "Gain a loyal beast companion that fights alongside you at your command.",
+          "subclass": "Beast Master"
+        },
+        {
+          "level": 3,
+          "name": "Umbral Sight",
+          "description": "Gain or extend darkvision and become invisible to creatures relying on darkvision to see you.",
+          "subclass": "Gloom Stalker"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Extra Attack",
+          "description": "Attack twice instead of once whenever you take the Attack action."
+        },
+        {
+          "level": 6,
+          "name": "Favored Enemy Improvement",
+          "description": "Choose an additional favored enemy and language."
+        },
+        {
+          "level": 6,
+          "name": "Natural Explorer Improvement",
+          "description": "Choose an additional favored terrain."
+        },
+        {
+          "level": 7,
+          "name": "Defensive Tactics",
+          "description": "Choose a defense against crowds, fear or multiattacking foes.",
+          "subclass": "Hunter"
+        },
+        {
+          "level": 7,
+          "name": "Exceptional Training",
+          "description": "Your companion can Dash, Disengage, Dodge or Help as a bonus action, and its attacks count as magical.",
+          "subclass": "Beast Master"
+        },
+        {
+          "level": 7,
+          "name": "Iron Mind",
+          "description": "Gain proficiency in Wisdom saving throws or another save if you already have it.",
+          "subclass": "Gloom Stalker"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 8,
+          "name": "Land's Stride",
+          "description": "Nonmagical difficult terrain does not slow you and you resist magical plant effects."
+        },
+        {
+          "level": 10,
+          "name": "Hide in Plain Sight",
+          "description": "Spend a minute camouflaging yourself to gain a large bonus to Stealth while you stay still."
+        },
+        {
+          "level": 10,
+          "name": "Natural Explorer Improvement (third terrain)",
+          "description": "Choose a third favored terrain."
+        },
+        {
+          "level": 11,
+          "name": "Bestial Fury",
+          "description": "Your companion can make two attacks when you command it to attack.",
+          "subclass": "Beast Master"
+        },
+        {
+          "level": 11,
+          "name": "Multiattack",
+          "description": "Choose Volley or Whirlwind Attack to strike many enemies at once.",
+          "subclass": "Hunter"
+        },
+        {
+          "level": 11,
+          "name": "Stalker's Flurry",
+          "description": "Once per turn when you miss with a weapon attack, you can make another attack.",
+          "subclass": "Gloom Stalker"
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 14,
+          "name": "Favored Enemy Improvement (third enemy)",
+          "description": "Choose a third favored enemy and language."
+        },
+        {
+          "level": 14,
+          "name": "Vanish",
+          "description": "Hide as a bonus action, and you cannot be tracked by nonmagical means."
+        },
+        {
+          "level": 15,
+          "name": "Shadowy Dodge",
+          "description": "Use your reaction to impose disadvantage on an attack against you.",
+          "subclass": "Gloom Stalker"
+        },
+        {
+          "level": 15,
+          "name": "Share Spells",
+          "description": "Spells you cast on yourself can also affect your nearby companion.",
+          "subclass": "Beast Master"
+        },
+        {
+          "level": 15,
+          "name": "Superior Hunter's Defense",
+          "description": "Choose Evasion, Stand Against the Tide or Uncanny Dodge.",
+          "subclass": "Hunter"
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 18,
+          "name": "Feral Senses",
+          "description": "Sense nearby invisible creatures and suffer no disadvantage attacking unseen foes."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Foe Slayer",
+          "description": "Once per turn, add your Wisdom modifier to an attack or damage roll against a favored enemy."
+        }
+      ]
     },
     {
       "id": "rogue",
@@ -196,7 +1796,200 @@
         "intelligence": 2,
         "wisdom": 0,
         "charisma": 0
-      }
+      },
+      "spellcasting": "NONE",
+      "subclasses": [
+        "Arcane Trickster",
+        "Assassin",
+        "Thief"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Expertise",
+          "description": "Double your proficiency bonus for two chosen skills or thieves' tools."
+        },
+        {
+          "level": 1,
+          "name": "Sneak Attack",
+          "description": "Once per turn, deal extra damage when you have advantage or an ally is next to your target."
+        },
+        {
+          "level": 1,
+          "name": "Thieves' Cant",
+          "description": "You know the secret slang and signs used by thieves to pass hidden messages."
+        },
+        {
+          "level": 2,
+          "name": "Cunning Action",
+          "description": "Dash, Disengage or Hide as a bonus action."
+        },
+        {
+          "level": 3,
+          "name": "Assassinate",
+          "description": "Gain advantage against creatures that have not acted yet, and hits against surprised foes are critical.",
+          "subclass": "Assassin"
+        },
+        {
+          "level": 3,
+          "name": "Bonus Proficiencies",
+          "description": "Gain proficiency with the disguise kit and poisoner's kit.",
+          "subclass": "Assassin"
+        },
+        {
+          "level": 3,
+          "name": "Fast Hands",
+          "description": "Use Cunning Action to make Sleight of Hand checks, use thieves' tools or use an object.",
+          "subclass": "Thief"
+        },
+        {
+          "level": 3,
+          "name": "Mage Hand Legerdemain",
+          "description": "Your invisible mage hand can pick pockets, plant items and open locks.",
+          "subclass": "Arcane Trickster"
+        },
+        {
+          "level": 3,
+          "name": "Roguish Archetype",
+          "description": "Choose the archetype that defines your roguish expertise."
+        },
+        {
+          "level": 3,
+          "name": "Second-Story Work",
+          "description": "Climb at full speed and jump farther running.",
+          "subclass": "Thief"
+        },
+        {
+          "level": 3,
+          "name": "Spellcasting",
+          "description": "Learn a small set of wizard spells, mostly enchantment and illusion, cast with Intelligence.",
+          "subclass": "Arcane Trickster"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 5,
+          "name": "Uncanny Dodge",
+          "description": "Use your reaction to halve the damage of an attack from an attacker you can see."
+        },
+        {
+          "level": 6,
+          "name": "Expertise (additional)",
+          "description": "Choose two more proficiencies to gain double proficiency."
+        },
+        {
+          "level": 7,
+          "name": "Evasion",
+          "description": "Take no damage on a successful Dexterity save for half damage, and only half on a failure."
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 9,
+          "name": "Infiltration Expertise",
+          "description": "Spend time and money to build a convincing false identity.",
+          "subclass": "Assassin"
+        },
+        {
+          "level": 9,
+          "name": "Magical Ambush",
+          "description": "Creatures have disadvantage on saves against your spells if you are hidden when you cast them.",
+          "subclass": "Arcane Trickster"
+        },
+        {
+          "level": 9,
+          "name": "Supreme Sneak",
+          "description": "Gain advantage on Stealth checks if you move no more than half your speed.",
+          "subclass": "Thief"
+        },
+        {
+          "level": 10,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 11,
+          "name": "Reliable Talent",
+          "description": "Treat any d20 roll of 9 or lower as a 10 on ability checks with proficient skills."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 13,
+          "name": "Impostor",
+          "description": "Flawlessly mimic another person's speech, writing and behavior after studying them.",
+          "subclass": "Assassin"
+        },
+        {
+          "level": 13,
+          "name": "Use Magic Device",
+          "description": "Ignore class, race and level requirements when using magic items.",
+          "subclass": "Thief"
+        },
+        {
+          "level": 13,
+          "name": "Versatile Trickster",
+          "description": "Use your mage hand to distract a creature and gain advantage against it.",
+          "subclass": "Arcane Trickster"
+        },
+        {
+          "level": 14,
+          "name": "Blindsense",
+          "description": "You know the location of hidden or invisible creatures within 10 feet if you can hear."
+        },
+        {
+          "level": 15,
+          "name": "Slippery Mind",
+          "description": "Gain proficiency in Wisdom saving throws."
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Death Strike",
+          "description": "A surprised creature you hit must pass a Constitution save or take double damage.",
+          "subclass": "Assassin"
+        },
+        {
+          "level": 17,
+          "name": "Spell Thief",
+          "description": "Use your reaction to negate a spell aimed at you and steal knowledge of it for a time.",
+          "subclass": "Arcane Trickster"
+        },
+        {
+          "level": 17,
+          "name": "Thief's Reflexes",
+          "description": "Take two turns in the first round of combat.",
+          "subclass": "Thief"
+        },
+        {
+          "level": 18,
+          "name": "Elusive",
+          "description": "No attack roll has advantage against you while you are not incapacitated."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Stroke of Luck",
+          "description": "Turn a miss into a hit or a failed check into a 20 once per short rest."
+        }
+      ]
     },
     {
       "id": "sorcerer",
@@ -218,7 +2011,165 @@
         "intelligence": 0,
         "wisdom": 0,
         "charisma": 2
-      }
+      },
+      "spellcasting": "FULL",
+      "subclasses": [
+        "Draconic Bloodline",
+        "Shadow Magic",
+        "Wild Magic"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Draconic Resilience",
+          "description": "Gain an extra hit point per sorcerer level and natural armor of 13 plus Dexterity.",
+          "subclass": "Draconic Bloodline"
+        },
+        {
+          "level": 1,
+          "name": "Dragon Ancestor",
+          "description": "Choose a dragon type, learn Draconic and gain bonuses when dealing with dragons.",
+          "subclass": "Draconic Bloodline"
+        },
+        {
+          "level": 1,
+          "name": "Eyes of the Dark",
+          "description": "Gain darkvision and later see through your own darkness spells.",
+          "subclass": "Shadow Magic"
+        },
+        {
+          "level": 1,
+          "name": "Sorcerous Origin",
+          "description": "Your innate magic comes from a specific origin that grants features as you level."
+        },
+        {
+          "level": 1,
+          "name": "Spellcasting",
+          "description": "Cast sorcerer spells using Charisma, powered by magic in your blood."
+        },
+        {
+          "level": 1,
+          "name": "Strength of the Grave",
+          "description": "When reduced to 0 hit points, you may make a Charisma save to drop to 1 instead.",
+          "subclass": "Shadow Magic"
+        },
+        {
+          "level": 1,
+          "name": "Tides of Chaos",
+          "description": "Gain advantage on one roll, with a chance to trigger a surge later.",
+          "subclass": "Wild Magic"
+        },
+        {
+          "level": 1,
+          "name": "Wild Magic Surge",
+          "description": "Casting spells may unleash a random magical effect.",
+          "subclass": "Wild Magic"
+        },
+        {
+          "level": 2,
+          "name": "Font of Magic",
+          "description": "Gain sorcery points that can be converted to and from spell slots."
+        },
+        {
+          "level": 3,
+          "name": "Metamagic",
+          "description": "Learn two ways to bend your spells, such as twinning, quickening or extending them."
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 6,
+          "name": "Bend Luck",
+          "description": "Spend sorcery points to add or subtract 1d4 from another creature's roll.",
+          "subclass": "Wild Magic"
+        },
+        {
+          "level": 6,
+          "name": "Elemental Affinity",
+          "description": "Add Charisma to damage of spells matching your ancestry and spend a point to resist that element.",
+          "subclass": "Draconic Bloodline"
+        },
+        {
+          "level": 6,
+          "name": "Hound of Ill Omen",
+          "description": "Spend sorcery points to summon a shadowy hound that hunts a target and weakens its saves.",
+          "subclass": "Shadow Magic"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 10,
+          "name": "Metamagic (additional option)",
+          "description": "Learn one more Metamagic option."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 14,
+          "name": "Controlled Chaos",
+          "description": "Roll twice on the surge table and choose the result.",
+          "subclass": "Wild Magic"
+        },
+        {
+          "level": 14,
+          "name": "Dragon Wings",
+          "description": "Sprout dragon wings as a bonus action to gain a flying speed.",
+          "subclass": "Draconic Bloodline"
+        },
+        {
+          "level": 14,
+          "name": "Shadow Walk",
+          "description": "Teleport between shadows as a bonus action while in dim light or darkness.",
+          "subclass": "Shadow Magic"
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Metamagic (final option)",
+          "description": "Learn another Metamagic option."
+        },
+        {
+          "level": 18,
+          "name": "Draconic Presence",
+          "description": "Spend sorcery points to project an aura of awe or fear around you.",
+          "subclass": "Draconic Bloodline"
+        },
+        {
+          "level": 18,
+          "name": "Spell Bombardment",
+          "description": "When you roll maximum on a damage die, roll it again and add the result.",
+          "subclass": "Wild Magic"
+        },
+        {
+          "level": 18,
+          "name": "Umbral Form",
+          "description": "Become a shadowy form that moves through objects and resists most damage.",
+          "subclass": "Shadow Magic"
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Sorcerous Restoration",
+          "description": "Regain 4 sorcery points whenever you finish a short rest."
+        }
+      ]
     },
     {
       "id": "warlock",
@@ -240,7 +2191,157 @@
         "intelligence": 0,
         "wisdom": 2,
         "charisma": 2
-      }
+      },
+      "spellcasting": "PACT",
+      "subclasses": [
+        "The Archfey",
+        "The Fiend",
+        "The Great Old One"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Awakened Mind",
+          "description": "Speak telepathically to any creature you can see within 30 feet.",
+          "subclass": "The Great Old One"
+        },
+        {
+          "level": 1,
+          "name": "Dark One's Blessing",
+          "description": "Gain temporary hit points whenever you reduce a hostile creature to 0 hit points.",
+          "subclass": "The Fiend"
+        },
+        {
+          "level": 1,
+          "name": "Fey Presence",
+          "description": "Charm or frighten creatures in a small cube around you once per short rest.",
+          "subclass": "The Archfey"
+        },
+        {
+          "level": 1,
+          "name": "Otherworldly Patron",
+          "description": "Strike a bargain with an otherworldly being that grants features and expanded spells."
+        },
+        {
+          "level": 1,
+          "name": "Pact Magic",
+          "description": "Cast warlock spells using Charisma with a few slots that are always cast at their highest level and refresh on a short rest."
+        },
+        {
+          "level": 2,
+          "name": "Eldritch Invocations",
+          "description": "Learn fragments of forbidden lore that grant lasting magical abilities."
+        },
+        {
+          "level": 3,
+          "name": "Pact Boon",
+          "description": "Your patron grants a gift: Pact of the Blade, the Chain or the Tome."
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 6,
+          "name": "Dark One's Own Luck",
+          "description": "Add a d10 to an ability check or saving throw once per short rest.",
+          "subclass": "The Fiend"
+        },
+        {
+          "level": 6,
+          "name": "Entropic Ward",
+          "description": "Impose disadvantage on an attack against you and gain advantage on your next attack if it misses.",
+          "subclass": "The Great Old One"
+        },
+        {
+          "level": 6,
+          "name": "Misty Escape",
+          "description": "When damaged, use your reaction to turn invisible and teleport a short distance.",
+          "subclass": "The Archfey"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 10,
+          "name": "Beguiling Defenses",
+          "description": "You are immune to being charmed and can turn charm attempts back on the caster.",
+          "subclass": "The Archfey"
+        },
+        {
+          "level": 10,
+          "name": "Fiendish Resilience",
+          "description": "Choose a damage type after each rest to gain resistance to it.",
+          "subclass": "The Fiend"
+        },
+        {
+          "level": 10,
+          "name": "Thought Shield",
+          "description": "Your thoughts cannot be read, you resist psychic damage and you reflect it back at attackers.",
+          "subclass": "The Great Old One"
+        },
+        {
+          "level": 11,
+          "name": "Mystic Arcanum (6th level)",
+          "description": "Choose one 6th-level spell you can cast once per long rest without a slot."
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 13,
+          "name": "Mystic Arcanum (7th level)",
+          "description": "Choose one 7th-level spell you can cast once per long rest without a slot."
+        },
+        {
+          "level": 14,
+          "name": "Create Thrall",
+          "description": "Touch an incapacitated humanoid to charm it indefinitely and link with it telepathically.",
+          "subclass": "The Great Old One"
+        },
+        {
+          "level": 14,
+          "name": "Dark Delirium",
+          "description": "Plunge a creature into an illusory realm where it is charmed or frightened for a minute.",
+          "subclass": "The Archfey"
+        },
+        {
+          "level": 14,
+          "name": "Hurl Through Hell",
+          "description": "Send a creature you hit on a brief trip through the lower planes, dealing heavy psychic damage.",
+          "subclass": "The Fiend"
+        },
+        {
+          "level": 15,
+          "name": "Mystic Arcanum (8th level)",
+          "description": "Choose one 8th-level spell you can cast once per long rest without a slot."
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 17,
+          "name": "Mystic Arcanum (9th level)",
+          "description": "Choose one 9th-level spell you can cast once per long rest without a slot."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Eldritch Master",
+          "description": "Spend a minute pleading with your patron to regain all Pact Magic slots once per long rest."
+        }
+      ]
     },
     {
       "id": "wizard",
@@ -262,7 +2363,155 @@
         "intelligence": 2,
         "wisdom": 2,
         "charisma": 0
-      }
+      },
+      "spellcasting": "FULL",
+      "subclasses": [
+        "School of Abjuration",
+        "School of Divination",
+        "School of Evocation"
+      ],
+      "features": [
+        {
+          "level": 1,
+          "name": "Arcane Recovery",
+          "description": "Once per day during a short rest, recover expended spell slots up to half your wizard level."
+        },
+        {
+          "level": 1,
+          "name": "Spellcasting",
+          "description": "Prepare spells from your spellbook and cast them using Intelligence."
+        },
+        {
+          "level": 2,
+          "name": "Abjuration Savant",
+          "description": "Copying abjuration spells into your spellbook costs half the gold and time.",
+          "subclass": "School of Abjuration"
+        },
+        {
+          "level": 2,
+          "name": "Arcane Tradition",
+          "description": "Choose a school of magic to specialize in."
+        },
+        {
+          "level": 2,
+          "name": "Arcane Ward",
+          "description": "Casting abjuration spells creates and recharges a magical ward that absorbs damage for you.",
+          "subclass": "School of Abjuration"
+        },
+        {
+          "level": 2,
+          "name": "Divination Savant",
+          "description": "Copying divination spells into your spellbook costs half the gold and time.",
+          "subclass": "School of Divination"
+        },
+        {
+          "level": 2,
+          "name": "Evocation Savant",
+          "description": "Copying evocation spells into your spellbook costs half the gold and time.",
+          "subclass": "School of Evocation"
+        },
+        {
+          "level": 2,
+          "name": "Portent",
+          "description": "After a long rest, roll two d20s and use them to replace attack rolls, checks or saves.",
+          "subclass": "School of Divination"
+        },
+        {
+          "level": 2,
+          "name": "Sculpt Spells",
+          "description": "Protect chosen allies from your evocation spells' area so they take no damage.",
+          "subclass": "School of Evocation"
+        },
+        {
+          "level": 4,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 6,
+          "name": "Expert Divination",
+          "description": "Casting a divination spell of 2nd level or higher restores a lower-level spell slot.",
+          "subclass": "School of Divination"
+        },
+        {
+          "level": 6,
+          "name": "Potent Cantrip",
+          "description": "Creatures that succeed on saves against your cantrips still take half damage.",
+          "subclass": "School of Evocation"
+        },
+        {
+          "level": 6,
+          "name": "Projected Ward",
+          "description": "Use your reaction to have your Arcane Ward absorb damage dealt to a nearby creature.",
+          "subclass": "School of Abjuration"
+        },
+        {
+          "level": 8,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 10,
+          "name": "Empowered Evocation",
+          "description": "Add your Intelligence modifier to the damage of your wizard evocation spells.",
+          "subclass": "School of Evocation"
+        },
+        {
+          "level": 10,
+          "name": "Improved Abjuration",
+          "description": "Add your proficiency bonus to checks made with abjuration spells like counterspell.",
+          "subclass": "School of Abjuration"
+        },
+        {
+          "level": 10,
+          "name": "The Third Eye",
+          "description": "Gain darkvision, ethereal sight, the ability to read any language or see invisibility until your next rest.",
+          "subclass": "School of Divination"
+        },
+        {
+          "level": 12,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 14,
+          "name": "Greater Portent",
+          "description": "Roll three d20s for Portent instead of two.",
+          "subclass": "School of Divination"
+        },
+        {
+          "level": 14,
+          "name": "Overchannel",
+          "description": "Deal maximum damage with a lower-level spell, at the risk of necrotic damage to yourself on repeat use.",
+          "subclass": "School of Evocation"
+        },
+        {
+          "level": 14,
+          "name": "Spell Resistance",
+          "description": "Gain advantage on saves against spells and resistance to spell damage.",
+          "subclass": "School of Abjuration"
+        },
+        {
+          "level": 16,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 18,
+          "name": "Spell Mastery",
+          "description": "Cast one chosen 1st-level and one 2nd-level spell at their lowest level without spending slots."
+        },
+        {
+          "level": 19,
+          "name": "Ability Score Improvement",
+          "description": "Raise one ability score by 2 or two scores by 1 (to a maximum of 20), or take a feat instead."
+        },
+        {
+          "level": 20,
+          "name": "Signature Spells",
+          "description": "Two chosen 3rd-level spells are always prepared and can each be cast once per rest without a slot."
+        }
+      ]
     }
   ]
 }

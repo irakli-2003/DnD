@@ -390,5 +390,47 @@
     "traits" : [ "random", "does not have a personality", "uses happy face and sad face for expressing emotions" ],
     "languages" : [ ],
     "imagePath" : "images/npcs/new_1788421566015.jpg"
+  }, {
+    "id" : "cheshire-cat",
+    "name" : "The Cheshire Cat",
+    "description" : "Large fey (dead). AC -, HP -: he cannot and will not be fought (999 HP only so the battle map never drops him). He is in the mirrors, not in the room. If a player attacks him, the attack passes through the mirror and strikes their own reflection: they take half the damage dealt, and the cat says 'Yes, that's what usually happens here' and carries on talking. He answers exactly what is asked and never corrects a badly worded question. He cannot leave the mirrors, carry anything, fight for them, or come to Act 7.",
+    "role" : "dead guide in the mirrors",
+    "level" : 1,
+    "stats" : {
+      "strength" : 10,
+      "dexterity" : 20,
+      "constitution" : 10,
+      "intelligence" : 18,
+      "wisdom" : 18,
+      "charisma" : 20
+    },
+    "traits" : [ "cannot lie", "never volunteers", "always pays his debts", "dead - lives only in mirrors" ],
+    "languages" : [ "common" ],
+    "maxHitPoints" : 999,
+    "armorClass" : 0,
+    "maxMana" : 0,
+    "spellSlots" : [ ],
+    "imagePath" : null
+  }, {
+    "id" : "grandfather-t",
+    "name" : "The Grandfather ('T.', the First Traveller)",
+    "description" : "A three-metre elf with Vaerak's tattoos, ribbons tied round his horns, his chest opened like a book with a tiny doll's house inside and a beating heart in the top-floor bed. He lies on the table under the white cloth at the far end of the nursery. He is alive only because Alice imagines him alive. He can move his eyes, grip the compass, raise one finger to his lips ('shh'), point to the note, then the door - and squeeze Vaerak's hand once. He cannot be saved. Not a combatant.",
+    "role" : "Alice's 'big doll' - Vaerak's grandfather",
+    "level" : 1,
+    "stats" : {
+      "strength" : 18,
+      "dexterity" : 8,
+      "constitution" : 10,
+      "intelligence" : 14,
+      "wisdom" : 16,
+      "charisma" : 12
+    },
+    "traits" : [ "cannot speak (painted lips)", "can barely move", "holds the twin compass" ],
+    "languages" : [ "common" ],
+    "maxHitPoints" : 1,
+    "armorClass" : 10,
+    "maxMana" : 0,
+    "spellSlots" : [ ],
+    "imagePath" : null
   } ]
 }
