@@ -685,5 +685,136 @@
       "source" : "DM",
       "expired" : false
     } ]
+  }, {
+    "id" : "Tatuli",
+    "name" : "Tasha",
+    "classId" : "cleric",
+    "raceId" : "tiefling",
+    "level" : 5,
+    "xp" : 65,
+    "stats" : {
+      "strength" : 8,
+      "dexterity" : 8,
+      "constitution" : 15,
+      "intelligence" : 8,
+      "wisdom" : 15,
+      "charisma" : 15
+    },
+    "items" : [ {
+      "itemId" : "morningstar",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : true
+    }, {
+      "itemId" : "light-crossbow",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : true
+    }, {
+      "itemId" : "shield",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : true
+    }, {
+      "itemId" : "leather-armor",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : true
+    }, {
+      "itemId" : "holy-symbol",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : true
+    }, {
+      "itemId" : "healers-kit",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : false
+    }, {
+      "itemId" : "holy-water",
+      "condition" : {
+        "durability" : 100
+      },
+      "equipped" : false
+    } ],
+    "spells" : [ {
+      "spellId" : "sacred-flame",
+      "rank" : 0,
+      "active" : true
+    }, {
+      "spellId" : "guidance",
+      "rank" : 0,
+      "active" : true
+    }, {
+      "spellId" : "light",
+      "rank" : 0,
+      "active" : true
+    }, {
+      "spellId" : "thaumaturgy",
+      "rank" : 0,
+      "active" : true
+    }, {
+      "spellId" : "cure-wounds",
+      "rank" : 1,
+      "active" : true
+    }, {
+      "spellId" : "healing-word",
+      "rank" : 1,
+      "active" : true
+    }, {
+      "spellId" : "bless",
+      "rank" : 1,
+      "active" : true
+    }, {
+      "spellId" : "detect-magic",
+      "rank" : 1,
+      "active" : true
+    }, {
+      "spellId" : "lesser-restoration",
+      "rank" : 2,
+      "active" : true
+    }, {
+      "spellId" : "spiritual-weapon",
+      "rank" : 2,
+      "active" : true
+    }, {
+      "spellId" : "hold-person",
+      "rank" : 2,
+      "active" : true
+    }, {
+      "spellId" : "revivify",
+      "rank" : 3,
+      "active" : true
+    }, {
+      "spellId" : "dispel-magic",
+      "rank" : 3,
+      "active" : false
+    } ],
+    "passwordHash" : null,
+    "passwordSalt" : null,
+    "imagePath" : "images/players/player-tasha.jpg",
+    "playerName" : "Unassigned",
+    "ownerUsername" : "",
+    "description" : "",
+    "maxHitPoints" : 30,
+    "currentHitPoints" : 26,
+    "maxMana" : 0,
+    "currentMana" : 0,
+    "activeEffects" : [ {
+      "effectId" : "disadvantage",
+      "name" : "Disadvantage",
+      "description" : "",
+      "remainingRounds" : 3,
+      "damagePerRound" : 0,
+      "healingPerRound" : 0,
+      "source" : "DM",
+      "expired" : false
+    } ]
   } ]
 }
