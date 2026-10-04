@@ -52,7 +52,10 @@
       "effects" : [ "advantage_on_attack" ],
       "range" : 5.0,
       "recharge" : 0,
-      "radius" : 0.0
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
     }, {
       "id" : "keen_smell",
       "name" : "Keen Smell",
@@ -60,7 +63,10 @@
       "effects" : [ ],
       "range" : 0.0,
       "recharge" : 0,
-      "radius" : 0.0
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
     }, {
       "id" : "bite",
       "name" : "Bite",
@@ -68,8 +74,15 @@
       "effects" : [ "prone" ],
       "range" : 5.0,
       "recharge" : 0,
-      "radius" : 0.0
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
     } ],
+    "maxHitPoints" : 37,
+    "armorClass" : 14,
+    "maxMana" : 0,
+    "spellSlots" : [ ],
     "imagePath" : "images/beasts/dire-wolf.jpg"
   }, {
     "id" : "brown-bear",
@@ -686,6 +699,195 @@
       "recharge" : 0,
       "radius" : 0.0
     } ],
+    "imagePath" : null
+  }, {
+    "id" : "raaz",
+    "name" : "Raaz (spirit rhinoceros)",
+    "description" : "Vaerak's rhinoceros, found dying, saved, befriended - and after its death bound into the Horn Hammer. When fully summoned it takes a body of water and living soil. Speed 20 m per round. Upkeep: 5 HP from Vaerak every turn it stays.",
+    "habitat" : "grassland",
+    "challengeRating" : "2",
+    "stats" : {
+      "strength" : 21,
+      "dexterity" : 8,
+      "constitution" : 16,
+      "intelligence" : 3,
+      "wisdom" : 12,
+      "charisma" : 6
+    },
+    "abilities" : [ {
+      "id" : "raaz_charge",
+      "name" : "Charge",
+      "description" : "Moves at least 6 m straight toward a target, then slams it: 2d8 + 5 bludgeoning. DC 15 Strength save or the target is knocked back 3 m and prone.",
+      "effects" : [ "knockback", "prone" ],
+      "range" : 65.0,
+      "recharge" : 2,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : {
+        "dice" : [ {
+          "diceId" : "d8",
+          "count" : 2
+        } ],
+        "typeId" : "bludgeoning"
+      }
+    }, {
+      "id" : "raaz_impale",
+      "name" : "Impale",
+      "description" : "Drives its horn through a target: 2d10 + 5 piercing and the target is impaled (grappled, escape DC 15). An impaled target bleeds every round.",
+      "effects" : [ "grappled", "bleeding" ],
+      "range" : 5.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : {
+        "dice" : [ {
+          "diceId" : "d10",
+          "count" : 2
+        } ],
+        "typeId" : "piercing"
+      }
+    } ],
+    "maxHitPoints" : 50,
+    "armorClass" : 15,
+    "maxMana" : 0,
+    "spellSlots" : [ ],
+    "imagePath" : null
+  }, {
+    "id" : "kaavor",
+    "name" : "Kaavor (spirit falcon)",
+    "description" : "Vaerak's falcon, found abandoned as a chick and raised by hand - after its death bound into the Sinew Lash. When fully summoned it takes a body of water and soil. Speed 90 m per round (flying). Upkeep: 3 HP from Vaerak every turn it stays. Can see in almost complete darkness; sees anything within half a kilometre in open sight and daylight.",
+    "habitat" : "mountain",
+    "challengeRating" : "1",
+    "stats" : {
+      "strength" : 6,
+      "dexterity" : 18,
+      "constitution" : 12,
+      "intelligence" : 4,
+      "wisdom" : 18,
+      "charisma" : 7
+    },
+    "abilities" : [ {
+      "id" : "kaavor_flight_dive",
+      "name" : "Flight Dive",
+      "description" : "+3 to hit for every round spent gaining height; the bonus stays as long as Kaavor keeps the elevation. Dive strike: 2d6 + 4 slashing.",
+      "effects" : [ "advantage_on_attack" ],
+      "range" : 295.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : {
+        "dice" : [ {
+          "diceId" : "d6",
+          "count" : 2
+        } ],
+        "typeId" : "slashing"
+      }
+    }, {
+      "id" : "kaavor_focus",
+      "name" : "Focus",
+      "description" : "Kaavor keeps an eye on its prey (DC 10 to hold focus) and gains +3 to hit while it holds it. Focus is lost if Kaavor uses any action or ability except Flight Dive.",
+      "effects" : [ "advantage_on_attack" ],
+      "range" : 0.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
+    }, {
+      "id" : "kaavor_talons",
+      "name" : "Talons",
+      "description" : "Talon rake: 1d6 + 4 slashing. Causes staggering on unarmoured enemies.",
+      "effects" : [ "staggered" ],
+      "range" : 5.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : {
+        "dice" : [ {
+          "diceId" : "d6",
+          "count" : 1
+        } ],
+        "typeId" : "slashing"
+      }
+    }, {
+      "id" : "kaavor_keen_sight",
+      "name" : "Keen Sight",
+      "description" : "Sees in almost complete darkness; sees anything within half a kilometre in open sight and daylight.",
+      "effects" : [ ],
+      "range" : 0.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
+    } ],
+    "maxHitPoints" : 20,
+    "armorClass" : 7,
+    "maxMana" : 0,
+    "spellSlots" : [ ],
+    "imagePath" : null
+  }, {
+    "id" : "giant-flamingo",
+    "name" : "Giant Flamingo",
+    "description" : "Large beast, CR 2 (450 XP). AC 12, HP 45 (6d10+12), speed 9 m. Passive Perception 10. Two and a half metres, pink, used far too long as a croquet mallet - the neck is permanently bent into a striking pose. Its beak is sewn shut. In the queue at the Cross Door the two flamingos walk against the line: one step, one pause, and swing at every second turn (every third person).",
+    "habitat" : "urban",
+    "challengeRating" : "2",
+    "stats" : {
+      "strength" : 17,
+      "dexterity" : 12,
+      "constitution" : 14,
+      "intelligence" : 3,
+      "wisdom" : 10,
+      "charisma" : 6
+    },
+    "abilities" : [ {
+      "id" : "neck_swing",
+      "name" : "Neck Swing",
+      "description" : "Melee attack: +5 to hit, reach 3 m (10 ft), 2d8+3 bludgeoning. (In the queue: DEX save DC 13, 2d8+2 bludgeoning and prone; half and standing on a success.)",
+      "effects" : [ "prone" ],
+      "range" : 10.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : {
+        "dice" : [ {
+          "diceId" : "d8",
+          "count" : 2
+        } ],
+        "typeId" : "bludgeoning"
+      }
+    }, {
+      "id" : "croquet",
+      "name" : "Croquet",
+      "description" : "Recharge 5-6. One creature within 1.5 m: STR save DC 13 or it is hurled 3 m and knocked prone.",
+      "effects" : [ "knockback", "prone" ],
+      "range" : 5.0,
+      "recharge" : 3,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
+    }, {
+      "id" : "rhythm",
+      "name" : "Rhythm",
+      "description" : "Passive. It swings only on every second turn and cannot change that. In combat this is as readable as it was in the queue.",
+      "effects" : [ ],
+      "range" : 0.0,
+      "recharge" : 0,
+      "radius" : 0.0,
+      "hpCost" : 0,
+      "manaCost" : 0,
+      "damage" : null
+    } ],
+    "maxHitPoints" : 45,
+    "armorClass" : 12,
+    "maxMana" : 0,
+    "spellSlots" : [ ],
     "imagePath" : null
   } ]
 }

@@ -92,6 +92,12 @@ public class ActiveEffect {
         this.source = source;
     }
 
+    public ActiveEffect copy() {
+        ActiveEffect c = new ActiveEffect(effectId, name, remainingRounds, damagePerRound, healingPerRound, source);
+        c.description = description;
+        return c;
+    }
+
     /** True once this has run its course and should be dropped from the bearer. */
     public boolean isExpired() {
         return remainingRounds <= 0;

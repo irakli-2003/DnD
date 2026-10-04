@@ -349,5 +349,145 @@
     "healingAmount" : 0,
     "durationRounds" : 3,
     "lasting" : true
+  }, {
+    "id" : "staggered",
+    "name" : "Staggered",
+    "description" : "Knocked off balance: disadvantage on the next attack and movement halved until the end of its next turn.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 1,
+    "lasting" : true
+  }, {
+    "id" : "gravity_pull",
+    "name" : "Gravity Pull",
+    "description" : "Dragged up to 3 m (10 ft) toward the centre of a collapsing gravity well.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 0,
+    "lasting" : false
+  }, {
+    "id" : "anchored",
+    "name" : "Anchored",
+    "description" : "Its own weight multiplies: speed 0 until the start of the caster's next turn.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 1,
+    "lasting" : true
+  }, {
+    "id" : "gravity_shift",
+    "name" : "Gravity Shift",
+    "description" : "Own gravity bent: either feather-light (jump twice as far, no falling damage, can run along walls) or anchored (cannot be shoved, pushed or knocked prone).",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 1,
+    "lasting" : true
+  }, {
+    "id" : "guard_stance",
+    "name" : "Guard Stance",
+    "description" : "+1 AC until the start of the next turn.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 1,
+    "lasting" : true
+  }, {
+    "id" : "blade_oath",
+    "name" : "Blade Oath",
+    "description" : "Weapon hits deal +1 piercing damage.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 10,
+    "lasting" : true
+  }, {
+    "id" : "compelled_duel",
+    "name" : "Compelled Duel",
+    "description" : "Pulled toward the challenger and has disadvantage on attacks against anyone else.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 10,
+    "lasting" : true
+  }, {
+    "id" : "concussed",
+    "name" : "Concussed",
+    "description" : "Head ringing: disadvantage on attacks and ability checks until the end of its next turn.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 1,
+    "lasting" : true
+  }, {
+    "id" : "armor_broken",
+    "name" : "Armor Broken",
+    "description" : "Armour pierced or knocked askew: -2 AC.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 2,
+    "lasting" : true
+  }, {
+    "id" : "weakened",
+    "name" : "Weakened",
+    "description" : "Its blows land without strength: deals half damage.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 2,
+    "lasting" : true
+  }, {
+    "id" : "shield_of_faith",
+    "name" : "Shield of Faith",
+    "description" : "A shimmering field of faith: +2 AC.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 10,
+    "lasting" : true
+  }, {
+    "id" : "guided",
+    "name" : "Guided",
+    "description" : "Add 1d4 to one ability check of choice before the effect ends.",
+    "damaging" : false,
+    "healing" : false,
+    "damageAmount" : 0,
+    "healingAmount" : 0,
+    "durationRounds" : 10,
+    "lasting" : true
+  }, {
+    "id" : "aided",
+    "name" : "Aided",
+    "description" : "Bolstered: maximum and current HP +3 for 8 hours.",
+    "damaging" : false,
+    "healing" : true,
+    "damageAmount" : 0,
+    "healingAmount" : 3,
+    "durationRounds" : 0,
+    "lasting" : false
+  }, {
+    "id" : "spirit_upkeep",
+    "name" : "Spirit Upkeep",
+    "description" : "Keeping a spirit companion in a physical body drains the summoner's own life every turn. Remove when the spirit is dismissed.",
+    "damaging" : true,
+    "healing" : false,
+    "damageAmount" : 5,
+    "healingAmount" : 0,
+    "durationRounds" : 10,
+    "lasting" : true
   } ]
 }

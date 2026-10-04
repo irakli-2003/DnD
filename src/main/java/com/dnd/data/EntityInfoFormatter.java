@@ -22,6 +22,38 @@ public final class EntityInfoFormatter {
     /** Catalog properties that are plumbing rather than content, and so are never printed. */
     private static final List<String> HIDDEN_FIELDS = List.of("id", "imagePath", "passwordHash", "passwordSalt");
 
+    /** Combat numbers gathered into one compact "HP · AC · Mana · Slots" line at the top. */
+    private static final List<String> VITAL_FIELDS = List.of(
+        "maxHitPoints", "currentHitPoints", "armorClass", "maxMana", "currentMana", "spellSlots");
+
+    /** e.g. "HP 45/60 · AC 15 · Mana 10/10 · Spell slots 1st 4/4 · 2nd 2/3"; blank when none set. */
+    static String vitalsLine(Object entity) {
+        List<String> parts = new ArrayList<>();
+        int maxHp = intProperty(entity, "getMaxHitPoints");
+        int curHp = intProperty(entity, "getCurrentHitPoints");
+        boolean tracksCurrent = readProperty(entity, "getCurrentHitPoints") != null;
+        if (maxHp > 0) parts.add("HP " + (tracksCurrent ? curHp + "/" : "") + maxHp);
+        int ac = intProperty(entity, "getArmorClass");
+        if (ac > 0) parts.add("AC " + ac);
+        int maxMana = intProperty(entity, "getMaxMana");
+        if (maxMana > 0) {
+            parts.add("Mana " + (tracksCurrent ? intProperty(entity, "getCurrentMana") + "/" : "") + maxMana);
+        }
+        Object slots = readProperty(entity, "getSpellSlots");
+        if (slots instanceof List<?> list && !list.isEmpty()) {
+            @SuppressWarnings("unchecked")
+            List<com.dnd.model.magic.SpellSlot> typed = (List<com.dnd.model.magic.SpellSlot>) list;
+            String described = com.dnd.model.magic.SpellSlots.describe(typed);
+            if (!described.isBlank()) parts.add("Spell slots " + described);
+        }
+        return String.join(" · ", parts);
+    }
+
+    private static int intProperty(Object entity, String getter) {
+        Object value = readProperty(entity, getter);
+        return value instanceof Number n ? n.intValue() : 0;
+    }
+
     private final CampaignRepositories repos;
     private final ObjectMapper mapper = JsonMappers.create();
 
@@ -100,9 +132,11 @@ public final class EntityInfoFormatter {
         if (entity == null) return "";
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(singular(category)).append(": ").append(nameOf(entity)).append("]\n");
+        String vitals = vitalsLine(entity);
+        if (!vitals.isBlank()) sb.append("  ").append(vitals).append('\n');
         for (Map.Entry<String, Object> entry : properties(entity).entrySet()) {
             String key = entry.getKey();
-            if (HIDDEN_FIELDS.contains(key) || "name".equals(key)) continue;
+            if (HIDDEN_FIELDS.contains(key) || VITAL_FIELDS.contains(key) || "name".equals(key)) continue;
             String value = renderValue(entry.getValue());
             if (value.isBlank()) continue;
             sb.append("  ").append(humanize(key)).append(": ").append(value).append('\n');

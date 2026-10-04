@@ -349,7 +349,7 @@
   }, {
     "id" : "guidance",
     "name" : "Guidance",
-    "description" : "A touch lends a willing creature a moment of preternatural competence.",
+    "description" : "Touch, concentration, 1 minute. The target adds 1d4 to one ability check of its choice.",
     "level" : 0,
     "school" : "divination",
     "manaCost" : 0,
@@ -364,15 +364,15 @@
       "requiredRoll" : 5
     },
     "effects" : [ {
-      "id" : "blessed",
-      "name" : "Blessed",
-      "description" : "A faint radiance steadies the target.",
+      "id" : "guided",
+      "name" : "Guided",
+      "description" : "Add 1d4 to one ability check of choice before the effect ends.",
       "damaging" : false,
       "healing" : false,
       "damageAmount" : 0,
       "healingAmount" : 0,
-      "durationRounds" : 0,
-      "lasting" : false
+      "durationRounds" : 10,
+      "lasting" : true
     } ],
     "damage" : null,
     "cooldownRounds" : 0,
@@ -451,7 +451,7 @@
   }, {
     "id" : "cure-wounds",
     "name" : "Cure Wounds",
-    "description" : "A touch closes wounds and restores vitality.",
+    "description" : "A creature you touch regains 1d8 + 4 HP (applied as 9). Tasha adds +2 from her healing bonus.",
     "level" : 1,
     "school" : "restoration",
     "manaCost" : 5,
@@ -468,7 +468,7 @@
       "damaging" : false,
       "healing" : true,
       "damageAmount" : 0,
-      "healingAmount" : 8,
+      "healingAmount" : 9,
       "durationRounds" : 0,
       "lasting" : false
     } ],
@@ -520,7 +520,7 @@
   }, {
     "id" : "healing-word",
     "name" : "Healing Word",
-    "description" : "A single spoken word restores a small amount of vitality at range.",
+    "description" : "Bonus action. A creature within 18 m (60 ft) regains 1d4 + 4 HP (applied as 7). Tasha adds +2 from her healing bonus.",
     "level" : 1,
     "school" : "restoration",
     "manaCost" : 5,
@@ -537,7 +537,7 @@
       "damaging" : false,
       "healing" : true,
       "damageAmount" : 0,
-      "healingAmount" : 4,
+      "healingAmount" : 7,
       "durationRounds" : 0,
       "lasting" : false
     } ],
@@ -686,7 +686,7 @@
   }, {
     "id" : "bless",
     "name" : "Bless",
-    "description" : "Up to three allies gain a steady edge on attacks and saves.",
+    "description" : "Concentration, 1 minute. Up to three allies within 9 m add 1d4 to attack rolls (and saving throws).",
     "level" : 1,
     "school" : "enchantment",
     "manaCost" : 5,
@@ -703,13 +703,13 @@
     "effects" : [ {
       "id" : "blessed",
       "name" : "Blessed",
-      "description" : "A faint radiance steadies the target.",
+      "description" : "Add 1d4 to attack rolls and saving throws.",
       "damaging" : false,
       "healing" : false,
       "damageAmount" : 0,
       "healingAmount" : 0,
-      "durationRounds" : 0,
-      "lasting" : false
+      "durationRounds" : 10,
+      "lasting" : true
     } ],
     "damage" : null,
     "cooldownRounds" : 0,
@@ -964,7 +964,7 @@
   }, {
     "id" : "spiritual-weapon",
     "name" : "Spiritual Weapon",
-    "description" : "A floating spectral weapon attacks at the caster's command.",
+    "description" : "Bonus action. A floating spectral weapon appears within 18 m (60 ft) and strikes: +6 to hit, 1d8 + 4 force (the +4 is applied automatically). It can attack again as a bonus action each turn for 1 minute.",
     "level" : 2,
     "school" : "evocation",
     "manaCost" : 10,
@@ -974,13 +974,22 @@
     "requiredConsumables" : [ ],
     "requiredTools" : [ ],
     "concentration" : null,
-    "effects" : [ ],
+    "effects" : [ {
+      "id" : "spiritual_strike",
+      "name" : "Spiritual Strike",
+      "description" : "+4 force damage.",
+      "damaging" : true,
+      "healing" : false,
+      "damageAmount" : 4,
+      "healingAmount" : 0,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
     "damage" : {
-      "amount" : {
-        "id" : "d8",
-        "name" : "d8",
-        "sides" : 8
-      },
+      "dice" : [ {
+        "diceId" : "d8",
+        "count" : 1
+      } ],
       "typeId" : "force"
     },
     "cooldownRounds" : 0,
@@ -1019,7 +1028,7 @@
   }, {
     "id" : "lesser-restoration",
     "name" : "Lesser Restoration",
-    "description" : "Ends one disease or condition afflicting a creature the caster touches.",
+    "description" : "Touch. Cures one of: Blindness, Poison or Paralysis (remove the effect).",
     "level" : 2,
     "school" : "restoration",
     "manaCost" : 10,
@@ -1965,5 +1974,991 @@
     },
     "cooldownRounds" : 2,
     "areaSpell" : false
+  }, {
+    "id" : "raaz-horn-strike",
+    "name" : "Raaz – Horn Strike (partial summon)",
+    "description" : "Vaerak swings Rhaz, the Horn Hammer and Raaz's spirit lends its charge to the blow. Costs 10 HP per strike, paid from Vaerak's own life. Frontal hit: Raaz's charge hurls the target 10 m (30 ft) back, bludgeoning (Large creatures 5 m, Huge or bigger are not moved - DM call). Side/flank hit: half damage and no knockback - halve the rolled total. Damage: 2d10 + STR (hammer 1d10 + horn 1d10). Unavailable while Raaz is fully summoned.",
+    "level" : 0,
+    "school" : "nature-based magic",
+    "manaCost" : 10,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "knockback",
+      "name" : "Raaz's Charge",
+      "description" : "Hurled 10 m (30 ft) away from Vaerak by a spectral rhino's charge.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d10",
+        "count" : 2
+      } ],
+      "typeId" : "bludgeoning"
+    },
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "raaz-uppercut",
+    "name" : "Raaz – Uppercut (partial summon)",
+    "description" : "A rising blow with the horn tip. Very hard: Vaerak first makes a DC 16 Strength (Athletics) check. Success: DOUBLE damage (4d10 + STR) and the target is thrown into the air (height depends on its size and weight) and lands prone. Failure: no damage at all - enter 0 - but the 10 HP is still paid. Unavailable while Raaz is fully summoned.",
+    "level" : 0,
+    "school" : "nature-based magic",
+    "manaCost" : 10,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "prone",
+      "name" : "Launched",
+      "description" : "Thrown into the air by the horn; lands prone.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d10",
+        "count" : 4
+      } ],
+      "typeId" : "bludgeoning"
+    },
+    "cooldownRounds" : 2,
+    "areaSpell" : false
+  }, {
+    "id" : "kaavor-talon-lash",
+    "name" : "Kaavor – Talon Lash (partial summon)",
+    "description" : "Vaerak cracks Kaavor, the Sinew Lash and the falcon spirit's razor talons follow the whip, tearing the wound deep. Costs 5 HP per strike. Reach 3 m (10 ft). Damage: 1d4 whip + 2d6 talons, slashing. Very effective against unarmoured and leather-armoured enemies: causes Bleeding (3 HP per round for 3 rounds). It cannot cut metal armour - against chain or plate the talons glance off (the app's armour rules already zero slashing damage against metal) and no Bleeding applies; remove it. Unavailable while Kaavor is fully summoned.",
+    "level" : 0,
+    "school" : "nature-based magic",
+    "manaCost" : 5,
+    "range" : 10,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "bleeding",
+      "name" : "Talon Bleeding",
+      "description" : "Deep talon gashes that keep bleeding.",
+      "damaging" : true,
+      "healing" : false,
+      "damageAmount" : 3,
+      "healingAmount" : 0,
+      "durationRounds" : 3,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d4",
+        "count" : 1
+      }, {
+        "diceId" : "d6",
+        "count" : 2
+      } ],
+      "typeId" : "slashing"
+    },
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "summon-raaz",
+    "name" : "Summon Raaz (full summon)",
+    "description" : "Raaz takes a physical body: a spirit rhinoceros (place the 'Raaz' beast token; HP 50, AC 15, speed 20 m per round, Charge and Impale). Cost: 60 HP from Vaerak's life, then 5 HP every turn he keeps Raaz in physical form. Requirement: at least 300 litres of water and 400 kg of living soil must be near Vaerak - without them the summon fails. While Raaz is summoned Vaerak temporarily loses the partial summon (Horn Strike / Uppercut). Target Vaerak himself to track the 5 HP/turn upkeep as an effect; remove it when Raaz is dismissed or destroyed.",
+    "level" : 0,
+    "school" : "nature-based magic",
+    "manaCost" : 60,
+    "range" : 15,
+    "radius" : 0,
+    "castingMethod" : "ritual",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "spirit_upkeep",
+      "name" : "Raaz Upkeep",
+      "description" : "Raaz's body drains 5 HP from Vaerak every turn. Remove when Raaz is dismissed.",
+      "damaging" : true,
+      "healing" : false,
+      "damageAmount" : 5,
+      "healingAmount" : 0,
+      "durationRounds" : 10,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "summon-kaavor",
+    "name" : "Summon Kaavor (full summon)",
+    "description" : "Kaavor takes a physical body: a spirit falcon (place the 'Kaavor' beast token; HP 20, AC 7, speed 90 m per round, Flight Dive, Focus, darkvision). Cost: 30 HP from Vaerak's life, then 3 HP every turn he keeps Kaavor in physical form. Requirement: 4 litres of water and 2 kg of soil near Vaerak. While Kaavor is summoned Vaerak temporarily loses the partial summon (Talon Lash). Target Vaerak himself to track the 3 HP/turn upkeep as an effect; remove it when Kaavor is dismissed or destroyed.",
+    "level" : 0,
+    "school" : "nature-based magic",
+    "manaCost" : 30,
+    "range" : 15,
+    "radius" : 0,
+    "castingMethod" : "ritual",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "spirit_upkeep",
+      "name" : "Kaavor Upkeep",
+      "description" : "Kaavor's body drains 3 HP from Vaerak every turn. Remove when Kaavor is dismissed.",
+      "damaging" : true,
+      "healing" : false,
+      "damageAmount" : 3,
+      "healingAmount" : 0,
+      "durationRounds" : 10,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "gravity-round",
+    "name" : "Gravity Round",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. A normal shot that deals force damage instead of piercing.",
+    "level" : 0,
+    "school" : "transmutation",
+    "manaCost" : 1,
+    "range" : 90,
+    "radius" : 0,
+    "castingMethod" : "hand-movement",
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d10",
+        "count" : 1
+      } ],
+      "typeId" : "force"
+    },
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "crushing-shot",
+    "name" : "Crushing Shot",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. The bullet erupts with gravitational force: the target makes a DC 13 Strength save or is knocked prone (remove Prone if it saves).",
+    "level" : 0,
+    "school" : "transmutation",
+    "manaCost" : 1,
+    "range" : 90,
+    "radius" : 0,
+    "castingMethod" : "hand-movement",
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "prone",
+      "name" : "Crushed Prone",
+      "description" : "Slammed to the ground by a gravity burst.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d10",
+        "count" : 1
+      } ],
+      "typeId" : "force"
+    },
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "singularity-round",
+    "name" : "Singularity Round",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. 1 per short rest. On impact a tiny gravity well forms, pulling every creature within 3 m (10 ft) toward the target before collapsing; everything caught in the well takes the rolled force damage. The cooldown (100 rounds) only stops a second use in the same fight - it comes back after a short rest.",
+    "level" : 0,
+    "school" : "transmutation",
+    "manaCost" : 1,
+    "range" : 90,
+    "radius" : 10,
+    "castingMethod" : "hand-movement",
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "gravity_pull",
+      "name" : "Gravity Pull",
+      "description" : "Dragged up to 3 m (10 ft) toward the centre of a collapsing gravity well.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d10",
+        "count" : 1
+      } ],
+      "typeId" : "force"
+    },
+    "cooldownRounds" : 100,
+    "areaSpell" : true
+  }, {
+    "id" : "anchor-round",
+    "name" : "Anchor Round",
+    "description" : "Sixfold Judgment shot: costs 1 chamber (1 mana; regained on rests) AND 1 Sixfold Cartridge from the inventory (rests never bring cartridges back - find, loot or craft more). Range 27 m (90 ft). Attack with DEX; damage 1d10 + DEX force. 1 per long rest. The target's gravity dramatically increases: on a failed DC 13 Strength save its speed drops to 0 until the start of El Cucaracha's next turn (remove Anchored if it saves). The cooldown (100 rounds) only stops a second use in the same fight - it comes back after a long rest.",
+    "level" : 0,
+    "school" : "transmutation",
+    "manaCost" : 1,
+    "range" : 90,
+    "radius" : 0,
+    "castingMethod" : "hand-movement",
+    "requiredConsumables" : [ {
+      "id" : "sixfold-cartridge",
+      "name" : "Sixfold Cartridge",
+      "type" : "gear",
+      "description" : "A brass revolver cartridge etched with a spiral gravity-glyph. Sixfold Judgment fires one with every shot. Rests do not bring cartridges back: they must be looted, bought, or crafted (brass casing + black powder + a pinch of anchor-dust at a workbench).",
+      "valueGold" : 2,
+      "weight" : 0.05,
+      "damage" : null,
+      "durability" : {
+        "max" : 1,
+        "current" : 1
+      }
+    } ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "anchored",
+      "name" : "Anchored",
+      "description" : "Its own weight multiplies: speed 0 until the start of the caster's next turn.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d10",
+        "count" : 1
+      } ],
+      "typeId" : "force"
+    },
+    "cooldownRounds" : 100,
+    "areaSpell" : false
+  }, {
+    "id" : "gravitic-shift",
+    "name" : "Gravitic Shift",
+    "description" : "Bonus action. The Gravitic Anchor Node bends El Cucaracha's own gravity until his next turn: either feather-light (jump twice as far, take no falling damage, run along walls) or anchored (cannot be shoved, pushed or knocked prone). Does not use a chamber. Target himself.",
+    "level" : 0,
+    "school" : "transmutation",
+    "manaCost" : 0,
+    "range" : 0,
+    "radius" : 0,
+    "castingMethod" : "thought",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "gravity_shift",
+      "name" : "Gravity Shift",
+      "description" : "Own gravity bent: either feather-light (jump twice as far, no falling damage, can run along walls) or anchored (cannot be shoved, pushed or knocked prone).",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "dual-blade-strike",
+    "name" : "Dual Blade Strike",
+    "description" : "Lavenos technique. Requires both the Ladies' Blade and the Forgotten Blade equipped. +5 to hit, damage 1d8 + 1d6. The Ladies' Blade d6 still follows its even/odd rule (even → doubled, odd → halved).",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d8",
+        "count" : 1
+      }, {
+        "diceId" : "d6",
+        "count" : 1
+      } ],
+      "typeId" : "slashing"
+    },
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "blade-oath",
+    "name" : "Blade Oath",
+    "description" : "Lavenos technique. Cantrip. Swears an oath on the blade: +1 piercing damage on weapon hits for 1 minute. Target himself.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 0,
+    "radius" : 0,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "blade_oath",
+      "name" : "Blade Oath",
+      "description" : "Weapon hits deal +1 piercing damage.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 10,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "echo-of-the-duelist",
+    "name" : "Echo of the Duelist",
+    "description" : "Lavenos technique. Cantrip. Lavenos imitates a move of a famous duelist he describes in his own words; the DM decides the effect (usually advantage on one attack, a reposition of up to 3 m, or a disarm attempt). Imagination-based.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "advantage_on_attack",
+      "name" : "Duelist's Echo",
+      "description" : "Advantage on the next attack.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "quick-strike",
+    "name" : "Quick Strike",
+    "description" : "Lavenos technique. Cantrip. A lightning-fast jab: d20 to hit, 1d4 + 1 piercing (the +1 is applied automatically).",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "quick_strike_bonus",
+      "name" : "Quick Strike",
+      "description" : "+1 damage.",
+      "damaging" : true,
+      "healing" : false,
+      "damageAmount" : 1,
+      "healingAmount" : 0,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d4",
+        "count" : 1
+      } ],
+      "typeId" : "piercing"
+    },
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "guard-shift",
+    "name" : "Guard Shift",
+    "description" : "Lavenos technique. Cantrip. Shifts into a guard: +1 AC for 1 turn. Target himself.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 0,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "guard_stance",
+      "name" : "Guard Stance",
+      "description" : "+1 AC until the start of the next turn.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "step-feint",
+    "name" : "Step Feint",
+    "description" : "Lavenos technique. Cantrip. A feinting step that throws off the enemy's footwork: target is slowed by 30% (speed × 0.7) for 2 turns.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "slowed",
+      "name" : "Feinted",
+      "description" : "Speed reduced by 30%.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 2,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 2,
+    "areaSpell" : false
+  }, {
+    "id" : "compelled-duel",
+    "name" : "Compelled Duel",
+    "description" : "Lavenos technique. Challenges a creature within 9 m (30 ft): DC 13 Wisdom save or it is pulled up to 9 m toward Lavenos and has disadvantage on attacks against anyone else for 1 minute (concentration).",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 30,
+    "radius" : 0,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : {
+      "difficultyLevel" : "MEDIUM",
+      "preventsMovement" : false,
+      "requiredRoll" : 10
+    },
+    "effects" : [ {
+      "id" : "compelled_duel",
+      "name" : "Compelled Duel",
+      "description" : "Pulled toward the challenger and has disadvantage on attacks against anyone else.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 10,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 5,
+    "areaSpell" : false
+  }, {
+    "id" : "wrathful-strike",
+    "name" : "Wrathful Strike",
+    "description" : "Lavenos technique. Adds 1d6 psychic to a weapon hit and concusses the target (disadvantage on attacks and checks until the end of its next turn). Roll the weapon damage + 1d6 together.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "concussed",
+      "name" : "Concussed",
+      "description" : "Head ringing: disadvantage on attacks and ability checks until the end of its next turn.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d6",
+        "count" : 1
+      } ],
+      "typeId" : "psychic"
+    },
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "armor-thrust",
+    "name" : "Armor Thrust",
+    "description" : "Lavenos technique. Rapier only (Ladies' Blade). A thrust through the armour's gaps: 1d6 piercing that ignores armour (enter the full roll) and the target's AC drops by 2 for 2 turns.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "armor_broken",
+      "name" : "Armor Broken",
+      "description" : "Armour pierced or knocked askew: -2 AC.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 2,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d6",
+        "count" : 1
+      } ],
+      "typeId" : "piercing"
+    },
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "three-fast-stabs",
+    "name" : "3 Fast Stabs",
+    "description" : "Lavenos technique. Three stabs in one motion: 3d4 piercing.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d4",
+        "count" : 3
+      } ],
+      "typeId" : "piercing"
+    },
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "crushing-strike",
+    "name" : "Crushing Strike",
+    "description" : "Lavenos technique. A heavy blow to the guard: 1d8 bludgeoning and the enemy deals half damage for 2 turns.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "weakened",
+      "name" : "Weakened",
+      "description" : "Its blows land without strength: deals half damage.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 2,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d8",
+        "count" : 1
+      } ],
+      "typeId" : "bludgeoning"
+    },
+    "cooldownRounds" : 4,
+    "areaSpell" : false
+  }, {
+    "id" : "blade-rush",
+    "name" : "Charge / Blade Rush",
+    "description" : "Lavenos technique. Moves up to 9 m (30 ft) in a straight line and attacks at the end with +2 to hit: 1d8 slashing.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 30,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d8",
+        "count" : 1
+      } ],
+      "typeId" : "slashing"
+    },
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "second-wind",
+    "name" : "Second Wind",
+    "description" : "Lavenos technique. Catches his breath and shakes off one debuff (DM removes one negative effect). Once per short rest - target himself.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 0,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "second_wind",
+      "name" : "Second Wind",
+      "description" : "One debuff removed.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 100,
+    "areaSpell" : false
+  }, {
+    "id" : "commanding-point",
+    "name" : "Commanding Point",
+    "description" : "Lavenos technique. Points at an ally within 9 m: either gives that ally his turn now, or lets them repeat the skill/action they just used.",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 30,
+    "radius" : 0,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ ],
+    "damage" : null,
+    "cooldownRounds" : 5,
+    "areaSpell" : false
+  }, {
+    "id" : "combo-strike",
+    "name" : "Combo Strike",
+    "description" : "Lavenos technique. When an ally stands next to the same enemy, Lavenos attacks and gives that ally a chance to attack the enemy with him (ally makes one weapon attack as a reaction).",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ ],
+    "damage" : null,
+    "cooldownRounds" : 3,
+    "areaSpell" : false
+  }, {
+    "id" : "tlko-super-attack",
+    "name" : "T.L.K.O. (super attack)",
+    "description" : "Lavenos technique. Super attack only Maghro knows. Once per long rest. Lavenos unleashes both blades in one finishing combination: 2d8 + 2d6 slashing (the Ladies' Blade dice still follow the even/odd rule), the target is concussed, and for 1 minute Lavenos gains +1 AC (DM tracks it on him). Balanced as a level-5 nova: about 16 damage on average, once per long rest (cooldown 100 rounds).",
+    "level" : 0,
+    "school" : null,
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "body-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "concussed",
+      "name" : "Concussed",
+      "description" : "Head ringing: disadvantage on attacks and ability checks until the end of its next turn.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 1,
+      "lasting" : true
+    } ],
+    "damage" : {
+      "dice" : [ {
+        "diceId" : "d8",
+        "count" : 2
+      }, {
+        "diceId" : "d6",
+        "count" : 2
+      } ],
+      "typeId" : "slashing"
+    },
+    "cooldownRounds" : 100,
+    "areaSpell" : false
+  }, {
+    "id" : "shield-of-faith",
+    "name" : "Shield of Faith",
+    "description" : "Bonus action, concentration, 10 minutes. A creature within 10 m (30 ft) gains +2 AC.",
+    "level" : 1,
+    "school" : "abjuration",
+    "manaCost" : 5,
+    "range" : 30,
+    "radius" : 0,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : {
+      "difficultyLevel" : "MEDIUM",
+      "preventsMovement" : false,
+      "requiredRoll" : 10
+    },
+    "effects" : [ {
+      "id" : "shield_of_faith",
+      "name" : "Shield of Faith",
+      "description" : "A shimmering field of faith: +2 AC.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 10,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "spare-the-dying",
+    "name" : "Spare the Dying",
+    "description" : "Touch a living creature at 0 HP: it becomes stable (stops making death saves).",
+    "level" : 0,
+    "school" : "necromancy",
+    "manaCost" : 0,
+    "range" : 5,
+    "radius" : 0,
+    "castingMethod" : "hand-movement",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "stabilized",
+      "name" : "Stabilized",
+      "description" : "Stable at 0 HP; no longer dying.",
+      "damaging" : false,
+      "healing" : false,
+      "damageAmount" : 0,
+      "healingAmount" : 0,
+      "durationRounds" : 10,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "first-miracle",
+    "name" : "First Miracle (homebrew)",
+    "description" : "Reaction when a creature within 9 m (30 ft) drops to 0 HP: it instantly regains Wisdom modifier + Tasha's level HP (2 + 5 = 7).",
+    "level" : 1,
+    "school" : "divine magic",
+    "manaCost" : 5,
+    "range" : 30,
+    "radius" : 0,
+    "castingMethod" : "thought",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "invigorated",
+      "name" : "First Miracle",
+      "description" : "Brought back from the brink.",
+      "damaging" : false,
+      "healing" : true,
+      "damageAmount" : 0,
+      "healingAmount" : 7,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "divine-embrace",
+    "name" : "Divine Embrace (homebrew)",
+    "description" : "Up to 3 creatures within 30 m (100 ft) are wrapped in divine warmth and regenerate 2d8 + 4 HP, spread over 3 rounds (applied as 4 HP per round). 1 use, resets on a long rest (cooldown 100 rounds stops a second use in the same fight).",
+    "level" : 2,
+    "school" : "divine magic",
+    "manaCost" : 10,
+    "range" : 100,
+    "radius" : 10,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "regeneration",
+      "name" : "Divine Embrace",
+      "description" : "Regenerating HP every round.",
+      "damaging" : false,
+      "healing" : true,
+      "damageAmount" : 0,
+      "healingAmount" : 4,
+      "durationRounds" : 3,
+      "lasting" : true
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 100,
+    "areaSpell" : true
+  }, {
+    "id" : "hope-never-dies",
+    "name" : "Hope Never Dies (homebrew)",
+    "description" : "Targets a creature at 0 HP within 9 m (30 ft): it returns to 1 HP and also regains 2d6 + 4 HP (applied as 12 in total). Written as a 4th-level spell; set to 3rd level so Tasha can cast it at level 5 (she has no 4th-level slots yet).",
+    "level" : 3,
+    "school" : "divine magic",
+    "manaCost" : 15,
+    "range" : 30,
+    "radius" : 0,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "invigorated",
+      "name" : "Hope Never Dies",
+      "description" : "Returns from 0 HP.",
+      "damaging" : false,
+      "healing" : true,
+      "damageAmount" : 0,
+      "healingAmount" : 12,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : false
+  }, {
+    "id" : "aid",
+    "name" : "Aid",
+    "description" : "Up to 5 creatures within 9 m (30 ft): maximum and current HP +3 for 8 hours.",
+    "level" : 2,
+    "school" : "abjuration",
+    "manaCost" : 10,
+    "range" : 30,
+    "radius" : 15,
+    "castingMethod" : "speech",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "aided",
+      "name" : "Aided",
+      "description" : "Bolstered: maximum and current HP +3 for 8 hours.",
+      "damaging" : false,
+      "healing" : true,
+      "damageAmount" : 0,
+      "healingAmount" : 3,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : true
+  }, {
+    "id" : "prayer-of-healing",
+    "name" : "Prayer of Healing",
+    "description" : "Up to 6 creatures within 10 m (30 ft) regain 2d8 + 4 HP (applied as 13). Takes a 10-minute prayer, so it is used between fights, not mid-combat.",
+    "level" : 2,
+    "school" : "restoration",
+    "manaCost" : 10,
+    "range" : 30,
+    "radius" : 30,
+    "castingMethod" : "ritual",
+    "requiredConsumables" : [ ],
+    "requiredTools" : [ ],
+    "concentration" : null,
+    "effects" : [ {
+      "id" : "invigorated",
+      "name" : "Prayer of Healing",
+      "description" : "Wounds close under a shared prayer.",
+      "damaging" : false,
+      "healing" : true,
+      "damageAmount" : 0,
+      "healingAmount" : 13,
+      "durationRounds" : 0,
+      "lasting" : false
+    } ],
+    "damage" : null,
+    "cooldownRounds" : 0,
+    "areaSpell" : true
   } ]
 }

@@ -73,6 +73,47 @@ public class CharacterClass implements Printable {
         this.savingThrowBonuses = savingThrowBonuses;
     }
 
+    /** How this class gains spell slots; {@code NONE} for non-casters. */
+    private com.dnd.model.magic.SpellcastingType spellcasting = com.dnd.model.magic.SpellcastingType.NONE;
+    /** Subclass names offered at character creation (e.g. Path of the Berserker). */
+    private List<String> subclasses = new java.util.ArrayList<>();
+    /** Everything the class unlocks, level by level. */
+    private List<ClassFeature> features = new java.util.ArrayList<>();
+
+    public com.dnd.model.magic.SpellcastingType getSpellcasting() {
+        return spellcasting;
+    }
+
+    public void setSpellcasting(com.dnd.model.magic.SpellcastingType spellcasting) {
+        this.spellcasting = spellcasting == null ? com.dnd.model.magic.SpellcastingType.NONE : spellcasting;
+    }
+
+    public List<String> getSubclasses() {
+        return subclasses;
+    }
+
+    public void setSubclasses(List<String> subclasses) {
+        this.subclasses = subclasses == null ? new java.util.ArrayList<>() : subclasses;
+    }
+
+    public List<ClassFeature> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(List<ClassFeature> features) {
+        this.features = features == null ? new java.util.ArrayList<>() : features;
+    }
+
+    /** Features gained on reaching exactly {@code level} for a character of {@code subclass}. */
+    public List<ClassFeature> featuresAt(int level, String subclass) {
+        List<ClassFeature> out = new java.util.ArrayList<>();
+        if (features == null) return out;
+        for (ClassFeature feature : features) {
+            if (feature != null && feature.getLevel() == level && feature.appliesTo(subclass)) out.add(feature);
+        }
+        return out;
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;
