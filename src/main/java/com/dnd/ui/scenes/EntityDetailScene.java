@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import com.dnd.ui.components.ImageFolders;
 
 import java.io.File;
 import java.util.*;
@@ -59,9 +60,7 @@ public class EntityDetailScene extends BaseScene {
 
         final String[] newImagePath = {currentImgPath};
         Button uploadImageBtn = btn("Upload Image", () -> {
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Select Image");
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png","*.jpg","*.jpeg","*.gif","*.webp"));
+            FileChooser fc = ImageFolders.imageChooser("Select Image");
             File chosen = fc.showOpenDialog(null);
             if (chosen != null && uiSession.campaignRoot() != null) {
                 try {
@@ -81,6 +80,11 @@ public class EntityDetailScene extends BaseScene {
         HBox imageSection = new HBox(16, imageView, uploadImageBtn);
         imageSection.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         content.getChildren().add(imageSection);
+
+        if (uiSession.isDm() && entity instanceof com.dnd.model.character.PlayerCharacter pc) {
+            content.getChildren().add(ProgressionPanel.build(this, repos, pc,
+                () -> uiSession.getRouter().goTo(SceneType.ENTITY_DETAIL)));
+        }
 
         EntityForm form = EntityForm.of(getEntityClass(cat), entity, skippedProperties(cat), catalogsFor(repos));
         content.getChildren().add(form.getNode());

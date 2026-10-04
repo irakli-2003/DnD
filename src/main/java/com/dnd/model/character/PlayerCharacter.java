@@ -277,6 +277,43 @@ public class PlayerCharacter implements Printable {
         if (activeEffects != null) activeEffects.remove(effect);
     }
 
+    // ── Class progression & magic ───────────────────────────────────────────
+
+    /** Chosen subclass (e.g. "Path of the Berserker"); unlocks that subclass's features. */
+    private String subclass;
+    public String getSubclass() { return subclass; }
+    public void setSubclass(String subclass) { this.subclass = subclass; }
+
+    /** Long-form history, organised by the DM (Darius's rune journey lives here). */
+    private String backstory;
+    public String getBackstory() { return backstory; }
+    public void setBackstory(String backstory) { this.backstory = backstory; }
+
+    /**
+     * What this character spends to cast. {@code null} means "whatever the class uses":
+     * spell slots for standard casters. Homebrew characters can be switched to mana, or to
+     * hit points for blood-magic style characters.
+     */
+    private com.dnd.model.magic.CastingResource castingResource;
+    public com.dnd.model.magic.CastingResource getCastingResource() { return castingResource; }
+    public void setCastingResource(com.dnd.model.magic.CastingResource castingResource) {
+        this.castingResource = castingResource;
+    }
+
+    /** Spell slots by level; spent when casting, refilled on rests. */
+    private List<com.dnd.model.magic.SpellSlot> spellSlots = new ArrayList<>();
+    public List<com.dnd.model.magic.SpellSlot> getSpellSlots() { return spellSlots; }
+    public void setSpellSlots(List<com.dnd.model.magic.SpellSlot> spellSlots) {
+        this.spellSlots = spellSlots != null ? spellSlots : new ArrayList<>();
+    }
+
+    /** Spell/ability id → rounds left before it can be used again; persists between fights. */
+    private java.util.Map<String, Integer> cooldowns = new java.util.LinkedHashMap<>();
+    public java.util.Map<String, Integer> getCooldowns() { return cooldowns; }
+    public void setCooldowns(java.util.Map<String, Integer> cooldowns) {
+        this.cooldowns = cooldowns != null ? cooldowns : new java.util.LinkedHashMap<>();
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;

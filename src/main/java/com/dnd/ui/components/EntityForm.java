@@ -80,7 +80,7 @@ public final class EntityForm {
     /** Nesting limit, so a self-referencing model can never build an infinite form. */
     private static final int MAX_DEPTH = 3;
     private static final List<String> LEADING = List.of("id", "name", "description");
-    private static final Set<String> LONG_TEXT = Set.of("description", "overview");
+    private static final Set<String> LONG_TEXT = Set.of("description", "overview", "backstory");
     private static final String LABEL_STYLE = "-fx-text-fill: #a89060; -fx-font-size: 12px;";
     private static final String HINT_STYLE = "-fx-text-fill: #6a5a3a; -fx-font-size: 11px;";
     private static final String GROUP_STYLE =

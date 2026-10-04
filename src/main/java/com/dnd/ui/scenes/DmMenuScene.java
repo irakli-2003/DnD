@@ -128,7 +128,14 @@ public class DmMenuScene extends BaseScene {
             uiSession.getRouter().goTo(SceneType.ENTITY_DETAIL);
         });
 
-        section.getChildren().addAll(scrollRow, newPlayerBtn);
+        Button createCharacterBtn = btn("Create Character", () -> {
+            if (uiSession.campaignRoot() != null) {
+                new CharacterCreationWizard(uiSession, new CampaignRepositories(uiSession.campaignRoot())).show();
+            }
+        });
+
+        HBox playerButtons = new HBox(10, createCharacterBtn, newPlayerBtn);
+        section.getChildren().addAll(scrollRow, playerButtons);
         return section;
     }
 

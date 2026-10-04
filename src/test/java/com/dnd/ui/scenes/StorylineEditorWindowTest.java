@@ -76,4 +76,53 @@ public class StorylineEditorWindowTest {
         assertEquals("0 words", StorylineEditorWindow.describeStats(""));
         assertFalse(StorylineEditorWindow.describeStats("just notes").contains("read-aloud"));
     }
+
+    // ------------------------------------------------------------------ find
+
+    private static final String HAY = "Alice met alice. ALICE smiled.";
+
+    @Test
+    public void findNextIsCaseInsensitiveByDefaultAndStartsAtFrom() {
+        assertEquals(0, StorylineEditorWindow.findMatch(HAY, "alice", 0, true, false, true));
+        assertEquals(10, StorylineEditorWindow.findMatch(HAY, "alice", 1, true, false, true));
+        assertEquals(17, StorylineEditorWindow.findMatch(HAY, "alice", 11, true, false, true));
+    }
+
+    @Test
+    public void findNextHonoursMatchCase() {
+        assertEquals(10, StorylineEditorWindow.findMatch(HAY, "alice", 0, true, true, true));
+        assertEquals(17, StorylineEditorWindow.findMatch(HAY, "ALICE", 0, true, true, true));
+        assertEquals(-1, StorylineEditorWindow.findMatch(HAY, "aLiCe", 0, true, true, true));
+    }
+
+    @Test
+    public void findNextWrapsAroundOnlyWhenAsked() {
+        assertEquals(0, StorylineEditorWindow.findMatch(HAY, "alice", 18, true, false, true));
+        assertEquals(-1, StorylineEditorWindow.findMatch(HAY, "alice", 18, true, false, false));
+    }
+
+    @Test
+    public void findPreviousSearchesStrictlyBeforeFromAndWraps() {
+        assertEquals(10, StorylineEditorWindow.findMatch(HAY, "alice", 17, false, false, true));
+        assertEquals(0, StorylineEditorWindow.findMatch(HAY, "alice", 10, false, false, true));
+        assertEquals(17, StorylineEditorWindow.findMatch(HAY, "alice", 0, false, false, true));
+        assertEquals(-1, StorylineEditorWindow.findMatch(HAY, "alice", 0, false, false, false));
+    }
+
+    @Test
+    public void findHandlesEmptyAndMissingInput() {
+        assertEquals(-1, StorylineEditorWindow.findMatch(HAY, "", 0, true, false, true));
+        assertEquals(-1, StorylineEditorWindow.findMatch(null, "a", 0, true, false, true));
+        assertEquals(-1, StorylineEditorWindow.findMatch("ab", "abc", 0, true, false, true));
+        assertEquals(-1, StorylineEditorWindow.findMatch(HAY, "dragon", 5, false, false, true));
+        assertEquals(17, StorylineEditorWindow.findMatch(HAY, "alice", 999, false, false, true));
+    }
+
+    @Test
+    public void findAllCountsNonOverlappingMatches() {
+        assertEquals(java.util.List.of(0, 10, 17), StorylineEditorWindow.findAll(HAY, "alice", false));
+        assertEquals(java.util.List.of(10), StorylineEditorWindow.findAll(HAY, "alice", true));
+        assertEquals(java.util.List.of(0, 2), StorylineEditorWindow.findAll("aaaa", "aa", true));
+        assertTrue(StorylineEditorWindow.findAll(HAY, "", false).isEmpty());
+    }
 }

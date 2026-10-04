@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
+import com.dnd.ui.components.ImageFolders;
 
 import java.io.File;
 
@@ -64,9 +65,7 @@ public class CharacterProfileScene extends BaseScene {
         }
 
         Button uploadBtn = btn("Upload Portrait", () -> {
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Select Portrait");
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png","*.jpg","*.jpeg","*.webp"));
+            FileChooser fc = ImageFolders.imageChooser("Select Portrait");
             File chosen = fc.showOpenDialog(null);
             if (chosen == null) return;
             try {

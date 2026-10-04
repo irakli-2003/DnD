@@ -1895,6 +1895,314 @@
     {
       "id": "player-tasha",
       "file": "players/players.json"
+    },
+    {
+      "id": "staggered",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "gravity_pull",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "anchored",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "gravity_shift",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "guard_stance",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "blade_oath",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "compelled_duel",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "concussed",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "armor_broken",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "weakened",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "shield_of_faith",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "guided",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "aided",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "spirit_upkeep",
+      "file": "world/effects.json"
+    },
+    {
+      "id": "raaz-horn-strike",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "raaz-uppercut",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "kaavor-talon-lash",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "summon-raaz",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "summon-kaavor",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "raaz",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "kaavor",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "gravity-round",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "crushing-shot",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "singularity-round",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "anchor-round",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "gravitic-shift",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "ladies-blade",
+      "file": "world/items.json"
+    },
+    {
+      "id": "forgotten-blade",
+      "file": "world/items.json"
+    },
+    {
+      "id": "explorers-pack",
+      "file": "world/items.json"
+    },
+    {
+      "id": "simple-clothes",
+      "file": "world/items.json"
+    },
+    {
+      "id": "visage-glasses",
+      "file": "world/items.json"
+    },
+    {
+      "id": "philter-of-love",
+      "file": "world/items.json"
+    },
+    {
+      "id": "dust-powder",
+      "file": "world/items.json"
+    },
+    {
+      "id": "advantage-wisdom",
+      "file": "world/items.json"
+    },
+    {
+      "id": "null-monet",
+      "file": "world/items.json"
+    },
+    {
+      "id": "dual-blade-strike",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "blade-oath",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "echo-of-the-duelist",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "quick-strike",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "guard-shift",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "step-feint",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "compelled-duel",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "wrathful-strike",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "armor-thrust",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "three-fast-stabs",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "crushing-strike",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "blade-rush",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "second-wind",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "commanding-point",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "combo-strike",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "tlko-super-attack",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "shield-of-faith",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "spare-the-dying",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "first-miracle",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "divine-embrace",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "hope-never-dies",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "aid",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "prayer-of-healing",
+      "file": "world/spells.json"
+    },
+    {
+      "id": "diamond-card-soldier",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "black-card-soldier",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "the-gardener",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "topiary-hound",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "mad-hatter",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "animated-tea-service",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "dormouse-swarm",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "bandersnatch-pup",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "jabberwock-hatchling",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "bread-and-butterfly-swarm",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "rocking-horse-fly",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "march-hare",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "clockwork-white-rabbit",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "alice-twisted",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "queen-of-hearts",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "doll-mimic",
+      "file": "world/monsters.json"
+    },
+    {
+      "id": "giant-flamingo",
+      "file": "world/beasts.json"
+    },
+    {
+      "id": "cheshire-cat",
+      "file": "world/npcs.json"
+    },
+    {
+      "id": "grandfather-t",
+      "file": "world/npcs.json"
     }
   ]
 }

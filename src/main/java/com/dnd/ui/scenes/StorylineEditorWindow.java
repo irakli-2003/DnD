@@ -58,6 +58,9 @@ final class StorylineEditorWindow {
     private Label statsLabel;
     private SessionTimer timer;
     private boolean dirty;
+    private Stage editorStage;
+    private Stage findStage;
+    private TextField findField;
 
     StorylineEditorWindow(BaseScene owner, StorylineService service, CampaignRepositories repos, Path file) {
         this.owner = owner;
@@ -68,6 +71,7 @@ final class StorylineEditorWindow {
 
     void show() {
         Stage stage = new Stage();
+        editorStage = stage;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(file.getFileName().toString());
 
@@ -116,6 +120,7 @@ final class StorylineEditorWindow {
 
         Scene scene = owner.themedScene(layout, 1000, 720);
         scene.getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), this::save);
+        scene.getAccelerators().put(new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN), this::openFind);
         stage.setScene(scene);
         stage.setMaximized(true);
         markDirty(false);
@@ -173,7 +178,8 @@ final class StorylineEditorWindow {
             new Separator(),
             toolButton("Player View", "Show only the read-aloud passages, for reading at the table",
                 this::openPlayerView),
-            toolButton("Find", "Find text in this file", this::openFind),
+            toolButton("Find", "Find text in this file (Ctrl+F)", this::openFind),
+            toolButton("Notes", "Campaign-wide scratch notes shared by every session file", this::openNotes),
             new Separator(),
             toolButton("Award XP", "Give a player character experience without leaving this file",
                 this::openAwardXp),
@@ -618,6 +624,10 @@ final class StorylineEditorWindow {
         close.setOnAction(e -> stage.close());
 
         ScrollPane scroll = new ScrollPane(new VBox(14,
+            ProgressionPanel.build(owner, repos, pc, () -> {
+                stage.close();
+                javafx.application.Platform.runLater(() -> showManagePlayerWindow(pc));
+            }),
             vitalsHeader, vitals,
             itemsHeader, itemsBox, addItem,
             effectsHeader, effectsBox, addEffect));
@@ -675,25 +685,181 @@ final class StorylineEditorWindow {
         }
     }
 
+    /**
+     * Opens (or re-focuses) the find bar: a small non-modal window owned by the editor so it
+     * floats above it while the DM keeps reading. Enter / Shift+Enter step through matches,
+     * Esc closes. The search field keeps keyboard focus; hits are only selected in the area.
+     */
     private void openFind() {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle("Find");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Find:");
-        owner.styleDialog(dialog);
-        dialog.showAndWait().ifPresent(needle -> {
-            if (needle.isEmpty()) return;
-            int from = area.getSelection().getEnd();
-            int idx = area.getText().toLowerCase().indexOf(needle.toLowerCase(), from);
-            if (idx < 0) idx = area.getText().toLowerCase().indexOf(needle.toLowerCase());
-            if (idx < 0) {
-                statusLabel.setText("No match for \"" + needle + "\".");
-                return;
+        String selected = area.getSelectedText();
+        boolean prefill = selected != null && !selected.isEmpty() && selected.indexOf('\n') < 0;
+        if (findStage != null) {
+            if (prefill) findField.setText(selected);
+            findStage.show();
+            findStage.toFront();
+            findStage.requestFocus();
+            findField.requestFocus();
+            findField.selectAll();
+            return;
+        }
+
+        findField = new TextField(prefill ? selected : "");
+        findField.setPromptText("Find in this file");
+        findField.setPrefColumnCount(22);
+        CheckBox matchCase = new CheckBox("Match case");
+        Label counter = new Label();
+        counter.getStyleClass().add("body-label");
+        counter.setMinWidth(80);
+
+        Button prev = new Button("Previous");
+        Button next = new Button("Next");
+        Button close = new Button("Close");
+        for (Button b : List.of(prev, next, close)) b.getStyleClass().add("dnd-button");
+
+        Stage fs = new Stage();
+        fs.initOwner(editorStage);
+        fs.initModality(Modality.NONE);
+        fs.setTitle("Find");
+        fs.setResizable(false);
+
+        Runnable findNext = () -> runFind(findField.getText(), true, false, matchCase.isSelected(), counter);
+        Runnable findPrev = () -> runFind(findField.getText(), false, false, matchCase.isSelected(), counter);
+        next.setOnAction(e -> findNext.run());
+        prev.setOnAction(e -> findPrev.run());
+        close.setOnAction(e -> fs.close());
+        // Typing refines the current hit in place instead of jumping past it.
+        findField.textProperty().addListener((obs, o, n) ->
+            runFind(n, true, true, matchCase.isSelected(), counter));
+        matchCase.selectedProperty().addListener((obs, o, n) ->
+            runFind(findField.getText(), true, true, n, counter));
+        findField.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                if (e.isShiftDown()) findPrev.run(); else findNext.run();
+                e.consume();
             }
-            area.selectRange(idx, idx + needle.length());
-            area.requestFocus();
-            statusLabel.setText("Found \"" + needle + "\".");
         });
+
+        HBox row1 = new HBox(6, findField, prev, next);
+        row1.setAlignment(Pos.CENTER_LEFT);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox row2 = new HBox(10, matchCase, counter, spacer, close);
+        row2.setAlignment(Pos.CENTER_LEFT);
+        VBox layout = new VBox(8, row1, row2);
+        layout.setPadding(new Insets(10));
+        layout.getStyleClass().add("root");
+
+        Scene scene = owner.themedScene(layout, 430, 95);
+        scene.addEventFilter(javafx.scene.input.KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                fs.close();
+                e.consume();
+            }
+        });
+        fs.setScene(scene);
+        fs.setOnHidden(e -> findStage = null);
+        findStage = fs;
+        fs.show();
+        findField.requestFocus();
+        findField.selectAll();
+        if (!findField.getText().isEmpty()) runFind(findField.getText(), true, true, matchCase.isSelected(), counter);
+    }
+
+    /**
+     * Runs one search step and updates the selection, counter and status bar.
+     *
+     * @param inclusive when true a match starting at the current selection start counts
+     *                  (used while typing so the current hit is refined, not skipped)
+     */
+    private void runFind(String needle, boolean forward, boolean inclusive, boolean matchCase, Label counter) {
+        if (needle == null || needle.isEmpty()) {
+            counter.setText("");
+            return;
+        }
+        String text = area.getText();
+        int from;
+        if (forward) from = inclusive ? area.getSelection().getStart() : area.getSelection().getEnd();
+        else from = area.getSelection().getStart();
+        int idx = findMatch(text, needle, from, forward, matchCase, true);
+        List<Integer> all = findAll(text, needle, matchCase);
+        if (idx < 0) {
+            counter.setText("0 of 0");
+            statusLabel.setText("No match for \"" + needle + "\".");
+            return;
+        }
+        int ordinal = 1;
+        for (int pos : all) if (pos < idx) ordinal++;
+        counter.setText(ordinal + " of " + all.size());
+        area.selectRange(idx, idx + needle.length());
+        scrollIntoView(idx);
+        statusLabel.setText("Found \"" + needle + "\" (" + ordinal + " of " + all.size() + ").");
+    }
+
+    /**
+     * Scrolls the text area so the character at {@code index} is visible. The skin only
+     * auto-scrolls to the caret while the area is focused, and the find bar deliberately
+     * keeps focus, so the scroll offset is computed here from the character's bounds.
+     */
+    private void scrollIntoView(int index) {
+        javafx.application.Platform.runLater(() -> {
+            if (!(area.getSkin() instanceof javafx.scene.control.skin.TextAreaSkin skin)) return;
+            if (index >= area.getLength()) return;
+            javafx.geometry.Rectangle2D b = skin.getCharacterBounds(index);
+            double viewport = area.getHeight();
+            if (b.getMinY() < 0 || b.getMaxY() > viewport - 20) {
+                area.setScrollTop(Math.max(0, area.getScrollTop() + b.getMinY() - viewport / 3));
+            }
+        });
+    }
+
+    /**
+     * Finds the next ({@code forward}) or previous match of {@code needle} in {@code text}.
+     * Forward returns the first match starting at or after {@code from}; backward returns the
+     * last match starting strictly before {@code from}. With {@code wrap} the search continues
+     * from the other end of the text. Returns -1 when there is no match (or the needle is empty).
+     */
+    static int findMatch(String text, String needle, int from, boolean forward, boolean matchCase, boolean wrap) {
+        if (text == null || needle == null || needle.isEmpty() || needle.length() > text.length()) return -1;
+        int last = text.length() - needle.length();
+        from = Math.max(0, Math.min(from, text.length()));
+        if (forward) {
+            for (int i = from; i <= last; i++) if (text.regionMatches(!matchCase, i, needle, 0, needle.length())) return i;
+            if (wrap) {
+                for (int i = 0; i < Math.min(from, last + 1); i++) {
+                    if (text.regionMatches(!matchCase, i, needle, 0, needle.length())) return i;
+                }
+            }
+        } else {
+            for (int i = Math.min(from - 1, last); i >= 0; i--) {
+                if (text.regionMatches(!matchCase, i, needle, 0, needle.length())) return i;
+            }
+            if (wrap) {
+                for (int i = last; i >= Math.max(from, 0); i--) {
+                    if (text.regionMatches(!matchCase, i, needle, 0, needle.length())) return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    /** Start offsets of every non-overlapping match, used for the "3 of 12" counter. */
+    static List<Integer> findAll(String text, String needle, boolean matchCase) {
+        List<Integer> out = new ArrayList<>();
+        if (text == null || needle == null || needle.isEmpty()) return out;
+        int i = 0;
+        while (true) {
+            int idx = findMatch(text, needle, i, true, matchCase, false);
+            if (idx < 0) break;
+            out.add(idx);
+            i = idx + needle.length();
+        }
+        return out;
+    }
+
+    private void openNotes() {
+        Path root = owner.uiSession.campaignRoot();
+        if (root == null) root = service.getRoot().getParent();
+        CampaignNotesWindow.open(owner, editorStage, root);
     }
 
     /** Opens a large-type window containing only the read-aloud passages of this file. */

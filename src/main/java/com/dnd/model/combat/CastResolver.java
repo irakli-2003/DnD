@@ -2,6 +2,8 @@ package com.dnd.model.combat;
 
 import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.item.Item;
+import com.dnd.model.magic.CastingResource;
+import com.dnd.model.magic.SpellSlots;
 import com.dnd.model.magic.Spell;
 import com.dnd.model.world.map.ActiveEffect;
 import com.dnd.model.world.map.CombatState;
@@ -48,10 +50,13 @@ public final class CastResolver {
         private final List<Effect> effects;
         private final Damage damage;
         private final List<Item> consumables;
+        private final int spellLevel;
+        private final int hpCost;
 
         private Castable(String id, String name, String description, boolean spell, int manaCost,
                          double rangeFeet, double radiusFeet, int cooldownRounds,
-                         List<Effect> effects, Damage damage, List<Item> consumables) {
+                         List<Effect> effects, Damage damage, List<Item> consumables,
+                         int spellLevel, int hpCost) {
             this.id = id;
             this.name = name;
             this.description = description;
@@ -63,6 +68,18 @@ public final class CastResolver {
             this.effects = effects == null ? List.of() : effects;
             this.damage = damage;
             this.consumables = consumables == null ? List.of() : consumables;
+            this.spellLevel = Math.max(0, spellLevel);
+            this.hpCost = Math.max(0, hpCost);
+        }
+
+        /** 0 for cantrips and abilities; otherwise the minimum spell slot level it needs. */
+        public int getSpellLevel() {
+            return spellLevel;
+        }
+
+        /** Hit points always paid by the caster, whatever their casting resource. */
+        public int getHpCost() {
+            return hpCost;
         }
 
         public String getId() {
@@ -120,7 +137,7 @@ public final class CastResolver {
         if (spell == null) return null;
         return new Castable(spell.getId(), spell.getName(), spell.getDescription(), true,
             spell.getManaCost(), spell.getRange(), spell.getRadius(), spell.getCooldownRounds(),
-            spell.getEffects(), spell.getDamage(), spell.getRequiredConsumables());
+            spell.getEffects(), spell.getDamage(), spell.getRequiredConsumables(), spell.getLevel(), 0);
     }
 
     /**
@@ -138,8 +155,8 @@ public final class CastResolver {
             }
         }
         return new Castable(ability.getId(), ability.getName(), ability.getDescription(), false,
-            0, ability.getRange(), ability.getRadius(), ability.getRecharge(),
-            resolved, null, List.of());
+            ability.getManaCost(), ability.getRange(), ability.getRadius(), ability.getRecharge(),
+            resolved, ability.getDamage(), List.of(), 0, ability.getHpCost());
     }
 
     /** What happened when a cast was attempted. */
@@ -186,10 +203,8 @@ public final class CastResolver {
         if (cooldown > 0) {
             return action.getName() + " recharges in " + cooldown + (cooldown == 1 ? " round." : " rounds.");
         }
-        if (action.getManaCost() > state.getCurrentMana()) {
-            return "Not enough mana - needs " + action.getManaCost()
-                + ", has " + state.getCurrentMana() + ".";
-        }
+        String cost = costProblem(state, action);
+        if (cost != null) return cost;
         String missing = missingConsumable(caster, action);
         if (missing != null) return "Missing " + missing + ".";
         return null;
@@ -221,10 +236,8 @@ public final class CastResolver {
         CombatState casterState = TokenSupport.combatOf(caster);
         List<String> log = new ArrayList<>();
 
-        if (action.getManaCost() > 0) {
-            casterState.setCurrentMana(casterState.getCurrentMana() - action.getManaCost());
-            log.add(TokenSupport.nameOf(caster) + " spends " + action.getManaCost() + " mana.");
-        }
+        String paid = pay(casterState, action);
+        if (paid != null) log.add(TokenSupport.nameOf(caster) + " " + paid);
         for (String consumed : consume(caster, action)) {
             log.add(TokenSupport.nameOf(caster) + " uses up " + consumed + ".");
         }
@@ -242,6 +255,54 @@ public final class CastResolver {
         String summary = TokenSupport.nameOf(caster) + " casts " + action.getName()
             + (hit.isEmpty() ? " at empty ground." : " on " + describeTargets(hit) + ".");
         return new Outcome(true, summary, log);
+    }
+
+    // ── Costs ───────────────────────────────────────────────────────────────
+
+    /**
+     * Why the caster cannot afford this, or null when they can. Cantrips and abilities never
+     * need slots; levelled spells use whatever the caster's casting resource is.
+     */
+    public static String costProblem(CombatState state, Castable action) {
+        int hpNeeded = action.getHpCost();
+        CastingResource resource = state.effectiveCastingResource();
+        boolean levelled = action.isSpell() && action.getSpellLevel() > 0;
+        if (resource == CastingResource.HIT_POINTS) hpNeeded += action.getManaCost();
+        if (hpNeeded > 0 && hpNeeded >= state.getCurrentHitPoints()) {
+            return action.getName() + " costs " + hpNeeded + " HP but only "
+                + state.getCurrentHitPoints() + " HP remain.";
+        }
+        if (resource == CastingResource.SPELL_SLOTS && levelled) {
+            if (SpellSlots.lowestAvailable(state.getSpellSlots(), action.getSpellLevel()) < 0) {
+                return "No spell slot of level " + action.getSpellLevel() + " or higher left.";
+            }
+        } else if (resource == CastingResource.MANA && action.getManaCost() > state.getCurrentMana()) {
+            return "Not enough mana - needs " + action.getManaCost()
+                + ", has " + state.getCurrentMana() + ".";
+        }
+        return null;
+    }
+
+    /** Deducts the cost; returns a log fragment like "spends a 2nd-level slot." or null. */
+    private static String pay(CombatState state, Castable action) {
+        List<String> parts = new ArrayList<>();
+        CastingResource resource = state.effectiveCastingResource();
+        int hp = action.getHpCost();
+        if (resource == CastingResource.HIT_POINTS) hp += action.getManaCost();
+        if (resource == CastingResource.SPELL_SLOTS && action.isSpell() && action.getSpellLevel() > 0) {
+            int slot = SpellSlots.lowestAvailable(state.getSpellSlots(), action.getSpellLevel());
+            if (slot > 0 && SpellSlots.spend(state.getSpellSlots(), slot)) {
+                parts.add("spends a " + SpellSlots.ordinal(slot) + "-level slot");
+            }
+        } else if (resource == CastingResource.MANA && action.getManaCost() > 0) {
+            state.setCurrentMana(state.getCurrentMana() - action.getManaCost());
+            parts.add("spends " + action.getManaCost() + " mana");
+        }
+        if (hp > 0) {
+            state.setCurrentHitPoints(state.getCurrentHitPoints() - hp);
+            parts.add("pays " + hp + " HP");
+        }
+        return parts.isEmpty() ? null : String.join(" and ", parts) + ".";
     }
 
     /** True when the DM needs to be asked for a rolled damage total before this can be cast. */

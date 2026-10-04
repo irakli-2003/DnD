@@ -152,10 +152,20 @@ half-circle arcs spanning their sessions, so the root folder arcs across the who
   - `Insert Map` - drops a `[map:<id>|<label>]` link for any map in the campaign. Double-click
     a link (or put the caret in it and press `Open Map Link`) to launch the battle map.
   - A session timer that counts up from zero or down from a set number of minutes.
-  - Heading, bullets, checklist, divider, find, and `Ctrl+S` to save.
+  - Heading, bullets, checklist, divider, and `Ctrl+S` to save.
+  - `Find` (`Ctrl+F`) - a floating find bar with Previous/Next, match case and an
+    "n of m" counter; Enter / Shift+Enter step through matches, Esc closes.
+  - `Notes` - a small floating scratchpad shared by every session file of the campaign
+    (`<campaign>/notes.txt`), autosaved as you type. Handy for running trackers.
 
 Read-aloud markers and map links are stripped from the Player View, so the table only ever
 sees the prose.
+
+## Images folder
+
+Keep portraits, map backgrounds, textures, etc. in the `images/` folder at the project root
+(subfolders `characters`, `maps`, `textures`, `monsters`, `items`). Every image picker in the
+app opens there; the chosen file is still copied into the campaign as before.
 
 ## Battle map
 

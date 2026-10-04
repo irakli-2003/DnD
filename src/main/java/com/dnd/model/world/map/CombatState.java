@@ -415,6 +415,65 @@ public class CombatState {
         return log;
     }
 
+    // ── Spellcasting resources ──────────────────────────────────────────────
+
+    /** Explicit casting currency; {@code null} means slots if the creature has any, else mana. */
+    private com.dnd.model.magic.CastingResource castingResource;
+    private List<com.dnd.model.magic.SpellSlot> spellSlots = new ArrayList<>();
+
+    public com.dnd.model.magic.CastingResource getCastingResource() {
+        return castingResource;
+    }
+
+    public void setCastingResource(com.dnd.model.magic.CastingResource castingResource) {
+        this.castingResource = castingResource;
+    }
+
+    public List<com.dnd.model.magic.SpellSlot> getSpellSlots() {
+        if (spellSlots == null) spellSlots = new ArrayList<>();
+        return spellSlots;
+    }
+
+    public void setSpellSlots(List<com.dnd.model.magic.SpellSlot> spellSlots) {
+        this.spellSlots = spellSlots != null ? spellSlots : new ArrayList<>();
+    }
+
+    /** What this creature actually pays with when casting a levelled spell. */
+    public com.dnd.model.magic.CastingResource effectiveCastingResource() {
+        if (castingResource != null) return castingResource;
+        return getSpellSlots().isEmpty() ? com.dnd.model.magic.CastingResource.MANA
+            : com.dnd.model.magic.CastingResource.SPELL_SLOTS;
+    }
+
+    /** Deep copy, used for round snapshots so rewinding cannot share mutable lists. */
+    public CombatState copy() {
+        CombatState c = new CombatState();
+        c.maxHitPoints = maxHitPoints;
+        c.currentHitPoints = currentHitPoints;
+        c.maxMana = maxMana;
+        c.currentMana = currentMana;
+        c.gold = gold;
+        c.initiative = initiative;
+        c.deathSaveFailures = deathSaveFailures;
+        c.downed = downed;
+        c.dead = dead;
+        c.conditions = new ArrayList<>(getConditions());
+        c.notes = notes;
+        c.inInitiative = inInitiative;
+        c.walkSpeed = walkSpeed;
+        c.climbSpeed = climbSpeed;
+        c.swimSpeed = swimSpeed;
+        c.speedSeeded = speedSeeded;
+        c.movementUsed = movementUsed;
+        List<ActiveEffect> effects = new ArrayList<>();
+        for (ActiveEffect e : getActiveEffects()) effects.add(e.copy());
+        c.activeEffects = effects;
+        c.cooldowns = new LinkedHashMap<>(getCooldowns());
+        c.castingResource = castingResource;
+        c.spellSlots = com.dnd.model.magic.SpellSlots.copy(getSpellSlots());
+        return c;
+    }
+
     /** Fraction of max hit points remaining, in 0..1, for drawing health bars. */
     public double healthFraction() {
         if (maxHitPoints <= 0) return 0;

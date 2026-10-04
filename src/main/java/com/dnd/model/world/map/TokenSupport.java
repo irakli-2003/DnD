@@ -126,6 +126,11 @@ public final class TokenSupport {
         return null;
     }
 
+    /** Replaces a token's combat state outright (used when rewinding time). */
+    public static void setCombat(MapObject token, CombatState state) {
+        writeCombat(token, state);
+    }
+
     private static void writeCombat(MapObject token, CombatState state) {
         if (token instanceof PlayerToken t) t.setCombat(state);
         else if (token instanceof NpcToken t) t.setCombat(state);
@@ -153,11 +158,15 @@ public final class TokenSupport {
             // The DM has already set this character's vitals from the storyline editor (or a
             // previous session) - a freshly placed token should start from that, not overwrite
             // it with the generic level-based estimate.
-            PlayerCharacter pc = t.getCharacter();
-            state.setMaxHitPoints(pc.getMaxHitPoints());
-            state.setCurrentHitPoints(pc.getCurrentHitPoints() > 0 ? pc.getCurrentHitPoints() : pc.getMaxHitPoints());
-            state.setMaxMana(pc.getMaxMana());
-            state.setCurrentMana(pc.getCurrentMana());
+            pullVitals(t.getCharacter(), state);
+        } else if (creatureMaxHp(token) > 0) {
+            state.setMaxHitPoints(creatureMaxHp(token));
+            state.setCurrentHitPoints(state.getMaxHitPoints());
+            state.setMaxMana(creatureMaxMana(token));
+            state.setCurrentMana(state.getMaxMana());
+            List<com.dnd.model.magic.SpellSlot> slots = creatureSlots(token);
+            state.setSpellSlots(com.dnd.model.magic.SpellSlots.copy(slots));
+            com.dnd.model.magic.SpellSlots.restoreAll(state.getSpellSlots());
         } else {
             state.setMaxHitPoints(Math.max(1, level * (6 + conMod)));
             state.setCurrentHitPoints(state.getMaxHitPoints());
@@ -166,6 +175,88 @@ public final class TokenSupport {
         }
         state.setInInitiative(isCreature(token));
         return state;
+    }
+
+    // ── Character sheet ⇄ battle map (single source of truth) ───────────────
+
+    /**
+     * Copies the persistent sheet's vitals, effects, cooldowns and spell slots into a token's
+     * combat state, so the battle map always starts from what the sheet says.
+     */
+    public static void pullVitals(PlayerCharacter pc, CombatState state) {
+        if (pc == null || state == null) return;
+        if (pc.getMaxHitPoints() > 0) {
+            state.setMaxHitPoints(pc.getMaxHitPoints());
+            state.setCurrentHitPoints(pc.getCurrentHitPoints());
+            if (pc.getCurrentHitPoints() > 0) {
+                state.setDowned(false);
+                if (state.isDead()) state.setDead(false);
+                state.setDeathSaveFailures(0);
+            } else if (!state.isDead()) {
+                state.setDowned(true);
+            }
+        }
+        state.setMaxMana(pc.getMaxMana());
+        state.setCurrentMana(pc.getCurrentMana());
+        List<ActiveEffect> effects = new ArrayList<>();
+        if (pc.getActiveEffects() != null) {
+            for (ActiveEffect e : pc.getActiveEffects()) if (e != null) effects.add(e.copy());
+        }
+        state.setActiveEffects(effects);
+        state.setCooldowns(new java.util.LinkedHashMap<>(pc.getCooldowns()));
+        state.setSpellSlots(com.dnd.model.magic.SpellSlots.copy(pc.getSpellSlots()));
+        state.setCastingResource(pc.getCastingResource());
+    }
+
+    /** Writes a token's live combat numbers back onto its persistent character sheet. */
+    public static void pushVitals(CombatState state, PlayerCharacter pc) {
+        if (pc == null || state == null) return;
+        pc.setMaxHitPoints(state.getMaxHitPoints());
+        pc.setCurrentHitPoints(state.getCurrentHitPoints());
+        pc.setMaxMana(state.getMaxMana());
+        pc.setCurrentMana(state.getCurrentMana());
+        List<ActiveEffect> effects = new ArrayList<>();
+        for (ActiveEffect e : state.getActiveEffects()) if (e != null) effects.add(e.copy());
+        pc.setActiveEffects(effects);
+        pc.setCooldowns(new java.util.LinkedHashMap<>(state.getCooldowns()));
+        pc.setSpellSlots(com.dnd.model.magic.SpellSlots.copy(state.getSpellSlots()));
+    }
+
+    /**
+     * Replaces a player token's embedded character copy with the latest sheet and pulls its
+     * vitals in. A sheet with no hit points yet is instead seeded from the token.
+     */
+    public static void refreshFromSheet(PlayerToken token, PlayerCharacter sheet) {
+        if (token == null || sheet == null) return;
+        CombatState state = combatOf(token);
+        token.setCharacter(sheet);
+        if (sheet.getMaxHitPoints() > 0) {
+            pullVitals(sheet, state);
+        } else {
+            pushVitals(state, sheet);
+            state.setCastingResource(sheet.getCastingResource());
+        }
+    }
+
+    public static int creatureMaxHp(MapObject token) {
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getMaxHitPoints();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getMaxHitPoints();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getMaxHitPoints();
+        return 0;
+    }
+
+    public static int creatureMaxMana(MapObject token) {
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getMaxMana();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getMaxMana();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getMaxMana();
+        return 0;
+    }
+
+    public static List<com.dnd.model.magic.SpellSlot> creatureSlots(MapObject token) {
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getSpellSlots();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getSpellSlots();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getSpellSlots();
+        return List.of();
     }
 
     /** Level, or a level-equivalent derived from challenge rating for monsters and beasts. */

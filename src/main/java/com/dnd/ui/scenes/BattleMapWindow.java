@@ -86,6 +86,12 @@ public class BattleMapWindow {
     /** Catalogue id of the token queued up to be placed by clicking the map. */
     private String armedTokenId;
 
+    /** Board snapshots at each turn start, for the rabbit's time rewind. */
+    private final com.dnd.model.combat.TurnHistory history = new com.dnd.model.combat.TurnHistory();
+    /** Right-hand quick-placement palette, shown/hidden from the toolbar. */
+    private Node tokenPalette;
+    private BorderPane rootPane;
+
     public BattleMapWindow(BaseScene owner, UiSession uiSession, String mapId) {
         this.owner = owner;
         this.uiSession = uiSession;
@@ -134,8 +140,10 @@ public class BattleMapWindow {
             return;
         }
         map.ensureGridSize();
+        syncFromSheets();
         seedSpeeds();
         rebuildInitiative();
+        if (initiative.current() != null) history.record(map, initiative.current(), initiative.round());
 
         Stage stage = new Stage();
         stage.initModality(Modality.NONE);
@@ -159,6 +167,7 @@ public class BattleMapWindow {
         root.setLeft(panelHost);
         root.setCenter(mapScroll);
         root.setBottom(buildStatusBar());
+        rootPane = root;
 
         showRoster();
         render();
@@ -190,7 +199,9 @@ public class BattleMapWindow {
         });
         stage.setScene(scene);
         stage.setMaximized(true);
-        stage.setOnCloseRequest(e -> {
+        // onHidden covers both the window's X and the toolbar "Close" (stage.close() skips
+        // close-request handlers).
+        stage.setOnHidden(e -> {
             if (timer != null) timer.dispose();
             if (dirty) saveMap();
         });
@@ -227,7 +238,9 @@ public class BattleMapWindow {
                 this::openInitiativeEntryDialog),
             tool("Next Turn ▸", "Advance to the next living combatant", () -> {
                 MapObject next = initiative.next();
+                if (next != null) history.record(map, next, initiative.round());
                 dirty = true;
+                pushAllToSheets();
                 refreshAll();
                 if (next == null) {
                     status("Nothing left standing.");
@@ -237,8 +250,13 @@ public class BattleMapWindow {
                         + (ticked.isEmpty() ? "" : "  ·  " + ticked.get(0)), ticked);
                 }
             }),
+            tool("⟲ Rewind", "Turn time back to the previous turn of the selected creature (or the one acting now),"
+                + " undoing all damage, effects, spells and movement since - the rabbit's pocket watch", this::rewindTime),
             roundLabel,
             new Separator(),
+            tool("Rest...", "Give every player on the map a short or long rest", this::openPartyRestDialog),
+            tool("Tokens ▤", "Show the quick placement palette: click an entry, then click boxes to place"
+                + " as many as you like (Esc stops)", this::toggleTokenPalette),
             tool("Add Token...", "Place another creature on the map", this::openAddTokenDialog),
             tool("Remove Selected", "Take the selected token off the map", this::removeSelected),
             new Separator(),
@@ -789,6 +807,8 @@ public class BattleMapWindow {
         panel.getChildren().add(detailBars);
         panel.getChildren().add(buildVitalsEditor(token, state));
         panel.getChildren().add(buildDeathSaveControls(token, state));
+        panel.getChildren().add(buildMagicEditor(token, state));
+        panel.getChildren().add(buildRestButtons(token, state));
 
         if (!state.getActiveEffects().isEmpty()) {
             panel.getChildren().addAll(new Separator(), owner.sectionLabel("Active Effects"));
@@ -1229,6 +1249,8 @@ public class BattleMapWindow {
         armedCaster = null;
         clearRange();
         dirty = true;
+        pushToSheet(caster);
+        for (MapObject target : targets) pushToSheet(target);
         refreshAll();
         showDetail(caster);
         logLines(outcome.getMessage(), outcome.getLog());
@@ -1350,6 +1372,7 @@ public class BattleMapWindow {
 
     private void afterVitalsChange(MapObject token) {
         dirty = true;
+        pushToSheet(token);
         rebuildInitiative();
         if (detailToken == token && detailBars != null) {
             refreshDetailBars(TokenSupport.combatOf(token));
@@ -1453,6 +1476,13 @@ public class BattleMapWindow {
         armedTokenType = null;
         armedTokenId = null;
         addToken(type, id, cx, cy);
+        // Monsters, NPCs and beasts stay "in hand" so a whole pack can be dropped with a few
+        // clicks; a player character only exists once.
+        if (!"Player".equals(type)) {
+            armedTokenType = type;
+            armedTokenId = id;
+            status(statusLabel.getText() + "  ·  Click another box to place one more, Esc to stop.");
+        }
     }
 
     private void addToken(String type, String id, int x, int y) {
@@ -1498,7 +1528,278 @@ public class BattleMapWindow {
     }
 
     private void saveMap() {
+        pushAllToSheets();
         repos.maps().save(map);
         dirty = false;
+    }
+
+    // ── Character sheet sync ────────────────────────────────────────────────
+
+    private List<MapObject> allCreatures() {
+        List<MapObject> out = new ArrayList<>();
+        for (int y = 0; y < map.getHeight(); y++) {
+            for (int x = 0; x < map.getWidth(); x++) {
+                for (MapObject obj : map.getCell(x, y).getOccupants()) {
+                    if (TokenSupport.isCreature(obj)) out.add(obj);
+                }
+            }
+        }
+        return out;
+    }
+
+    /** Pulls the latest character sheets into every player token: the sheet is the truth. */
+    private void syncFromSheets() {
+        for (MapObject token : allCreatures()) {
+            if (!(token instanceof PlayerToken pt) || pt.getCharacter() == null) continue;
+            var sheet = repos.players().getById(pt.getCharacter().getId());
+            if (sheet == null) continue;
+            var cls = sheet.getClassId() == null ? null : repos.classes().getById(sheet.getClassId());
+            boolean seeded = com.dnd.model.character.Progression.ensureSlots(sheet, cls);
+            boolean hadVitals = sheet.getMaxHitPoints() > 0;
+            TokenSupport.refreshFromSheet(pt, sheet);
+            if (seeded || !hadVitals) repos.players().save(sheet);
+            dirty = true;
+        }
+    }
+
+    /** Writes one player token's live vitals, slots, effects, level and XP back to the sheet. */
+    private void pushToSheet(MapObject token) {
+        if (!(token instanceof PlayerToken pt) || pt.getCharacter() == null) return;
+        var onToken = pt.getCharacter();
+        var sheet = repos.players().getById(onToken.getId());
+        if (sheet == null) return;
+        CombatState state = TokenSupport.combatOf(token);
+        TokenSupport.pushVitals(state, sheet);
+        TokenSupport.pushVitals(state, onToken);
+        sheet.setLevel(onToken.getLevel());
+        sheet.setXp(onToken.getXp());
+        sheet.setItems(onToken.getItems());
+        repos.players().save(sheet);
+    }
+
+    private void pushAllToSheets() {
+        for (MapObject token : allCreatures()) pushToSheet(token);
+    }
+
+    // ── Time rewind ─────────────────────────────────────────────────────────
+
+    private void rewindTime() {
+        MapObject actor = decorations.selected != null && TokenSupport.isCreature(decorations.selected)
+            ? decorations.selected : initiative.current();
+        if (actor == null) {
+            status("Nobody to rewind for.");
+            return;
+        }
+        var snapshot = history.previousTurnOf(actor);
+        if (snapshot == null) {
+            status("No earlier turn of " + TokenSupport.nameOf(actor) + " has been recorded yet.");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+            "Turn time back to the start of " + TokenSupport.nameOf(actor) + "'s turn in round "
+                + snapshot.getRound() + "?\nEvery hit, spell, effect and step since then is undone.",
+            ButtonType.OK, ButtonType.CANCEL);
+        confirm.setHeaderText("⟲ Rewind time");
+        owner.styleDialog(confirm);
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+        history.restore(map, snapshot, initiative);
+        cancelCastSilently();
+        decorations.selected = null;
+        decorations.reachable = null;
+        dirty = true;
+        pushAllToSheets();
+        refreshAll();
+        showRoster();
+        status("⟲ Time rewinds... it is round " + snapshot.getRound() + ", "
+            + TokenSupport.nameOf(actor) + "'s turn again.");
+    }
+
+    private void cancelCastSilently() {
+        armedCast = null;
+        armedCaster = null;
+        clearRange();
+    }
+
+    // ── Spell slots & rests ─────────────────────────────────────────────────
+
+    private Node buildMagicEditor(MapObject token, CombatState state) {
+        VBox box = new VBox(6);
+        com.dnd.model.magic.CastingResource resource = state.effectiveCastingResource();
+        box.getChildren().add(owner.body("Casts with: " + resource));
+        if (!state.getSpellSlots().isEmpty()) {
+            GridPane grid = new GridPane();
+            grid.setHgap(6);
+            grid.setVgap(4);
+            int row = 0;
+            for (com.dnd.model.magic.SpellSlot slot : state.getSpellSlots()) {
+                Spinner<Integer> current = new Spinner<>(0, Math.max(0, slot.getMax()), slot.getCurrent());
+                current.setPrefWidth(80);
+                current.setEditable(true);
+                current.valueProperty().addListener((obs, o, n) -> {
+                    slot.setCurrent(n);
+                    dirty = true;
+                    pushToSheet(token);
+                });
+                grid.addRow(row++, owner.body(com.dnd.model.magic.SpellSlots.ordinal(slot.getLevel()) + "-level slots:"),
+                    current, owner.body("/ " + slot.getMax()));
+            }
+            box.getChildren().add(grid);
+        }
+        return box;
+    }
+
+    private Node buildRestButtons(MapObject token, CombatState state) {
+        Button shortRest = new Button("Short Rest");
+        shortRest.getStyleClass().add("dnd-button");
+        shortRest.setTooltip(new Tooltip("Recover the HP rolled on hit dice, pact slots, half the missing mana; timed effects end"));
+        shortRest.setOnAction(e -> {
+            Integer hp = askNumber("Short rest", TokenSupport.nameOf(token) + " - HP recovered from hit dice rolled:", 0);
+            if (hp == null) return;
+            com.dnd.model.character.Progression.shortRest(state, isPactCaster(token), hp);
+            afterVitalsChange(token);
+            showDetail(token);
+            status(TokenSupport.nameOf(token) + " takes a short rest.");
+        });
+        Button longRest = new Button("Long Rest");
+        longRest.getStyleClass().add("dnd-button");
+        longRest.setTooltip(new Tooltip("Full HP, mana and spell slots; every effect and cooldown cleared"));
+        longRest.setOnAction(e -> {
+            com.dnd.model.character.Progression.longRest(state);
+            afterVitalsChange(token);
+            showDetail(token);
+            status(TokenSupport.nameOf(token) + " takes a long rest.");
+        });
+        return new FlowPane(6, 6, shortRest, longRest);
+    }
+
+    private boolean isPactCaster(MapObject token) {
+        if (!(token instanceof PlayerToken pt) || pt.getCharacter() == null || pt.getCharacter().getClassId() == null) {
+            return false;
+        }
+        var cls = repos.classes().getById(pt.getCharacter().getClassId());
+        return cls != null && cls.getSpellcasting() == com.dnd.model.magic.SpellcastingType.PACT;
+    }
+
+    private Integer askNumber(String title, String prompt, int initial) {
+        javafx.scene.control.TextInputDialog dialog = new javafx.scene.control.TextInputDialog(String.valueOf(initial));
+        dialog.setTitle(title);
+        dialog.setHeaderText(null);
+        dialog.setContentText(prompt);
+        owner.styleDialog(dialog);
+        while (true) {
+            var result = dialog.showAndWait();
+            if (result.isEmpty()) return null;
+            try {
+                int value = Integer.parseInt(result.get().trim());
+                if (value < 0) throw new NumberFormatException();
+                return value;
+            } catch (NumberFormatException ex) {
+                dialog.setContentText("Enter a whole number 0 or greater:");
+            }
+        }
+    }
+
+    /** Short or long rest for every player on the map at once. */
+    private void openPartyRestDialog() {
+        List<PlayerToken> players = new ArrayList<>();
+        for (MapObject token : allCreatures()) {
+            if (token instanceof PlayerToken pt) players.add(pt);
+        }
+        if (players.isEmpty()) {
+            status("No player characters on this map.");
+            return;
+        }
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Party Rest");
+        dialog.setHeaderText("Short rest: enter the HP each player rolled on their hit dice.\n"
+            + "Long rest: everyone is restored to full.");
+        ButtonType shortType = new ButtonType("Short Rest", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+        ButtonType longType = new ButtonType("Long Rest", javafx.scene.control.ButtonBar.ButtonData.APPLY);
+        dialog.getDialogPane().getButtonTypes().addAll(shortType, longType, ButtonType.CANCEL);
+        owner.styleDialog(dialog);
+        GridPane grid = new GridPane();
+        grid.setHgap(8);
+        grid.setVgap(6);
+        java.util.Map<PlayerToken, Spinner<Integer>> rolls = new java.util.LinkedHashMap<>();
+        int row = 0;
+        for (PlayerToken pt : players) {
+            Spinner<Integer> hp = new Spinner<>(0, 999, 0);
+            hp.setEditable(true);
+            hp.setPrefWidth(90);
+            rolls.put(pt, hp);
+            grid.addRow(row++, new Label(TokenSupport.nameOf(pt)), hp);
+        }
+        dialog.getDialogPane().setContent(grid);
+        ButtonType chosen = dialog.showAndWait().orElse(ButtonType.CANCEL);
+        if (chosen == ButtonType.CANCEL) return;
+        for (PlayerToken pt : players) {
+            CombatState state = TokenSupport.combatOf(pt);
+            if (chosen == longType) com.dnd.model.character.Progression.longRest(state);
+            else com.dnd.model.character.Progression.shortRest(state, isPactCaster(pt), rolls.get(pt).getValue());
+        }
+        dirty = true;
+        pushAllToSheets();
+        refreshAll();
+        status(chosen == longType ? "The party takes a long rest." : "The party takes a short rest.");
+    }
+
+    // ── Quick placement palette ─────────────────────────────────────────────
+
+    private void toggleTokenPalette() {
+        if (rootPane == null) return;
+        if (rootPane.getRight() != null) {
+            rootPane.setRight(null);
+            return;
+        }
+        if (tokenPalette == null) tokenPalette = buildTokenPalette();
+        rootPane.setRight(tokenPalette);
+    }
+
+    /** Record for a palette row: "Monster", id, display name. */
+    private record PaletteEntry(String type, String id, String name) {
+        @Override
+        public String toString() {
+            return name + "   · " + type;
+        }
+    }
+
+    private Node buildTokenPalette() {
+        List<PaletteEntry> all = new ArrayList<>();
+        repos.players().list().forEach(p -> all.add(new PaletteEntry("Player", p.getId(), p.getName())));
+        repos.npcs().list().forEach(n -> all.add(new PaletteEntry("NPC", n.getId(), n.getName())));
+        repos.monsters().list().forEach(m -> all.add(new PaletteEntry("Monster", m.getId(), m.getName())));
+        repos.beasts().list().forEach(b -> all.add(new PaletteEntry("Beast", b.getId(), b.getName())));
+        all.sort(java.util.Comparator.comparing(e -> e.name() == null ? "" : e.name().toLowerCase(java.util.Locale.ROOT)));
+
+        javafx.scene.control.TextField search = new javafx.scene.control.TextField();
+        search.setPromptText("Search creatures...");
+        ComboBox<String> kind = new ComboBox<>();
+        kind.getItems().addAll("All", "Beast", "Monster", "NPC", "Player");
+        kind.setValue("All");
+        ListView<PaletteEntry> list = new ListView<>();
+        list.getStyleClass().add("dnd-list-view");
+        VBox.setVgrow(list, javafx.scene.layout.Priority.ALWAYS);
+
+        Runnable filter = () -> {
+            String q = search.getText() == null ? "" : search.getText().trim().toLowerCase(java.util.Locale.ROOT);
+            list.getItems().setAll(all.stream()
+                .filter(e -> "All".equals(kind.getValue()) || e.type().equals(kind.getValue()))
+                .filter(e -> q.isEmpty() || (e.name() != null && e.name().toLowerCase(java.util.Locale.ROOT).contains(q)))
+                .toList());
+        };
+        search.textProperty().addListener((o, a, b) -> filter.run());
+        kind.setOnAction(e -> filter.run());
+        filter.run();
+        list.getSelectionModel().selectedItemProperty().addListener((o, a, entry) -> {
+            if (entry != null) armTokenPlacement(entry.type(), entry.id());
+        });
+
+        Label hint = owner.body("Pick a creature, then click empty boxes to drop it. Esc stops.");
+        hint.setWrapText(true);
+        VBox box = new VBox(8, owner.sectionLabel("Quick Place"), search, kind, list, hint);
+        box.setPadding(new Insets(10));
+        box.setPrefWidth(260);
+        box.getStyleClass().add("battle-panel");
+        return box;
     }
 }

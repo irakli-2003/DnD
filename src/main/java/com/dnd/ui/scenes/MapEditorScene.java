@@ -16,6 +16,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import com.dnd.ui.components.ImageFolders;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -687,9 +688,7 @@ public class MapEditorScene extends BaseScene {
         Label fileLabel = body("No image selected.");
         fileLabel.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px;");
         Button chooseBtn = btn("Choose Image...", () -> {
-            FileChooser fc = new FileChooser();
-            fc.setTitle("Select Layer Image");
-            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
+            FileChooser fc = ImageFolders.imageChooser("Select Layer Image");
             File chosen = fc.showOpenDialog(dialogStage);
             if (chosen != null) {
                 chosenFile[0] = chosen;

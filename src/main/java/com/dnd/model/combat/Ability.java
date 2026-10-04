@@ -85,6 +85,37 @@ public class Ability implements Printable {
         this.radius = Math.max(0, radius);
     }
 
+    /** Hit points the user pays to activate this (blood magic, summons, rune strain). */
+    private int hpCost;
+    /** Mana the user pays, for homebrew mana-based characters. */
+    private int manaCost;
+    /** Dice rolled when this hits; empty means it deals no direct damage. */
+    private com.dnd.model.combat.Damage damage;
+
+    public int getHpCost() {
+        return hpCost;
+    }
+
+    public void setHpCost(int hpCost) {
+        this.hpCost = Math.max(0, hpCost);
+    }
+
+    public int getManaCost() {
+        return manaCost;
+    }
+
+    public void setManaCost(int manaCost) {
+        this.manaCost = Math.max(0, manaCost);
+    }
+
+    public com.dnd.model.combat.Damage getDamage() {
+        return damage;
+    }
+
+    public void setDamage(com.dnd.model.combat.Damage damage) {
+        this.damage = damage;
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;

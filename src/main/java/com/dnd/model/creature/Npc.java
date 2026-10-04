@@ -94,6 +94,23 @@ public class Npc implements Printable {
         this.languages = languages;
     }
 
+    // ── Vitals (shown in Insert Info and used to seed battle-map tokens) ──────
+    private int maxHitPoints;
+    private int armorClass;
+    private int maxMana;
+    private List<com.dnd.model.magic.SpellSlot> spellSlots = new java.util.ArrayList<>();
+
+    public int getMaxHitPoints() { return maxHitPoints; }
+    public void setMaxHitPoints(int maxHitPoints) { this.maxHitPoints = Math.max(0, maxHitPoints); }
+    public int getArmorClass() { return armorClass; }
+    public void setArmorClass(int armorClass) { this.armorClass = Math.max(0, armorClass); }
+    public int getMaxMana() { return maxMana; }
+    public void setMaxMana(int maxMana) { this.maxMana = Math.max(0, maxMana); }
+    public List<com.dnd.model.magic.SpellSlot> getSpellSlots() { return spellSlots; }
+    public void setSpellSlots(List<com.dnd.model.magic.SpellSlot> spellSlots) {
+        this.spellSlots = spellSlots != null ? spellSlots : new java.util.ArrayList<>();
+    }
+
     private String imagePath;
     public String getImagePath() { return imagePath; }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
