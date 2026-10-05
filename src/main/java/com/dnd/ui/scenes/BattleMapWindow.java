@@ -228,7 +228,10 @@ public class BattleMapWindow {
             "Turn on, then click any square to make it a wall or a floor again. No token needs to be selected."));
         wallButton.setOnAction(e -> setWallPaintMode(!wallPaintMode));
 
+        bar.setAlignment(Pos.CENTER_LEFT);
+        bar.setRowValignment(javafx.geometry.VPos.TOP);
         bar.getChildren().addAll(
+            toolGroup("⚔ COMBAT",
             tool("Roll NPCs", "Roll initiative for every creature the DM runs, leaving player rolls alone", () -> {
                 int rolled = initiative.rollNonPlayers();
                 refreshAll();
@@ -255,14 +258,13 @@ public class BattleMapWindow {
             }),
             tool("⟲ Rewind", "Turn time back to the previous turn of the selected creature (or the one acting now),"
                 + " undoing all damage, effects, spells and movement since - the rabbit's pocket watch", this::rewindTime),
-            roundLabel,
-            new Separator(),
-            tool("Rest...", "Give every player on the map a short or long rest", this::openPartyRestDialog),
+            roundLabel),
+            toolGroup("♟ TOKENS",
             tool("Tokens ▤", "Show the quick placement palette: click an entry, then click boxes to place"
                 + " as many as you like (Esc stops)", this::toggleTokenPalette),
             tool("Add Token...", "Place another creature on the map", this::openAddTokenDialog),
-            tool("Remove Selected", "Take the selected token off the map", this::removeSelected),
-            new Separator(),
+            dangerTool("✖ Remove Selected", "Take the selected token off the map", this::removeSelected)),
+            toolGroup("🗺 MAP",
             wallButton,
             tool("Terrain...", "Paint difficult, water or climbable ground onto the map",
                 this::openTerrainPaintDialog),
@@ -271,19 +273,37 @@ public class BattleMapWindow {
                 render();
             }),
             tool("Zoom -", "Shrink the grid", () -> zoom(-8)),
-            tool("Zoom +", "Enlarge the grid", () -> zoom(8)),
-            new Separator(),
+            tool("Zoom +", "Enlarge the grid", () -> zoom(8))),
+            toolGroup("🛏 PARTY",
+            tool("Rest...", "Give every player on the map a short or long rest", this::openPartyRestDialog)),
+            toolGroup("🎵 ATMOSPHERE",
+            buildMusicMenu(),
+            timer),
+            toolGroup("💾 BATTLE",
             tool("Save", "Write the battle state back to the campaign", () -> {
                 saveMap();
                 status("Battle state saved.");
             }),
-            tool("Close", "Close the battle map", stage::close),
-            new Separator(),
-            buildMusicMenu(),
-            new Separator(),
-            timer
+            tool("Close", "Close the battle map", stage::close))
         );
         return bar;
+    }
+
+    /** A captioned box holding related toolbar controls, so they read as one section. */
+    private Node toolGroup(String caption, Node... controls) {
+        Label label = new Label(caption);
+        label.getStyleClass().add("tool-group-label");
+        HBox row = new HBox(5, controls);
+        row.setAlignment(Pos.CENTER_LEFT);
+        VBox group = new VBox(label, row);
+        group.getStyleClass().add("tool-group");
+        return group;
+    }
+
+    private Button dangerTool(String text, String tooltip, Runnable action) {
+        Button b = tool(text, tooltip, action);
+        b.getStyleClass().setAll("button", "danger-button");
+        return b;
     }
 
     // ── Music ───────────────────────────────────────────────────────────────
