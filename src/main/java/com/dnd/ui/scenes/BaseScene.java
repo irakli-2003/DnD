@@ -42,6 +42,7 @@ public abstract class BaseScene {
      * render with JavaFX's default white/light-gray look.
      */
     protected void styleDialog(Dialog<?> dialog) {
+        com.dnd.ui.WindowOrder.adopt(dialog);
         dialog.getDialogPane().getStylesheets().add(getClass().getResource(CSS_PATH).toExternalForm());
     }
 
