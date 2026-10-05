@@ -71,6 +71,17 @@ public final class TokenSupport {
         return null;
     }
 
+    /**
+     * Armor Class written on an NPC, monster or beast sheet (0 when unknown). Player
+     * characters work theirs out from armor and class features instead.
+     */
+    public static int sheetArmorClassOf(MapObject token) {
+        if (token instanceof NpcToken t && t.getNpc() != null) return t.getNpc().getArmorClass();
+        if (token instanceof MonsterToken t && t.getMonster() != null) return t.getMonster().getArmorClass();
+        if (token instanceof BeastToken t && t.getBeast() != null) return t.getBeast().getArmorClass();
+        return 0;
+    }
+
     public static List<Ability> abilitiesOf(MapObject token) {
         if (token instanceof MonsterToken t && t.getMonster() != null && t.getMonster().getAbilities() != null) {
             return t.getMonster().getAbilities();
@@ -204,6 +215,7 @@ public final class TokenSupport {
         }
         state.setActiveEffects(effects);
         state.setCooldowns(new java.util.LinkedHashMap<>(pc.getCooldowns()));
+        state.setFeatureUses(new java.util.LinkedHashMap<>(pc.getFeatureUses()));
         state.setSpellSlots(com.dnd.model.magic.SpellSlots.copy(pc.getSpellSlots()));
         state.setCastingResource(pc.getCastingResource());
     }
@@ -219,6 +231,7 @@ public final class TokenSupport {
         for (ActiveEffect e : state.getActiveEffects()) if (e != null) effects.add(e.copy());
         pc.setActiveEffects(effects);
         pc.setCooldowns(new java.util.LinkedHashMap<>(state.getCooldowns()));
+        pc.setFeatureUses(new java.util.LinkedHashMap<>(state.getFeatureUses()));
         pc.setSpellSlots(com.dnd.model.magic.SpellSlots.copy(state.getSpellSlots()));
     }
 

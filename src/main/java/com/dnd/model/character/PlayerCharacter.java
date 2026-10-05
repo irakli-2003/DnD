@@ -314,6 +314,16 @@ public class PlayerCharacter implements Printable {
         this.cooldowns = cooldowns != null ? cooldowns : new java.util.LinkedHashMap<>();
     }
 
+    /** Class/race feature id → uses (or pool points) spent since its last recharge. */
+    private java.util.Map<String, Integer> featureUses = new java.util.LinkedHashMap<>();
+    public java.util.Map<String, Integer> getFeatureUses() {
+        if (featureUses == null) featureUses = new java.util.LinkedHashMap<>();
+        return featureUses;
+    }
+    public void setFeatureUses(java.util.Map<String, Integer> featureUses) {
+        this.featureUses = featureUses != null ? featureUses : new java.util.LinkedHashMap<>();
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;

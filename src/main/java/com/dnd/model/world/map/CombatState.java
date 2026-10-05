@@ -342,6 +342,79 @@ public class CombatState {
         this.cooldowns = cooldowns != null ? cooldowns : new LinkedHashMap<>();
     }
 
+    // ── Class & race features ───────────────────────────────────────────────
+
+    /** Feature id → uses (or pool points) spent since it last recharged, e.g. "rage" → 1. */
+    private Map<String, Integer> featureUses = new LinkedHashMap<>();
+    /** Damage type ids this creature always halves (race traits and the like). */
+    private List<String> resistances = new ArrayList<>();
+    /**
+     * Id of a once-per-rest "drop to 1 HP instead of 0" trait (Relentless Endurance), or
+     * null. Whether it is still available is tracked in {@link #featureUses}.
+     */
+    private String enduranceFeature;
+
+    public Map<String, Integer> getFeatureUses() {
+        if (featureUses == null) featureUses = new LinkedHashMap<>();
+        return featureUses;
+    }
+
+    public void setFeatureUses(Map<String, Integer> featureUses) {
+        this.featureUses = featureUses != null ? featureUses : new LinkedHashMap<>();
+    }
+
+    public List<String> getResistances() {
+        if (resistances == null) resistances = new ArrayList<>();
+        return resistances;
+    }
+
+    public void setResistances(List<String> resistances) {
+        this.resistances = resistances != null ? new ArrayList<>(resistances) : new ArrayList<>();
+    }
+
+    public String getEnduranceFeature() {
+        return enduranceFeature;
+    }
+
+    /** Walking speed currently added by class features, so a level-up can adjust it by the difference. */
+    private int featureSpeedBonus;
+
+    public int getFeatureSpeedBonus() {
+        return featureSpeedBonus;
+    }
+
+    public void setFeatureSpeedBonus(int featureSpeedBonus) {
+        this.featureSpeedBonus = featureSpeedBonus;
+    }
+
+    public void setEnduranceFeature(String enduranceFeature) {
+        this.enduranceFeature = enduranceFeature;
+    }
+
+    /** True when innate traits or a running effect halve damage of {@code typeId}. */
+    public boolean resists(String typeId) {
+        if (typeId == null || typeId.isBlank()) return false;
+        for (String r : getResistances()) if (typeId.equalsIgnoreCase(r)) return true;
+        for (ActiveEffect e : getActiveEffects()) {
+            for (String r : e.getResistances()) if (typeId.equalsIgnoreCase(r)) return true;
+        }
+        return false;
+    }
+
+    /** Sum of Strength-melee damage bonuses from running effects (Rage). */
+    public int meleeDamageBonus() {
+        int total = 0;
+        for (ActiveEffect e : getActiveEffects()) total += e.getMeleeDamageBonus();
+        return total;
+    }
+
+    /** Sum of AC changes from running effects. */
+    public int effectAcBonus() {
+        int total = 0;
+        for (ActiveEffect e : getActiveEffects()) total += e.getAcBonus();
+        return total;
+    }
+
     /**
      * Adds an effect, refreshing the duration instead of stacking a second copy when the
      * same effect is already running - being frozen twice makes it last longer, not tick
@@ -469,6 +542,10 @@ public class CombatState {
         for (ActiveEffect e : getActiveEffects()) effects.add(e.copy());
         c.activeEffects = effects;
         c.cooldowns = new LinkedHashMap<>(getCooldowns());
+        c.featureUses = new LinkedHashMap<>(getFeatureUses());
+        c.resistances = new ArrayList<>(getResistances());
+        c.enduranceFeature = enduranceFeature;
+        c.featureSpeedBonus = featureSpeedBonus;
         c.castingResource = castingResource;
         c.spellSlots = com.dnd.model.magic.SpellSlots.copy(getSpellSlots());
         return c;

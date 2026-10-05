@@ -1,5 +1,10 @@
 package com.dnd.model.world.map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * An effect currently riding on a creature - frost for three more rounds, a blessing until
  * the end of the fight, and so on.
@@ -22,6 +27,15 @@ public class ActiveEffect {
     private int healingPerRound;
     /** Who or what applied it, purely so the DM can see where it came from. */
     private String source;
+    /** Extra damage on Strength melee attacks while this lasts (e.g. a barbarian's Rage). */
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private int meleeDamageBonus;
+    /** Armor Class added while this lasts (or removed, when negative). */
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+    private int acBonus;
+    /** Damage type ids halved while this lasts. */
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<String> resistances = new ArrayList<>();
 
     public ActiveEffect() {
     }
@@ -92,9 +106,37 @@ public class ActiveEffect {
         this.source = source;
     }
 
+    public int getMeleeDamageBonus() {
+        return meleeDamageBonus;
+    }
+
+    public void setMeleeDamageBonus(int meleeDamageBonus) {
+        this.meleeDamageBonus = meleeDamageBonus;
+    }
+
+    public int getAcBonus() {
+        return acBonus;
+    }
+
+    public void setAcBonus(int acBonus) {
+        this.acBonus = acBonus;
+    }
+
+    public List<String> getResistances() {
+        if (resistances == null) resistances = new ArrayList<>();
+        return resistances;
+    }
+
+    public void setResistances(List<String> resistances) {
+        this.resistances = resistances != null ? new ArrayList<>(resistances) : new ArrayList<>();
+    }
+
     public ActiveEffect copy() {
         ActiveEffect c = new ActiveEffect(effectId, name, remainingRounds, damagePerRound, healingPerRound, source);
         c.description = description;
+        c.meleeDamageBonus = meleeDamageBonus;
+        c.acBonus = acBonus;
+        c.resistances = new ArrayList<>(getResistances());
         return c;
     }
 

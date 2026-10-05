@@ -6,6 +6,8 @@ import com.dnd.model.combat.CastResolver;
 import com.dnd.model.combat.InitiativeTracker;
 import com.dnd.model.item.Item;
 import com.dnd.model.magic.Spell;
+import com.dnd.model.rules.CombatRules;
+import com.dnd.model.rules.FeatureRules;
 import com.dnd.model.world.map.*;
 import com.dnd.ui.ImageStore;
 import com.dnd.ui.MapRenderer;
@@ -80,6 +82,23 @@ public class BattleMapWindow {
     private CastResolver.Castable armedCast;
     /** Who is casting {@link #armedCast}. */
     private MapObject armedCaster;
+    /** The class/race feature behind {@link #armedCast} (Breath Weapon), spent once it lands. */
+    private FeatureRules.Action armedCastFeature;
+
+    /** A targeted feature (Lay on Hands, Bardic Inspiration) waiting for the DM to click someone. */
+    private FeatureRules.Action armedFeature;
+    private MapObject armedFeatureUser;
+    /** Pool points to spend when {@link #armedFeature} is a healing pool. */
+    private int armedFeaturePoints;
+
+    /** A weapon attack waiting for the DM to click its target. */
+    private FeatureRules.Attack armedAttack;
+    private MapObject armedAttacker;
+
+    /** Damage type the vitals Damage button deals; remembered between hits. */
+    private String vitalsDamageType;
+
+    private final java.util.Random dice = new java.util.Random();
 
     /** Type ("Player"/"NPC"/"Monster"/"Beast") of the token queued up to be placed by clicking the map. */
     private String armedTokenType;
@@ -122,14 +141,53 @@ public class BattleMapWindow {
 
     private void seedSpeed(MapObject token) {
         CombatState state = TokenSupport.combatOf(token);
-        if (state.isSpeedSeeded()) return;
-        state.setSpeedSeeded(true);
-        dirty = true;
+        if (!state.isSpeedSeeded()) {
+            state.setSpeedSeeded(true);
+            dirty = true;
+            if (token instanceof PlayerToken player && player.getCharacter() != null) {
+                String raceId = player.getCharacter().getRaceId();
+                var race = raceId == null || raceId.isBlank() ? null : repos.races().getById(raceId);
+                if (race != null && race.getSpeed() > 0) state.setWalkSpeed(race.getSpeed());
+            }
+        }
+        seedFeatures(token);
+    }
+
+    /**
+     * Puts a player's class and race traits on their combat state every time the map opens,
+     * so levelling up or changing armor between fights is picked up: innate resistances,
+     * the drop-to-1-HP trait and Fast/Unarmored Movement speed.
+     */
+    private void seedFeatures(MapObject token) {
         if (!(token instanceof PlayerToken player) || player.getCharacter() == null) return;
-        String raceId = player.getCharacter().getRaceId();
-        if (raceId == null || raceId.isBlank()) return;
-        var race = repos.races().getById(raceId);
-        if (race != null && race.getSpeed() > 0) state.setWalkSpeed(race.getSpeed());
+        FeatureRules.Kit kit = kitOf(token);
+        if (kit == null) return;
+        CombatState state = TokenSupport.combatOf(token);
+        int speedBefore = state.getWalkSpeed();
+        FeatureRules.seed(state, kit, FeatureRules.worn(player.getCharacter(), repos.items()::getById));
+        if (state.getWalkSpeed() != speedBefore) dirty = true;
+    }
+
+    /** Class and race features of a player token, or null for anyone else. */
+    private FeatureRules.Kit kitOf(MapObject token) {
+        if (!(token instanceof PlayerToken pt) || pt.getCharacter() == null) return null;
+        var pc = pt.getCharacter();
+        var cls = pc.getClassId() == null ? null : repos.classes().getById(pc.getClassId());
+        var race = pc.getRaceId() == null ? null : repos.races().getById(pc.getRaceId());
+        return FeatureRules.kit(pc, cls, race);
+    }
+
+    /** Current Armor Class with a short explanation of where it comes from. */
+    private FeatureRules.ArmorClass armorClassOf(MapObject token) {
+        CombatState state = TokenSupport.combatOf(token);
+        if (token instanceof PlayerToken pt && pt.getCharacter() != null) {
+            return FeatureRules.armorClass(pt.getCharacter(), kitOf(token), repos.items()::getById,
+                state.effectAcBonus());
+        }
+        int sheet = TokenSupport.sheetArmorClassOf(token);
+        int base = sheet > 0 ? sheet : 10;
+        int total = base + state.effectAcBonus();
+        return new FeatureRules.ArmorClass(total, sheet > 0 ? "from the stat block" : "no AC on the sheet, 10 assumed");
     }
 
     public void show() {
@@ -185,6 +243,10 @@ public class BattleMapWindow {
                 }
                 if (armedCast != null) {
                     cancelCast();
+                    return;
+                }
+                if (armedFeature != null || armedAttack != null) {
+                    cancelFeatureAndAttack();
                     return;
                 }
                 if (armedTokenType != null) {
@@ -428,6 +490,14 @@ public class BattleMapWindow {
             }
             if (armedCast != null) {
                 resolveCastAt(cx, cy);
+                return;
+            }
+            if (armedFeature != null) {
+                resolveFeatureAt(cx, cy);
+                return;
+            }
+            if (armedAttack != null) {
+                resolveAttackAt(cx, cy);
                 return;
             }
             if (armedTokenType != null) {
@@ -904,7 +974,11 @@ public class BattleMapWindow {
         Label kind = new Label(TokenSupport.kindOf(token) + " · level " + TokenSupport.levelOf(token));
         kind.getStyleClass().add("subtitle-label");
         detailToken = token;
-        panel.getChildren().add(new HBox(10, portrait(token, 56), new VBox(2, name, kind)));
+        FeatureRules.ArmorClass ac = armorClassOf(token);
+        Label acLabel = new Label("🛡 AC " + ac.total());
+        acLabel.getStyleClass().add("subtitle-label");
+        acLabel.setTooltip(new Tooltip(ac.breakdown()));
+        panel.getChildren().add(new HBox(10, portrait(token, 56), new VBox(2, name, kind, acLabel)));
 
         String description = TokenSupport.descriptionOf(token);
         if (description != null && !description.isBlank()) {
@@ -926,6 +1000,14 @@ public class BattleMapWindow {
         if (!state.getActiveEffects().isEmpty()) {
             panel.getChildren().addAll(new Separator(), owner.sectionLabel("Active Effects"));
             panel.getChildren().add(buildActiveEffectList(state));
+        }
+
+        FeatureRules.Kit kit = kitOf(token);
+        if (kit != null) {
+            panel.getChildren().addAll(new Separator(), owner.sectionLabel("Attacks"));
+            panel.getChildren().add(buildAttackList(token, kit));
+            panel.getChildren().addAll(new Separator(), owner.sectionLabel("Class & Race Features"));
+            panel.getChildren().add(buildFeatureList(token, state, kit));
         }
 
         panel.getChildren().addAll(new Separator(), owner.sectionLabel("Movement"));
@@ -971,8 +1053,26 @@ public class BattleMapWindow {
 
         Button damage = new Button("Damage");
         damage.getStyleClass().add("danger-button");
+        MenuButton damageType = new MenuButton(damageTypeLabel(vitalsDamageType));
+        damageType.setTooltip(new Tooltip("Type of damage dealt by the Damage button - resistances halve it"));
+        MenuItem untyped = new MenuItem("Untyped");
+        untyped.setOnAction(e -> {
+            vitalsDamageType = null;
+            damageType.setText(damageTypeLabel(null));
+        });
+        damageType.getItems().add(untyped);
+        for (var type : repos.damageTypes().list()) {
+            MenuItem item = new MenuItem(type.getName() != null ? type.getName() : type.getId());
+            item.setOnAction(e -> {
+                vitalsDamageType = type.getId();
+                damageType.setText(damageTypeLabel(type.getId()));
+            });
+            damageType.getItems().add(item);
+        }
         damage.setOnAction(e -> {
-            state.applyDamage(amount.getValue());
+            CombatRules.Hit landed = CombatRules.damage(state, amount.getValue(), vitalsDamageType);
+            status(TokenSupport.nameOf(token) + " takes " + landed.dealt()
+                + (vitalsDamageType == null ? "" : " " + vitalsDamageType) + " damage" + landed.note() + ".");
             afterVitalsChange(token);
         });
 
@@ -1011,9 +1111,14 @@ public class BattleMapWindow {
         grid.setHgap(6);
         grid.setVgap(6);
         grid.addRow(0, amount, damage, heal);
-        grid.addRow(1, owner.body("Max HP:"), maxHp);
-        grid.addRow(2, owner.body("Mana:"), currentMana, maxMana);
+        grid.add(damageType, 0, 1, 3, 1);
+        grid.addRow(2, owner.body("Max HP:"), maxHp);
+        grid.addRow(3, owner.body("Mana:"), currentMana, maxMana);
         return grid;
+    }
+
+    private static String damageTypeLabel(String typeId) {
+        return "Damage type: " + (typeId == null ? "untyped" : typeId);
     }
 
     private Node buildDeathSaveControls(MapObject token, CombatState state) {
@@ -1286,6 +1391,371 @@ public class BattleMapWindow {
         return row;
     }
 
+    // ── Class & race features ───────────────────────────────────────────────
+
+    private Button smallButton(String text, String styleClass) {
+        Button b = new Button(text);
+        b.getStyleClass().add(styleClass);
+        b.setStyle("-fx-min-width: 0; -fx-padding: 3 10;");
+        return b;
+    }
+
+    /**
+     * Rage, Second Wind, Lay on Hands and friends, each with its uses left and a button that
+     * actually does it; then the passive traits, resistances included, as reminders.
+     */
+    private Node buildFeatureList(MapObject token, CombatState state, FeatureRules.Kit kit) {
+        VBox box = new VBox(4);
+        String name = TokenSupport.nameOf(token);
+        for (FeatureRules.Action action : kit.getActions()) {
+            int left = action.usesLeft(state.getFeatureUses());
+            Label label = new Label(action.getName() + "  ·  " + action.usesLabel(state.getFeatureUses()));
+            label.getStyleClass().add(left > 0 ? "body-label" : "muted-label");
+            label.setWrapText(true);
+            label.setTooltip(new Tooltip(action.getDescription()));
+            HBox.setHgrow(label, Priority.ALWAYS);
+            label.setMaxWidth(Double.MAX_VALUE);
+            HBox row = new HBox(6, label);
+            row.setAlignment(Pos.CENTER_LEFT);
+
+            boolean automatic = action.getId().equals(kit.getEnduranceFeature());
+            if (automatic) {
+                label.setText(label.getText() + "  ·  automatic");
+            } else if (action.getKind() == FeatureRules.Kind.HEAL_POOL) {
+                Spinner<Integer> points = new Spinner<>(1, Math.max(1, left), Math.max(1, Math.min(5, left)));
+                points.setEditable(true);
+                points.setPrefWidth(70);
+                Button touch = smallButton("Heal…", "dnd-button");
+                touch.setDisable(left <= 0);
+                touch.setTooltip(new Tooltip("Pick the points, then click who is healed"));
+                touch.setOnAction(e -> {
+                    commitSpinner(points);
+                    armFeature(token, action, points.getValue());
+                });
+                row.getChildren().addAll(points, touch);
+            } else {
+                boolean armed = armedFeature == action || (armedCastFeature != null
+                    && armedCastFeature.getId().equals(action.getId()) && armedCaster == token);
+                Button use = smallButton(action.needsTarget() ? "Target…" : "Use",
+                    action.getKind() == FeatureRules.Kind.AREA_DAMAGE ? "danger-button" : "dnd-button");
+                use.setDisable(left <= 0 || armed);
+                use.setOnAction(e -> useFeature(token, state, action, name));
+                row.getChildren().add(use);
+            }
+            box.getChildren().add(row);
+        }
+
+        List<String> resist = new ArrayList<>(state.getResistances());
+        for (ActiveEffect effect : state.getActiveEffects()) {
+            for (String r : effect.getResistances()) if (!resist.contains(r)) resist.add(r);
+        }
+        if (!resist.isEmpty()) {
+            Label r = new Label("Resists: " + String.join(", ", resist) + " (damage halved)");
+            r.getStyleClass().add("body-label");
+            r.setWrapText(true);
+            box.getChildren().add(r);
+        }
+        int rageBonus = state.meleeDamageBonus();
+        if (rageBonus > 0) box.getChildren().add(owner.body("+" + rageBonus + " damage on Strength melee attacks"));
+
+        for (FeatureRules.Passive passive : kit.getPassives()) {
+            Label p = new Label("• " + passive.name());
+            p.getStyleClass().add("muted-label");
+            p.setWrapText(true);
+            if (passive.description() != null && !passive.description().isBlank()) {
+                p.setTooltip(new Tooltip(passive.description()));
+            }
+            box.getChildren().add(p);
+        }
+        return box;
+    }
+
+    private void useFeature(MapObject token, CombatState state, FeatureRules.Action action, String name) {
+        switch (action.getKind()) {
+            case ALLY_EFFECT, HEAL_POOL -> armFeature(token, action, 1);
+            case AREA_DAMAGE -> {
+                CastResolver.Castable castable = CastResolver.of(action.toAbility(), id -> repos.effects().getById(id));
+                cancelFeatureAndAttackSilently();
+                armCast(token, castable);
+                if (armedCast == castable) {
+                    armedCastFeature = action;
+                    showDetail(token);
+                }
+            }
+            default -> afterFeatureUse(token, FeatureRules.useOnSelf(action, state, name, dice));
+        }
+    }
+
+    private void afterFeatureUse(MapObject token, String message) {
+        dirty = true;
+        pushToSheet(token);
+        rebuildInitiative();
+        showDetail(token);
+        render();
+        status(message);
+    }
+
+    /** Picks up a feature that needs a target so the next click on a creature uses it. */
+    private void armFeature(MapObject user, FeatureRules.Action action, int points) {
+        if (action.usesLeft(TokenSupport.combatOf(user).getFeatureUses()) <= 0) {
+            status(action.getName() + " is spent until a " + action.getRecharge().label() + ".");
+            return;
+        }
+        cancelCastSilently();
+        armedFeature = action;
+        armedFeatureUser = user;
+        armedFeaturePoints = points;
+        previewRange(user, Math.max(5, action.getRangeFeet()) / FEET_PER_CELL, 0);
+        status(action.getName() + " - click who receives it, or press Esc to cancel.");
+        showDetail(user);
+    }
+
+    private void resolveFeatureAt(int cx, int cy) {
+        MapObject user = armedFeatureUser;
+        FeatureRules.Action action = armedFeature;
+        if (user == null || action == null) return;
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        MapObject target = tokenAtCell(cx, cy);
+        if (target == null || !TokenSupport.isCreature(target)) {
+            status(action.getName() + " needs a creature.");
+            return;
+        }
+        double reach = Math.max(5, action.getRangeFeet());
+        double distance = distanceCells(user, cx, cy) * FEET_PER_CELL;
+        if (distance > reach + 0.001) {
+            status(action.getName() + " reaches " + (int) reach + " ft but they are " + (int) distance + " ft away.");
+            return;
+        }
+        CombatState userState = TokenSupport.combatOf(user);
+        CombatState targetState = TokenSupport.combatOf(target);
+        String message = action.getKind() == FeatureRules.Kind.HEAL_POOL
+            ? FeatureRules.useHealPool(action, userState, TokenSupport.nameOf(user), targetState,
+                TokenSupport.nameOf(target), armedFeaturePoints)
+            : FeatureRules.useOnAlly(action, userState, TokenSupport.nameOf(user), targetState,
+                TokenSupport.nameOf(target));
+        armedFeature = null;
+        armedFeatureUser = null;
+        clearRange();
+        pushToSheet(target);
+        refreshAll();
+        afterFeatureUse(user, message);
+    }
+
+    private void cancelFeatureAndAttackSilently() {
+        armedFeature = null;
+        armedFeatureUser = null;
+        armedAttack = null;
+        armedAttacker = null;
+    }
+
+    private void cancelFeatureAndAttack() {
+        cancelFeatureAndAttackSilently();
+        clearRange();
+        status("Cancelled.");
+        if (detailToken != null) showDetail(detailToken);
+    }
+
+    // ── Weapon attacks ──────────────────────────────────────────────────────
+
+    private Node buildAttackList(MapObject token, FeatureRules.Kit kit) {
+        VBox box = new VBox(2);
+        if (!(token instanceof PlayerToken pt) || pt.getCharacter() == null) return box;
+        CombatState state = TokenSupport.combatOf(token);
+        int rage = state.meleeDamageBonus();
+        for (FeatureRules.Attack attack : FeatureRules.attacks(pt.getCharacter(), kit, repos.items()::getById)) {
+            boolean raging = rage > 0 && attack.melee() && attack.strengthBased();
+            Label row = new Label(attack.name() + "  ·  " + signed(attack.toHit()) + " to hit  ·  "
+                + attack.damageLabel() + (raging ? " (+" + rage + " rage)" : "")
+                + "  ·  " + (int) attack.reachFeet() + " ft");
+            row.getStyleClass().add("hover-row");
+            if (armedAttack != null && armedAttacker == token && armedAttack.id().equals(attack.id())) {
+                row.getStyleClass().add("selected-row");
+            }
+            row.setMaxWidth(Double.MAX_VALUE);
+            row.setWrapText(true);
+            row.setTooltip(new Tooltip("Click, then click the target."));
+            row.setOnMouseEntered(e -> previewRange(token, attack.reachFeet() / FEET_PER_CELL, 0));
+            row.setOnMouseExited(e -> {
+                if (armedAttack == null && armedCast == null && armedFeature == null) clearRange();
+            });
+            row.setOnMouseClicked(e -> armAttack(token, attack));
+            box.getChildren().add(row);
+        }
+        if (kit.getExtraAttacks() > 0) {
+            box.getChildren().add(owner.body("Extra Attack: " + (kit.getExtraAttacks() + 1)
+                + " attacks per Attack action"));
+        }
+        return box;
+    }
+
+    private static String signed(int n) {
+        return n >= 0 ? "+" + n : String.valueOf(n);
+    }
+
+    private void armAttack(MapObject attacker, FeatureRules.Attack attack) {
+        cancelCastSilently();
+        armedAttack = attack;
+        armedAttacker = attacker;
+        previewRange(attacker, attack.reachFeet() / FEET_PER_CELL, 0);
+        status("Attacking with " + attack.name() + " - click the target, or press Esc to cancel.");
+        showDetail(attacker);
+    }
+
+    private void resolveAttackAt(int cx, int cy) {
+        MapObject attacker = armedAttacker;
+        FeatureRules.Attack attack = armedAttack;
+        if (attacker == null || attack == null) return;
+        if (cx < 0 || cy < 0 || cx >= map.getWidth() || cy >= map.getHeight()) return;
+        MapObject target = tokenAtCell(cx, cy);
+        if (target == null || !TokenSupport.isCreature(target) || target == attacker) {
+            status(attack.name() + " needs a creature to hit.");
+            return;
+        }
+        double distance = distanceCells(attacker, cx, cy) * FEET_PER_CELL;
+        if (distance > attack.reachFeet() + 0.001) {
+            status(attack.name() + " reaches " + (int) attack.reachFeet() + " ft but the target is "
+                + (int) distance + " ft away.");
+            return;
+        }
+        armedAttack = null;
+        armedAttacker = null;
+        clearRange();
+        showAttackForm(attacker, target, attack);
+    }
+
+    /**
+     * The DM rolls on the table; this shows what the roll needs to beat, takes the damage
+     * dice they rolled and adds every flat bonus (ability, Rage, Fury of the Small) itself,
+     * then lands the hit through the resistance rules.
+     */
+    private void showAttackForm(MapObject attacker, MapObject target, FeatureRules.Attack attack) {
+        VBox panel = new VBox(10);
+        panel.setPadding(new Insets(12));
+        CombatState attackerState = TokenSupport.combatOf(attacker);
+        CombatState targetState = TokenSupport.combatOf(target);
+        FeatureRules.Kit kit = kitOf(attacker);
+
+        Label title = new Label("⚔ " + TokenSupport.nameOf(attacker) + " attacks " + TokenSupport.nameOf(target));
+        title.getStyleClass().add("title-label");
+        title.setWrapText(true);
+        panel.getChildren().add(title);
+
+        int ac = armorClassOf(target).total();
+        Label needs = new Label(attack.name() + ": roll d20 " + signed(attack.toHit()) + " against AC " + ac
+            + " - a " + Math.max(2, Math.min(20, ac - attack.toHit())) + " or better on the die hits (20 always does).");
+        needs.getStyleClass().add("body-label");
+        needs.setWrapText(true);
+        panel.getChildren().add(needs);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(8);
+        grid.setVgap(6);
+        int row = 0;
+        TextField rolled = new TextField();
+        rolled.setPrefWidth(80);
+        if (attack.dice() != null) {
+            rolled.setPromptText(attack.dice());
+            rolled.getStyleClass().add("dnd-text-field");
+            grid.addRow(row++, owner.body("Rolled " + attack.dice() + ":"), rolled);
+        }
+        CheckBox crit = new CheckBox("Critical hit (roll the weapon dice twice, enter the total)");
+        crit.setWrapText(true);
+        if (attack.dice() != null) grid.add(crit, 0, row++, 2, 1);
+
+        TextField sneakRolled = new TextField();
+        CheckBox sneak = new CheckBox();
+        if (kit != null && kit.getSneakAttackDice() > 0 && attack.finesseOrRanged()) {
+            sneak.setText("Sneak Attack - rolled " + kit.getSneakAttackDice() + "d6:");
+            sneakRolled.setPrefWidth(80);
+            sneakRolled.setPromptText(kit.getSneakAttackDice() + "d6");
+            sneakRolled.disableProperty().bind(sneak.selectedProperty().not());
+            grid.addRow(row++, sneak, sneakRolled);
+        }
+
+        int level = TokenSupport.levelOf(attacker);
+        FeatureRules.Action fury = kit == null ? null : kit.action(FeatureRules.FURY_OF_THE_SMALL);
+        CheckBox furyBox = new CheckBox();
+        if (fury != null && fury.usesLeft(attackerState.getFeatureUses()) > 0) {
+            furyBox.setText("Fury of the Small (+" + level + ", target is larger)");
+            grid.add(furyBox, 0, row++, 2, 1);
+        }
+        panel.getChildren().add(grid);
+
+        int rage = attack.melee() && attack.strengthBased() ? attackerState.meleeDamageBonus() : 0;
+        List<String> flat = new ArrayList<>();
+        flat.add(signed(attack.damageBonus()) + (attack.dice() == null ? " unarmed" : attack.strengthBased() ? " STR" : " DEX"));
+        if (rage > 0) flat.add("+" + rage + " Rage");
+        Label added = new Label("Added for you: " + String.join(", ", flat)
+            + (attack.damageType() == null ? "" : "  ·  " + attack.damageType() + " damage"
+            + (targetState.resists(attack.damageType()) ? " (target resists - halved)" : "")));
+        added.getStyleClass().add("muted-label");
+        added.setWrapText(true);
+        panel.getChildren().add(added);
+
+        Label error = new Label();
+        error.getStyleClass().add("error-label");
+
+        Button hit = smallButton("Hit", "danger-button");
+        Button miss = smallButton("Miss", "dnd-button");
+        Button cancel = smallButton("Cancel", "dnd-button");
+        hit.setDefaultButton(true);
+        hit.setOnAction(e -> {
+            int diceTotal;
+            int sneakTotal;
+            try {
+                diceTotal = parseRoll(rolled.getText(), attack.dice() != null);
+                sneakTotal = sneak.isSelected() ? parseRoll(sneakRolled.getText(), true) : 0;
+            } catch (NumberFormatException ex) {
+                error.setText("Enter the rolled dice totals as whole numbers.");
+                return;
+            }
+            int furyBonus = furyBox.isSelected() && fury != null
+                && FeatureRules.spend(attackerState.getFeatureUses(), fury, 1) ? level : 0;
+            int total = Math.max(0, diceTotal + sneakTotal + attack.damageBonus() + rage + furyBonus);
+            CombatRules.Hit landed = CombatRules.damage(targetState, total, attack.damageType());
+            List<String> detail = new ArrayList<>();
+            if (attack.dice() != null) detail.add(attack.dice() + (crit.isSelected() ? " (crit)" : "") + ": " + diceTotal);
+            if (sneakTotal > 0) detail.add("Sneak Attack: " + sneakTotal);
+            detail.add("Ability: " + signed(attack.damageBonus()));
+            if (rage > 0) detail.add("Rage: +" + rage);
+            if (furyBonus > 0) detail.add("Fury of the Small: +" + furyBonus);
+            if (landed.resisted()) detail.add("Resisted: " + total + " → " + landed.dealt());
+            if (landed.endured()) detail.add(TokenSupport.nameOf(target) + " refuses to fall (1 HP).");
+            dirty = true;
+            pushToSheet(attacker);
+            pushToSheet(target);
+            refreshAll();
+            showDetail(attacker);
+            logLines(TokenSupport.nameOf(attacker) + " hits " + TokenSupport.nameOf(target) + " with "
+                + attack.name() + " for " + landed.dealt()
+                + (attack.damageType() == null ? "" : " " + attack.damageType()) + landed.note() + ".", detail);
+        });
+        miss.setOnAction(e -> {
+            showDetail(attacker);
+            status(TokenSupport.nameOf(attacker) + " misses " + TokenSupport.nameOf(target) + ".");
+        });
+        cancel.setOnAction(e -> showDetail(attacker));
+        HBox buttons = new HBox(8, hit, miss, cancel);
+        panel.getChildren().addAll(buttons, error);
+
+        detailScroll = new ScrollPane(panel);
+        detailScroll.setFitToWidth(true);
+        detailScroll.getStyleClass().add("scroll-pane");
+        panelHost.getChildren().setAll(detailScroll);
+        javafx.application.Platform.runLater(rolled::requestFocus);
+    }
+
+    private static int parseRoll(String text, boolean required) {
+        String t = text == null ? "" : text.trim();
+        if (t.isEmpty()) {
+            if (required) throw new NumberFormatException();
+            return 0;
+        }
+        int value = Integer.parseInt(t);
+        if (value < 0) throw new NumberFormatException();
+        return value;
+    }
+
     // ── Casting ─────────────────────────────────────────────────────────────
 
     /**
@@ -1298,6 +1768,8 @@ public class BattleMapWindow {
             status(blocked);
             return;
         }
+        cancelFeatureAndAttackSilently();
+        armedCastFeature = null;
         armedCaster = caster;
         armedCast = action;
         previewRange(caster, action.getRangeFeet() / FEET_PER_CELL, action.getRadiusFeet() / FEET_PER_CELL);
@@ -1310,6 +1782,7 @@ public class BattleMapWindow {
     private void cancelCast() {
         armedCast = null;
         armedCaster = null;
+        armedCastFeature = null;
         clearRange();
         status("Cast cancelled.");
         if (detailToken != null) showDetail(detailToken);
@@ -1360,6 +1833,10 @@ public class BattleMapWindow {
 
         armedCast = null;
         armedCaster = null;
+        if (armedCastFeature != null) {
+            FeatureRules.spend(TokenSupport.combatOf(caster).getFeatureUses(), armedCastFeature, 1);
+            armedCastFeature = null;
+        }
         clearRange();
         dirty = true;
         pushToSheet(caster);
@@ -1695,6 +2172,11 @@ public class BattleMapWindow {
     private void cancelCastSilently() {
         armedCast = null;
         armedCaster = null;
+        armedCastFeature = null;
+        armedFeature = null;
+        armedFeatureUser = null;
+        armedAttack = null;
+        armedAttacker = null;
         clearRange();
     }
 
@@ -1729,18 +2211,18 @@ public class BattleMapWindow {
     private Node buildRestButtons(MapObject token, CombatState state) {
         Button shortRest = new Button("Short Rest");
         shortRest.getStyleClass().add("dnd-button");
-        shortRest.setTooltip(new Tooltip("Recover the HP rolled on hit dice, pact slots, half the missing mana; timed effects end"));
+        shortRest.setTooltip(new Tooltip("Recover the HP rolled on hit dice, pact slots, half the missing mana and short-rest features; timed effects end"));
         shortRest.setOnAction(e -> {
             Integer hp = askNumber("Short rest", TokenSupport.nameOf(token) + " - HP recovered from hit dice rolled:", 0);
             if (hp == null) return;
-            com.dnd.model.character.Progression.shortRest(state, isPactCaster(token), hp);
+            com.dnd.model.character.Progression.shortRest(state, isPactCaster(token), hp, TokenSupport.levelOf(token));
             afterVitalsChange(token);
             showDetail(token);
             status(TokenSupport.nameOf(token) + " takes a short rest.");
         });
         Button longRest = new Button("Long Rest");
         longRest.getStyleClass().add("dnd-button");
-        longRest.setTooltip(new Tooltip("Full HP, mana and spell slots; every effect and cooldown cleared"));
+        longRest.setTooltip(new Tooltip("Full HP, mana, spell slots and feature uses; every effect and cooldown cleared"));
         longRest.setOnAction(e -> {
             com.dnd.model.character.Progression.longRest(state);
             afterVitalsChange(token);
@@ -1813,7 +2295,8 @@ public class BattleMapWindow {
         for (PlayerToken pt : players) {
             CombatState state = TokenSupport.combatOf(pt);
             if (chosen == longType) com.dnd.model.character.Progression.longRest(state);
-            else com.dnd.model.character.Progression.shortRest(state, isPactCaster(pt), rolls.get(pt).getValue());
+            else com.dnd.model.character.Progression.shortRest(state, isPactCaster(pt), rolls.get(pt).getValue(),
+                TokenSupport.levelOf(pt));
         }
         dirty = true;
         pushAllToSheets();

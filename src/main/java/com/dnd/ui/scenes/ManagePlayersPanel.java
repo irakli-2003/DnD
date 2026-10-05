@@ -6,8 +6,11 @@ import com.dnd.model.character.CharacterClass;
 import com.dnd.model.character.PlayerCharacter;
 import com.dnd.model.combat.Effect;
 import com.dnd.model.item.Item;
+import com.dnd.model.rules.FeatureRules;
 import com.dnd.model.session.TrackedCreature;
 import com.dnd.model.world.map.ActiveEffect;
+import com.dnd.model.world.map.CombatState;
+import com.dnd.model.world.map.TokenSupport;
 import com.dnd.ui.ImageStore;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -414,8 +417,68 @@ final class ManagePlayersPanel {
         detailFrame(pc.getName(),
             ProgressionPanel.build(owner, repos, pc, () -> showPlayer(pc)),
             subLabel("Vitals"), vitals,
+            subLabel("Class & Race Features"), featuresBox(pc, persist),
             headerRow("Items", addItem), itemPicker, itemsBox,
             headerRow("Active Effects", addEffect), effectPicker, effectsBox);
+    }
+
+    /**
+     * AC, resistances, and every class/race feature with its uses left. Features that only
+     * touch their user can be used right here; targeted ones are used on the battle map.
+     */
+    private Node featuresBox(PlayerCharacter pc, Runnable persist) {
+        var cls = pc.getClassId() == null ? null : repos.classes().getById(pc.getClassId());
+        var race = pc.getRaceId() == null ? null : repos.races().getById(pc.getRaceId());
+        FeatureRules.Kit kit = FeatureRules.kit(pc, cls, race);
+        int effectAc = 0;
+        if (pc.getActiveEffects() != null) for (ActiveEffect e : pc.getActiveEffects()) effectAc += e.getAcBonus();
+        FeatureRules.ArmorClass ac = FeatureRules.armorClass(pc, kit, repos.items()::getById, effectAc);
+
+        VBox box = new VBox(4);
+        Label acLabel = owner.body("🛡 AC " + ac.total() + "  (" + ac.breakdown() + ")");
+        acLabel.setWrapText(true);
+        box.getChildren().add(acLabel);
+        if (!kit.getResistances().isEmpty()) {
+            box.getChildren().add(owner.body("Resists: " + String.join(", ", kit.getResistances())));
+        }
+        for (FeatureRules.Action action : kit.getActions()) {
+            int left = action.usesLeft(pc.getFeatureUses());
+            Label label = new Label(action.getName() + "  ·  " + action.usesLabel(pc.getFeatureUses()));
+            label.getStyleClass().add(left > 0 ? "body-label" : "muted-label");
+            label.setWrapText(true);
+            label.setMaxWidth(Double.MAX_VALUE);
+            label.setTooltip(new Tooltip(action.getDescription()));
+            HBox.setHgrow(label, Priority.ALWAYS);
+            HBox row = new HBox(6, label);
+            row.setAlignment(Pos.CENTER_LEFT);
+            boolean automatic = action.getId().equals(kit.getEnduranceFeature());
+            if (action.needsTarget() || automatic) {
+                row.getChildren().add(hint(automatic ? "automatic" : "on battle map"));
+            } else {
+                Button use = smallBtn("Use", () -> {
+                    CombatState state = new CombatState();
+                    TokenSupport.pullVitals(pc, state);
+                    String message = FeatureRules.useOnSelf(action, state, pc.getName(), new java.util.Random());
+                    TokenSupport.pushVitals(state, pc);
+                    persist.run();
+                    status.accept(message);
+                    showPlayer(pc);
+                });
+                use.setDisable(left <= 0);
+                row.getChildren().add(use);
+            }
+            box.getChildren().add(row);
+        }
+        for (FeatureRules.Passive passive : kit.getPassives()) {
+            Label p = new Label("• " + passive.name());
+            p.getStyleClass().add("muted-label");
+            p.setWrapText(true);
+            if (passive.description() != null && !passive.description().isBlank()) {
+                p.setTooltip(new Tooltip(passive.description()));
+            }
+            box.getChildren().add(p);
+        }
+        return box;
     }
 
     void showCreature(TrackedCreature c) {

@@ -114,6 +114,16 @@ public class CharacterClass implements Printable {
         return out;
     }
 
+    /** Every feature a {@code level} character of {@code subclass} has unlocked so far. */
+    public List<ClassFeature> featuresUpTo(int level, String subclass) {
+        List<ClassFeature> out = new java.util.ArrayList<>();
+        if (features == null) return out;
+        for (ClassFeature feature : features) {
+            if (feature != null && feature.getLevel() <= level && feature.appliesTo(subclass)) out.add(feature);
+        }
+        return out;
+    }
+
     @Override
     public String toString() {
         return name != null ? name : id;

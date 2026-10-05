@@ -319,8 +319,11 @@ public final class CastResolver {
 
         int directDamage = action.getDamage() != null && action.getDamage().hasDice() ? Math.max(0, rolledDamage) : 0;
         if (directDamage > 0) {
-            state.applyDamage(directDamage);
-            log.add(targetName + " takes " + directDamage + " damage.");
+            com.dnd.model.rules.CombatRules.Hit landed =
+                com.dnd.model.rules.CombatRules.damage(state, directDamage, action.getDamage().getTypeId());
+            String type = action.getDamage().getTypeId();
+            log.add(targetName + " takes " + landed.dealt()
+                + (type == null || type.isBlank() ? "" : " " + type) + " damage" + landed.note() + ".");
         }
 
         for (Effect effect : action.getEffects()) {
@@ -342,8 +345,10 @@ public final class CastResolver {
             }
             // Instant effects land once, right now, and leave nothing behind.
             if (effect.isDamaging() && effect.getDamageAmount() > 0) {
-                state.applyDamage(effect.getDamageAmount());
-                log.add(targetName + " takes " + effect.getDamageAmount() + " from " + displayName(effect, action) + ".");
+                com.dnd.model.rules.CombatRules.Hit landed =
+                    com.dnd.model.rules.CombatRules.damage(state, effect.getDamageAmount(), null);
+                log.add(targetName + " takes " + landed.dealt() + " from " + displayName(effect, action)
+                    + landed.note() + ".");
             }
             if (effect.isHealing() && effect.getHealingAmount() > 0) {
                 state.heal(effect.getHealingAmount());
