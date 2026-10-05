@@ -61,6 +61,8 @@ final class StorylineEditorWindow {
     private Stage editorStage;
     private Stage findStage;
     private TextField findField;
+    private final StackPane playersHost = new StackPane();
+    private ManagePlayersPanel playersPanel;
 
     StorylineEditorWindow(BaseScene owner, StorylineService service, CampaignRepositories repos, Path file) {
         this.owner = owner;
@@ -120,7 +122,13 @@ final class StorylineEditorWindow {
             }
         });
 
-        VBox layout = new VBox(0, buildToolbar(stage), area, buildStatusBar(stage));
+        playersHost.setVisible(false);
+        playersHost.setManaged(false);
+        HBox.setHgrow(area, Priority.ALWAYS);
+        HBox center = new HBox(area, playersHost);
+        VBox.setVgrow(center, Priority.ALWAYS);
+
+        VBox layout = new VBox(0, buildToolbar(stage), center, buildStatusBar(stage));
         layout.getStyleClass().add("root");
         VBox.setVgrow(area, Priority.ALWAYS);
 
@@ -194,8 +202,8 @@ final class StorylineEditorWindow {
             toolGroup("☻ PLAYERS",
                 toolButton("Award XP", "Give a player character experience without leaving this file",
                     this::openAwardXp),
-                toolButton("Manage Player", "Adjust a player's health, mana, items, and lingering effects",
-                    this::openManagePlayer)),
+                toolButton("Manage Players", "Show or hide the panel with every player and this session's creatures:"
+                    + " HP, mana, items and effects", this::toggleManagePlayers)),
             toolGroup("⏱ TIMER", timer),
             toolGroup("💾 FILE",
                 toolButton("Save", "Save this file (Ctrl+S)", this::save),
@@ -594,215 +602,16 @@ final class StorylineEditorWindow {
         });
     }
 
-    /**
-     * Opens a detail window for one player character letting the DM adjust health, mana,
-     * items and lingering effects between sessions - the same kind of bookkeeping the
-     * battle map does live in combat, but reachable from prep notes without an active map.
-     */
-    private void openManagePlayer() {
-        List<com.dnd.model.character.PlayerCharacter> players = repos.players().list();
-        if (players.isEmpty()) {
-            statusLabel.setText("No player characters in this campaign yet.");
-            return;
+    /** Shows or hides the right-hand Manage Players panel (cards for the party and this session's creatures). */
+    private void toggleManagePlayers() {
+        if (playersPanel == null) {
+            playersPanel = new ManagePlayersPanel(owner, repos, file, statusLabel::setText);
+            playersHost.getChildren().setAll(playersPanel.node());
         }
-        ChoiceDialog<com.dnd.model.character.PlayerCharacter> pick = new ChoiceDialog<>(players.get(0), players);
-        pick.setTitle("Manage Player");
-        pick.setHeaderText(null);
-        pick.setContentText("Character:");
-        owner.styleDialog(pick);
-        pick.showAndWait().ifPresent(this::showManagePlayerWindow);
-    }
-
-    private void showManagePlayerWindow(com.dnd.model.character.PlayerCharacter pc) {
-        Stage stage = new Stage();
-        com.dnd.ui.WindowOrder.adopt(stage);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Manage " + pc.getName());
-
-        VBox layout = new VBox(14);
-        layout.setPadding(new Insets(14));
-        layout.getStyleClass().add("root");
-
-        Runnable persist = () -> repos.players().save(pc);
-
-        Label vitalsHeader = new Label("Vitals");
-        vitalsHeader.getStyleClass().add("section-label");
-
-        Spinner<Integer> maxHp = new Spinner<>(0, 9999, pc.getMaxHitPoints());
-        maxHp.setEditable(true);
-        maxHp.valueProperty().addListener((o, old, n) -> { pc.setMaxHitPoints(n); persist.run(); });
-        Spinner<Integer> curHp = new Spinner<>(0, 9999, pc.getCurrentHitPoints());
-        curHp.setEditable(true);
-        curHp.valueProperty().addListener((o, old, n) -> { pc.setCurrentHitPoints(n); persist.run(); });
-        Spinner<Integer> maxMana = new Spinner<>(0, 9999, pc.getMaxMana());
-        maxMana.setEditable(true);
-        maxMana.valueProperty().addListener((o, old, n) -> { pc.setMaxMana(n); persist.run(); });
-        Spinner<Integer> curMana = new Spinner<>(0, 9999, pc.getCurrentMana());
-        curMana.setEditable(true);
-        curMana.valueProperty().addListener((o, old, n) -> { pc.setCurrentMana(n); persist.run(); });
-
-        GridPane vitals = new GridPane();
-        vitals.setHgap(8);
-        vitals.setVgap(8);
-        vitals.addRow(0, owner.body("Current HP:"), curHp, owner.body("Max HP:"), maxHp);
-        vitals.addRow(1, owner.body("Current Mana:"), curMana, owner.body("Max Mana:"), maxMana);
-
-        Label itemsHeader = new Label("Items");
-        itemsHeader.getStyleClass().add("section-label");
-        VBox itemsBox = new VBox(6);
-        Button addItem = new Button("Add Item");
-        addItem.getStyleClass().add("dnd-button");
-        addItem.setOnAction(e -> {
-            List<com.dnd.model.item.Item> catalog = repos.items().list();
-            if (catalog.isEmpty()) {
-                statusLabel.setText("No items in this campaign's catalog yet.");
-                return;
-            }
-            ChoiceDialog<com.dnd.model.item.Item> itemPick = new ChoiceDialog<>(catalog.get(0), catalog);
-            itemPick.setTitle("Add Item");
-            itemPick.setHeaderText(null);
-            itemPick.setContentText("Item:");
-            owner.styleDialog(itemPick);
-            itemPick.showAndWait().ifPresent(item -> {
-                List<com.dnd.model.character.PlayerCharacter.PlayerItem> items = pc.getItems();
-                if (items == null) {
-                    items = new ArrayList<>();
-                    pc.setItems(items);
-                }
-                com.dnd.model.character.PlayerCharacter.PlayerItem stack = items.stream()
-                    .filter(i -> i != null && item.getId().equals(i.getItemId())).findFirst().orElse(null);
-                if (stack != null) {
-                    stack.setQuantity(stack.getQuantity() + 1);
-                } else {
-                    items.add(new com.dnd.model.character.PlayerCharacter.PlayerItem(
-                        item.getId(), new com.dnd.model.character.PlayerCharacter.ItemCondition(100), false));
-                }
-                persist.run();
-                refreshItemsBox(itemsBox, pc, persist);
-            });
-        });
-
-        Label effectsHeader = new Label("Active Effects");
-        effectsHeader.getStyleClass().add("section-label");
-        VBox effectsBox = new VBox(6);
-        Button addEffect = new Button("Add Effect");
-        addEffect.getStyleClass().add("dnd-button");
-        addEffect.setOnAction(e -> {
-            List<com.dnd.model.combat.Effect> catalog = repos.effects().list();
-            if (catalog.isEmpty()) {
-                statusLabel.setText("No effects in this campaign's catalog yet.");
-                return;
-            }
-            ChoiceDialog<com.dnd.model.combat.Effect> effectPick = new ChoiceDialog<>(catalog.get(0), catalog);
-            effectPick.setTitle("Add Effect");
-            effectPick.setHeaderText(null);
-            effectPick.setContentText("Effect:");
-            owner.styleDialog(effectPick);
-            effectPick.showAndWait().ifPresent(effect -> {
-                TextInputDialog rounds = new TextInputDialog(String.valueOf(Math.max(1, effect.getDurationRounds())));
-                rounds.setTitle("Add Effect");
-                rounds.setHeaderText(null);
-                rounds.setContentText("Rounds remaining:");
-                owner.styleDialog(rounds);
-                rounds.showAndWait().ifPresent(raw -> {
-                    try {
-                        int roundCount = Integer.parseInt(raw.trim());
-                        pc.addEffect(new com.dnd.model.world.map.ActiveEffect(effect.getId(), effect.getName(),
-                            roundCount, effect.getDamageAmount(), effect.getHealingAmount(), "DM"));
-                        persist.run();
-                        refreshEffectsBox(effectsBox, pc, persist);
-                    } catch (NumberFormatException ex) {
-                        statusLabel.setText("\"" + raw + "\" isn't a whole number.");
-                    }
-                });
-            });
-        });
-
-        refreshItemsBox(itemsBox, pc, persist);
-        refreshEffectsBox(effectsBox, pc, persist);
-
-        Button close = new Button("Close");
-        close.getStyleClass().add("dnd-button");
-        close.setOnAction(e -> stage.close());
-
-        ScrollPane scroll = new ScrollPane(new VBox(14,
-            ProgressionPanel.build(owner, repos, pc, () -> {
-                stage.close();
-                javafx.application.Platform.runLater(() -> showManagePlayerWindow(pc));
-            }),
-            vitalsHeader, vitals,
-            itemsHeader, itemsBox, addItem,
-            effectsHeader, effectsBox, addEffect));
-        scroll.setFitToWidth(true);
-        scroll.getStyleClass().add("scroll-pane");
-        VBox.setVgrow(scroll, Priority.ALWAYS);
-
-        layout.getChildren().addAll(scroll, close);
-        stage.setScene(owner.themedScene(layout, 480, 620));
-        stage.showAndWait();
-    }
-
-    private void refreshItemsBox(VBox itemsBox, com.dnd.model.character.PlayerCharacter pc, Runnable persist) {
-        itemsBox.getChildren().clear();
-        List<com.dnd.model.character.PlayerCharacter.PlayerItem> items = pc.getItems();
-        if (items == null || items.isEmpty()) {
-            itemsBox.getChildren().add(owner.body("No items."));
-            return;
-        }
-        for (com.dnd.model.character.PlayerCharacter.PlayerItem item : new ArrayList<>(items)) {
-            com.dnd.model.item.Item catalogItem = repos.items().getById(item.getItemId());
-            Label label = owner.body((catalogItem != null ? catalogItem.getName() : item.getItemId())
-                + (item.getQuantity() > 1 ? "  ×" + item.getQuantity() : ""));
-            Button less = new Button("−");
-            less.getStyleClass().add("dnd-button");
-            less.setTooltip(new javafx.scene.control.Tooltip("Use up / lose one"));
-            less.setOnAction(e -> {
-                if (item.getQuantity() > 1) item.setQuantity(item.getQuantity() - 1);
-                else items.remove(item);
-                persist.run();
-                refreshItemsBox(itemsBox, pc, persist);
-            });
-            Button more = new Button("+");
-            more.getStyleClass().add("dnd-button");
-            more.setTooltip(new javafx.scene.control.Tooltip("Found or crafted one more"));
-            more.setOnAction(e -> {
-                item.setQuantity(item.getQuantity() + 1);
-                persist.run();
-                refreshItemsBox(itemsBox, pc, persist);
-            });
-            Button remove = new Button("Remove");
-            remove.getStyleClass().add("danger-button");
-            remove.setOnAction(e -> {
-                items.remove(item);
-                persist.run();
-                refreshItemsBox(itemsBox, pc, persist);
-            });
-            HBox row = new HBox(8, label, less, more, remove);
-            row.setAlignment(Pos.CENTER_LEFT);
-            itemsBox.getChildren().add(row);
-        }
-    }
-
-    private void refreshEffectsBox(VBox effectsBox, com.dnd.model.character.PlayerCharacter pc, Runnable persist) {
-        effectsBox.getChildren().clear();
-        List<com.dnd.model.world.map.ActiveEffect> effects = pc.getActiveEffects();
-        if (effects == null || effects.isEmpty()) {
-            effectsBox.getChildren().add(owner.body("No active effects."));
-            return;
-        }
-        for (com.dnd.model.world.map.ActiveEffect effect : new ArrayList<>(effects)) {
-            Label label = owner.body(effect.label());
-            Button clear = new Button("Clear");
-            clear.getStyleClass().add("danger-button");
-            clear.setOnAction(e -> {
-                pc.clearEffect(effect);
-                persist.run();
-                refreshEffectsBox(effectsBox, pc, persist);
-            });
-            HBox row = new HBox(8, label, clear);
-            row.setAlignment(Pos.CENTER_LEFT);
-            effectsBox.getChildren().add(row);
-        }
+        boolean show = !playersHost.isVisible();
+        if (show) playersPanel.showList();
+        playersHost.setVisible(show);
+        playersHost.setManaged(show);
     }
 
     /**
