@@ -101,7 +101,12 @@ final class StorylineEditorWindow {
         area.setOnMouseClicked(e -> {
             if (e.getClickCount() < 2) return;
             MapLink link = MapLink.at(area.getText(), area.getCaretPosition());
-            if (link != null) openBattleMap(link);
+            if (link != null) {
+                openBattleMap(link);
+                return;
+            }
+            com.dnd.music.MusicCue cue = com.dnd.music.MusicCue.at(area.getText(), area.getCaretPosition());
+            if (cue != null) playCue(cue);
         });
 
         // The skin (and with it the internal ScrollPane) isn't created until the TextArea is
@@ -165,6 +170,7 @@ final class StorylineEditorWindow {
             buildInsertBlockMenu(),
             buildMapLinkMenu(),
             toolButton("Open Map Link", "Open the battle map linked at the cursor", this::openMapLinkAtCaret),
+            buildMusicMenu(),
             new Separator(),
             toolButton("Read-Aloud", "Wrap the selected text as prose to read to the players",
                 () -> wrapSelection(READ_ALOUD_OPEN, READ_ALOUD_CLOSE)),
@@ -224,6 +230,69 @@ final class StorylineEditorWindow {
             maps.getItems().setAll(items);
         });
         return maps;
+    }
+
+    /**
+     * "🎵 Music": opens the music panel, or inserts a [music: ...] / [sfx: ...] cue at the
+     * caret. Double-clicking a cue in the text plays it during the session.
+     */
+    private MenuButton buildMusicMenu() {
+        MenuButton music = new MenuButton("🎵 Music ▾");
+        music.getStyleClass().add("dnd-button");
+        music.setTooltip(new Tooltip("Music panel, or insert a music / sound cue (double-click a cue to play it)"));
+
+        MenuItem open = new MenuItem("Open music panel...");
+        open.setOnAction(e -> MusicPanel.open(owner, owner.uiSession.campaignRoot()));
+        Menu musicCues = new Menu("Insert music cue");
+        Menu soundCues = new Menu("Insert sound cue");
+        musicCues.getItems().add(new MenuItem("Loading..."));
+        soundCues.getItems().add(new MenuItem("Loading..."));
+        music.setOnShowing(e -> {
+            com.dnd.music.MusicLibrary library = com.dnd.music.MusicLibrary.load(owner.uiSession.campaignRoot());
+            List<MenuItem> playlists = new ArrayList<>();
+            for (var playlist : library.sortedPlaylists()) {
+                MenuItem item = new MenuItem(playlist.getName());
+                item.setOnAction(ev -> insertAtCaret(com.dnd.music.MusicCue.marker(com.dnd.music.MusicCue.Kind.MUSIC, playlist.getName())));
+                playlists.add(item);
+            }
+            MenuItem stop = new MenuItem("■ stop (fade out)");
+            stop.setOnAction(ev -> insertAtCaret(com.dnd.music.MusicCue.marker(com.dnd.music.MusicCue.Kind.MUSIC, "stop")));
+            playlists.add(new SeparatorMenuItem());
+            playlists.add(stop);
+            musicCues.getItems().setAll(playlists);
+
+            List<MenuItem> sounds = new ArrayList<>();
+            for (var sound : library.sortedSounds()) {
+                MenuItem item = new MenuItem(sound.getName());
+                item.setOnAction(ev -> insertAtCaret(com.dnd.music.MusicCue.marker(com.dnd.music.MusicCue.Kind.SFX, sound.getName())));
+                sounds.add(item);
+            }
+            if (sounds.isEmpty()) {
+                MenuItem none = new MenuItem("No sounds yet - add them in the music panel.");
+                none.setDisable(true);
+                sounds.add(none);
+            }
+            soundCues.getItems().setAll(sounds);
+        });
+        music.getItems().addAll(open, new SeparatorMenuItem(), musicCues, soundCues);
+        return music;
+    }
+
+    private void playCue(com.dnd.music.MusicCue cue) {
+        com.dnd.music.MusicLibrary library = com.dnd.music.MusicLibrary.load(owner.uiSession.campaignRoot());
+        com.dnd.ui.music.MusicPlayer player = com.dnd.ui.music.MusicPlayer.get();
+        if (cue.isStop()) {
+            player.stop();
+            statusLabel.setText("Music fading out.");
+        } else if (cue.kind() == com.dnd.music.MusicCue.Kind.SFX) {
+            var sound = library.findSound(cue.name());
+            statusLabel.setText(sound != null && player.playSound(sound)
+                ? "🔊 " + sound.getName() : "No sound effect called \"" + cue.name() + "\" - add it in the music panel.");
+        } else {
+            var playlist = library.findPlaylist(cue.name());
+            statusLabel.setText(playlist != null && player.playPlaylist(library, playlist, -1)
+                ? "🎵 " + playlist.getName() : "No playable playlist called \"" + cue.name() + "\" - add it in the music panel.");
+        }
     }
 
     /** Opens the map linked at the caret, reporting clearly when there isn't one. */

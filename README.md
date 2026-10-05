@@ -187,3 +187,15 @@ a session file, or from `Run Battle` in the map viewer.
 - **Map control.** Add and remove tokens, drag them between cells, toggle a cell impassable,
   show or hide health bars, zoom, and save the map back to the campaign. A timer is available
   here too.
+
+## Background music
+
+Music comes from **YouTube links** and plays only on the DM's computer. Open it with **🎵 Music** in the DM menu, the battle map toolbar, or the session text editor.
+
+- **Playlists:** create one (e.g. *Tavern*, *Dungeon*, *Boss fight*), then **+ Add link** and paste any YouTube video or playlist URL. Add `&t=1m30s` to start partway in. Double-click a track to play it. Switching playlists crossfades.
+- **Combat music:** choose a *⚔ Combat playlist*. When initiative is rolled or entered on the battle map, the music crossfades to it, and it switches back when the map closes. You can turn this off in the map's 🎵 menu.
+- **Map music:** on the battle map, choose 🎵 → *This map's music* to play a playlist whenever that map opens.
+- **Sound effects:** add a YouTube clip with optional start/end seconds, then click its pad button to play it. Music is turned down while the effect plays.
+- **Session cues:** in a session text file, write `[music: Playlist name]`, `[music: stop]` or `[sfx: Sound name]`, or insert them from the editor's 🎵 menu. Double-click a cue to play it.
+
+Everything is saved to `music.json` in the campaign folder. The first time you play, the app downloads an embedded Chromium player (~150 MB) to `~/.dnd-campaign-manager/jcef`. A small player window appears briefly and then hides. Videos whose owners block playback outside YouTube are skipped automatically.

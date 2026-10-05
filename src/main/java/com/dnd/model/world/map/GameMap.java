@@ -22,6 +22,16 @@ public class GameMap implements Printable {
     private List<MapLayer> layers = new ArrayList<>();
     private List<Drawing> drawings = new ArrayList<>();
     private List<MapObjectGroup> groups = new ArrayList<>();
+    /** Music playlist (from the campaign's music.json) that starts when this map is opened; null = none. */
+    private String musicPlaylistId;
+
+    public String getMusicPlaylistId() {
+        return musicPlaylistId;
+    }
+
+    public void setMusicPlaylistId(String musicPlaylistId) {
+        this.musicPlaylistId = musicPlaylistId;
+    }
 
     public GameMap() {
     }

@@ -204,8 +204,10 @@ public class BattleMapWindow {
         stage.setOnHidden(e -> {
             if (timer != null) timer.dispose();
             if (dirty) saveMap();
+            com.dnd.ui.music.MusicPlayer.get().endCombat(musicLibrary(), null);
         });
         stage.show();
+        com.dnd.ui.music.MusicPlayer.get().playMapMusic(musicLibrary(), map.getMusicPlaylistId());
     }
 
     // ── Toolbar ─────────────────────────────────────────────────────────────
@@ -233,6 +235,7 @@ public class BattleMapWindow {
                 status(rolled == 0
                     ? "No non-player combatants to roll for."
                     : "Rolled initiative for " + rolled + " non-player combatant" + (rolled == 1 ? "" : "s") + ".");
+                if (rolled > 0) startCombatMusic();
             }),
             tool("Enter Initiative...", "Type the initiative each combatant rolled at the table",
                 this::openInitiativeEntryDialog),
@@ -276,9 +279,90 @@ public class BattleMapWindow {
             }),
             tool("Close", "Close the battle map", stage::close),
             new Separator(),
+            buildMusicMenu(),
+            new Separator(),
             timer
         );
         return bar;
+    }
+
+    // ── Music ───────────────────────────────────────────────────────────────
+
+    private CheckMenuItem combatMusicItem;
+
+    private com.dnd.music.MusicLibrary musicLibrary() {
+        return com.dnd.music.MusicLibrary.load(uiSession.campaignRoot());
+    }
+
+    private MenuButton buildMusicMenu() {
+        MenuButton menu = new MenuButton("🎵 Music");
+        menu.getStyleClass().add("dnd-button");
+        menu.setTooltip(new Tooltip("Background music for this map and for combat"));
+
+        MenuItem open = new MenuItem("Open music panel...");
+        open.setOnAction(e -> MusicPanel.open(owner, uiSession.campaignRoot()));
+
+        combatMusicItem = new CheckMenuItem("⚔ Combat music");
+        combatMusicItem.setSelected(com.dnd.ui.music.MusicPlayer.get().inCombat());
+        combatMusicItem.setOnAction(e -> {
+            if (combatMusicItem.isSelected()) {
+                if (!startCombatMusic()) {
+                    combatMusicItem.setSelected(false);
+                    status("Choose a combat playlist in the music panel first.");
+                }
+            } else {
+                com.dnd.ui.music.MusicPlayer.get().endCombat(musicLibrary(), map.getMusicPlaylistId());
+                status("Combat music off.");
+            }
+        });
+
+        Menu mapMusic = new Menu("This map's music");
+        MenuItem loading = new MenuItem("Loading...");
+        mapMusic.getItems().add(loading);
+        mapMusic.setOnShowing(e -> {
+            ToggleGroup group = new ToggleGroup();
+            List<MenuItem> items = new ArrayList<>();
+            RadioMenuItem none = new RadioMenuItem("(none)");
+            none.setToggleGroup(group);
+            none.setSelected(map.getMusicPlaylistId() == null);
+            none.setOnAction(ev -> setMapPlaylist(null));
+            items.add(none);
+            for (var playlist : musicLibrary().sortedPlaylists()) {
+                RadioMenuItem item = new RadioMenuItem(playlist.getName());
+                item.setToggleGroup(group);
+                item.setSelected(playlist.getId().equals(map.getMusicPlaylistId()));
+                item.setOnAction(ev -> setMapPlaylist(playlist));
+                items.add(item);
+            }
+            mapMusic.getItems().setAll(items);
+        });
+
+        menu.getItems().addAll(open, new SeparatorMenuItem(), combatMusicItem, mapMusic);
+        return menu;
+    }
+
+    private void setMapPlaylist(com.dnd.music.MusicLibrary.Playlist playlist) {
+        map.setMusicPlaylistId(playlist == null ? null : playlist.getId());
+        dirty = true;
+        saveMap();
+        if (playlist != null) {
+            com.dnd.ui.music.MusicPlayer.get().playMapMusic(musicLibrary(), playlist.getId());
+            status("\"" + playlist.getName() + "\" will play whenever this map is opened.");
+        } else {
+            status("This map no longer has its own music.");
+        }
+    }
+
+    /** Switches to the combat playlist (if the campaign has one). Returns false when none is set. */
+    private boolean startCombatMusic() {
+        var player = com.dnd.ui.music.MusicPlayer.get();
+        if (player.inCombat()) return true;
+        boolean started = player.startCombat(musicLibrary());
+        if (started) {
+            if (combatMusicItem != null) combatMusicItem.setSelected(true);
+            status("⚔ Combat music!");
+        }
+        return started;
     }
 
     private Button tool(String text, String tooltip, Runnable action) {
@@ -607,6 +691,7 @@ public class BattleMapWindow {
         refreshAll();
         status("Initiative updated for " + combatants.size() + " combatant"
             + (combatants.size() == 1 ? "" : "s") + ".");
+        if (!combatants.isEmpty()) startCombatMusic();
     }
 
     private void commitSpinner(Spinner<Integer> spinner) {

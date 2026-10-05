@@ -61,10 +61,11 @@ public class DmMenuScene extends BaseScene {
         content.getChildren().add(playersSection());
         content.getChildren().add(storylineSection());
 
-        content.getChildren().add(
+        content.getChildren().add(new HBox(10,
             btn("Online Session" + (uiSession.getSession().isOnline() ? "  ●" : ""),
-                () -> uiSession.getRouter().goTo(SceneType.DM_ONLINE_SESSION))
-        );
+                () -> uiSession.getRouter().goTo(SceneType.DM_ONLINE_SESSION)),
+            btn("🎵 Music", () -> MusicPanel.open(this, uiSession.campaignRoot()))
+        ));
 
         root.getChildren().add(content);
         VBox.setVgrow(content, Priority.ALWAYS);
