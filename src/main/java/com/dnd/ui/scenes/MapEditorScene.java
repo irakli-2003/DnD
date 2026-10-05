@@ -680,6 +680,7 @@ public class MapEditorScene extends BaseScene {
     /** Dialog for adding a background layer: name, optional image OR solid color, and placement/size. */
     private void openAddLayerDialog() {
         Stage dialogStage = new Stage();
+        com.dnd.ui.WindowOrder.adopt(dialogStage);
         dialogStage.initModality(Modality.APPLICATION_MODAL);
         dialogStage.setTitle("Add Map Layer");
 

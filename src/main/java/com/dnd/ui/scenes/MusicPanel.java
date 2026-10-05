@@ -46,6 +46,7 @@ public final class MusicPanel {
     private Label message;
     private Button playPause;
     private Consumer<MusicPlayer.Status> listener;
+    private Stage stage;
 
     private MusicPanel(BaseScene owner, Path campaignRoot) {
         this.owner = owner;
@@ -55,17 +56,21 @@ public final class MusicPanel {
 
     /** Opens (or focuses) the music window for the given campaign. */
     public static void open(BaseScene owner, Path campaignRoot) {
-        if (openStage != null && openStage.isShowing() && campaignRoot.equals(openRoot)) {
+        javafx.stage.Window from = com.dnd.ui.WindowOrder.current();
+        if (openStage != null && openStage.isShowing() && campaignRoot.equals(openRoot)
+                && (from == openStage || from == openStage.getOwner())) {
             openStage.setIconified(false);
             openStage.toFront();
             return;
         }
+        // Opened from a different window: re-attach it there so closing it goes back to that window.
         if (openStage != null) openStage.close();
-        new MusicPanel(owner, campaignRoot).show();
+        new MusicPanel(owner, campaignRoot).show(from);
     }
 
-    private void show() {
-        Stage stage = new Stage();
+    private void show(javafx.stage.Window from) {
+        stage = new Stage();
+        com.dnd.ui.WindowOrder.adopt(stage, from);
         stage.setTitle("🎵 Music");
 
         VBox root = new VBox(12);
@@ -365,6 +370,7 @@ public final class MusicPanel {
         dialog.setTitle(heading);
         dialog.setHeaderText("Paste a YouTube link (a single video or a whole playlist)");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.initOwner(stage);
         owner.styleDialog(dialog);
 
         TextField url = new TextField(track.getUrl() == null ? "" : track.getUrl());
@@ -499,6 +505,7 @@ public final class MusicPanel {
         dialog.setTitle(heading);
         dialog.setHeaderText("A short clip from a YouTube video. Use start/end to cut out just the sound you want.");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        dialog.initOwner(stage);
         owner.styleDialog(dialog);
 
         TextField name = new TextField(sound.getName() == null ? "" : sound.getName());
@@ -568,6 +575,7 @@ public final class MusicPanel {
         dialog.setTitle(title);
         dialog.setHeaderText(null);
         dialog.setContentText(prompt);
+        dialog.initOwner(stage);
         owner.styleDialog(dialog);
         String value = dialog.showAndWait().orElse(null);
         return value == null || value.isBlank() ? null : value.trim();
@@ -575,6 +583,7 @@ public final class MusicPanel {
 
     private boolean confirm(String text) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, text, ButtonType.OK, ButtonType.CANCEL);
+        alert.initOwner(stage);
         owner.styleDialog(alert);
         return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
     }

@@ -71,6 +71,7 @@ final class StorylineEditorWindow {
 
     void show() {
         Stage stage = new Stage();
+        com.dnd.ui.WindowOrder.adopt(stage);
         editorStage = stage;
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle(file.getFileName().toString());
@@ -589,6 +590,7 @@ final class StorylineEditorWindow {
 
     private void showManagePlayerWindow(com.dnd.model.character.PlayerCharacter pc) {
         Stage stage = new Stage();
+        com.dnd.ui.WindowOrder.adopt(stage);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Manage " + pc.getName());
 
@@ -960,6 +962,7 @@ final class StorylineEditorWindow {
         // Map markers are prep plumbing; the players should hear the map's name, not its id.
         String readAloud = MapLink.stripMarkers(extractReadAloud(area.getText()));
         Stage stage = new Stage();
+        com.dnd.ui.WindowOrder.adopt(stage);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Read to players - " + file.getFileName());
 

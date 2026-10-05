@@ -232,6 +232,7 @@ public class CharacterCreationWizard extends BaseScene {
     /** Opens the wizard as a modal window. */
     public void show() {
         stage = new Stage();
+        com.dnd.ui.WindowOrder.adopt(stage);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Create Character");
         stage.setScene(build());
