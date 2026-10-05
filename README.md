@@ -163,6 +163,11 @@ half-circle arcs spanning their sessions, so the root folder arcs across the who
     chosen amount. Click a card for details (vitals, items, effects, rests and level-ups),
     and `← Back` to return to the list. Added creatures are separate copies with their own
     HP, saved per session file in a hidden `.<file>.roster.json` next to it.
+    No popups: `+ Add`, `+ Add Item` and `+ Add Effect` open a searchable list right inside
+    the panel (type, then click or press Enter; it stays open to add several). `✚ New item...`
+    / `✚ New effect...` create a catalog entry on the spot and apply it in one step. Effects
+    have `−` / `+` round buttons. `★ XP` (or the toolbar's `Award XP`) awards XP to the whole
+    party or the ticked players at once.
 
 Read-aloud markers and map links are stripped from the Player View, so the table only ever
 sees the prose.

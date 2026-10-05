@@ -260,14 +260,12 @@ public class BattleMapWindow {
                 + " undoing all damage, effects, spells and movement since - the rabbit's pocket watch", this::rewindTime),
             roundLabel),
             toolGroup("♟ TOKENS",
-            tool("Tokens ▤", "Show the quick placement palette: click an entry, then click boxes to place"
+            tool("＋ Add Token", "Show or hide the creature list: click an entry, then click boxes to place"
                 + " as many as you like (Esc stops)", this::toggleTokenPalette),
-            tool("Add Token...", "Place another creature on the map", this::openAddTokenDialog),
             dangerTool("✖ Remove Selected", "Take the selected token off the map", this::removeSelected)),
             toolGroup("🗺 MAP",
             wallButton,
-            tool("Terrain...", "Paint difficult, water or climbable ground onto the map",
-                this::openTerrainPaintDialog),
+            buildTerrainMenu(),
             tool("Health Bars", "Show or hide health and mana bars on tokens", () -> {
                 decorations.showHealthBars = !decorations.showHealthBars;
                 render();
@@ -608,29 +606,39 @@ public class BattleMapWindow {
     // ── Terrain painting ────────────────────────────────────────────────────
 
     /**
-     * Asks which terrain to paint and then leaves the window in painting mode, so a whole
-     * river or scree slope can be laid down in one pass instead of one dialog per square.
+     * One click on a terrain type enters painting mode, so a whole river or scree slope can
+     * be laid down in one pass; the same menu offers "Stop painting" while it is active.
      */
-    private void openTerrainPaintDialog() {
-        if (paintTerrain != null) {
-            stopTerrainPainting();
-            return;
-        }
-        ChoiceDialog<TerrainType> dialog = new ChoiceDialog<>(TerrainType.NORMAL, TerrainType.values());
-        dialog.setTitle("Paint Terrain");
-        dialog.setHeaderText(null);
-        dialog.setContentText("Terrain to paint:");
-        owner.styleDialog(dialog);
-        dialog.showAndWait().ifPresent(choice -> {
-            paintTerrain = choice;
-            setWallPaintMode(false);
-            decorations.selected = null;
-            decorations.reachable = null;
-            showRoster();
-            render();
-            status("Painting " + choice.getLabel().toLowerCase() + " ground - click squares. Esc to stop."
-                + (choice == TerrainType.NORMAL ? "" : " " + terrainHint(choice)));
+    private MenuButton buildTerrainMenu() {
+        MenuButton menu = new MenuButton("Terrain");
+        menu.getStyleClass().add("dnd-button");
+        menu.setTooltip(new Tooltip("Paint difficult, water or climbable ground onto the map"));
+        menu.setOnShowing(e -> {
+            menu.getItems().clear();
+            if (paintTerrain != null) {
+                MenuItem stop = new MenuItem("■ Stop painting " + paintTerrain.getLabel().toLowerCase());
+                stop.setOnAction(a -> stopTerrainPainting());
+                menu.getItems().addAll(stop, new SeparatorMenuItem());
+            }
+            for (TerrainType terrain : TerrainType.values()) {
+                MenuItem item = new MenuItem((terrain == paintTerrain ? "● " : "") + terrain.getLabel());
+                item.setOnAction(a -> startTerrainPainting(terrain));
+                menu.getItems().add(item);
+            }
         });
+        menu.getItems().add(new MenuItem("…"));
+        return menu;
+    }
+
+    private void startTerrainPainting(TerrainType choice) {
+        paintTerrain = choice;
+        setWallPaintMode(false);
+        decorations.selected = null;
+        decorations.reachable = null;
+        showRoster();
+        render();
+        status("Painting " + choice.getLabel().toLowerCase() + " ground - click squares. Esc to stop."
+            + (choice == TerrainType.NORMAL ? "" : " " + terrainHint(choice)));
     }
 
     private String terrainHint(TerrainType terrain) {
@@ -768,7 +776,7 @@ public class BattleMapWindow {
             rosterPanel.getChildren().add(buildRosterRow(token));
         }
         if (initiative.order().isEmpty()) {
-            rosterPanel.getChildren().add(owner.body("No creatures on this map yet. Use \"Add Token...\"."));
+            rosterPanel.getChildren().add(owner.body("No creatures on this map yet. Use \"＋ Add Token\"."));
         }
 
         ScrollPane scroll = new ScrollPane(rosterPanel);
@@ -1516,50 +1524,6 @@ public class BattleMapWindow {
 
     // ── Adding tokens ───────────────────────────────────────────────────────
 
-    private void openAddTokenDialog() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        dialog.setTitle("Add Token");
-        dialog.setHeaderText("Choose a creature, then click an empty box on the map to place it");
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        owner.styleDialog(dialog);
-
-        ComboBox<String> typeBox = new ComboBox<>();
-        typeBox.getItems().addAll("Player", "NPC", "Monster", "Beast");
-        typeBox.setValue("Monster");
-
-        ListView<String> entries = new ListView<>();
-        entries.getStyleClass().add("dnd-list-view");
-        entries.setPrefHeight(220);
-
-        Runnable refresh = () -> {
-            entries.getItems().clear();
-            switch (typeBox.getValue()) {
-                case "Player" -> repos.players().list().forEach(p -> entries.getItems().add(p.getId() + " | " + p.getName()));
-                case "NPC" -> repos.npcs().list().forEach(n -> entries.getItems().add(n.getId() + " | " + n.getName()));
-                case "Monster" -> repos.monsters().list().forEach(m -> entries.getItems().add(m.getId() + " | " + m.getName()));
-                case "Beast" -> repos.beasts().list().forEach(b -> entries.getItems().add(b.getId() + " | " + b.getName()));
-                default -> { }
-            }
-        };
-        typeBox.setOnAction(e -> refresh.run());
-        refresh.run();
-
-        GridPane grid = new GridPane();
-        grid.setHgap(8);
-        grid.setVgap(8);
-        grid.addRow(0, new Label("Type:"), typeBox);
-        grid.addRow(1, new Label("Entry:"), entries);
-        dialog.getDialogPane().setContent(grid);
-
-        if (dialog.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
-        String selected = entries.getSelectionModel().getSelectedItem();
-        if (selected == null) {
-            status("No entry chosen, nothing was added.");
-            return;
-        }
-        armTokenPlacement(typeBox.getValue(), selected.split("\\|")[0].trim());
-    }
-
     /** Picks up a catalogue entry so the next click on an empty, passable box places it there. */
     private void armTokenPlacement(String type, String id) {
         armedTokenType = type;
@@ -1865,7 +1829,8 @@ public class BattleMapWindow {
             rootPane.setRight(null);
             return;
         }
-        if (tokenPalette == null) tokenPalette = buildTokenPalette();
+        // Rebuilt on every open so creatures added to the campaign meanwhile show up.
+        tokenPalette = buildTokenPalette();
         rootPane.setRight(tokenPalette);
     }
 
@@ -1887,9 +1852,17 @@ public class BattleMapWindow {
 
         javafx.scene.control.TextField search = new javafx.scene.control.TextField();
         search.setPromptText("Search creatures...");
-        ComboBox<String> kind = new ComboBox<>();
-        kind.getItems().addAll("All", "Beast", "Monster", "NPC", "Player");
-        kind.setValue("All");
+        ToggleGroup kinds = new ToggleGroup();
+        javafx.scene.layout.FlowPane kindRow = new javafx.scene.layout.FlowPane(4, 4);
+        for (String k : List.of("All", "Player", "NPC", "Monster", "Beast")) {
+            ToggleButton t = new ToggleButton(k);
+            t.setUserData(k);
+            t.setToggleGroup(kinds);
+            t.getStyleClass().add("tool-toggle-button");
+            kindRow.getChildren().add(t);
+        }
+        kinds.selectToggle(kinds.getToggles().get(0));
+        kinds.selectedToggleProperty().addListener((o, old, v) -> { if (v == null) kinds.selectToggle(old); });
         ListView<PaletteEntry> list = new ListView<>();
         list.getStyleClass().add("dnd-list-view");
         VBox.setVgrow(list, javafx.scene.layout.Priority.ALWAYS);
@@ -1897,20 +1870,28 @@ public class BattleMapWindow {
         Runnable filter = () -> {
             String q = search.getText() == null ? "" : search.getText().trim().toLowerCase(java.util.Locale.ROOT);
             list.getItems().setAll(all.stream()
-                .filter(e -> "All".equals(kind.getValue()) || e.type().equals(kind.getValue()))
+                .filter(e -> {
+                    String k = kinds.getSelectedToggle() == null ? "All" : (String) kinds.getSelectedToggle().getUserData();
+                    return "All".equals(k) || e.type().equals(k);
+                })
                 .filter(e -> q.isEmpty() || (e.name() != null && e.name().toLowerCase(java.util.Locale.ROOT).contains(q)))
                 .toList());
         };
         search.textProperty().addListener((o, a, b) -> filter.run());
-        kind.setOnAction(e -> filter.run());
+        kinds.selectedToggleProperty().addListener((o, a, b) -> filter.run());
         filter.run();
         list.getSelectionModel().selectedItemProperty().addListener((o, a, entry) -> {
             if (entry != null) armTokenPlacement(entry.type(), entry.id());
         });
+        // Clicking the already-selected entry again (e.g. after Esc) picks it back up.
+        list.setOnMouseClicked(e -> {
+            PaletteEntry entry = list.getSelectionModel().getSelectedItem();
+            if (entry != null && armedTokenId == null) armTokenPlacement(entry.type(), entry.id());
+        });
 
         Label hint = owner.body("Pick a creature, then click empty boxes to drop it. Esc stops.");
         hint.setWrapText(true);
-        VBox box = new VBox(8, owner.sectionLabel("Quick Place"), search, kind, list, hint);
+        VBox box = new VBox(8, owner.sectionLabel("Add Token"), search, kindRow, list, hint);
         box.setPadding(new Insets(10));
         box.setPrefWidth(260);
         box.getStyleClass().add("battle-panel");

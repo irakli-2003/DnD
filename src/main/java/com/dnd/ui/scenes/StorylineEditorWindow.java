@@ -569,37 +569,12 @@ final class StorylineEditorWindow {
 
     /**
      * Lets the DM hand out XP right from the session notes - e.g. right after writing "the
-     * party defeats the ogre" - instead of having to leave the file, open the entity list, and
-     * find the character there.
+     * party defeats the ogre": opens the Manage Players panel with its Award XP form, where
+     * the whole party (or just some players) get the amount in one click.
      */
     private void openAwardXp() {
-        List<com.dnd.model.character.PlayerCharacter> players = repos.players().list();
-        if (players.isEmpty()) {
-            statusLabel.setText("No player characters in this campaign yet.");
-            return;
-        }
-        ChoiceDialog<com.dnd.model.character.PlayerCharacter> pick = new ChoiceDialog<>(players.get(0), players);
-        pick.setTitle("Award XP");
-        pick.setHeaderText(null);
-        pick.setContentText("Character:");
-        owner.styleDialog(pick);
-        pick.showAndWait().ifPresent(pc -> {
-            TextInputDialog amountDialog = new TextInputDialog("100");
-            amountDialog.setTitle("Award XP");
-            amountDialog.setHeaderText(null);
-            amountDialog.setContentText("XP to add to " + pc.getName() + " (current: " + pc.getXp() + "):");
-            owner.styleDialog(amountDialog);
-            amountDialog.showAndWait().ifPresent(raw -> {
-                try {
-                    int amount = Integer.parseInt(raw.trim());
-                    pc.addXp(amount);
-                    repos.players().save(pc);
-                    statusLabel.setText(pc.getName() + " now has " + pc.getXp() + " XP.");
-                } catch (NumberFormatException ex) {
-                    statusLabel.setText("\"" + raw + "\" isn't a whole number.");
-                }
-            });
-        });
+        if (playersPanel == null || !playersHost.isVisible()) toggleManagePlayers();
+        playersPanel.showAwardXp();
     }
 
     /** Shows or hides the right-hand Manage Players panel (cards for the party and this session's creatures). */

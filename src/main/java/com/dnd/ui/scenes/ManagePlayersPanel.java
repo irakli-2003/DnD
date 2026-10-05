@@ -14,14 +14,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.IntConsumer;
+import java.util.function.Supplier;
 
 /**
  * The text editor's right-hand "Manage Players" panel: a vertical list of cards - every
@@ -42,6 +47,10 @@ final class ManagePlayersPanel {
     private final List<TrackedCreature> creatures;
     private Spinner<Integer> amount;
     private double listScroll;
+    private VBox cardsBox;
+    private Node listPane;
+    private Runnable xpToggle = () -> { };
+    private int lastXp = 100;
 
     ManagePlayersPanel(BaseScene owner, CampaignRepositories repos, Path sessionFile, Consumer<String> status) {
         this.owner = owner;
@@ -75,10 +84,19 @@ final class ManagePlayersPanel {
 
     void showList() {
         Label heading = owner.sectionLabel("Party & Creatures");
-        MenuButton add = buildAddMenu();
+        VBox addHost = new VBox();
+        VBox xpHost = new VBox();
+        Button add = smallBtn("+ Add", () -> { xpHost.getChildren().clear(); toggle(addHost, () -> creaturePicker(addHost)); });
+        add.setTooltip(new Tooltip("Add a player, monster, NPC or beast to this session"));
+        Button xp = smallBtn("★ XP", () -> { addHost.getChildren().clear(); toggle(xpHost, () -> awardXpForm(xpHost)); });
+        xp.setTooltip(new Tooltip("Award experience to one or more players"));
+        xpToggle = () -> {
+            addHost.getChildren().clear();
+            if (xpHost.getChildren().isEmpty()) xpHost.getChildren().setAll(awardXpForm(xpHost));
+        };
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-        HBox header = new HBox(8, heading, spacer, add);
+        HBox header = new HBox(6, heading, spacer, xp, add);
         header.setAlignment(Pos.CENTER_LEFT);
 
         int previous = amount == null ? 5 : amount.getValue();
@@ -89,7 +107,29 @@ final class ManagePlayersPanel {
         HBox amountRow = new HBox(8, amountLabel, amount);
         amountRow.setAlignment(Pos.CENTER_LEFT);
 
-        VBox cards = new VBox(8);
+        cardsBox = new VBox(8);
+        refreshCards();
+
+        ScrollPane scroll = scroll(cardsBox);
+        listPane = scroll;
+        double restore = listScroll;
+        scroll.vvalueProperty().addListener((o, old, v) -> listScroll = v.doubleValue());
+        javafx.application.Platform.runLater(() -> scroll.setVvalue(restore));
+
+        VBox top = new VBox(8, header, addHost, xpHost, amountRow);
+        top.setPadding(new Insets(10, 10, 6, 10));
+        root.getChildren().setAll(top, scroll);
+    }
+
+    /** Opens the list with the Award XP form showing (used by the editor's toolbar button). */
+    void showAwardXp() {
+        showList();
+        xpToggle.run();
+    }
+
+    private void refreshCards() {
+        VBox cards = cardsBox;
+        cards.getChildren().clear();
         cards.getChildren().add(subLabel("Players"));
         List<PlayerCharacter> players = repos.players().list();
         if (players.isEmpty()) cards.getChildren().add(hint("No player characters yet - use + Add."));
@@ -100,61 +140,98 @@ final class ManagePlayersPanel {
         List<TrackedCreature> sorted = new ArrayList<>(creatures);
         sorted.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(nameOf(a), nameOf(b)));
         for (TrackedCreature c : sorted) cards.getChildren().add(creatureCard(c));
-
-        ScrollPane scroll = scroll(cards);
-        double restore = listScroll;
-        scroll.vvalueProperty().addListener((o, old, v) -> listScroll = v.doubleValue());
-        javafx.application.Platform.runLater(() -> scroll.setVvalue(restore));
-
-        VBox top = new VBox(8, header, amountRow);
-        top.setPadding(new Insets(10, 10, 6, 10));
-        root.getChildren().setAll(top, scroll);
     }
 
-    private MenuButton buildAddMenu() {
-        MenuButton add = new MenuButton("+ Add");
-        add.getStyleClass().add("dnd-button");
-        add.setStyle("-fx-min-width: 0; -fx-padding: 5 10 5 10;");
+    /** True while the card list (rather than a detail view) is what the panel shows. */
+    private boolean listShowing() {
+        return listPane != null && root.getChildren().contains(listPane);
+    }
 
-        MenuItem newPlayer = new MenuItem("New player character...");
-        newPlayer.setOnAction(e -> new CharacterCreationWizard(owner.uiSession, repos).show(this::showList));
+    /** One searchable list of every monster, NPC and beast in the catalog; each click adds one more. */
+    private Node creaturePicker(VBox host) {
+        record Entry(TrackedCreature.Kind kind, String id, String name, int hp, int mana, int ac, String image) { }
+        List<Entry> all = new ArrayList<>();
+        repos.monsters().list().forEach(m -> all.add(new Entry(TrackedCreature.Kind.MONSTER, m.getId(), m.getName(),
+            m.getMaxHitPoints(), m.getMaxMana(), m.getArmorClass(), m.getImagePath())));
+        repos.npcs().list().forEach(n -> all.add(new Entry(TrackedCreature.Kind.NPC, n.getId(), n.getName(),
+            n.getMaxHitPoints(), n.getMaxMana(), n.getArmorClass(), n.getImagePath())));
+        repos.beasts().list().forEach(b -> all.add(new Entry(TrackedCreature.Kind.BEAST, b.getId(), b.getName(),
+            b.getMaxHitPoints(), b.getMaxMana(), b.getArmorClass(), b.getImagePath())));
+        all.sort((x, y) -> String.CASE_INSENSITIVE_ORDER.compare(x.name() == null ? "" : x.name(), y.name() == null ? "" : y.name()));
+        return picker(host, "Search monsters, NPCs, beasts... (Enter adds)", all,
+            e -> e.name() + "   · " + kindLabel(e.kind()) + "  · HP " + e.hp(),
+            e -> addCreature(new TrackedCreature(e.kind(), e.id(), e.name(), e.hp(), e.mana(), e.ac(), e.image())),
+            "✚ New player...", () -> new CharacterCreationWizard(owner.uiSession, repos).show(this::showList));
+    }
 
-        Menu monsters = new Menu("Monster");
-        for (var m : repos.monsters().list()) {
-            monsters.getItems().add(addItem(m.getName(), () -> addCreature(new TrackedCreature(
-                TrackedCreature.Kind.MONSTER, m.getId(), m.getName(), m.getMaxHitPoints(), m.getMaxMana(),
-                m.getArmorClass(), m.getImagePath()))));
+    private static String kindLabel(TrackedCreature.Kind kind) {
+        return switch (kind) {
+            case MONSTER -> "Monster";
+            case NPC -> "NPC";
+            case BEAST -> "Beast";
+        };
+    }
+
+    /** Amount + a tick box per player: XP for the whole party (or just some) in one go. */
+    private Node awardXpForm(VBox host) {
+        Spinner<Integer> xp = new Spinner<>(1, 1_000_000, lastXp, 50);
+        xp.setEditable(true);
+        xp.setPrefWidth(110);
+        HBox amountRow = new HBox(8, owner.body("XP each:"), xp);
+        amountRow.setAlignment(Pos.CENTER_LEFT);
+
+        List<PlayerCharacter> players = repos.players().list();
+        List<CheckBox> boxes = new ArrayList<>();
+        FlowPane who = new FlowPane(10, 6);
+        for (PlayerCharacter pc : players) {
+            CheckBox cb = new CheckBox(pc.getName());
+            cb.setUserData(pc.getId());
+            cb.setSelected(true);
+            cb.setStyle("-fx-text-fill: #e8dcc0;");
+            boxes.add(cb);
+            who.getChildren().add(cb);
         }
-        Menu npcs = new Menu("NPC");
-        for (var n : repos.npcs().list()) {
-            npcs.getItems().add(addItem(n.getName(), () -> addCreature(new TrackedCreature(
-                TrackedCreature.Kind.NPC, n.getId(), n.getName(), n.getMaxHitPoints(), n.getMaxMana(),
-                n.getArmorClass(), n.getImagePath()))));
-        }
-        Menu beasts = new Menu("Beast");
-        for (var b : repos.beasts().list()) {
-            beasts.getItems().add(addItem(b.getName(), () -> addCreature(new TrackedCreature(
-                TrackedCreature.Kind.BEAST, b.getId(), b.getName(), b.getMaxHitPoints(), b.getMaxMana(),
-                b.getArmorClass(), b.getImagePath()))));
-        }
-        for (Menu m : List.of(monsters, npcs, beasts)) {
-            if (m.getItems().isEmpty()) {
-                MenuItem none = new MenuItem("(none in the catalog yet)");
-                none.setDisable(true);
-                m.getItems().add(none);
+        CheckBox everyone = new CheckBox("Everyone");
+        everyone.setSelected(true);
+        everyone.setStyle("-fx-text-fill: #c9a84c;");
+        everyone.setOnAction(e -> boxes.forEach(cb -> cb.setSelected(everyone.isSelected())));
+
+        Button award = smallBtn("Award", () -> {
+            try {
+                xp.getValueFactory().setValue(Integer.parseInt(xp.getEditor().getText().trim()));
+            } catch (NumberFormatException ignored) {
+                xp.getEditor().setText(String.valueOf(xp.getValue()));
             }
-        }
-        add.getItems().addAll(newPlayer, new SeparatorMenuItem(), monsters, npcs, beasts);
-        return add;
+            int amountXp = xp.getValue();
+            lastXp = amountXp;
+            List<String> given = new ArrayList<>();
+            for (CheckBox cb : boxes) {
+                if (!cb.isSelected()) continue;
+                PlayerCharacter pc = repos.players().getById((String) cb.getUserData());
+                if (pc == null) continue;
+                pc.addXp(amountXp);
+                repos.players().save(pc);
+                given.add(pc.getName() + " (" + pc.getXp() + ")");
+            }
+            if (given.isEmpty()) {
+                status.accept("Tick at least one player.");
+                return;
+            }
+            status.accept("+" + amountXp + " XP → " + String.join(", ", given));
+            host.getChildren().clear();
+            refreshCards();
+        });
+        Button cancel = smallBtn("Cancel", () -> host.getChildren().clear());
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox actions = new HBox(6, award, spacer, cancel);
+        VBox box = new VBox(6, subLabel("Award XP"), amountRow, everyone, who, actions);
+        if (players.isEmpty()) box.getChildren().setAll(subLabel("Award XP"), hint("No player characters yet."), cancel);
+        box.getStyleClass().add("picker-box");
+        javafx.application.Platform.runLater(xp.getEditor()::requestFocus);
+        return box;
     }
 
-    private MenuItem addItem(String label, Runnable action) {
-        MenuItem item = new MenuItem(label);
-        item.setOnAction(e -> action.run());
-        return item;
-    }
-
-    /** Adds a creature, numbering repeats ("Goblin", "Goblin 2", ...) so cards stay distinguishable. */
     void addCreature(TrackedCreature creature) {
         String base = creature.getName() == null ? "Creature" : creature.getName();
         long same = creatures.stream().filter(c -> base.equals(c.getName())
@@ -163,7 +240,7 @@ final class ManagePlayersPanel {
         creatures.add(creature);
         saveCreatures();
         status.accept(creature.getName() + " added to this session.");
-        showList();
+        if (listShowing()) refreshCards(); else showList();
     }
 
     private Node playerCard(PlayerCharacter pc) {
@@ -297,7 +374,8 @@ final class ManagePlayersPanel {
             pc.getMaxMana(), v -> { pc.setMaxMana(v); persist.run(); });
 
         VBox itemsBox = new VBox(6);
-        Button addItem = smallBtn("+ Add Item", () -> pickItem(item -> {
+        VBox itemPicker = new VBox();
+        Button addItem = smallBtn("+ Add Item", () -> toggle(itemPicker, () -> itemPicker(itemPicker, item -> {
             List<PlayerCharacter.PlayerItem> items = pc.getItems();
             if (items == null) {
                 items = new ArrayList<>();
@@ -309,7 +387,8 @@ final class ManagePlayersPanel {
             else items.add(new PlayerCharacter.PlayerItem(item.getId(), new PlayerCharacter.ItemCondition(100), false));
             persist.run();
             refreshItems(itemsBox, pc, persist);
-        }));
+            status.accept(item.getName() + " given to " + pc.getName() + ".");
+        })));
 
         VBox effectsBox = new VBox(6);
         Runnable refreshEffects = new Runnable() {
@@ -319,14 +398,15 @@ final class ManagePlayersPanel {
                     pc.clearEffect(effect);
                     persist.run();
                     this.run();
-                });
+                }, persist);
             }
         };
-        Button addEffect = smallBtn("+ Add Effect", () -> pickEffect(effect -> {
+        VBox effectPicker = new VBox();
+        Button addEffect = smallBtn("+ Add Effect", () -> toggle(effectPicker, () -> effectPicker(effectPicker, effect -> {
             pc.addEffect(effect);
             persist.run();
             refreshEffects.run();
-        }));
+        })));
 
         refreshItems(itemsBox, pc, persist);
         refreshEffects.run();
@@ -334,8 +414,8 @@ final class ManagePlayersPanel {
         detailFrame(pc.getName(),
             ProgressionPanel.build(owner, repos, pc, () -> showPlayer(pc)),
             subLabel("Vitals"), vitals,
-            headerRow("Items", addItem), itemsBox,
-            headerRow("Active Effects", addEffect), effectsBox);
+            headerRow("Items", addItem), itemPicker, itemsBox,
+            headerRow("Active Effects", addEffect), effectPicker, effectsBox);
     }
 
     void showCreature(TrackedCreature c) {
@@ -359,14 +439,15 @@ final class ManagePlayersPanel {
                     c.getActiveEffects().remove(effect);
                     saveCreatures();
                     this.run();
-                });
+                }, ManagePlayersPanel.this::saveCreatures);
             }
         };
-        Button addEffect = smallBtn("+ Add Effect", () -> pickEffect(effect -> {
+        VBox effectPicker = new VBox();
+        Button addEffect = smallBtn("+ Add Effect", () -> toggle(effectPicker, () -> effectPicker(effectPicker, effect -> {
             c.getActiveEffects().add(effect);
             saveCreatures();
             refreshEffects.run();
-        }));
+        })));
         refreshEffects.run();
 
         TextArea notes = new TextArea(c.getNotes() == null ? "" : c.getNotes());
@@ -389,7 +470,7 @@ final class ManagePlayersPanel {
         detailFrame(nameOf(c),
             subLabel("Name"), name,
             subLabel("Vitals"), vitals,
-            headerRow("Active Effects", addEffect), effectsBox,
+            headerRow("Active Effects", addEffect), effectPicker, effectsBox,
             subLabel("Notes"), notes,
             remove);
     }
@@ -443,7 +524,7 @@ final class ManagePlayersPanel {
         }
     }
 
-    private void fillEffects(VBox box, List<ActiveEffect> effects, Consumer<ActiveEffect> clear) {
+    private void fillEffects(VBox box, List<ActiveEffect> effects, Consumer<ActiveEffect> clear, Runnable persist) {
         box.getChildren().clear();
         if (effects == null || effects.isEmpty()) {
             box.getChildren().add(hint("No active effects."));
@@ -454,57 +535,251 @@ final class ManagePlayersPanel {
             label.setWrapText(true);
             label.setMaxWidth(Double.MAX_VALUE);
             HBox.setHgrow(label, Priority.ALWAYS);
-            Button x = new Button("Clear");
+            Button fewer = quick("−", "One round less", () -> {
+                if (effect.getRemainingRounds() <= 1) {
+                    clear.accept(effect);
+                    return;
+                }
+                effect.setRemainingRounds(effect.getRemainingRounds() - 1);
+                persist.run();
+                label.setText(effect.label());
+            });
+            Button more = quick("+", "One round more", () -> {
+                effect.setRemainingRounds(effect.getRemainingRounds() + 1);
+                persist.run();
+                label.setText(effect.label());
+            });
+            Button x = new Button("✖");
             x.getStyleClass().add("danger-button");
-            x.setStyle("-fx-min-width: 0; -fx-padding: 3 8 3 8;");
+            x.setStyle("-fx-min-width: 0; -fx-padding: 2 7 2 7;");
+            x.setTooltip(new Tooltip("Clear this effect"));
             x.setOnAction(e -> clear.accept(effect));
-            HBox row = new HBox(6, label, x);
+            HBox row = new HBox(5, label, fewer, more, x);
             row.setAlignment(Pos.CENTER_LEFT);
             box.getChildren().add(row);
         }
     }
 
-    private void pickItem(Consumer<Item> then) {
-        List<Item> catalog = repos.items().list();
-        if (catalog.isEmpty()) {
-            status.accept("No items in this campaign's catalog yet.");
+    // ------------------------------------------------- inline pickers & forms
+
+    /** Opens {@code content} inside {@code host}, or closes it if it is already open. */
+    private void toggle(VBox host, Supplier<Node> content) {
+        if (!host.getChildren().isEmpty()) {
+            host.getChildren().clear();
             return;
         }
-        ChoiceDialog<Item> pick = new ChoiceDialog<>(catalog.get(0), catalog);
-        pick.setTitle("Add Item");
-        pick.setHeaderText(null);
-        pick.setContentText("Item:");
-        owner.styleDialog(pick);
-        pick.showAndWait().ifPresent(then);
+        host.getChildren().setAll(content.get());
     }
 
-    private void pickEffect(Consumer<ActiveEffect> then) {
-        List<Effect> catalog = repos.effects().list();
-        if (catalog.isEmpty()) {
-            status.accept("No effects in this campaign's catalog yet.");
-            return;
-        }
-        ChoiceDialog<Effect> pick = new ChoiceDialog<>(catalog.get(0), catalog);
-        pick.setTitle("Add Effect");
-        pick.setHeaderText(null);
-        pick.setContentText("Effect:");
-        owner.styleDialog(pick);
-        pick.showAndWait().ifPresent(effect -> {
-            TextInputDialog rounds = new TextInputDialog(String.valueOf(Math.max(1, effect.getDurationRounds())));
-            rounds.setTitle("Add Effect");
-            rounds.setHeaderText(null);
-            rounds.setContentText("Rounds remaining:");
-            owner.styleDialog(rounds);
-            rounds.showAndWait().ifPresent(raw -> {
-                try {
-                    int count = Integer.parseInt(raw.trim());
-                    then.accept(new ActiveEffect(effect.getId(), effect.getName(), count,
-                        effect.getDamageAmount(), effect.getHealingAmount(), "DM"));
-                } catch (NumberFormatException ex) {
-                    status.accept("\"" + raw + "\" isn't a whole number.");
-                }
-            });
+    /**
+     * A searchable list shown right in the panel: type to filter, click an entry (or press
+     * Enter for the first match) to use it. It stays open so several can be added in a row.
+     */
+    private <T> Node picker(VBox host, String prompt, List<T> catalog, Function<T, String> label,
+                            Consumer<T> onPick, String createText, Runnable onCreate) {
+        TextField search = new TextField();
+        search.setPromptText(prompt);
+        search.getStyleClass().add("dnd-text-field");
+
+        ListView<T> list = new ListView<>();
+        list.getStyleClass().add("dnd-list-view");
+        list.setPrefHeight(170);
+        list.setPlaceholder(hint(catalog.isEmpty() ? "Nothing in the catalog yet - create one below." : "No match."));
+        list.setCellFactory(v -> new ListCell<>() {
+            @Override
+            protected void updateItem(T item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : label.apply(item));
+            }
         });
+        Runnable filter = () -> {
+            String q = search.getText() == null ? "" : search.getText().trim().toLowerCase(Locale.ROOT);
+            list.getItems().setAll(catalog.stream()
+                .filter(t -> q.isEmpty() || label.apply(t).toLowerCase(Locale.ROOT).contains(q))
+                .toList());
+        };
+        search.textProperty().addListener((o, old, v) -> filter.run());
+        filter.run();
+
+        Consumer<T> pick = t -> {
+            if (t == null) return;
+            list.getSelectionModel().clearSelection();
+            onPick.accept(t);
+        };
+        list.setOnMouseClicked(e -> {
+            if (e.getButton() == MouseButton.PRIMARY) pick.accept(list.getSelectionModel().getSelectedItem());
+        });
+        list.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) pick.accept(list.getSelectionModel().getSelectedItem());
+        });
+        search.setOnAction(e -> {
+            if (!list.getItems().isEmpty()) pick.accept(list.getItems().get(0));
+        });
+
+        Button create = smallBtn(createText, onCreate);
+        Button done = smallBtn("Done", () -> host.getChildren().clear());
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox actions = new HBox(6, create, spacer, done);
+        actions.setAlignment(Pos.CENTER_LEFT);
+
+        VBox box = new VBox(6, search, list, actions);
+        box.getStyleClass().add("picker-box");
+        javafx.application.Platform.runLater(search::requestFocus);
+        return box;
+    }
+
+    private Node itemPicker(VBox host, Consumer<Item> onPick) {
+        return picker(host, "Search items... (Enter adds the first match)", repos.items().list(),
+            i -> i.getName() + (i.getType() != null && !i.getType().isBlank() ? "   · " + i.getType() : ""),
+            onPick, "✚ New item...", () -> host.getChildren().setAll(newItemForm(host, onPick)));
+    }
+
+    private Node effectPicker(VBox host, Consumer<ActiveEffect> onPick) {
+        return picker(host, "Search effects... (Enter adds the first match)", repos.effects().list(),
+            ManagePlayersPanel::describe,
+            e -> onPick.accept(toActive(e)),
+            "✚ New effect...", () -> host.getChildren().setAll(newEffectForm(host, onPick)));
+    }
+
+    private static String describe(Effect e) {
+        StringBuilder sb = new StringBuilder(e.getName() == null ? "?" : e.getName());
+        sb.append("   · ").append(Math.max(1, e.getDurationRounds())).append(" rnd");
+        if (e.getDamageAmount() > 0) sb.append(", ").append(e.getDamageAmount()).append(" dmg/rnd");
+        if (e.getHealingAmount() > 0) sb.append(", ").append(e.getHealingAmount()).append(" heal/rnd");
+        return sb.toString();
+    }
+
+    static ActiveEffect toActive(Effect e) {
+        return new ActiveEffect(e.getId(), e.getName(), Math.max(1, e.getDurationRounds()),
+            e.getDamageAmount(), e.getHealingAmount(), "DM");
+    }
+
+    /** Creates a catalog item right here and gives it to the character in one step. */
+    private Node newItemForm(VBox host, Consumer<Item> onCreated) {
+        TextField name = formField("Name");
+        ToggleGroup kinds = new ToggleGroup();
+        HBox kindRow = new HBox(4);
+        for (String[] k : new String[][] {{"gear", "Gear"}, {"weapon", "Weapon"}, {"armor", "Armor"}, {"alchemy", "Alchemy"}}) {
+            ToggleButton t = new ToggleButton(k[1]);
+            t.setUserData(k[0]);
+            t.setToggleGroup(kinds);
+            t.getStyleClass().add("tool-toggle-button");
+            kindRow.getChildren().add(t);
+        }
+        kinds.selectToggle(kinds.getToggles().get(0));
+        kinds.selectedToggleProperty().addListener((o, old, v) -> { if (v == null) kinds.selectToggle(old); });
+        TextArea description = new TextArea();
+        description.setPromptText("Description (optional)");
+        description.setWrapText(true);
+        description.setPrefRowCount(2);
+
+        Label error = new Label();
+        error.getStyleClass().add("error-label");
+        Button create = smallBtn("Create & Add", () -> {
+            if (name.getText() == null || name.getText().isBlank()) {
+                error.setText("Give the item a name.");
+                return;
+            }
+            Item item = newItem(
+                newId("item", name.getText(), repos.items().list().stream().map(Item::getId).toList()),
+                name.getText().trim(), (String) kinds.getSelectedToggle().getUserData(), description.getText());
+            repos.items().save(item);
+            onCreated.accept(item);
+            host.getChildren().setAll(itemPicker(host, onCreated));
+        });
+        Button cancel = smallBtn("Cancel", () -> host.getChildren().setAll(itemPicker(host, onCreated)));
+        name.setOnAction(e -> create.fire());
+        return form("New item", error, create, cancel, name, kindRow, description);
+    }
+
+    /** Creates a catalog effect right here and applies it in one step. */
+    private Node newEffectForm(VBox host, Consumer<ActiveEffect> onCreated) {
+        TextField name = formField("Name, e.g. Burning");
+        Spinner<Integer> rounds = new Spinner<>(1, 999, 3);
+        Spinner<Integer> damage = new Spinner<>(0, 999, 0);
+        Spinner<Integer> healing = new Spinner<>(0, 999, 0);
+        for (Spinner<Integer> s : List.of(rounds, damage, healing)) {
+            s.setEditable(true);
+            s.setPrefWidth(80);
+        }
+        GridPane numbers = new GridPane();
+        numbers.setHgap(8);
+        numbers.setVgap(6);
+        numbers.addRow(0, owner.body("Rounds:"), rounds);
+        numbers.addRow(1, owner.body("Damage / round:"), damage);
+        numbers.addRow(2, owner.body("Healing / round:"), healing);
+        TextArea description = new TextArea();
+        description.setPromptText("Description (optional)");
+        description.setWrapText(true);
+        description.setPrefRowCount(2);
+
+        Label error = new Label();
+        error.getStyleClass().add("error-label");
+        Button create = smallBtn("Create & Apply", () -> {
+            if (name.getText() == null || name.getText().isBlank()) {
+                error.setText("Give the effect a name.");
+                return;
+            }
+            int dmg = damage.getValue();
+            int heal = healing.getValue();
+            Effect effect = new Effect(newId("effect", name.getText(), repos.effects().list().stream().map(Effect::getId).toList()),
+                name.getText().trim(), description.getText(), dmg > 0, heal > 0, dmg, heal);
+            effect.setDurationRounds(rounds.getValue());
+            repos.effects().save(effect);
+            onCreated.accept(toActive(effect));
+            host.getChildren().setAll(effectPicker(host, onCreated));
+        });
+        Button cancel = smallBtn("Cancel", () -> host.getChildren().setAll(effectPicker(host, onCreated)));
+        name.setOnAction(e -> create.fire());
+        return form("New effect", error, create, cancel, name, numbers, description);
+    }
+
+    /** Builds the right {@link Item} subtype for {@code type} the same way the catalog JSON is read. */
+    static Item newItem(String id, String name, String type, String description) {
+        java.util.Map<String, Object> raw = new java.util.LinkedHashMap<>();
+        raw.put("id", id);
+        raw.put("name", name);
+        raw.put("type", type);
+        raw.put("description", description == null ? "" : description);
+        Item item = new com.fasterxml.jackson.databind.ObjectMapper()
+            .configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .convertValue(raw, Item.class);
+        item.setDurability(new Item.ItemDurability(100, 100));
+        return item;
+    }
+
+    private Node form(String title, Label error, Button create, Button cancel, Node... fields) {
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        HBox actions = new HBox(6, create, spacer, cancel);
+        actions.setAlignment(Pos.CENTER_LEFT);
+        VBox box = new VBox(6);
+        box.getChildren().add(subLabel(title));
+        box.getChildren().addAll(fields);
+        box.getChildren().addAll(error, actions);
+        box.getStyleClass().add("picker-box");
+        if (fields.length > 0 && fields[0] instanceof TextField first) {
+            javafx.application.Platform.runLater(first::requestFocus);
+        }
+        return box;
+    }
+
+    private TextField formField(String prompt) {
+        TextField f = new TextField();
+        f.setPromptText(prompt);
+        f.getStyleClass().add("dnd-text-field");
+        return f;
+    }
+
+    /** {@code <prefix>-<slug>}, made unique against {@code taken}; non-Latin names get a short random id. */
+    static String newId(String prefix, String name, java.util.Collection<String> taken) {
+        String slug = CharacterCreationWizard.slug(name);
+        String base = prefix + "-" + (slug.isEmpty() ? java.util.UUID.randomUUID().toString().substring(0, 8) : slug);
+        String candidate = base;
+        int n = 2;
+        while (taken.contains(candidate)) candidate = base + "-" + n++;
+        return candidate;
     }
 
     // ---------------------------------------------------------------- helpers

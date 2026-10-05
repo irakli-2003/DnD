@@ -70,7 +70,11 @@ public class StorylineScene extends BaseScene {
 
         Button newFolderBtn = btn("New Folder", this::onNewFolder);
         Button newFileBtn = btn("New File", this::onNewFile);
-        Button moveBtn = btn("Move to Folder", this::onMove);
+        MenuButton moveBtn = new MenuButton("Move to Folder");
+        moveBtn.getStyleClass().add("dnd-button");
+        moveBtn.setTooltip(new Tooltip("Pick a destination folder - one click moves the selected item"));
+        moveBtn.getItems().add(new MenuItem("…"));
+        moveBtn.setOnShowing(e -> fillMoveMenu(moveBtn));
         Button upBtn = btn("↑", () -> onNudge(true));
         Button downBtn = btn("↓", () -> onNudge(false));
         upBtn.setTooltip(new Tooltip("Move the selected item up among its siblings"));
@@ -324,28 +328,33 @@ public class StorylineScene extends BaseScene {
         });
     }
 
-    private void onMove() {
+    /** Lists every valid destination folder right in the menu; choosing one moves the item. */
+    private void fillMoveMenu(MenuButton menu) {
+        menu.getItems().clear();
         Path source = selectedPath();
         if (source == null || source.equals(service.getRoot())) return;
         List<FolderOption> options = new ArrayList<>();
         collectFolderOptions(service.getRoot(), source, "Storyline", options);
-        if (options.isEmpty()) {
-            showError("No valid destination folder available.");
-            return;
+        Path currentParent = source.getParent();
+        for (FolderOption opt : options) {
+            boolean here = opt.path.equals(currentParent);
+            MenuItem item = new MenuItem((here ? "● " : "") + opt.label);
+            item.setDisable(here);
+            item.setOnAction(e -> {
+                try {
+                    service.move(source, opt.path);
+                    refreshAll();
+                } catch (IllegalArgumentException ex) {
+                    showError(ex.getMessage());
+                }
+            });
+            menu.getItems().add(item);
         }
-        ChoiceDialog<FolderOption> dialog = new ChoiceDialog<>(options.get(0), options);
-        dialog.setTitle("Move");
-        dialog.setHeaderText("Select destination folder for '" + source.getFileName() + "'");
-        dialog.setContentText("Destination:");
-        styleDialog(dialog);
-        dialog.showAndWait().ifPresent(opt -> {
-            try {
-                service.move(source, opt.path);
-                refreshAll();
-            } catch (IllegalArgumentException e) {
-                showError(e.getMessage());
-            }
-        });
+        if (menu.getItems().isEmpty()) {
+            MenuItem none = new MenuItem("No valid destination folder");
+            none.setDisable(true);
+            menu.getItems().add(none);
+        }
     }
 
     /** Collects every folder under {@code folder} as a candidate move destination, excluding {@code excludeSubtree} itself and its descendants. */

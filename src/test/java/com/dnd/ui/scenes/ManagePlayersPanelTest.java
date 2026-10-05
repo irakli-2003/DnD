@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -97,6 +98,91 @@ public class ManagePlayersPanelTest {
             back.fire();
             assertNotNull("back returns to the card list",
                 find(panel.node(), n -> n instanceof Label l && "Party & Creatures".equals(l.getText())));
+        });
+    }
+
+    @Test
+    public void inlinePickersAddFromCatalogAndCreateNewEntries() throws Exception {
+        Path root = Files.createTempDirectory("dnd-manage-pickers");
+        CampaignRepositories repos = new CampaignRepositories(root);
+        PlayerCharacter aria = new PlayerCharacter();
+        aria.setId("aria");
+        aria.setName("Aria");
+        aria.setMaxHitPoints(20);
+        aria.setCurrentHitPoints(20);
+        repos.players().save(aria);
+        repos.items().save(ManagePlayersPanel.newItem("rope", "Rope", "gear", "50 ft"));
+        com.dnd.model.combat.Effect burn = new com.dnd.model.combat.Effect("burn", "Burning", "", true, false, 3, 0);
+        burn.setDurationRounds(2);
+        repos.effects().save(burn);
+        Path session = root.resolve("Session 1.md");
+        Files.writeString(session, "text");
+
+        onFx(() -> {
+            ManagePlayersPanel panel = new ManagePlayersPanel(new CharacterCreationWizard(null, repos), repos, session, s -> { });
+            panel.showPlayer(repos.players().getById("aria"));
+
+            // Item: open the inline picker, search, Enter adds the first match; no dialog involved.
+            button(panel.node(), "+ Add Item").fire();
+            TextField itemSearch = (TextField) find(panel.node(), n -> n instanceof TextField t && t.getPromptText() != null && t.getPromptText().startsWith("Search items"));
+            assertNotNull("item picker opens inline", itemSearch);
+            itemSearch.setText("rop");
+            itemSearch.getOnAction().handle(null);
+            assertEquals(List.of("rope"), repos.players().getById("aria").getItems().stream().map(i -> i.getItemId()).toList());
+
+            // Create a brand-new item from the picker and it is given right away.
+            button(panel.node(), "✚ New item...").fire();
+            TextField name = (TextField) find(panel.node(), n -> n instanceof TextField t && "Name".equals(t.getPromptText()));
+            name.setText("Silver Bullet");
+            button(panel.node(), "Create & Add").fire();
+            assertNotNull("new item saved to catalog", repos.items().getById("item-silver-bullet"));
+            assertTrue(repos.players().getById("aria").getItems().stream().anyMatch(i -> "item-silver-bullet".equals(i.getItemId())));
+
+            // Effect: picker applies the catalog default duration.
+            button(panel.node(), "+ Add Effect").fire();
+            TextField effectSearch = (TextField) find(panel.node(), n -> n instanceof TextField t && t.getPromptText() != null && t.getPromptText().startsWith("Search effects"));
+            effectSearch.setText("burn");
+            effectSearch.getOnAction().handle(null);
+            assertEquals(2, repos.players().getById("aria").getActiveEffects().get(0).getRemainingRounds());
+
+            button(panel.node(), "✚ New effect...").fire();
+            TextField effectName = (TextField) find(panel.node(), n -> n instanceof TextField t && t.getPromptText() != null && t.getPromptText().startsWith("Name, e.g."));
+            effectName.setText("Blessed");
+            button(panel.node(), "Create & Apply").fire();
+            assertNotNull(repos.effects().getById("effect-blessed"));
+            assertEquals(2, repos.players().getById("aria").getActiveEffects().size());
+
+            // Award XP inline: everyone ticked by default.
+            panel.showAwardXp();
+            int before = repos.players().getById("aria").getXp();
+            button(panel.node(), "Award").fire();
+            assertEquals(before + 100, repos.players().getById("aria").getXp());
+        });
+    }
+
+    @Test
+    public void addPickerAddsCreaturesWithoutClosing() throws Exception {
+        Path root = Files.createTempDirectory("dnd-manage-add");
+        CampaignRepositories repos = new CampaignRepositories(root);
+        Monster goblin = new Monster();
+        goblin.setId("gob");
+        goblin.setName("Goblin");
+        goblin.setMaxHitPoints(7);
+        repos.monsters().save(goblin);
+        Path session = root.resolve("Session 1.md");
+        Files.writeString(session, "text");
+
+        onFx(() -> {
+            ManagePlayersPanel panel = new ManagePlayersPanel(new CharacterCreationWizard(null, repos), repos, session, s -> { });
+            panel.showList();
+            button(panel.node(), "+ Add").fire();
+            TextField search = (TextField) find(panel.node(), n -> n instanceof TextField t && t.getPromptText() != null && t.getPromptText().startsWith("Search monsters"));
+            search.setText("gob");
+            search.getOnAction().handle(null);
+            search.getOnAction().handle(null);
+            assertEquals(List.of("Goblin", "Goblin 2"), panel.creatures().stream().map(TrackedCreature::getName).toList());
+            assertNotNull("picker stays open", find(panel.node(), n -> n == search));
+            card(panel, "Goblin 2");
         });
     }
 
