@@ -10,6 +10,7 @@ import com.dnd.ui.SceneType;
 import com.dnd.ui.UiSession;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,12 +23,6 @@ import java.util.List;
 public class DmMenuScene extends BaseScene {
 
     /** Every entity category managed in the Worldbuilding section (everything except players). */
-    private static final EntityCategory[] WORLDBUILDING_CATEGORIES = {
-        EntityCategory.NPC, EntityCategory.MONSTER, EntityCategory.BEAST, EntityCategory.ITEM,
-        EntityCategory.SPELL, EntityCategory.PLACE, EntityCategory.MAP, EntityCategory.CLASS,
-        EntityCategory.RACE, EntityCategory.DAMAGE_TYPE, EntityCategory.EFFECT, EntityCategory.LANGUAGE,
-        EntityCategory.ALCHEMY_INGREDIENT, EntityCategory.BOOK, EntityCategory.DICE
-    };
 
     private static final double CARD_WIDTH = 120;
 
@@ -57,41 +52,75 @@ public class DmMenuScene extends BaseScene {
 
         content.getChildren().addAll(header, subtitle("Campaign: " + campaignName));
 
-        content.getChildren().add(worldbuildingSection());
+        content.getChildren().add(sessionSection());
         content.getChildren().add(playersSection());
-        content.getChildren().add(storylineSection());
+        content.getChildren().add(worldbuildingSection());
 
-        content.getChildren().add(new HBox(10,
-            btn("Online Session" + (uiSession.getSession().isOnline() ? "  ●" : ""),
-                () -> uiSession.getRouter().goTo(SceneType.DM_ONLINE_SESSION)),
-            btn("🎵 Music", () -> MusicPanel.open(this, uiSession.campaignRoot()))
-        ));
-
-        root.getChildren().add(content);
-        VBox.setVgrow(content, Priority.ALWAYS);
+        ScrollPane scroll = new ScrollPane(content);
+        scroll.setFitToWidth(true);
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scroll.setStyle("-fx-background: #1a1a2e; -fx-background-color: #1a1a2e;");
+        root.getChildren().add(scroll);
+        VBox.setVgrow(scroll, Priority.ALWAYS);
         return wrapInScene(root);
     }
 
-    /** "Worldbuilding": one button per non-player entity category, wrapping as needed. */
-    private VBox worldbuildingSection() {
-        VBox section = new VBox(10);
-        section.getChildren().add(sectionLabel("Worldbuilding"));
+    /** A boxed card with a title, so each area of the DM page reads as its own section. */
+    private VBox card(String title, Node... children) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("dm-card");
+        card.getChildren().add(sectionLabel(title));
+        card.getChildren().addAll(children);
+        return card;
+    }
 
-        FlowPane grid = new FlowPane(10, 10);
-        for (EntityCategory cat : WORLDBUILDING_CATEGORIES) {
-            grid.getChildren().add(btn(categoryLabel(cat), () -> {
-                uiSession.setActiveEntityCategory(cat);
-                uiSession.getRouter().goTo(SceneType.ENTITY_LIST);
-            }));
+    /** "Run the Session": everything used while actually playing at the table. */
+    private VBox sessionSection() {
+        FlowPane row = new FlowPane(10, 10,
+            btn("📜 Open Storyline", () -> uiSession.getRouter().goTo(SceneType.STORYLINE)),
+            btn("🎵 Music", () -> MusicPanel.open(this, uiSession.campaignRoot())),
+            btn("🌐 Online Session" + (uiSession.getSession().isOnline() ? "  ●" : ""),
+                () -> uiSession.getRouter().goTo(SceneType.DM_ONLINE_SESSION)));
+        return card("▶ Run the Session", row);
+    }
+
+    /** Worldbuilding categories, grouped by what they describe. */
+    private static final String[] WORLDBUILDING_GROUP_NAMES = {
+        "Creatures", "Places", "Items & Lore", "Magic & Rules", "Peoples"
+    };
+    private static final EntityCategory[][] WORLDBUILDING_GROUPS = {
+        {EntityCategory.NPC, EntityCategory.MONSTER, EntityCategory.BEAST},
+        {EntityCategory.PLACE, EntityCategory.MAP},
+        {EntityCategory.ITEM, EntityCategory.ALCHEMY_INGREDIENT, EntityCategory.BOOK},
+        {EntityCategory.SPELL, EntityCategory.EFFECT, EntityCategory.DAMAGE_TYPE, EntityCategory.DICE},
+        {EntityCategory.CLASS, EntityCategory.RACE, EntityCategory.LANGUAGE}
+    };
+
+    /** "Worldbuilding": one button per non-player entity category, in labeled groups. */
+    private VBox worldbuildingSection() {
+        FlowPane groups = new FlowPane(12, 12);
+        for (int i = 0; i < WORLDBUILDING_GROUPS.length; i++) {
+            Label caption = new Label(WORLDBUILDING_GROUP_NAMES[i]);
+            caption.getStyleClass().add("sub-label");
+            VBox buttons = new VBox(6);
+            for (EntityCategory cat : WORLDBUILDING_GROUPS[i]) {
+                Button b = btn(categoryLabel(cat), () -> {
+                    uiSession.setActiveEntityCategory(cat);
+                    uiSession.getRouter().goTo(SceneType.ENTITY_LIST);
+                });
+                b.setMaxWidth(Double.MAX_VALUE);
+                buttons.getChildren().add(b);
+            }
+            VBox group = new VBox(6, caption, buttons);
+            group.getStyleClass().add("dm-subgroup");
+            groups.getChildren().add(group);
         }
-        section.getChildren().add(grid);
-        return section;
+        return card("🏰 Worldbuilding", groups);
     }
 
     /** "Players": horizontally scrollable row of mini character cards, with scroll arrows. */
     private VBox playersSection() {
         VBox section = new VBox(10);
-        section.getChildren().add(sectionLabel("Players"));
 
         HBox cardRow = new HBox(10);
         cardRow.setPadding(new Insets(4));
@@ -116,8 +145,8 @@ public class DmMenuScene extends BaseScene {
 
         Button left = btn("◀", () -> scroll.setHvalue(Math.max(0, scroll.getHvalue() - 0.2)));
         Button right = btn("▶", () -> scroll.setHvalue(Math.min(1, scroll.getHvalue() + 0.2)));
-        left.setMinWidth(40);
-        right.setMinWidth(40);
+        left.setStyle("-fx-min-width: 44px; -fx-padding: 8 12 8 12;");
+        right.setStyle("-fx-min-width: 44px; -fx-padding: 8 12 8 12;");
 
         HBox scrollRow = new HBox(8, left, scroll, right);
         scrollRow.setAlignment(Pos.CENTER_LEFT);
@@ -137,7 +166,7 @@ public class DmMenuScene extends BaseScene {
 
         HBox playerButtons = new HBox(10, createCharacterBtn, newPlayerBtn);
         section.getChildren().addAll(scrollRow, playerButtons);
-        return section;
+        return card("☻ Players", section);
     }
 
     private VBox playerCard(PlayerCharacter pc, CampaignRepositories repos) {
@@ -169,14 +198,6 @@ public class DmMenuScene extends BaseScene {
             uiSession.getRouter().goTo(SceneType.ENTITY_DETAIL);
         });
         return card;
-    }
-
-    /** "Storyline": entry point to the story-arc file tree + timeline. */
-    private VBox storylineSection() {
-        VBox section = new VBox(10);
-        section.getChildren().add(sectionLabel("Storyline"));
-        section.getChildren().add(btn("Open Storyline", () -> uiSession.getRouter().goTo(SceneType.STORYLINE)));
-        return section;
     }
 
     private Label smallLabel(String text, boolean emphasis) {

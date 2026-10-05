@@ -492,3 +492,19 @@
 .menu-button.dnd-button > .arrow-button > .arrow {
     -fx-background-color: #c9a84c;
 }
+.dm-card {
+    -fx-background-color: #181834;
+    -fx-border-color: #4a3c1c;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16 16 16;
+}
+.dm-subgroup {
+    -fx-background-color: #1b2747;
+    -fx-border-color: #5a4a22;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8 10 10 10;
+}
