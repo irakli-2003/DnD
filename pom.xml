@@ -48,6 +48,13 @@
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.1</version>
         </dependency>
+        <!-- Embedded Chromium: plays background music from YouTube links (JavaFX's WebView
+             can't decode YouTube streams). Native bundle (~150 MB) downloads on first use. -->
+        <dependency>
+            <groupId>me.friwi</groupId>
+            <artifactId>jcefmaven</artifactId>
+            <version>135.0.20</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -32,6 +32,15 @@ public class GuiApp extends Application {
         primaryStage.show();
     }
 
+    @Override
+    public void stop() {
+        // The embedded music engine (Chromium) runs its own non-daemon threads, so the JVM
+        // would linger after the last window closes unless it is shut down explicitly.
+        if (com.dnd.ui.music.MusicPlayer.get().shutdown()) {
+            System.exit(0);
+        }
+    }
+
     public static void launch(String[] args) {
         Application.launch(GuiApp.class, args);
     }
