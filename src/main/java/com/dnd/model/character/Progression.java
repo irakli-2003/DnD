@@ -151,6 +151,7 @@ public final class Progression {
             pc.setCurrentMana(pc.getCurrentMana() + back);
             log.add("regains " + back + " mana");
         }
+        com.dnd.model.rules.FeatureRules.recover(pc.getFeatureUses(), false, pc.getLevel());
         int cleared = clearTimedEffects(pc.getActiveEffects());
         if (cleared > 0) log.add(cleared + " effect" + (cleared == 1 ? "" : "s") + " wear off");
         return log;
@@ -165,6 +166,7 @@ public final class Progression {
         int effects = pc.getActiveEffects() == null ? 0 : pc.getActiveEffects().size();
         pc.getActiveEffects().clear();
         pc.getCooldowns().clear();
+        pc.getFeatureUses().clear();
         log.add("fully rested (HP, mana and spell slots restored"
             + (effects > 0 ? ", " + effects + " effect" + (effects == 1 ? "" : "s") + " cleared" : "") + ")");
         return log;
@@ -172,6 +174,12 @@ public final class Progression {
 
     /** Battle-map counterpart of {@link #shortRest} for a token's combat state. */
     public static void shortRest(CombatState state, boolean pactCaster, int hitPointsRecovered) {
+        shortRest(state, pactCaster, hitPointsRecovered, 1);
+    }
+
+    /** Short rest for a token whose class features recharge according to {@code level}. */
+    public static void shortRest(CombatState state, boolean pactCaster, int hitPointsRecovered, int level) {
+        com.dnd.model.rules.FeatureRules.recover(state.getFeatureUses(), false, level);
         if (hitPointsRecovered > 0) state.heal(hitPointsRecovered);
         if (pactCaster) SpellSlots.restoreAll(state.getSpellSlots());
         int missing = state.getMaxMana() - state.getCurrentMana();
@@ -188,6 +196,7 @@ public final class Progression {
         SpellSlots.restoreAll(state.getSpellSlots());
         state.getActiveEffects().clear();
         state.getCooldowns().clear();
+        state.getFeatureUses().clear();
     }
 
     private static int clearTimedEffects(List<ActiveEffect> effects) {

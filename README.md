@@ -199,6 +199,32 @@ a session file, or from `Run Battle` in the map viewer.
   show or hide health bars, zoom, and save the map back to the campaign. A timer is available
   here too.
 
+### Class & race features
+
+Characters get the basic features of their class (up to their level, plus their subclass's)
+and their race, and those features do things in battle rather than just sitting on the sheet.
+They appear in the battle-map token detail and in Manage Players under **Class & Race
+Features**, with uses left and what brings them back.
+
+- **Armor Class** is worked out from equipped armor (or Unarmored Defense: barbarian
+  10 + DEX + CON, monk 10 + DEX + WIS), shields, worn pieces, and active effects. Hover it for
+  the breakdown.
+- **Usable features** have buttons. Self features apply at once, e.g. Rage gives +2/+3/+4
+  melee damage and halves bludgeoning, piercing, and slashing damage for 10 rounds, and Second
+  Wind rolls 1d10 + level healing. Targeted features (Lay on Hands, Bardic Inspiration,
+  Breath Weapon) arm the cursor so you can click a token.
+- **Resistances** (Rage, tiefling fire, dwarf poison, ...) halve typed damage automatically.
+  Pick the damage type next to the Damage button. Relentless Endurance (half-orc) and Undying
+  (revenant) drop the character to 1 HP instead of 0 once per long rest.
+- **Attacks.** Each weapon and an unarmed strike is listed with to-hit and damage. Click one,
+  then the target. The form shows d20 + bonus vs. the target's AC. You enter the rolled damage
+  dice and the app adds STR/DEX, Rage, Sneak Attack, and Fury of the Small. Firearms keep using
+  their ammo spells.
+- **Rests.** A short rest restores Second Wind, Action Surge, Ki, Channel Divinity, Wild Shape,
+  Breath Weapon, and similar features. A long rest restores everything.
+- New characters get their race's ability bonuses added to their scores. Existing sheets are
+  treated as final.
+
 ## Background music
 
 Music comes from **YouTube links** and plays only on the DM's computer. Open it with **🎵 Music** in the DM menu, the battle map toolbar, or the session text editor.

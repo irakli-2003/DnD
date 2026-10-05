@@ -162,7 +162,7 @@ public class CharacterCreationWizard extends BaseScene {
         pc.setSubclass(hasSubclasses(s.cls) ? s.subclass : null);
         pc.setLevel(s.level);
         pc.setXp(0);
-        int[] sc = s.scores;
+        int[] sc = finalScores(s);
         pc.setStats(new CoreStats(sc[0], sc[1], sc[2], sc[3], sc[4], sc[5]));
 
         List<PlayerCharacter.PlayerItem> items = new ArrayList<>();
@@ -183,6 +183,21 @@ public class CharacterCreationWizard extends BaseScene {
         pc.setCurrentHitPoints(hp);
         Progression.ensureSlots(pc, s.cls);
         return pc;
+    }
+
+    private static final String[] BONUS_KEYS = {"strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"};
+
+    /** The chosen scores with the race's ability bonuses added (STR, DEX, CON, INT, WIS, CHA). */
+    public static int[] finalScores(State s) {
+        int[] out = s.scores.clone();
+        java.util.Map<String, Integer> bonuses = s.race == null ? null : s.race.getAbilityBonuses();
+        if (bonuses == null) return out;
+        for (int i = 0; i < 6; i++) {
+            Integer bonus = bonuses.get(BONUS_KEYS[i]);
+            if (bonus == null) bonus = bonuses.get(ABILITY_NAMES[i].toLowerCase(java.util.Locale.ROOT));
+            if (bonus != null) out[i] = Math.max(CoreStats.MIN_SCORE, Math.min(CoreStats.MAX_SCORE, out[i] + bonus));
+        }
+        return out;
     }
 
     /** Case-insensitive alphabetical copy of {@code list} by {@code nameFn}. */
@@ -340,7 +355,7 @@ public class CharacterCreationWizard extends BaseScene {
         if (race.getDescription() != null) sb.append(race.getDescription()).append("\n");
         sb.append("Speed: ").append(race.getSpeed()).append(" ft");
         if (race.getAbilityBonuses() != null && !race.getAbilityBonuses().isEmpty()) {
-            sb.append("\nAbility bonuses: ");
+            sb.append("\nAbility bonuses (added to your scores): ");
             List<String> keys = sortedByName(race.getAbilityBonuses().keySet(), k -> k);
             List<String> parts = new ArrayList<>();
             for (String k : keys) parts.add(k + " +" + race.getAbilityBonuses().get(k));
@@ -561,9 +576,10 @@ public class CharacterCreationWizard extends BaseScene {
         if (hasSubclasses(state.cls)) sb.append("Subclass: ").append(nz(state.subclass)).append("\n");
         sb.append("Level: ").append(state.level).append("\n");
         List<String> stats = new ArrayList<>();
-        for (int i = 0; i < 6; i++) stats.add(ABILITY_NAMES[i] + " " + state.scores[i]);
-        sb.append("Abilities: ").append(String.join("  ", stats)).append("\n");
-        sb.append("Max HP: ").append(maxHitPoints(hitDieSides(state.cls), state.scores[2], state.level)).append("\n");
+        int[] finalScores = finalScores(state);
+        for (int i = 0; i < 6; i++) stats.add(ABILITY_NAMES[i] + " " + finalScores[i]);
+        sb.append("Abilities (race bonuses included): ").append(String.join("  ", stats)).append("\n");
+        sb.append("Max HP: ").append(maxHitPoints(hitDieSides(state.cls), finalScores[2], state.level)).append("\n");
         if (isCaster(state.cls)) {
             sb.append("Spell slots: ").append(SpellSlots.describe(SpellSlots.fresh(
                 SpellSlots.maxSlots(state.cls.getSpellcasting(), state.level)))).append("\n");
