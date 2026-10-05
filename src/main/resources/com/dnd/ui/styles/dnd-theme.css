@@ -508,3 +508,34 @@
     -fx-background-radius: 5px;
     -fx-padding: 8 10 10 10;
 }
+/* Text editor's Manage Players side panel */
+.side-panel {
+    -fx-background-color: #141428;
+    -fx-border-color: transparent transparent transparent #c9a84c;
+    -fx-border-width: 0 0 0 1;
+}
+.creature-card {
+    -fx-background-color: #1b2747;
+    -fx-border-color: #5a4a22;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8;
+    -fx-cursor: hand;
+}
+.creature-card:hover {
+    -fx-border-color: #c9a84c;
+    -fx-background-color: #22305a;
+}
+.creature-card-down {
+    -fx-opacity: 0.55;
+}
+.card-name {
+    -fx-text-fill: #e8d8a8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.card-effects {
+    -fx-text-fill: #c08ae0;
+    -fx-font-size: 11px;
+}

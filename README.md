@@ -157,6 +157,12 @@ half-circle arcs spanning their sessions, so the root folder arcs across the who
     "n of m" counter; Enter / Shift+Enter step through matches, Esc closes.
   - `Notes` - a small floating scratchpad shared by every session file of the campaign
     (`<campaign>/notes.txt`), autosaved as you type. Handy for running trackers.
+  - `Manage Players` - toggles a full-height panel on the right with a card for every player
+    character plus any monsters, NPCs or beasts added to this session (`+ Add`). Cards show
+    HP, mana and active effects, with quick `−` / `+` buttons that damage or heal by the
+    chosen amount. Click a card for details (vitals, items, effects, rests and level-ups),
+    and `← Back` to return to the list. Added creatures are separate copies with their own
+    HP, saved per session file in a hidden `.<file>.roster.json` next to it.
 
 Read-aloud markers and map links are stripped from the Player View, so the table only ever
 sees the prose.

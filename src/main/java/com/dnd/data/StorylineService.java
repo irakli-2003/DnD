@@ -56,6 +56,7 @@ public class StorylineService {
         try (Stream<Path> stream = Files.list(folder)) {
             List<Path> children = new ArrayList<>(stream
                 .filter(p -> !p.getFileName().toString().equals(ORDER_FILE))
+                .filter(p -> !SessionRosterStore.isRosterFile(p))
                 .toList());
             List<String> order = readOrder(folder);
             children.sort(Comparator
@@ -200,6 +201,7 @@ public class StorylineService {
                 }
             } else {
                 Files.delete(target);
+                Files.deleteIfExists(SessionRosterStore.rosterFile(target));
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -229,6 +231,10 @@ public class StorylineService {
         }
         try {
             Files.move(source, target);
+            Path roster = SessionRosterStore.rosterFile(source);
+            if (Files.isRegularFile(roster)) {
+                Files.move(roster, SessionRosterStore.rosterFile(target));
+            }
             return target;
         } catch (IOException e) {
             throw new UncheckedIOException(e);

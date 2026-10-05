@@ -231,11 +231,17 @@ public class CharacterCreationWizard extends BaseScene {
 
     /** Opens the wizard as a modal window. */
     public void show() {
+        show(null);
+    }
+
+    /** Opens the wizard and runs {@code onClosed} once it closes (created or cancelled). */
+    public void show(Runnable onClosed) {
         stage = new Stage();
         com.dnd.ui.WindowOrder.adopt(stage);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setTitle("Create Character");
         stage.setScene(build());
+        if (onClosed != null) stage.setOnHidden(e -> onClosed.run());
         stage.show();
     }
 
