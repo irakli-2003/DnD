@@ -166,40 +166,54 @@ final class StorylineEditorWindow {
         bar.setPadding(new Insets(8, 10, 8, 10));
         bar.getStyleClass().add("editor-toolbar");
 
+        bar.setAlignment(Pos.CENTER_LEFT);
+        bar.setRowValignment(javafx.geometry.VPos.TOP);
         bar.getChildren().addAll(
-            buildInsertInfoMenu(),
-            buildInsertBlockMenu(),
-            buildMapLinkMenu(),
-            toolButton("Open Map Link", "Open the battle map linked at the cursor", this::openMapLinkAtCaret),
-            buildMusicMenu(),
-            new Separator(),
-            toolButton("Read-Aloud", "Wrap the selected text as prose to read to the players",
-                () -> wrapSelection(READ_ALOUD_OPEN, READ_ALOUD_CLOSE)),
-            toolButton("DM Note", "Wrap the selected text as a private DM-only note",
-                () -> wrapSelection(DM_NOTE_OPEN, DM_NOTE_CLOSE)),
-            new Separator(),
-            toolButton("Heading", "Turn the current line into a section heading", this::insertHeading),
-            toolButton("Bullets", "Turn the selected lines into a bullet list", () -> prefixLines("- ")),
-            toolButton("Checklist", "Turn the selected lines into a checklist", () -> prefixLines("[ ] ")),
-            toolButton("Divider", "Insert a horizontal divider", () -> insertAtCaret("\n" + "-".repeat(60) + "\n")),
-            new Separator(),
-            toolButton("Player View", "Show only the read-aloud passages, for reading at the table",
-                this::openPlayerView),
-            toolButton("Find", "Find text in this file (Ctrl+F)", this::openFind),
-            toolButton("Notes", "Campaign-wide scratch notes shared by every session file", this::openNotes),
-            new Separator(),
-            toolButton("Award XP", "Give a player character experience without leaving this file",
-                this::openAwardXp),
-            toolButton("Manage Player", "Adjust a player's health, mana, items, and lingering effects",
-                this::openManagePlayer),
-            new Separator(),
-            toolButton("Save", "Save this file (Ctrl+S)", this::save),
-            toolButton("Save & Close", "Save and close the editor",
-                () -> { save(); persistScrollAndDisposeTimer(); stage.close(); }),
-            new Separator(),
-            timer
+            toolGroup("✍ INSERT",
+                buildInsertInfoMenu(),
+                buildInsertBlockMenu(),
+                buildMapLinkMenu()),
+            toolGroup("🎭 MARK TEXT",
+                toolButton("Read-Aloud", "Wrap the selected text as prose to read to the players",
+                    () -> wrapSelection(READ_ALOUD_OPEN, READ_ALOUD_CLOSE)),
+                toolButton("DM Note", "Wrap the selected text as a private DM-only note",
+                    () -> wrapSelection(DM_NOTE_OPEN, DM_NOTE_CLOSE))),
+            toolGroup("¶ FORMAT",
+                toolButton("Heading", "Turn the current line into a section heading", this::insertHeading),
+                toolButton("Bullets", "Turn the selected lines into a bullet list", () -> prefixLines("- ")),
+                toolButton("Checklist", "Turn the selected lines into a checklist", () -> prefixLines("[ ] ")),
+                toolButton("Divider", "Insert a horizontal divider", () -> insertAtCaret("\n" + "-".repeat(60) + "\n"))),
+            toolGroup("🔍 FIND & NOTES",
+                toolButton("Find", "Find text in this file (Ctrl+F)", this::openFind),
+                toolButton("Notes", "Campaign-wide scratch notes shared by every session file", this::openNotes)),
+            toolGroup("🎲 AT THE TABLE",
+                toolButton("Player View", "Show only the read-aloud passages, for reading at the table",
+                    this::openPlayerView),
+                toolButton("Open Map Link", "Open the battle map linked at the cursor", this::openMapLinkAtCaret),
+                buildMusicMenu()),
+            toolGroup("☻ PLAYERS",
+                toolButton("Award XP", "Give a player character experience without leaving this file",
+                    this::openAwardXp),
+                toolButton("Manage Player", "Adjust a player's health, mana, items, and lingering effects",
+                    this::openManagePlayer)),
+            toolGroup("⏱ TIMER", timer),
+            toolGroup("💾 FILE",
+                toolButton("Save", "Save this file (Ctrl+S)", this::save),
+                toolButton("Save & Close", "Save and close the editor",
+                    () -> { save(); persistScrollAndDisposeTimer(); stage.close(); }))
         );
         return bar;
+    }
+
+    /** A captioned box holding related toolbar controls, so they read as one section. */
+    private Node toolGroup(String caption, Node... controls) {
+        Label label = new Label(caption);
+        label.getStyleClass().add("tool-group-label");
+        HBox row = new HBox(5, controls);
+        row.setAlignment(Pos.CENTER_LEFT);
+        VBox group = new VBox(label, row);
+        group.getStyleClass().add("tool-group");
+        return group;
     }
 
     /**
@@ -208,7 +222,7 @@ final class StorylineEditorWindow {
      * is how a written encounter turns into a playable one.
      */
     private MenuButton buildMapLinkMenu() {
-        MenuButton maps = new MenuButton("Insert Map ▾");
+        MenuButton maps = new MenuButton("Insert Map");
         maps.getStyleClass().add("dnd-button");
         maps.setTooltip(new Tooltip("Insert a link to a battle map"));
 
@@ -238,7 +252,7 @@ final class StorylineEditorWindow {
      * caret. Double-clicking a cue in the text plays it during the session.
      */
     private MenuButton buildMusicMenu() {
-        MenuButton music = new MenuButton("🎵 Music ▾");
+        MenuButton music = new MenuButton("🎵 Music");
         music.getStyleClass().add("dnd-button");
         music.setTooltip(new Tooltip("Music panel, or insert a music / sound cue (double-click a cue to play it)"));
 
@@ -334,7 +348,7 @@ final class StorylineEditorWindow {
      * filter box because catalogs like items and spells get long.
      */
     private MenuButton buildInsertInfoMenu() {
-        MenuButton insert = new MenuButton("Insert Info ▾");
+        MenuButton insert = new MenuButton("Insert Info");
         insert.getStyleClass().add("dnd-button");
         insert.setTooltip(new Tooltip("Insert formatted information about a campaign entry"));
 
@@ -406,7 +420,7 @@ final class StorylineEditorWindow {
 
     /** Ready-made scaffolding blocks for common session-prep structures. */
     private MenuButton buildInsertBlockMenu() {
-        MenuButton blocks = new MenuButton("Insert Block ▾");
+        MenuButton blocks = new MenuButton("Insert Block");
         blocks.getStyleClass().add("dnd-button");
 
         BiConsumer<String, String> add = (label, template) -> {

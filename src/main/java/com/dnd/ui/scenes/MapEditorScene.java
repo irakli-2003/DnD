@@ -57,6 +57,9 @@ public class MapEditorScene extends BaseScene {
     // cursor (snapped to the grid) until it is released on another valid, empty box.
     private MapObject draggingToken;
     private int dragHoverCx = -1, dragHoverCy = -1;
+    /** The placed token last clicked; "Remove Selected Token" and Delete act on it. */
+    private MapObject selectedToken;
+    private ContextMenu tokenMenu;
 
     // Resize state, anchored on the fixed opposite corner. Applies to layers, drawings and groups.
     private boolean resizeActive = false;
@@ -140,7 +143,13 @@ public class MapEditorScene extends BaseScene {
         Scene scene = wrapInScene(root);
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                selectedToken = null;
                 deselectAll();
+                renderCanvas();
+            } else if ((e.getCode() == javafx.scene.input.KeyCode.DELETE || e.getCode() == javafx.scene.input.KeyCode.BACK_SPACE)
+                    && selectedToken != null && !(e.getTarget() instanceof javafx.scene.control.TextInputControl)) {
+                removeToken(selectedToken);
+                e.consume();
             }
         });
         return scene;
@@ -160,19 +169,29 @@ public class MapEditorScene extends BaseScene {
         panel.setPadding(new Insets(10));
         panel.setStyle("-fx-background-color: #12122a;");
 
-        panel.getChildren().add(buildObjectsTreeSection());
-        panel.getChildren().add(separator());
-        panel.getChildren().add(buildDrawToolsSection());
-        panel.getChildren().add(separator());
-        panel.getChildren().add(buildPlaceTokensSection());
+        panel.getChildren().addAll(
+            card(buildPlaceTokensSection()),
+            card(buildDrawToolsSection()),
+            card(buildObjectsTreeSection()));
 
         return panel;
     }
 
-    private Separator separator() {
-        Separator sep = new Separator();
-        sep.setPadding(new Insets(8, 0, 8, 0));
-        return sep;
+    private VBox card(VBox section) {
+        section.getStyleClass().add("editor-card");
+        return section;
+    }
+
+    private Label subLabel(String text) {
+        Label l = new Label(text);
+        l.getStyleClass().add("sub-label");
+        return l;
+    }
+
+    private Label hintLabel(String text) {
+        Label hint = body(text);
+        hint.setStyle("-fx-text-fill: #7a6a48; -fx-font-size: 11px; -fx-wrap-text: true;");
+        return hint;
     }
 
     // ---------------------------------------------------------------------
@@ -181,7 +200,7 @@ public class MapEditorScene extends BaseScene {
 
     private VBox buildObjectsTreeSection() {
         VBox box = new VBox(6);
-        box.getChildren().add(sectionLabel("Map Objects"));
+        box.getChildren().add(sectionLabel("🖼 Map Objects (layers & drawings)"));
 
         TreeView<ObjNode> tree = new TreeView<>();
         tree.getStyleClass().add("dnd-list-view");
@@ -215,14 +234,25 @@ public class MapEditorScene extends BaseScene {
             renderCanvas();
         });
 
-        Label hint = body("Shift+click / Ctrl+click to select multiple objects, then Group.");
-        hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
+        Label hint = hintLabel("Shift+click / Ctrl+click to select multiple objects, then Group.");
 
-        box.getChildren().addAll(tree,
-            new HBox(6, upBtn, downBtn),
-            new HBox(6, addLayerBtn, deleteBtn),
-            new HBox(6, groupBtn, ungroupBtn),
-            hint);
+        for (Button b : List.of(upBtn, downBtn, addLayerBtn, deleteBtn, groupBtn, ungroupBtn)) {
+            b.setMaxWidth(Double.MAX_VALUE);
+        }
+        GridPane actions = new GridPane();
+        actions.setHgap(6);
+        actions.setVgap(4);
+        actions.addRow(0, subLabel("Add / remove"), new Label());
+        actions.addRow(1, addLayerBtn, deleteBtn);
+        actions.addRow(2, subLabel("Stacking order"), new Label());
+        actions.addRow(3, upBtn, downBtn);
+        actions.addRow(4, subLabel("Grouping"), new Label());
+        actions.addRow(5, groupBtn, ungroupBtn);
+        ColumnConstraints half = new ColumnConstraints();
+        half.setPercentWidth(50);
+        actions.getColumnConstraints().addAll(half, half);
+
+        box.getChildren().addAll(tree, actions, hint);
         return box;
     }
 
@@ -494,7 +524,7 @@ public class MapEditorScene extends BaseScene {
     /** Draw tools: shape selector, color picker, filled toggle, line width, and clear-all. */
     private VBox buildDrawToolsSection() {
         VBox box = new VBox(6);
-        box.getChildren().add(sectionLabel("Draw Tools"));
+        box.getChildren().add(sectionLabel("✎ Draw & Paint"));
 
         ToggleGroup toolGroup = new ToggleGroup();
         ToggleButton selectBtn = toolToggle("Select/Move", toolGroup);
@@ -522,8 +552,9 @@ public class MapEditorScene extends BaseScene {
             renderCanvas();
         });
 
-        FlowPane toolRow = new FlowPane(4, 4, selectBtn, penBtn, lineBtn, rectBtn, ovalBtn, eraserBtn,
-            passableBtn, terrainBtn);
+        FlowPane selectRow = new FlowPane(4, 4, selectBtn);
+        FlowPane shapeRow = new FlowPane(4, 4, penBtn, lineBtn, rectBtn, ovalBtn, eraserBtn);
+        FlowPane groundRow = new FlowPane(4, 4, passableBtn, terrainBtn);
 
         ChoiceBox<TerrainType> terrainBox = new ChoiceBox<>();
         terrainBox.getItems().setAll(TerrainType.values());
@@ -566,14 +597,17 @@ public class MapEditorScene extends BaseScene {
         opacityRow.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
         HBox.setHgrow(opacitySlider, javafx.scene.layout.Priority.ALWAYS);
 
-        Label hint = body("Pen/Line/Rect/Oval draw on the map. Eraser removes the shape under your click. "
-            + "Passable Toggle flips a cell's passable/impassable state on click (impassable cells render solid black). "
-            + "Terrain paints the selected ground type; water and climbing cost extra movement unless a "
-            + "creature has a swim or climb speed, and difficult ground always costs double. "
-            + "With Select/Move, drag a corner handle to resize anything - image layers, shapes and groups alike.");
-        hint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
+        Label hint = hintLabel("Select/Move: click tokens or objects; drag a corner handle to resize layers, shapes and groups. "
+            + "Eraser removes the shape under your click. Passable flips a cell between open and wall (solid black). "
+            + "Terrain paints the chosen ground; water and climbing cost extra movement unless a "
+            + "creature can swim or climb, and difficult ground always costs double.");
 
-        box.getChildren().addAll(toolRow, colorPicker, filledCheck, widthRow, opacityRow, terrainRow, hint);
+        box.getChildren().addAll(
+            subLabel("Pointer"), selectRow,
+            subLabel("Shapes"), shapeRow,
+            subLabel("Ground"), groundRow, terrainRow,
+            subLabel("Style (new shapes / selected object)"), colorPicker, filledCheck, widthRow, opacityRow,
+            hint);
         return box;
     }
 
@@ -635,7 +669,7 @@ public class MapEditorScene extends BaseScene {
     /** Place-tokens panel: pick an entity type + specific entity, then click or drag onto the map. */
     private VBox buildPlaceTokensSection() {
         VBox box = new VBox(6);
-        box.getChildren().add(sectionLabel("Place Tokens"));
+        box.getChildren().add(sectionLabel("♟ Tokens"));
 
         tokenTypeBox = new ComboBox<>();
         tokenTypeBox.getItems().addAll("Player", "NPC", "Monster", "Beast");
@@ -670,11 +704,39 @@ public class MapEditorScene extends BaseScene {
             e.consume();
         });
 
-        Label clickHint = body("Select an entity, then click a cell on the map (or drag it there) to place it.");
-        clickHint.setStyle("-fx-text-fill: #6a5a3a; -fx-font-size: 11px; -fx-wrap-text: true;");
+        Label clickHint = hintLabel("Pick an entity, then click an empty cell on the map (or drag it there).");
+        Label editHint = hintLabel("Click a placed token to select it (gold ring), drag it to move it."
+            + " Right-click it or press Delete to remove it.");
 
-        box.getChildren().addAll(tokenTypeBox, tokenEntityListView, clickHint);
+        Button removeTokenBtn = dangerBtn("Remove Selected Token", () -> {
+            if (selectedToken == null) {
+                Alert info = new Alert(Alert.AlertType.INFORMATION,
+                    "Click a token on the map first (with the Select tool), then press this button.", ButtonType.OK);
+                info.setHeaderText(null);
+                styleDialog(info);
+                info.showAndWait();
+                return;
+            }
+            removeToken(selectedToken);
+        });
+        removeTokenBtn.setMaxWidth(Double.MAX_VALUE);
+
+        box.getChildren().addAll(subLabel("Place new"), tokenTypeBox, tokenEntityListView, clickHint,
+            subLabel("Placed tokens"), removeTokenBtn, editHint);
         return box;
+    }
+
+    /** Takes a placed token off the map after the DM confirms. */
+    private void removeToken(MapObject token) {
+        if (token == null) return;
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+            "Remove " + TokenSupport.nameOf(token) + " from this map?", ButtonType.OK, ButtonType.CANCEL);
+        confirm.setHeaderText(null);
+        styleDialog(confirm);
+        if (confirm.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) return;
+        map.removeObject(token);
+        if (selectedToken == token) selectedToken = null;
+        renderCanvas();
     }
 
     /** Dialog for adding a background layer: name, optional image OR solid color, and placement/size. */
@@ -795,6 +857,21 @@ public class MapEditorScene extends BaseScene {
             dragging = false;
             resizeActive = false;
 
+            if (e.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
+                MapObject token = tokenAtCell((int) (mx / CELL_SIZE), (int) (my / CELL_SIZE));
+                if (token != null) {
+                    selectedToken = token;
+                    renderCanvas();
+                    MenuItem remove = new MenuItem("Remove " + TokenSupport.nameOf(token));
+                    remove.setOnAction(ev -> removeToken(token));
+                    if (tokenMenu != null) tokenMenu.hide();
+                    tokenMenu = new ContextMenu(remove);
+                    tokenMenu.show(canvas, e.getScreenX(), e.getScreenY());
+                }
+                return;
+            }
+            if (e.getButton() != javafx.scene.input.MouseButton.PRIMARY) return;
+
             switch (currentTool) {
                 case PEN -> { penPoints.clear(); penPoints.add(new double[]{mx, my}); }
                 case LINE, RECT, OVAL -> {
@@ -810,11 +887,13 @@ public class MapEditorScene extends BaseScene {
                     int tcy = (int) (my / CELL_SIZE);
                     MapObject tokenHere = tokenAtCell(tcx, tcy);
                     if (tokenHere != null) {
+                        selectedToken = tokenHere;
                         draggingToken = tokenHere;
                         dragHoverCx = tcx;
                         dragHoverCy = tcy;
                         break;
                     }
+                    selectedToken = null;
                     double[] b = boundsOfKeyPx(selectedKey);
                     if (b != null) {
                         int corner = hitCorner(mx, my, b[0], b[1], b[2], b[3]);
@@ -833,6 +912,7 @@ public class MapEditorScene extends BaseScene {
         });
 
         canvas.setOnMouseDragged(e -> {
+            if (!e.isPrimaryButtonDown()) return;
             switch (currentTool) {
                 case PEN -> { penPoints.add(new double[]{e.getX(), e.getY()}); renderCanvas(); }
                 case TERRAIN -> paintTerrainAt(e.getX(), e.getY());
@@ -858,6 +938,7 @@ public class MapEditorScene extends BaseScene {
         });
 
         canvas.setOnMouseReleased(e -> {
+            if (e.getButton() != javafx.scene.input.MouseButton.PRIMARY) return;
             switch (currentTool) {
                 case PEN -> {
                     if (penPoints.size() > 1) { commitDrawing(Drawing.Type.FREEHAND, new ArrayList<>(penPoints)); refreshObjectsTree(); }
@@ -1317,6 +1398,21 @@ public class MapEditorScene extends BaseScene {
             gc.setLineWidth(2);
             gc.strokeRect(dragHoverCx * CELL_SIZE + 1, dragHoverCy * CELL_SIZE + 1, CELL_SIZE - 2, CELL_SIZE - 2);
             drawToken(gc, draggingToken, dragHoverCx, dragHoverCy, 0);
+        }
+
+        // The selected token gets a gold ring so it's clear what Delete / Remove will act on.
+        if (selectedToken != null && draggingToken == null) {
+            var pos = selectedToken.getPosition();
+            boolean onMap = pos != null && pos.getX() >= 0 && pos.getY() >= 0
+                && pos.getX() < map.getWidth() && pos.getY() < map.getHeight()
+                && map.getCell(pos.getX(), pos.getY()).getOccupants().contains(selectedToken);
+            if (onMap) {
+                gc.setStroke(Color.web("#f0d080"));
+                gc.setLineWidth(3);
+                gc.strokeRect(pos.getX() * CELL_SIZE + 1.5, pos.getY() * CELL_SIZE + 1.5, CELL_SIZE - 3, CELL_SIZE - 3);
+            } else {
+                selectedToken = null;
+            }
         }
 
         // Selection highlight (dashed box), with corner resize-handles on whatever is selected.

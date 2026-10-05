@@ -444,3 +444,67 @@
     -fx-border-color: #e8c46a;
     -fx-border-width: 0 0 0 3;
 }
+
+/* Grouped toolbars: related buttons live together in a labeled box. */
+.tool-group {
+    -fx-background-color: #1b2747;
+    -fx-border-color: #5a4a22;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 3 8 6 8;
+    -fx-spacing: 4;
+}
+.tool-group-label {
+    -fx-text-fill: #c9a84c;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+.tool-group .dnd-button,
+.tool-group .danger-button,
+.tool-group .menu-button {
+    -fx-min-width: 0;
+    -fx-padding: 5 10 5 10;
+    -fx-font-size: 12px;
+}
+.editor-card {
+    -fx-background-color: #181834;
+    -fx-border-color: #4a3c1c;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8 10 10 10;
+}
+.editor-card .dnd-button,
+.editor-card .danger-button {
+    -fx-min-width: 0;
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 12px;
+}
+.sub-label {
+    -fx-text-fill: #a08a50;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+.menu-button.dnd-button > .label {
+    -fx-text-fill: #c9a84c;
+}
+.menu-button.dnd-button > .arrow-button > .arrow {
+    -fx-background-color: #c9a84c;
+}
+.dm-card {
+    -fx-background-color: #181834;
+    -fx-border-color: #4a3c1c;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12 16 16 16;
+}
+.dm-subgroup {
+    -fx-background-color: #1b2747;
+    -fx-border-color: #5a4a22;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-padding: 8 10 10 10;
+}
