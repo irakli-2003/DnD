@@ -4,6 +4,7 @@ import com.dnd.data.JsonMappers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class MusicLibrary {
 
     public static final String FILE_NAME = "music.json";
+    private static final String STARTER_RESOURCE = "/music/starter-library.json";
 
     private List<Playlist> playlists = new ArrayList<>();
     private List<Sound> sounds = new ArrayList<>();
@@ -28,15 +30,55 @@ public class MusicLibrary {
     private boolean shuffle;
     private boolean loop = true;
 
+    /** The campaign's library, or the bundled starter pack when the campaign has none yet. */
     public static MusicLibrary load(Path campaignRoot) {
         Path file = campaignRoot.resolve(FILE_NAME);
-        if (!Files.exists(file)) return new MusicLibrary();
+        if (!Files.exists(file)) return starter();
         try {
             MusicLibrary library = mapper().readValue(file.toFile(), MusicLibrary.class);
             return library == null ? new MusicLibrary() : library;
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to read " + file, e);
         }
+    }
+
+    /**
+     * The bundled starter pack: popular YouTube tavern/market/dungeon/combat music, looping
+     * ambience (rain, river, wind...) and one-shot effects (thunder, door creak, dragon roar...).
+     */
+    public static MusicLibrary starter() {
+        try (InputStream in = MusicLibrary.class.getResourceAsStream(STARTER_RESOURCE)) {
+            if (in == null) return new MusicLibrary();
+            return mapper().readValue(in, MusicLibrary.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to read the starter music library", e);
+        }
+    }
+
+    /**
+     * Adds the starter pack's playlists and sounds that this library doesn't have yet
+     * (matched by name), and its combat playlist if none is chosen. Returns how many were added.
+     */
+    public int addStarterPack() {
+        MusicLibrary starter = starter();
+        int added = 0;
+        for (Playlist p : starter.playlists) {
+            if (findPlaylist(p.getName()) != null) continue;
+            if (findPlaylist(p.getId()) != null) p.setId(newId());
+            playlists.add(p);
+            added++;
+        }
+        for (Sound s : starter.sounds) {
+            if (findSound(s.getName()) != null) continue;
+            if (findSound(s.getId()) != null) s.setId(newId());
+            sounds.add(s);
+            added++;
+        }
+        if (findPlaylist(combatPlaylistId) == null) {
+            Playlist combat = starter.findPlaylist(starter.combatPlaylistId);
+            if (combat != null) combatPlaylistId = findPlaylist(combat.getName()).getId();
+        }
+        return added;
     }
 
     public void save(Path campaignRoot) {
@@ -149,7 +191,7 @@ public class MusicLibrary {
         @Override public String toString() { return label(); }
     }
 
-    /** A short sound effect: a YouTube clip, optionally cut to a start/end second. */
+    /** A sound effect (a YouTube clip, optionally cut to a start/end second) or a looping ambience. */
     public static class Sound {
         private String id = newId();
         private String name;
@@ -157,6 +199,8 @@ public class MusicLibrary {
         private int startSeconds;
         /** 0 means "play to the end of the video". */
         private int endSeconds;
+        /** Background sound (rain, river, wind...) that loops under the music until stopped. */
+        private boolean ambience;
 
         public Sound() {}
 
@@ -177,6 +221,9 @@ public class MusicLibrary {
         public void setStartSeconds(int startSeconds) { this.startSeconds = Math.max(0, startSeconds); }
         public int getEndSeconds() { return endSeconds; }
         public void setEndSeconds(int endSeconds) { this.endSeconds = Math.max(0, endSeconds); }
+
+        public boolean isAmbience() { return ambience; }
+        public void setAmbience(boolean ambience) { this.ambience = ambience; }
 
         public YouTubeLink link() { return YouTubeLink.parse(url); }
 

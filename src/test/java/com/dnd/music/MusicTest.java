@@ -83,9 +83,56 @@ public class MusicTest {
     }
 
     @Test
-    public void missingFileGivesEmptyLibrary() {
+    public void missingFileGivesStarterLibrary() {
         MusicLibrary library = MusicLibrary.load(tmp.getRoot().toPath());
-        assertTrue(library.getPlaylists().isEmpty());
         assertTrue(library.isLoop());
+        assertNotNull(library.findPlaylist("Tavern"));
+        assertEquals("Combat", library.findPlaylist(library.getCombatPlaylistId()).getName());
+        assertTrue(library.findSound("River").isAmbience());
+        assertFalse(library.findSound("Thunder clap").isAmbience());
+    }
+
+    @Test
+    public void starterPackLinksAreAllSingleYouTubeVideos() {
+        MusicLibrary starter = MusicLibrary.starter();
+        assertTrue(starter.getPlaylists().size() >= 10);
+        assertTrue(starter.getSounds().size() >= 20);
+        java.util.Set<String> ids = new java.util.HashSet<>();
+        for (MusicLibrary.Playlist p : starter.getPlaylists()) {
+            assertTrue(p.getName(), ids.add(p.getId()));
+            assertFalse(p.getName(), p.getTracks().isEmpty());
+            for (MusicLibrary.Track t : p.getTracks()) {
+                assertNotNull(t.getUrl(), t.link());
+                assertNotNull(t.getUrl(), t.link().videoId());
+                assertFalse(t.getTitle().isBlank());
+            }
+        }
+        for (MusicLibrary.Sound s : starter.getSounds()) {
+            assertTrue(s.getName(), ids.add(s.getId()));
+            assertNotNull(s.getUrl(), s.link().videoId());
+        }
+    }
+
+    @Test
+    public void starterPackMergesWithoutDuplicates() {
+        MusicLibrary library = new MusicLibrary();
+        MusicLibrary.Playlist mine = new MusicLibrary.Playlist("tavern");
+        library.getPlaylists().add(mine);
+        library.getSounds().add(new MusicLibrary.Sound("River", "https://youtu.be/dQw4w9WgXcQ", 0, 0));
+
+        int added = library.addStarterPack();
+        int total = MusicLibrary.starter().getPlaylists().size() + MusicLibrary.starter().getSounds().size();
+        assertEquals(total - 2, added);
+        assertSame(mine, library.findPlaylist("Tavern"));
+        assertEquals("https://youtu.be/dQw4w9WgXcQ", library.findSound("river").getUrl());
+        assertEquals("Combat", library.findPlaylist(library.getCombatPlaylistId()).getName());
+        assertEquals(0, library.addStarterPack());
+    }
+
+    @Test
+    public void sfxStopCueIsAStop() {
+        MusicCue cue = MusicCue.findAll("[sfx: stop]").get(0);
+        assertEquals(MusicCue.Kind.SFX, cue.kind());
+        assertTrue(cue.isStop());
     }
 }

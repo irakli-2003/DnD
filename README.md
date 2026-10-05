@@ -195,7 +195,9 @@ Music comes from **YouTube links** and plays only on the DM's computer. Open it 
 - **Playlists:** create one (e.g. *Tavern*, *Dungeon*, *Boss fight*), then **+ Add link** and paste any YouTube video or playlist URL. Add `&t=1m30s` to start partway in. Double-click a track to play it. Switching playlists crossfades.
 - **Combat music:** choose a *⚔ Combat playlist*. When initiative is rolled or entered on the battle map, the music crossfades to it, and it switches back when the map closes. You can turn this off in the map's 🎵 menu.
 - **Map music:** on the battle map, choose 🎵 → *This map's music* to play a playlist whenever that map opens.
-- **Sound effects:** add a YouTube clip with optional start/end seconds, then click its pad button to play it. Music is turned down while the effect plays.
-- **Session cues:** in a session text file, write `[music: Playlist name]`, `[music: stop]` or `[sfx: Sound name]`, or insert them from the editor's 🎵 menu. Double-click a cue to play it.
+- **Starter pack:** a campaign without its own music starts with ready-made playlists of popular YouTube videos: Tavern, City market, Harbor, Castle, Village, Travel, Forest, Dungeon, Mystery, Horror, Combat, Boss fight, Sad, Camp, At sea. It also has ambience and sound effects. Campaigns that already have music get it with **★ Starter pack**, which only adds what's missing.
+- **Ambience:** looping background sounds (river, wind, rain, thunderstorm, fireplace, cave, swamp...) play under the music. Click one to start it and click it again to stop it. Tick *Ambience* when adding a sound to make it loop.
+- **Sound effects:** add a YouTube clip with optional start/end seconds, then click its pad button to play it once. Music is turned down while the effect plays.
+- **Session cues:** in a session text file, write `[music: Playlist name]`, `[music: stop]`, `[sfx: Sound name]` or `[sfx: stop]`, or insert them from the editor's 🎵 menu. Double-click a cue to play it.
 
 Everything is saved to `music.json` in the campaign folder. The first time you play, the app downloads an embedded Chromium player (~150 MB) to `~/.dnd-campaign-manager/jcef`. A small player window appears briefly and then hides. Videos whose owners block playback outside YouTube are skipped automatically.

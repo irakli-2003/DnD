@@ -16,8 +16,9 @@ public record MusicCue(Kind kind, String name, int start, int end) {
 
     private static final Pattern PATTERN = Pattern.compile("\\[(music|sfx)\\s*:\\s*([^\\]]+)\\]", Pattern.CASE_INSENSITIVE);
 
+    /** {@code [music: stop]} fades the music out; {@code [sfx: stop]} stops effects and ambience. */
     public boolean isStop() {
-        return kind == Kind.MUSIC && "stop".equalsIgnoreCase(name);
+        return "stop".equalsIgnoreCase(name);
     }
 
     public static String marker(Kind kind, String name) {
