@@ -78,6 +78,8 @@ public final class MusicPlayer {
     /** The playlist to go back to when combat ends (null = silence). */
     private String beforeCombatPlaylistId;
     private boolean combat;
+    /** The looping ambience sound that is on, or null. */
+    private volatile String ambienceSoundId;
 
     private MusicPlayer() {}
 
@@ -144,6 +146,12 @@ public final class MusicPlayer {
             builder.setInstallDir(new File(System.getProperty("user.home"), ".dnd-campaign-manager/jcef"));
             builder.addJcefArgs("--autoplay-policy=no-user-gesture-required");
             builder.getCefSettings().windowless_rendering_enabled = false;
+            // A profile folder per process: Chromium refuses to start a second instance on a shared
+            // profile ("Opening in existing browser session"), e.g. two app windows at once.
+            File cache = new File(System.getProperty("java.io.tmpdir"), "dnd-music-" + ProcessHandle.current().pid());
+            deleteStaleCaches(cache.getParentFile());
+            builder.getCefSettings().root_cache_path = cache.getAbsolutePath();
+            builder.getCefSettings().cache_path = cache.getAbsolutePath();
             builder.setProgressHandler((state, percent) -> {
                 if (state == EnumProgress.DOWNLOADING) {
                     update(Phase.DOWNLOADING, "Downloading the music engine (one time only, ~150 MB)"
@@ -195,6 +203,23 @@ public final class MusicPlayer {
         }, "music-engine-watchdog");
         watchdog.setDaemon(true);
         watchdog.start();
+    }
+
+    /** Removes profile folders left behind by earlier runs whose process has ended. */
+    private static void deleteStaleCaches(File dir) {
+        File[] old = dir.listFiles((d, name) -> name.startsWith("dnd-music-"));
+        if (old == null) return;
+        for (File f : old) {
+            try {
+                long pid = Long.parseLong(f.getName().substring("dnd-music-".length()));
+                if (pid == ProcessHandle.current().pid() || ProcessHandle.of(pid).isPresent()) continue;
+                try (var walk = java.nio.file.Files.walk(f.toPath())) {
+                    walk.sorted(java.util.Comparator.reverseOrder()).forEach(p -> p.toFile().delete());
+                }
+            } catch (Exception ignored) {
+                // Not ours, or still locked - try again next time.
+            }
+        }
     }
 
     private void onPageStatus(String title) {
@@ -360,18 +385,41 @@ public final class MusicPlayer {
         run("dnd.setLoop(" + loop + ");");
     }
 
-    /** Plays a sound effect over the music (the music dips while it plays). */
+    /**
+     * Plays a sound over the music. One-shot effects play once and the music dips while they
+     * play; ambience sounds (rain, river, wind...) fade in and loop under the music until
+     * {@link #stopAmbience()} or another ambience replaces them.
+     */
     public boolean playSound(MusicLibrary.Sound sound) {
         if (sound == null) return false;
         YouTubeLink link = sound.link();
         if (link == null || link.videoId() == null) return false;
         int start = sound.getStartSeconds() > 0 ? sound.getStartSeconds() : link.startSeconds();
+        if (sound.isAmbience()) {
+            ambienceSoundId = sound.getId();
+            run("dnd.ambience(" + mapper.valueToTree(link.videoId()) + "," + start + ");");
+            fire();
+            return true;
+        }
         run("dnd.sfx(" + mapper.valueToTree(link.videoId()) + "," + start + "," + sound.getEndSeconds() + ");");
         return true;
     }
 
     public void stopSound() {
         run("dnd.stopSfx();");
+    }
+
+    /** Fades out the looping ambience. */
+    public void stopAmbience() {
+        if (ambienceSoundId == null) return;
+        ambienceSoundId = null;
+        run("dnd.stopAmbience();");
+        fire();
+    }
+
+    /** Id of the ambience sound that is currently looping, or null. */
+    public String ambienceSoundId() {
+        return ambienceSoundId;
     }
 
     // ── Combat and map music ────────────────────────────────────────────────

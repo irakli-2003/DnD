@@ -264,9 +264,15 @@ final class StorylineEditorWindow {
 
             List<MenuItem> sounds = new ArrayList<>();
             for (var sound : library.sortedSounds()) {
-                MenuItem item = new MenuItem(sound.getName());
+                MenuItem item = new MenuItem((sound.isAmbience() ? "∞ " : "") + sound.getName());
                 item.setOnAction(ev -> insertAtCaret(com.dnd.music.MusicCue.marker(com.dnd.music.MusicCue.Kind.SFX, sound.getName())));
                 sounds.add(item);
+            }
+            if (!sounds.isEmpty()) {
+                MenuItem stopSounds = new MenuItem("■ stop sounds & ambience");
+                stopSounds.setOnAction(ev -> insertAtCaret(com.dnd.music.MusicCue.marker(com.dnd.music.MusicCue.Kind.SFX, "stop")));
+                sounds.add(new SeparatorMenuItem());
+                sounds.add(stopSounds);
             }
             if (sounds.isEmpty()) {
                 MenuItem none = new MenuItem("No sounds yet - add them in the music panel.");
@@ -282,13 +288,18 @@ final class StorylineEditorWindow {
     private void playCue(com.dnd.music.MusicCue cue) {
         com.dnd.music.MusicLibrary library = com.dnd.music.MusicLibrary.load(owner.uiSession.campaignRoot());
         com.dnd.ui.music.MusicPlayer player = com.dnd.ui.music.MusicPlayer.get();
-        if (cue.isStop()) {
+        if (cue.isStop() && cue.kind() == com.dnd.music.MusicCue.Kind.SFX) {
+            player.stopSound();
+            player.stopAmbience();
+            statusLabel.setText("Sounds and ambience stopped.");
+        } else if (cue.isStop()) {
             player.stop();
             statusLabel.setText("Music fading out.");
         } else if (cue.kind() == com.dnd.music.MusicCue.Kind.SFX) {
             var sound = library.findSound(cue.name());
             statusLabel.setText(sound != null && player.playSound(sound)
-                ? "🔊 " + sound.getName() : "No sound effect called \"" + cue.name() + "\" - add it in the music panel.");
+                ? (sound.isAmbience() ? "🌧 " : "🔊 ") + sound.getName()
+                : "No sound called \"" + cue.name() + "\" - add it in the music panel.");
         } else {
             var playlist = library.findPlaylist(cue.name());
             statusLabel.setText(playlist != null && player.playPlaylist(library, playlist, -1)

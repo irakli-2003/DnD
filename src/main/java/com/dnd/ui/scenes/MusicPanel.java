@@ -41,12 +41,14 @@ public final class MusicPanel {
     private ListView<MusicLibrary.Track> trackList;
     private ComboBox<Object> combatBox;
     private FlowPane soundPad;
+    private FlowPane ambiencePad;
     private Label nowPlaying;
     private Label detail;
     private Label message;
     private Button playPause;
     private Consumer<MusicPlayer.Status> listener;
     private Stage stage;
+    private String shownAmbience;
 
     private MusicPanel(BaseScene owner, Path campaignRoot) {
         this.owner = owner;
@@ -199,6 +201,7 @@ public final class MusicPanel {
         String note = s.phase() == MusicPlayer.Phase.FAILED ? s.message() : s.error();
         if (note != null) message.setText(note);
         playPause.setText(s.isPlaying() ? "⏸ Pause" : "▶ Play");
+        if (!java.util.Objects.equals(shownAmbience, player.ambienceSoundId())) refreshSounds();
     }
 
     private static String clock(int seconds) {
@@ -266,8 +269,18 @@ public final class MusicPanel {
             save();
         });
 
+        Button starter = tool("★ Starter pack", "Add the popular YouTube playlists, ambience and sound effects that"
+            + " this campaign doesn't have yet (tavern, market, dungeon, combat, rain, river, thunder...)", () -> {
+            int added = library.addStarterPack();
+            save();
+            refreshPlaylists(playlistList.getSelectionModel().getSelectedItem());
+            refreshSounds();
+            message.setText(added == 0 ? "You already have everything from the starter pack."
+                : "Added " + added + " playlists and sounds from the starter pack.");
+        });
+
         HBox row1 = new HBox(6, add, rename, delete);
-        return new VBox(8, owner.sectionLabel("Playlists"), playlistList, row1, playBtn,
+        return new VBox(8, owner.sectionLabel("Playlists"), playlistList, row1, new HBox(6, playBtn, starter),
             owner.body("⚔ Combat playlist:"), combatBox);
     }
 
@@ -446,9 +459,13 @@ public final class MusicPanel {
     private VBox buildSoundColumn() {
         soundPad = new FlowPane(6, 6);
         soundPad.setPrefWrapLength(240);
-        ScrollPane scroll = new ScrollPane(soundPad);
+        ambiencePad = new FlowPane(6, 6);
+        ambiencePad.setPrefWrapLength(240);
+        VBox pads = new VBox(8, owner.body("∞ Ambience - loops under the music, click again to stop"), ambiencePad,
+            new Separator(), owner.body("🔊 Effects - play once"), soundPad);
+        ScrollPane scroll = new ScrollPane(pads);
         scroll.setFitToWidth(true);
-        scroll.setPrefWidth(270);
+        scroll.setPrefWidth(290);
         scroll.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
         VBox.setVgrow(scroll, Priority.ALWAYS);
 
@@ -459,51 +476,65 @@ public final class MusicPanel {
             save();
         });
 
-        Button add = tool("+ Add sound", "Add a sound effect from a YouTube clip", () -> {
-            MusicLibrary.Sound s = soundDialog(new MusicLibrary.Sound(), "Add sound effect");
+        Button add = tool("+ Add sound", "Add a sound effect or looping ambience from a YouTube clip", () -> {
+            MusicLibrary.Sound s = soundDialog(new MusicLibrary.Sound(), "Add sound");
             if (s == null) return;
             library.getSounds().add(s);
             save();
             refreshSounds();
         });
-        Button stopFx = tool("⏹", "Stop the sound effect", player::stopSound);
+        Button stopFx = tool("⏹ Stop sounds", "Stop the sound effect and the ambience", () -> {
+            player.stopSound();
+            player.stopAmbience();
+        });
 
-        return new VBox(8, owner.sectionLabel("Sound effects"), scroll, new HBox(6, add, stopFx),
-            owner.body("Effects volume"), fxVolume);
+        return new VBox(8, owner.sectionLabel("Sounds"), scroll, new HBox(6, add, stopFx),
+            owner.body("Sounds volume"), fxVolume);
     }
 
     private void refreshSounds() {
+        shownAmbience = player.ambienceSoundId();
         soundPad.getChildren().clear();
-        if (library.getSounds().isEmpty()) {
-            soundPad.getChildren().add(owner.body("No sounds yet. Add thunder, a door creak, a dragon roar..."));
-            return;
-        }
+        ambiencePad.getChildren().clear();
         for (MusicLibrary.Sound sound : library.sortedSounds()) {
-            Button b = tool(sound.getName(), "Click to play · right-click to edit or remove", () -> {
-                if (!player.playSound(sound)) message.setText("\"" + sound.getName() + "\" needs a single-video YouTube link.");
-            });
+            boolean on = sound.isAmbience() && sound.getId().equals(shownAmbience);
+            Button b = tool((on ? "◼ " : "") + sound.getName(),
+                (sound.isAmbience() ? "Click to start or stop this loop" : "Click to play")
+                    + " · right-click to edit or remove", () -> {
+                    if (sound.isAmbience() && sound.getId().equals(player.ambienceSoundId())) {
+                        player.stopAmbience();
+                    } else if (!player.playSound(sound)) {
+                        message.setText("\"" + sound.getName() + "\" needs a single-video YouTube link.");
+                    }
+                    refreshSounds();
+                });
+            if (on) b.setStyle(b.getStyle() + "-fx-background-color: #6b4a00; -fx-border-color: #f0d080;");
             MenuItem edit = new MenuItem("Edit...");
             edit.setOnAction(e -> {
-                if (soundDialog(sound, "Edit sound effect") != null) {
+                if (soundDialog(sound, "Edit sound") != null) {
                     save();
                     refreshSounds();
                 }
             });
             MenuItem remove = new MenuItem("Remove");
             remove.setOnAction(e -> {
+                if (sound.getId().equals(player.ambienceSoundId())) player.stopAmbience();
                 library.getSounds().remove(sound);
                 save();
                 refreshSounds();
             });
             b.setContextMenu(new ContextMenu(edit, remove));
-            soundPad.getChildren().add(b);
+            (sound.isAmbience() ? ambiencePad : soundPad).getChildren().add(b);
         }
+        if (ambiencePad.getChildren().isEmpty()) ambiencePad.getChildren().add(owner.body("None yet - rain, river, wind..."));
+        if (soundPad.getChildren().isEmpty()) soundPad.getChildren().add(owner.body("None yet - thunder, a door creak, a dragon roar..."));
     }
 
     private MusicLibrary.Sound soundDialog(MusicLibrary.Sound sound, String heading) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle(heading);
-        dialog.setHeaderText("A short clip from a YouTube video. Use start/end to cut out just the sound you want.");
+        dialog.setHeaderText("A clip from a YouTube video. Use start/end to cut out just the sound you want,"
+            + " or tick Ambience for a background loop (rain, river, wind...).");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
         dialog.initOwner(stage);
         owner.styleDialog(dialog);
@@ -517,6 +548,8 @@ public final class MusicPanel {
         Spinner<Integer> end = new Spinner<>(0, 36000, sound.getEndSeconds());
         start.setEditable(true);
         end.setEditable(true);
+        CheckBox ambience = owner.checkBox("Ambience - loop under the music until stopped");
+        ambience.setSelected(sound.isAmbience());
         Button preview = new Button("▶ Preview");
         preview.getStyleClass().add("dnd-button");
         compact(preview);
@@ -536,7 +569,8 @@ public final class MusicPanel {
         grid.addRow(1, new Label("Link:"), url);
         grid.addRow(2, new Label("Start (s):"), start);
         grid.addRow(3, new Label("End (s, 0 = to the end):"), end);
-        grid.add(preview, 1, 4);
+        grid.add(ambience, 1, 4);
+        grid.add(preview, 1, 5);
         dialog.getDialogPane().setContent(grid);
         check.run();
 
@@ -545,6 +579,7 @@ public final class MusicPanel {
         sound.setUrl(url.getText().trim());
         sound.setStartSeconds(start.getValue());
         sound.setEndSeconds(end.getValue());
+        sound.setAmbience(ambience.isSelected());
         return sound;
     }
 

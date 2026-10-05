@@ -6,14 +6,14 @@
 <style>body{margin:0;background:#111} .p{width:320px;height:180px;display:inline-block}</style>
 </head>
 <body>
-<div class="p"><div id="a"></div></div><div class="p"><div id="b"></div></div><div class="p"><div id="fx"></div></div>
+<div class="p"><div id="a"></div></div><div class="p"><div id="b"></div></div><div class="p"><div id="fx"></div></div><div class="p"><div id="amb"></div></div>
 <script>
 // Two music decks (A/B) so a new playlist can crossfade in over the old one, plus a third
-// deck for sound effects. Java drives this page through window.dnd.* and reads its state
+// deck for one-shot sound effects and a fourth for looping ambience (rain, river, wind...). Java drives this page through window.dnd.* and reads its state
 // from document.title, which JCEF reports back on every change.
 var dnd = (function () {
   var decks = [], ready = 0, active = 0;
-  var fx = null, fxPlaying = false;
+  var fx = null, fxPlaying = false, amb = null, ambId = null, ambStart = 0, ambFade = null;
   var queue = [], index = -1, shuffle = false, loop = true, volume = 60, fxVolume = 80;
   var paused = false, lastError = null, errorStreak = 0, ducked = false;
   var fades = [null, null];
@@ -23,8 +23,8 @@ var dnd = (function () {
     try {
       if (d && d.getVideoData) { title = (d.getVideoData() || {}).title || ''; state = d.getPlayerState(); t = d.getCurrentTime(); dur = d.getDuration(); }
     } catch (e) {}
-    var s = { phase: ready >= 3 ? 'ready' : 'loading', state: state, title: title, index: index,
-              count: queue.length, t: Math.round(t), dur: Math.round(dur), paused: paused, error: lastError, fx: fxPlaying, ducked: ducked };
+    var s = { phase: ready >= 4 ? 'ready' : 'loading', state: state, title: title, index: index,
+              count: queue.length, t: Math.round(t), dur: Math.round(dur), paused: paused, error: lastError, fx: fxPlaying, ducked: ducked, amb: ambId };
     if (extra) for (var k in extra) s[k] = extra[k];
     document.title = 'DND|' + JSON.stringify(s);
   }
@@ -137,6 +137,12 @@ var dnd = (function () {
       if (ducked) { ducked = false; try { decks[active].setVolume(volume); } catch (x) {} }
       lastError = 'That sound effect cannot be played.'; report();
     });
+    amb = make('amb', function (e) {
+      // Ambience loops until it is stopped.
+      if (e.data === 0 && ambId) { try { amb.seekTo(ambStart, true); amb.playVideo(); } catch (x) {} }
+    }, function () {
+      ambId = null; lastError = 'That ambience cannot be played.'; report();
+    });
     setInterval(report, 1000);
   };
 
@@ -167,17 +173,39 @@ var dnd = (function () {
       fade(i, musicVolume(), 0, Math.max(50, fadeMs || 0), function () { try { decks[i].stopVideo(); } catch (e) {} report(); });
     },
     setVolume: function (v) { volume = v; if (!fades[active]) try { decks[active].setVolume(musicVolume()); } catch (e) {} },
-    setFxVolume: function (v) { fxVolume = v; try { fx.setVolume(v); } catch (e) {} },
+    setFxVolume: function (v) { fxVolume = v; try { fx.setVolume(v); } catch (e) {} try { amb.setVolume(v); } catch (e) {} },
     setShuffle: function (b) { shuffle = b; },
     setLoop: function (b) { loop = b; },
     sfx: function (videoId, start, end) {
+      lastError = null;
       var opts = { videoId: videoId, startSeconds: start || 0 };
       if (end > 0) opts.endSeconds = end;
       fx.setVolume(fxVolume);
       fx.loadVideoById(opts);
       try { var st = decks[active].getPlayerState(); if (st === 1) { ducked = true; decks[active].setVolume(musicVolume()); } } catch (e) {}
     },
-    stopSfx: function () { try { fx.stopVideo(); } catch (e) {} }
+    stopSfx: function () { try { fx.stopVideo(); } catch (e) {} },
+    ambience: function (videoId, start) {
+      ambId = videoId; ambStart = start || 0; lastError = null;
+      if (ambFade) clearInterval(ambFade);
+      amb.setVolume(0);
+      amb.loadVideoById({ videoId: videoId, startSeconds: ambStart });
+      var a = amb, n = 0;
+      ambFade = setInterval(function () {
+        n++; try { a.setVolume(Math.round(fxVolume * n / 40)); } catch (e) {}
+        if (n >= 40) { clearInterval(ambFade); ambFade = null; }
+      }, 50);
+      report();
+    },
+    stopAmbience: function () {
+      var a = amb, v = fxVolume, n = 0;
+      ambId = null; report();
+      if (ambFade) clearInterval(ambFade);
+      ambFade = setInterval(function () {
+        n++; try { a.setVolume(Math.round(v * (1 - n / 30))); } catch (e) {}
+        if (n >= 30) { clearInterval(ambFade); ambFade = null; try { a.stopVideo(); } catch (e) {} }
+      }, 50);
+    }
   };
 })();
 </script>
